@@ -76,6 +76,10 @@
 	margin-left: 251px;
 }
 
+#buddyboss_theme_options-buddyboss_header .redux-image-select li.redux-image-select {
+	display: block;
+}
+
 @media screen and (max-width: 1200px) {
 	.redux-sidebar {
 		width: 202px;

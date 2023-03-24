@@ -385,7 +385,7 @@ if ( $course_type == 'sfwd-lessons' ) {
 				<?php
 				if ( ! empty( $short_description ) ) :
 					?>
-					<p class="entry-content"><?php echo do_shortcode( htmlspecialchars_decode( $short_description ) ); ?></p>
+					<p class="entry-content"><?php echo do_shortcode( htmlspecialchars_decode( $short_description, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 ) ); ?></p>
 					<?php
 				endif;
 

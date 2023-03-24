@@ -584,6 +584,21 @@ section.llms-instructor-info .llms-author .name {
   display: none;
 }
 
+.bb-sfwd-aside .site-header {
+  width: 100%;
+  z-index: 610;
+  -webkit-transition: all .2s;
+          transition: all .2s;
+}
+
+@media screen and (min-width: 800px) {
+  .bb-buddypanel.buddypanel-open.bb-sfwd-aside .site-header:not(.site-header--elementor) {
+    width: -webkit-calc(100% - 230px);
+    width: calc(100% - 230px);
+    -webkit-transition: all .2s;
+            transition: all .2s;
+  }
+}
 @media screen and (max-width: 544px) {
   .llms-course-navigation .llms-course-nav {
     width: 100%;

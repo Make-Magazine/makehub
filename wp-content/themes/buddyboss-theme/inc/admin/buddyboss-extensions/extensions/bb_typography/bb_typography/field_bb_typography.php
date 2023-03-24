@@ -15,6 +15,7 @@
  * - ReduxFramework_typography
  */
 if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
+	#[\AllowDynamicProperties]
 	class ReduxFramework_bb_typography {
 		/**
 		 * Array of data for typography preview.

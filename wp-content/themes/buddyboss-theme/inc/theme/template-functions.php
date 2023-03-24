@@ -187,7 +187,7 @@ if ( ! function_exists( 'buddyboss_theme_body_classes' ) ) {
 			// LearnDash sidebar.
 			$sidebar   = ' sidebar-' . buddyboss_theme_get_option( 'learndash' );
 			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
-		} elseif ( is_active_sidebar( 'learndash_lesson_sidebar' ) && buddyboss_is_learndash() ) {
+		} elseif ( is_active_sidebar( 'learndash_lesson_sidebar' ) && buddyboss_is_learndash_inner() ) {
 			// LearnDash lesson sidebar
 			$sidebar   = ' sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
 			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
@@ -1163,6 +1163,34 @@ if ( ! function_exists( 'buddyboss_is_learndash_inner' ) ) {
 }
 
 /**
+ * Check if LearnDash focus mode is enabled.
+ *
+ * @package BuddyBoss_Theme
+ */
+if ( ! function_exists( 'ld_30_focus_mode_enable' ) ) {
+	function ld_30_focus_mode_enable() {
+
+		if ( class_exists( 'SFWD_LMS' ) ) {
+			$focus_mode = \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );
+
+			$post_types = [
+				'sfwd-lessons',
+				'sfwd-topic',
+				'sfwd-assignment',
+				'sfwd-quiz',
+			];
+
+			if ( in_array( get_post_type(), $post_types ) ) {
+				if ( 'yes' === $focus_mode ) {
+					return true;
+				}
+			}	
+		}
+
+	}
+}
+
+/**
  * Check if we are on inner pages of lifterLMS
  *
  * @package BuddyBoss_Theme
@@ -1896,7 +1924,7 @@ if ( ! function_exists( 'bb_set_unread_notification' ) ) {
 			return;
 		}
 
-		$notif_id = filter_input( INPUT_POST, 'notification_id', FILTER_SANITIZE_STRING );
+		$notif_id = bb_theme_filter_input_string( INPUT_POST, 'notification_id' );
 		if ( 'all' !== $notif_id ) {
 			$notif_id = filter_input( INPUT_POST, 'notification_id', FILTER_SANITIZE_NUMBER_INT );
 		}

@@ -33,6 +33,7 @@ if ( ! class_exists( 'ReduxFramework_extension_image' ) ) {
 	 *
 	 * @since 2.0.0
 	 */
+	#[\AllowDynamicProperties]
 	class ReduxFramework_extension_image {
 
 		// Set the version number of your extension here.

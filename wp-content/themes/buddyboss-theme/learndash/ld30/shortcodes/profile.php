@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $learndash_assets_loaded;
-$shortcode_data_json = htmlspecialchars( json_encode( $shortcode_atts ) );
+$shortcode_data_json = htmlspecialchars( json_encode( $shortcode_atts ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 /**
  * Logic to load assets as needed

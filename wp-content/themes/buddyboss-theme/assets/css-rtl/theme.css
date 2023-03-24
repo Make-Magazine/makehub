@@ -5662,6 +5662,9 @@ body:not(.page-template-page-fullscreen) .site {
 .site-content {
   min-height: 70vh;
 }
+.sticky-header .site-content {
+  min-height: 85vh;
+}
 
 .site-main {
   position: relative;
@@ -5914,6 +5917,9 @@ body .widget-area:not(.widget-area-secondary) {
   -webkit-transition: width .2s;
           transition: width .2s;
   box-shadow: 0 1px 0 0 rgba(139, 141, 157, 0.05), 0 0px 1px 0 rgba(65, 71, 108, 0.15);
+  position: fixed;
+  z-index: 610;
+  width: 100%;
 }
 
 .sticky-header .site-header.has-scrolled {
@@ -6894,6 +6900,12 @@ a.header-search-link {
 .bb-mobile-panel-inner .side-panel-menu .sub-menu a > i {
   color: var(--bb-headings-color);
 }
+.bb-mobile-panel-inner .side-panel-menu .current-menu-item .sub-menu a:hover {
+  color: var(--bb-primary-color);
+}
+.bb-mobile-panel-inner .side-panel-menu .current-menu-item .sub-menu .current-menu-item a {
+  color: var(--bb-primary-color);
+}
 .bb-mobile-panel-inner .menu-item-has-children:not(.hideshow):after {
   display: none;
 }
@@ -6923,7 +6935,7 @@ a.header-search-link {
   margin: 0;
   position: absolute;
   left: 0;
-  top: 10px;
+  top: 0;
   z-index: 22;
   -webkit-transition: all linear 0.2s;
           transition: all linear 0.2s;
@@ -8348,6 +8360,7 @@ span.count {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.buddypanel ul.buddypanel-menu li a > img._image + span:not(.count),
 .buddypanel ul.buddypanel-menu li a > i + span:not(.count) {
   margin-left: auto;
 }

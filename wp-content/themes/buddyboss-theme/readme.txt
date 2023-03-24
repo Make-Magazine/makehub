@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
-Version: 2.2.8.1
+Version: 2.2.9
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,23 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 2.2.9 =
+* Theme Options - Handled the 'Header' tab UI issue for the big screen in the dashboard
+* Theme Options - Provided option to translate all strings in theme options
+* Forums - Handled theme options 'Banner text color' option not working issue on the forum directory screen
+* Menus - Handled profile selected page/tab UI issue
+* Media - Handled document action dropdown UI issue in the documents directory screen
+* Messages - Handled send message editor formatting toolbar styling issue when the media component is disabled
+* Core - Icon Pack updated with latest icons
+* Coding Standards - Significant code refactoring to fix PHP 8 warnings and notices
+* Coding Standards - Significant code refactoring to fix PHP 8.2 deprecation errors, warnings, and notices
+* LearnDash - Provided 'Focus mode' menu compatibility with profile dropdown in lesson and topic screen
+* LearnDash - Handled learndash login modal styling consistency issue from theme options
+* LearnDash - Handled sticky header layout issue on a single lesson and topic screen
+* LearnDash - Handled lesson, topic, and quiz 'Release schedule' not working correctly issue
+* LearnDash - Handled 'Learndash Sidebar' active issue even when no widgets are associated
+* LearnDash - Handled long 'Custom labels' UI issue on lesson and topic screen sidebar
 
 = 2.2.8.1 =
 * Profiles - Handled cover image broken layout issue in responsive view when image size set as full width

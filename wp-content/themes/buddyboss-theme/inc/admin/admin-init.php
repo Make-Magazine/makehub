@@ -239,7 +239,7 @@ if ( ! function_exists( 'boss_custom_panel_styles_scripts' ) ) {
 		wp_register_style( 'redux-custom-panel', get_template_directory_uri() . '/inc/admin/assets/css/redux-custom-panel.css', array( 'redux-admin-css' ), time(), 'all' );
 		wp_enqueue_style( 'redux-custom-panel' );
 
-		wp_register_script( 'redux-custom-script', get_template_directory_uri() . '/inc/admin/assets/js/boss-custom-admin.js' );
+		wp_register_script( 'redux-custom-script', get_template_directory_uri() . '/inc/admin/assets/js/boss-custom-admin.js', array( 'wp-i18n' ) );
 		wp_enqueue_script( 'redux-custom-script' );
 
 		wp_localize_script(
@@ -247,6 +247,7 @@ if ( ! function_exists( 'boss_custom_panel_styles_scripts' ) ) {
 			'BOSS_CUSTOM_ADMIN',
 			array(
 				'elementor_pro_active' => ! empty( buddyboss_theme()->elementor_pro_helper() ) ? '1' : '0',
+				'ieInfo' => esc_html__( 'Please click "Reset All" at the top, before doing an import in order for your changes to take effect.', 'buddyboss-theme' ),
 			)
 		);
 

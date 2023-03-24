@@ -14,6 +14,7 @@ if ( ! class_exists( 'Redux_Class', false ) ) {
 	/**
 	 * Class Redux_Class
 	 */
+	#[\AllowDynamicProperties]
 	class Redux_Class {
 
 		/**

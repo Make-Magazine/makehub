@@ -326,7 +326,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				if ( $is_group_thread ) {
 					?>
 					<span class="notification-users">
-						<a href="<?php esc_url( bp_message_thread_view_link( bp_get_message_thread_id() ) ); ?>">
+						<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 							<?php
 							echo ucwords( $group_name );
 							?>

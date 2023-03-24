@@ -360,27 +360,8 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 				) && empty( $header_sticky )
 			) {
 				?>
-				@media screen and (min-width: 800px) {
-					.bb-buddypanel.buddypanel-open.single-sfwd-lessons .site-header:not(.site-header--elementor),
-					.bb-buddypanel.buddypanel-open.single-sfwd-topic .site-header:not(.site-header--elementor) {
-						width: -webkit-calc(100% - 220px);
-						width: calc(100% - 220px);
-						-webkit-transition: all .2s;
-						transition: all .2s;
-					}
-				}
-
-				.bb-sfwd-aside .site-header {
-					z-index: 610;
-					width: 100%;
-					-webkit-transition: all .2s;
-					transition: all .2s;
-				}
-
 				.bb-sfwd-aside .site-header.has-scrolled {
 					box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.05), 0 5px 10px 0 rgba(0, 0, 0, 0.15);
-					-webkit-transition: all .2s;
-					transition: all .2s;
 				}
 
 				.bb-sfwd-aside .site-content  {
@@ -395,16 +376,6 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 			<?php } ?>
 
 			<?php if ( ! empty( $header_sticky ) ) { ?>
-				.sticky-header .site-header {
-					position: fixed;
-					z-index: 610;
-					width: 100%;
-				}
-
-				.sticky-header .bp-search-ac-header {
-					position: fixed;
-				}
-
 				.sticky-header .site-content,
 				body.buddypress.sticky-header .site-content,
 				.bb-buddypanel.sticky-header .site-content,
@@ -418,10 +389,6 @@ if ( ! function_exists( 'boss_generate_option_css' ) ) {
 						echo 'padding-top: 76px;';
 					}
 					?>
-				}
-
-				.sticky-header .site-content {
-					min-height: 85vh;
 				}
 			<?php } ?>
 

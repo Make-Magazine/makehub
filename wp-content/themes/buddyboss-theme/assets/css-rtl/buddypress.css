@@ -2070,6 +2070,12 @@ body.activity-permalink .activity-list .activity-content .activity-header {
   color: var(--bb-alternate-text-color);
 }
 
+.bb-template-v2 .search-document-list .media-folder_items:last-child .media-folder_action__list,
+.bb-template-v2 #media-folder-document-data-table .media-folder_items:last-child .media-folder_actions .media-folder_action__list {
+  top: initial;
+  bottom: 33px;
+}
+
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__anchor {
   color: var(--bb-headings-color);
 }
@@ -20779,6 +20785,9 @@ body.compose .bp-messages-content {
   padding: 5px 0 5px 10px;
   box-shadow: none;
 }
+.bp-messages-content #bp-message-content #whats-new-messages-toolbar .media-off + .medium-editor-toolbar .medium-editor-toolbar-form {
+  width: auto;
+}
 @media screen and (max-width: 430px) {
   .bp-messages-content #bp-message-content .medium-editor-toolbar .medium-editor-toolbar-form {
     width: -webkit-calc(100% + 108px);
@@ -22045,10 +22054,6 @@ ul#bp-message-thread-list .group-messages-highlight .bp-message-content-wrap blo
   .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #whats-new-messages-toolbar .media-off,
   .bp-messages-content #bp-message-content #message-form-submit-wrapper #whats-new-messages-toolbar .media-off {
     height: 27px;
-  }
-  .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #whats-new-messages-toolbar .media-off + .medium-editor-toolbar,
-  .bp-messages-content #bp-message-content #message-form-submit-wrapper #whats-new-messages-toolbar .media-off + .medium-editor-toolbar {
-    bottom: -10px;
   }
   .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #message-new-submit,
   .bp-messages-content #bp-message-content #message-reply-form-submit-wrapper #message-reply-new-submit,
@@ -27114,6 +27119,10 @@ body.bp-search .bp-search-ac .item-avatar img {
   object-fit: cover;
   width: 100%;
   height: auto;
+}
+
+.sticky-header .bp-search-ac-header {
+  position: fixed;
 }
 
 body.admin-bar.bp-search .bp-search-ac-header,

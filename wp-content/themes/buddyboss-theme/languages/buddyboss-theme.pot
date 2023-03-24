@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-15 09:39:24+00:00\n"
+"POT-Creation-Date: 2023-03-22 08:10:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -65,8 +65,8 @@ msgstr ""
 #: learndash/ld30/shortcodes/profile.php:167
 #: lifterlms/course/course-index.php:20
 #: lifterlms/membership/membership-index.php:20 searchform.php:15
-#: template-parts/bbpress-banner.php:108 template-parts/header-aside.php:37
-#: template-parts/header-aside.php:132 template-parts/header-mobile.php:76
+#: template-parts/bbpress-banner.php:121 template-parts/header-aside.php:37
+#: template-parts/header-aside.php:144 template-parts/header-mobile.php:76
 #: template-parts/header-mobile.php:89
 msgid "Search"
 msgstr ""
@@ -220,8 +220,8 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2594
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:623
 #: inc/plugins/learndash-compat.php:63 inc/theme/template-functions.php:911
-#: inc/theme/template-functions.php:1868 inc/theme/template-functions.php:1881
-#: inc/theme/template-functions.php:1990 inc/theme/template-functions.php:2005
+#: inc/theme/template-functions.php:1896 inc/theme/template-functions.php:1909
+#: inc/theme/template-functions.php:2018 inc/theme/template-functions.php:2033
 #: learndash/ld30/focus/comments_list.php:120
 msgid "Reply"
 msgstr ""
@@ -410,7 +410,7 @@ msgid "Reply to:"
 msgstr ""
 
 #: bbpress/form-reply.php:45 bbpress/form-topic.php:74
-#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:230
+#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:231
 #: paid-memberships-pro/pages/account.php:144
 msgid "Cancel"
 msgstr ""
@@ -583,7 +583,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: bbpress.php:39 template-parts/bbpress-banner.php:107
+#: bbpress.php:39 template-parts/bbpress-banner.php:120
 msgid "Search forums..."
 msgstr ""
 
@@ -1003,13 +1003,19 @@ msgstr ""
 msgid "BuddyBoss"
 msgstr ""
 
-#: inc/admin/admin-init.php:276
+#: inc/admin/admin-init.php:250
+msgid ""
+"Please click \"Reset All\" at the top, before doing an import in order for "
+"your changes to take effect."
+msgstr ""
+
+#: inc/admin/admin-init.php:277
 msgid ""
 "Warning: Access Restricted. Please enable BuddyBoss Theme License key <a "
 "href=\"%s\">HERE</a> and try again."
 msgstr ""
 
-#: inc/admin/admin-init.php:410 inc/admin/admin-init.php:486
+#: inc/admin/admin-init.php:411 inc/admin/admin-init.php:487
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:663
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:204
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:267
@@ -1022,89 +1028,89 @@ msgstr ""
 msgid "Padding"
 msgstr ""
 
-#: inc/admin/admin-init.php:421
+#: inc/admin/admin-init.php:422
 msgid "Padding:"
 msgstr ""
 
-#: inc/admin/admin-init.php:559
+#: inc/admin/admin-init.php:560
 msgid ""
 "BuddyBoss Theme requires LearnDash 3.0 or above.  <a href=\"%s\">Update "
 "LearnDash</a>"
 msgstr ""
 
-#: inc/admin/admin-init.php:569
+#: inc/admin/admin-init.php:570
 msgid ""
 "BuddyBoss Theme requires the <strong>LearnDash 3.0</strong>  template, "
 "however you are using the <strong>Legacy</strong> template. <a "
 "href=\"%s\">Repair</a>"
 msgstr ""
 
-#: inc/admin/admin-init.php:595
+#: inc/admin/admin-init.php:596
 msgid "Default Fonts"
 msgstr ""
 
-#: inc/admin/admin-init.php:598 inc/admin/admin-init.php:606
+#: inc/admin/admin-init.php:599 inc/admin/admin-init.php:607
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:138
 msgid "Normal 400"
 msgstr ""
 
-#: inc/admin/admin-init.php:599 inc/admin/admin-init.php:607
+#: inc/admin/admin-init.php:600 inc/admin/admin-init.php:608
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:141
 msgid "Medium 500"
 msgstr ""
 
-#: inc/admin/admin-init.php:600
+#: inc/admin/admin-init.php:601
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:147
 msgid "Bold 700"
 msgstr ""
 
-#: inc/admin/admin-init.php:605
+#: inc/admin/admin-init.php:606
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:135
 msgid "Light 300"
 msgstr ""
 
-#: inc/admin/admin-init.php:608
+#: inc/admin/admin-init.php:609
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:144
 msgid "Semi Bold 600"
 msgstr ""
 
-#: inc/admin/admin-init.php:609
+#: inc/admin/admin-init.php:610
 msgid "Light 300 Italic"
 msgstr ""
 
-#: inc/admin/admin-init.php:610
+#: inc/admin/admin-init.php:611
 msgid "Normal 400 Italic"
 msgstr ""
 
-#: inc/admin/admin-init.php:628
+#: inc/admin/admin-init.php:629
 msgid ""
 "Please update BuddyBoss Platform to v1.4.0 to maintain compatibility with "
 "BuddyBoss Theme. Some icons in your theme will look wrong until you update."
 msgstr ""
 
-#: inc/admin/admin-init.php:641
+#: inc/admin/admin-init.php:642
 msgid "This panel is set to be Read-Only. Saving is disabled."
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:274
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:275
 msgid "Font family"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:307
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:309
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:308
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:310
 msgid "Backup Font Family"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:324
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:341
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:325
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:342
 msgid "Font style"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:325
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:326
 msgid "Font Weight &amp; Style"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:339
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:340
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:179
 #: inc/plugins/elementor/widgets/bb-tabs.php:231
 #: inc/plugins/elementor/widgets/bb-tabs.php:246
@@ -1113,131 +1119,131 @@ msgstr ""
 msgid "Style"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:351
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:352
 msgid "Font subsets"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:358
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:359
 msgid "Font Subsets"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:361
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:362
 msgid "Subsets"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:363
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:364
 msgid "Font script"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:374
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:375
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:377
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:379
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:376
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:378
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:380
 msgid "Text Align"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:386
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:417
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:438
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:462
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:387
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:418
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:439
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:463
 msgid "inherit"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:387
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:388
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:189
 msgid "left"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:388
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:389
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:191
 msgid "right"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:389
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:390
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:190
 msgid "center"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:390
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:391
 msgid "justify"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:391
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:416
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:392
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:417
 msgid "initial"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:400
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:401
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:403
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:405
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:402
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:404
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:406
 msgid "Text Transform"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:412
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:461
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:413
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:462
 msgid "none"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:413
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:414
 msgid "capitalize"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:414
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:415
 msgid "uppercase"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:415
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:416
 msgid "lowercase"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:426
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:427
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:429
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:431
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:428
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:430
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:432
 msgid "Font Variant"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:439
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:440
 msgid "normal"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:440
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:441
 msgid "small-caps"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:449
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:450
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:452
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:454
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:451
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:453
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:455
 msgid "Text Decoration"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:463
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:464
 msgid "underline"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:464
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:465
 msgid "overline"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:465
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:466
 msgid "line-through"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:466
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:467
 msgid "blink"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:476
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:481
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:477
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:482
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:455
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:546
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:611
 msgid "Font Size"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:482
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:483
 #: inc/plugins/elementor/widgets/bb-activity.php:376
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:362
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:170
@@ -1252,35 +1258,35 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:494
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:499
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:495
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:500
 msgid "Line Height"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:500
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:501
 #: inc/plugins/elementor/widgets/courses/controls/learndash-courses-controls.php:193
 #: inc/plugins/elementor/widgets/courses/controls/lifterlms-courses-controls.php:193
 msgid "Height"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:513
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:518
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:514
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:519
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:520
 msgid "Word Spacing"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:531
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:536
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:532
 #: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:537
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:538
 msgid "Letter Spacing"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:555
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:557
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:556
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:558
 msgid "Margin Top"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:557
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:558
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:690
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:758
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:654
@@ -1294,12 +1300,12 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:566
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:568
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:567
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:569
 msgid "Margin Bottom"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:568
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:569
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:710
 #: inc/plugins/elementor/widgets/bb-tabs.php:883
 #: inc/plugins/elementor/widgets/bb-tabs.php:966
@@ -1311,55 +1317,114 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:586
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:587
 msgid "Font Color"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:593
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:594
 msgid "Font color"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:636
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:637
 msgid "Shadow Color"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:641
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:642
 msgid "Shadow color"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:652
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:661
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:653
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:662
 msgid "Horizontal"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:668
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:677
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:669
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:678
 msgid "Vertical"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:684
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:693
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:685
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:694
 msgid "Blur"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:1081
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:1082
 msgid "Standard Fonts"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:1164
+#: inc/admin/buddyboss-extensions/extensions/bb_typography/bb_typography/field_bb_typography.php:1165
 msgid "Google Webfonts"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:228
+#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:229
 msgid ""
 "Your current options will be replaced with the values of this preset. Would "
 "you like to proceed?"
 msgstr ""
 
-#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:229
+#: inc/admin/buddyboss-extensions/extensions/custom_image_select/custom_image_select/field_custom_image_select.php:230
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:658
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:799
 msgid "Yes"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/class-redux-extension-import-export.php:84
+#: inc/admin/options-init.php:2855
+msgid "Import / Export"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:77
+msgid "Import Options"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:83
+msgid "Import from Clipboard"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:89
+msgid "Upload file"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:96
+msgid "Paste your clipboard data here."
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:109
+msgid "Import"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:112
+msgid ""
+"WARNING! This will overwrite all existing option values, please proceed "
+"with caution!"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:120
+msgid "Export Options"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:124
+msgid ""
+"Here you can copy/download your current option settings. Keep this safe as "
+"you can use it as a backup should anything go wrong, or you can use it to "
+"restore your settings on this site (or any other site)."
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:131
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:133
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:132
+msgid "Copied!"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:136
+msgid "Export File"
+msgstr ""
+
+#: inc/admin/buddyboss-extensions/extensions/import_export/import_export/class-redux-import-export.php:168
+msgid "Your panel has unchanged values, would you like to save them now?"
 msgstr ""
 
 #: inc/admin/buddyboss-extensions/extensions/repeater/repeater/field_repeater.php:251
@@ -1367,7 +1432,7 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
-#: inc/admin/options/custom-css.php:867
+#: inc/admin/options/custom-css.php:834
 msgid "Quiz Progress"
 msgstr ""
 
@@ -1404,7 +1469,7 @@ msgid ""
 "theme style, we recommend setting the button radius to \"6\"."
 msgstr ""
 
-#: inc/admin/options-init.php:125
+#: inc/admin/options-init.php:118 inc/admin/options-init.php:125
 msgid "Desktop Logo (Dark Mode)"
 msgstr ""
 
@@ -1422,18 +1487,18 @@ msgstr ""
 #: inc/admin/options-init.php:2090 inc/admin/options-init.php:2113
 #: inc/admin/options-init.php:2128 inc/admin/options-init.php:2143
 #: inc/admin/options-init.php:2157 inc/admin/options-init.php:2207
-#: inc/admin/options-init.php:2283 inc/admin/options-init.php:2312
-#: inc/admin/options-init.php:2333 inc/admin/options-init.php:2347
-#: inc/admin/options-init.php:2356 inc/admin/options-init.php:2366
-#: inc/admin/options-init.php:2375 inc/admin/options-init.php:2403
-#: inc/admin/options-init.php:2426 inc/admin/options-init.php:2443
-#: inc/admin/options-init.php:2452 inc/admin/options-init.php:2461
-#: inc/admin/options-init.php:2473 inc/admin/options-init.php:2555
-#: inc/admin/options-init.php:2591 inc/admin/options-init.php:2633
-#: inc/admin/options-init.php:2680 inc/admin/options-init.php:2704
-#: inc/admin/options-init.php:2746 inc/admin/options-init.php:2774
-#: inc/admin/options-init.php:2790 inc/admin/options-init.php:2808
-#: inc/admin/options-init.php:2837 inc/admin/options-init.php:2846
+#: inc/admin/options-init.php:2284 inc/admin/options-init.php:2313
+#: inc/admin/options-init.php:2334 inc/admin/options-init.php:2348
+#: inc/admin/options-init.php:2357 inc/admin/options-init.php:2367
+#: inc/admin/options-init.php:2376 inc/admin/options-init.php:2404
+#: inc/admin/options-init.php:2427 inc/admin/options-init.php:2444
+#: inc/admin/options-init.php:2453 inc/admin/options-init.php:2462
+#: inc/admin/options-init.php:2474 inc/admin/options-init.php:2556
+#: inc/admin/options-init.php:2592 inc/admin/options-init.php:2634
+#: inc/admin/options-init.php:2681 inc/admin/options-init.php:2705
+#: inc/admin/options-init.php:2747 inc/admin/options-init.php:2775
+#: inc/admin/options-init.php:2791 inc/admin/options-init.php:2809
+#: inc/admin/options-init.php:2838 inc/admin/options-init.php:2847
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:252
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:267
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:283
@@ -1455,19 +1520,19 @@ msgstr ""
 #: inc/admin/options-init.php:1943 inc/admin/options-init.php:2091
 #: inc/admin/options-init.php:2114 inc/admin/options-init.php:2129
 #: inc/admin/options-init.php:2144 inc/admin/options-init.php:2158
-#: inc/admin/options-init.php:2208 inc/admin/options-init.php:2284
-#: inc/admin/options-init.php:2313 inc/admin/options-init.php:2334
-#: inc/admin/options-init.php:2348 inc/admin/options-init.php:2357
-#: inc/admin/options-init.php:2367 inc/admin/options-init.php:2376
-#: inc/admin/options-init.php:2404 inc/admin/options-init.php:2427
-#: inc/admin/options-init.php:2444 inc/admin/options-init.php:2453
-#: inc/admin/options-init.php:2462 inc/admin/options-init.php:2474
-#: inc/admin/options-init.php:2556 inc/admin/options-init.php:2592
-#: inc/admin/options-init.php:2634 inc/admin/options-init.php:2681
-#: inc/admin/options-init.php:2705 inc/admin/options-init.php:2747
-#: inc/admin/options-init.php:2775 inc/admin/options-init.php:2791
-#: inc/admin/options-init.php:2809 inc/admin/options-init.php:2838
-#: inc/admin/options-init.php:2847
+#: inc/admin/options-init.php:2208 inc/admin/options-init.php:2285
+#: inc/admin/options-init.php:2314 inc/admin/options-init.php:2335
+#: inc/admin/options-init.php:2349 inc/admin/options-init.php:2358
+#: inc/admin/options-init.php:2368 inc/admin/options-init.php:2377
+#: inc/admin/options-init.php:2405 inc/admin/options-init.php:2428
+#: inc/admin/options-init.php:2445 inc/admin/options-init.php:2454
+#: inc/admin/options-init.php:2463 inc/admin/options-init.php:2475
+#: inc/admin/options-init.php:2557 inc/admin/options-init.php:2593
+#: inc/admin/options-init.php:2635 inc/admin/options-init.php:2682
+#: inc/admin/options-init.php:2706 inc/admin/options-init.php:2748
+#: inc/admin/options-init.php:2776 inc/admin/options-init.php:2792
+#: inc/admin/options-init.php:2810 inc/admin/options-init.php:2839
+#: inc/admin/options-init.php:2848
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:991
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:253
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:268
@@ -1513,7 +1578,7 @@ msgid ""
 "the BuddyPanel, it will be made smaller to fit within the BuddyPanel."
 msgstr ""
 
-#: inc/admin/options-init.php:168
+#: inc/admin/options-init.php:161 inc/admin/options-init.php:168
 msgid "Mobile Logo (Dark Mode)"
 msgstr ""
 
@@ -1529,7 +1594,8 @@ msgstr ""
 msgid "Logo"
 msgstr ""
 
-#: inc/admin/options-init.php:218 inc/admin/options-init.php:1375
+#: inc/admin/options-init.php:212 inc/admin/options-init.php:218
+#: inc/admin/options-init.php:1375
 msgid "Desktop Logo"
 msgstr ""
 
@@ -1541,7 +1607,7 @@ msgstr ""
 msgid "Desktop Logo Size"
 msgstr ""
 
-#: inc/admin/options-init.php:263
+#: inc/admin/options-init.php:257 inc/admin/options-init.php:263
 msgid "Mobile Logo"
 msgstr ""
 
@@ -1553,7 +1619,8 @@ msgstr ""
 msgid "Mobile Logo Size"
 msgstr ""
 
-#: inc/admin/options-init.php:308 inc/admin/options-init.php:1376
+#: inc/admin/options-init.php:301 inc/admin/options-init.php:308
+#: inc/admin/options-init.php:1376
 msgid "Site Icon"
 msgstr ""
 
@@ -2137,7 +2204,7 @@ msgid ""
 "always sticky in %1$s lessons and topics."
 msgstr ""
 
-#: inc/admin/options-init.php:1309 inc/admin/options-init.php:2295
+#: inc/admin/options-init.php:1309 inc/admin/options-init.php:2296
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:19
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:27
 #. translators: 1. Link URL. 2. Link text.
@@ -2411,6 +2478,30 @@ msgid ""
 "Widgets%2$s."
 msgstr ""
 
+#: inc/admin/options-init.php:1747
+msgid "1 Column"
+msgstr ""
+
+#: inc/admin/options-init.php:1748
+msgid "2 Column"
+msgstr ""
+
+#: inc/admin/options-init.php:1749
+msgid "3 Column"
+msgstr ""
+
+#: inc/admin/options-init.php:1750
+msgid "4 Column"
+msgstr ""
+
+#: inc/admin/options-init.php:1751
+msgid "5 Column"
+msgstr ""
+
+#: inc/admin/options-init.php:1752
+msgid "6 Column"
+msgstr ""
+
 #: inc/admin/options-init.php:1760 inc/admin/options-init.php:1765
 msgid "Footer Info Section"
 msgstr ""
@@ -2498,8 +2589,8 @@ msgstr ""
 msgid "Enter text or shortcode to display in your footer."
 msgstr ""
 
-#: inc/admin/options-init.php:1887 inc/admin/options-init.php:2737
-#: inc/admin/options-init.php:2753
+#: inc/admin/options-init.php:1887 inc/admin/options-init.php:2738
+#: inc/admin/options-init.php:2754
 msgid "Social Links"
 msgstr ""
 
@@ -2563,7 +2654,7 @@ msgstr ""
 msgid "We display a custom title above the background image."
 msgstr ""
 
-#: inc/admin/options-init.php:1959 inc/admin/options-init.php:2493
+#: inc/admin/options-init.php:1959 inc/admin/options-init.php:2494
 msgid "Custom login heading"
 msgstr ""
 
@@ -2637,8 +2728,8 @@ msgstr ""
 msgid "Single Post"
 msgstr ""
 
-#: inc/admin/options-init.php:2052 inc/admin/options-init.php:2516
-#: inc/admin/options-init.php:2630
+#: inc/admin/options-init.php:2052 inc/admin/options-init.php:2517
+#: inc/admin/options-init.php:2631
 msgid "Featured Image"
 msgstr ""
 
@@ -2735,6 +2826,16 @@ msgstr ""
 msgid "Set forum grid layouts to Card or Cover style."
 msgstr ""
 
+#: inc/admin/options-init.php:2196
+msgid "Card"
+msgstr ""
+
+#: inc/admin/options-init.php:2197
+#: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:147
+#: inc/plugins/elementor/widgets/gallery/bb-gallery.php:520
+msgid "Cover"
+msgstr ""
+
 #: inc/admin/options-init.php:2204
 msgid "Show Forum Banner"
 msgstr ""
@@ -2775,190 +2876,190 @@ msgstr ""
 msgid "Select text color for banner area."
 msgstr ""
 
-#: inc/admin/options-init.php:2253
+#: inc/admin/options-init.php:2254
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:295
 msgid "Forum Title"
 msgstr ""
 
-#: inc/admin/options-init.php:2254
+#: inc/admin/options-init.php:2255
 msgid "Title that will be shown on forum index banner area."
 msgstr ""
 
-#: inc/admin/options-init.php:2262
+#: inc/admin/options-init.php:2263
 msgid "Forum Description"
 msgstr ""
 
-#: inc/admin/options-init.php:2263
+#: inc/admin/options-init.php:2264
 msgid "Description that will be shown on forum index banner area."
 msgstr ""
 
-#: inc/admin/options-init.php:2265
+#: inc/admin/options-init.php:2266
 msgid ""
 "Find answers, ask questions, and connect with our <br>community around the "
 "world."
 msgstr ""
 
-#: inc/admin/options-init.php:2280
+#: inc/admin/options-init.php:2281
 msgid "Enable Search"
 msgstr ""
 
-#: inc/admin/options-init.php:2281
+#: inc/admin/options-init.php:2282
 msgid "If enabled search will show on banner."
 msgstr ""
 
-#: inc/admin/options-init.php:2304 inc/admin/options-init.php:2395
+#: inc/admin/options-init.php:2305 inc/admin/options-init.php:2396
 msgid "Courses Index"
 msgstr ""
 
-#: inc/admin/options-init.php:2309 inc/admin/options-init.php:2400
+#: inc/admin/options-init.php:2310 inc/admin/options-init.php:2401
 msgid "Show Categories Filter"
 msgstr ""
 
-#: inc/admin/options-init.php:2310 inc/admin/options-init.php:2401
+#: inc/admin/options-init.php:2311 inc/admin/options-init.php:2402
 msgid "Enable filtering the courses index by categories."
 msgstr ""
 
-#: inc/admin/options-init.php:2318 inc/admin/options-init.php:2409
+#: inc/admin/options-init.php:2319 inc/admin/options-init.php:2410
 msgid "Taxonomy"
 msgstr ""
 
-#: inc/admin/options-init.php:2319 inc/admin/options-init.php:2410
+#: inc/admin/options-init.php:2320 inc/admin/options-init.php:2411
 msgid "Select the taxonomy to filter by."
 msgstr ""
 
-#: inc/admin/options-init.php:2321 inc/admin/options-init.php:2412
+#: inc/admin/options-init.php:2322 inc/admin/options-init.php:2413
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:154
 msgid "Course Categories"
 msgstr ""
 
-#: inc/admin/options-init.php:2322 inc/admin/options-init.php:2413
+#: inc/admin/options-init.php:2323 inc/admin/options-init.php:2414
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:163
 msgid "Course Tags"
 msgstr ""
 
-#: inc/admin/options-init.php:2330 inc/admin/options-init.php:2423
+#: inc/admin/options-init.php:2331 inc/admin/options-init.php:2424
 msgid "Show Instructors Filter"
 msgstr ""
 
-#: inc/admin/options-init.php:2331 inc/admin/options-init.php:2424
+#: inc/admin/options-init.php:2332 inc/admin/options-init.php:2425
 msgid "Enable filtering the courses index by instructors."
 msgstr ""
 
-#: inc/admin/options-init.php:2339 inc/admin/options-init.php:2432
+#: inc/admin/options-init.php:2340 inc/admin/options-init.php:2433
 msgid "Course Content"
 msgstr ""
 
-#: inc/admin/options-init.php:2344 inc/admin/options-init.php:2437
+#: inc/admin/options-init.php:2345 inc/admin/options-init.php:2438
 msgid "Course Author"
 msgstr ""
 
-#: inc/admin/options-init.php:2345 inc/admin/options-init.php:2438
+#: inc/admin/options-init.php:2346 inc/admin/options-init.php:2439
 msgid "Display the course author on courses, lessons and topics."
 msgstr ""
 
-#: inc/admin/options-init.php:2353
+#: inc/admin/options-init.php:2354
 msgid "Course Author Bio"
 msgstr ""
 
-#: inc/admin/options-init.php:2354
+#: inc/admin/options-init.php:2355
 msgid ""
 "Display the course author bio on single courses. This data comes from the "
 "\"Biographical Info\" section when editing a user in the backend."
 msgstr ""
 
-#: inc/admin/options-init.php:2363 inc/admin/options-init.php:2449
+#: inc/admin/options-init.php:2364 inc/admin/options-init.php:2450
 msgid "Course Date"
 msgstr ""
 
-#: inc/admin/options-init.php:2364 inc/admin/options-init.php:2450
+#: inc/admin/options-init.php:2365 inc/admin/options-init.php:2451
 msgid "Display the course date on courses, lessons and topics."
 msgstr ""
 
-#: inc/admin/options-init.php:2372 inc/admin/options-init.php:2467
+#: inc/admin/options-init.php:2373 inc/admin/options-init.php:2468
 msgid "Course Participants"
 msgstr ""
 
-#: inc/admin/options-init.php:2373
+#: inc/admin/options-init.php:2374
 msgid ""
 "Display the list of enrolled course participants on courses, lessons and "
 "topics."
 msgstr ""
 
-#: inc/admin/options-init.php:2386
+#: inc/admin/options-init.php:2387
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:23
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:30
 msgid "LifterLMS"
 msgstr ""
 
-#: inc/admin/options-init.php:2414
+#: inc/admin/options-init.php:2415
 msgid "Course Tracks"
 msgstr ""
 
-#: inc/admin/options-init.php:2415
+#: inc/admin/options-init.php:2416
 msgid "Course Difficulty"
 msgstr ""
 
-#: inc/admin/options-init.php:2458
+#: inc/admin/options-init.php:2459
 msgid "Lessons List"
 msgstr ""
 
-#: inc/admin/options-init.php:2459
+#: inc/admin/options-init.php:2460
 msgid "Display the lessons list on lessons, quizzes and topics."
 msgstr ""
 
-#: inc/admin/options-init.php:2468
+#: inc/admin/options-init.php:2469
 msgid ""
 "Display the list of enrolled course participants on courses, lessons and "
 "quizzes."
 msgstr ""
 
-#: inc/admin/options-init.php:2482
+#: inc/admin/options-init.php:2483
 msgid "404 Page"
 msgstr ""
 
-#: inc/admin/options-init.php:2491 inc/admin/options-init.php:2603
+#: inc/admin/options-init.php:2492 inc/admin/options-init.php:2604
 msgid "Page Title"
 msgstr ""
 
-#: inc/admin/options-init.php:2492
+#: inc/admin/options-init.php:2493
 msgid "Enter a title for your 404 page."
 msgstr ""
 
-#: inc/admin/options-init.php:2494
+#: inc/admin/options-init.php:2495
 msgid "Looks like you got lost!"
 msgstr ""
 
-#: inc/admin/options-init.php:2499 inc/admin/options-init.php:2612
+#: inc/admin/options-init.php:2500 inc/admin/options-init.php:2613
 msgid "Page Description"
 msgstr ""
 
-#: inc/admin/options-init.php:2500
+#: inc/admin/options-init.php:2501
 msgid "Enter a description for your 404 page."
 msgstr ""
 
-#: inc/admin/options-init.php:2502
+#: inc/admin/options-init.php:2503
 msgid "We couldn't find the page you were looking for."
 msgstr ""
 
-#: inc/admin/options-init.php:2517
+#: inc/admin/options-init.php:2518
 msgid "Select which type of image to use on your 404 page."
 msgstr ""
 
-#: inc/admin/options-init.php:2520
+#: inc/admin/options-init.php:2521
 msgid "2.0"
 msgstr ""
 
-#: inc/admin/options-init.php:2521
+#: inc/admin/options-init.php:2522
 msgid "1.0"
 msgstr ""
 
-#: inc/admin/options-init.php:2522
+#: inc/admin/options-init.php:2523
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:121
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:730
 msgid "Custom"
 msgstr ""
 
-#: inc/admin/options-init.php:2523
+#: inc/admin/options-init.php:2524
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:352
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:634
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:345
@@ -2967,19 +3068,19 @@ msgstr ""
 msgid "None"
 msgstr ""
 
-#: inc/admin/options-init.php:2531
+#: inc/admin/options-init.php:2532
 msgid "The image will be tinted with your <b>Primary Color</b>."
 msgstr ""
 
-#: inc/admin/options-init.php:2552
+#: inc/admin/options-init.php:2553
 msgid "Page Button"
 msgstr ""
 
-#: inc/admin/options-init.php:2553
+#: inc/admin/options-init.php:2554
 msgid "Show a button at the bottom of your 404 page."
 msgstr ""
 
-#: inc/admin/options-init.php:2561
+#: inc/admin/options-init.php:2562
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:144
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:171
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:225
@@ -2987,223 +3088,293 @@ msgstr ""
 msgid "Button Text"
 msgstr ""
 
-#: inc/admin/options-init.php:2562
+#: inc/admin/options-init.php:2563
 msgid "Enter the text for your button."
 msgstr ""
 
-#: inc/admin/options-init.php:2563
+#: inc/admin/options-init.php:2564
 msgid "Return Home"
 msgstr ""
 
-#: inc/admin/options-init.php:2569
+#: inc/admin/options-init.php:2570
 msgid "Button Link"
 msgstr ""
 
-#: inc/admin/options-init.php:2570
+#: inc/admin/options-init.php:2571
 msgid "Enter the URL for your button."
 msgstr ""
 
-#: inc/admin/options-init.php:2579 inc/admin/options-init.php:2606
+#: inc/admin/options-init.php:2580 inc/admin/options-init.php:2607
 msgid "Maintenance Mode"
 msgstr ""
 
-#: inc/admin/options-init.php:2588
+#: inc/admin/options-init.php:2589
 msgid "Enable Maintenance Mode"
 msgstr ""
 
-#: inc/admin/options-init.php:2589
+#: inc/admin/options-init.php:2590
 msgid ""
 "If enabled, only site administrators will be able to login to your site. "
 "Logged-out members will see the maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2597
+#: inc/admin/options-init.php:2598
 msgid "Page Content"
 msgstr ""
 
-#: inc/admin/options-init.php:2604
+#: inc/admin/options-init.php:2605
 msgid "Enter a title for your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2605
+#: inc/admin/options-init.php:2606
 msgid "Custom Maintenance Title"
 msgstr ""
 
-#: inc/admin/options-init.php:2613
+#: inc/admin/options-init.php:2614
 msgid "Enter a description for your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2615
+#: inc/admin/options-init.php:2616
 msgid "Undergoing scheduled maintenance. <br>Sorry for the inconvenience."
 msgstr ""
 
-#: inc/admin/options-init.php:2631
+#: inc/admin/options-init.php:2632
 msgid "Show a featured image on your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2646
+#: inc/admin/options-init.php:2647
 msgid "Bottom Text"
 msgstr ""
 
-#: inc/admin/options-init.php:2647
+#: inc/admin/options-init.php:2648
 msgid "Enter text for the bottom of your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2650
+#: inc/admin/options-init.php:2651
 #. translators: 1. email url
 msgid "Contact us at  %1$s"
 msgstr ""
 
-#: inc/admin/options-init.php:2672
+#: inc/admin/options-init.php:2673
 #. translators: 1. Link URL. 2. Link text.
 msgid "Countdown Timer"
 msgstr ""
 
-#: inc/admin/options-init.php:2678
+#: inc/admin/options-init.php:2679
 msgid "Enable Countdown"
 msgstr ""
 
-#: inc/admin/options-init.php:2689
+#: inc/admin/options-init.php:2690
 msgid ""
 "Enter the date the timer should count down to, using the following date "
 "format: MM/DD/YYYY"
 msgstr ""
 
-#: inc/admin/options-init.php:2695
+#: inc/admin/options-init.php:2696
 msgid "Featured Content"
 msgstr ""
 
-#: inc/admin/options-init.php:2701
+#: inc/admin/options-init.php:2702
 msgid "Enable Featured Content"
 msgstr ""
 
-#: inc/admin/options-init.php:2702
+#: inc/admin/options-init.php:2703
 msgid "Enable a featured content section on your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2711
+#: inc/admin/options-init.php:2712
 msgid "Section Title"
 msgstr ""
 
-#: inc/admin/options-init.php:2712
+#: inc/admin/options-init.php:2713
 msgid "Enter a title for your featured content section."
 msgstr ""
 
-#: inc/admin/options-init.php:2713
+#: inc/admin/options-init.php:2714
 msgid "Subscribe Title"
 msgstr ""
 
-#: inc/admin/options-init.php:2719
+#: inc/admin/options-init.php:2720
 msgid "Section Content"
 msgstr ""
 
-#: inc/admin/options-init.php:2720
+#: inc/admin/options-init.php:2721
 msgid "You can use shortcodes in this content."
 msgstr ""
 
-#: inc/admin/options-init.php:2743
+#: inc/admin/options-init.php:2744
 msgid "Enable Social Links"
 msgstr ""
 
-#: inc/admin/options-init.php:2744
+#: inc/admin/options-init.php:2745
 msgid "Show links to your social networks on your maintenance mode page."
 msgstr ""
 
-#: inc/admin/options-init.php:2763
+#: inc/admin/options-init.php:2764
 msgid "Custom Codes"
 msgstr ""
 
-#: inc/admin/options-init.php:2771
+#: inc/admin/options-init.php:2772
 msgid "Tracking Code"
 msgstr ""
 
-#: inc/admin/options-init.php:2772
+#: inc/admin/options-init.php:2773
 msgid ""
 "Paste your Google Analytics (or other) tracking code here. This will be "
 "added before the closing of body tag."
 msgstr ""
 
-#: inc/admin/options-init.php:2787
+#: inc/admin/options-init.php:2788
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:261
 msgid "CSS"
 msgstr ""
 
-#: inc/admin/options-init.php:2788
+#: inc/admin/options-init.php:2789
 msgid ""
 "Quickly add some CSS here to make design adjustments. It is a much better "
 "solution then manually editing the theme. You may also consider using a "
 "child theme."
 msgstr ""
 
-#: inc/admin/options-init.php:2805
+#: inc/admin/options-init.php:2806
 msgid "JavaScript"
 msgstr ""
 
-#: inc/admin/options-init.php:2806
+#: inc/admin/options-init.php:2807
 msgid ""
 "Quickly add some JavaScript code here. It is a much better solution then "
 "manually editing the theme. You may also consider using a child theme."
 msgstr ""
 
-#: inc/admin/options-init.php:2825
+#: inc/admin/options-init.php:2826
 msgid "Minify Assets"
 msgstr ""
 
-#: inc/admin/options-init.php:2834
+#: inc/admin/options-init.php:2835
 msgid "Minify CSS"
 msgstr ""
 
-#: inc/admin/options-init.php:2835
+#: inc/admin/options-init.php:2836
 msgid ""
 "By default the theme loads stylesheets that are not minified. You can "
 "enable this setting to instead load minified and combined stylesheets."
 msgstr ""
 
-#: inc/admin/options-init.php:2843
+#: inc/admin/options-init.php:2844
 msgid "Minify JavaScript"
 msgstr ""
 
-#: inc/admin/options-init.php:2844
+#: inc/admin/options-init.php:2845
 msgid ""
 "By default the theme loads scripts that are not minified. You can enable "
 "this setting to instead load minified and combined JS files."
 msgstr ""
 
-#: inc/admin/options-init.php:2854
-msgid "Import / Export"
-msgstr ""
-
-#: inc/admin/options-init.php:2886
+#: inc/admin/options-init.php:2887
+#: inc/admin/redux-templates/panel/header.tpl.php:62
 msgid "Theme Options"
 msgstr ""
 
-#: inc/admin/options-init.php:2887
+#: inc/admin/options-init.php:2888
 #: inc/lib/buddyboss-updater/includes/functions.php:124
 msgid "BuddyBoss Theme"
 msgstr ""
 
-#: inc/admin/options-init.php:2939
+#: inc/admin/options-init.php:2944
 msgid "Follow BuddyBoss on YouTube"
 msgstr ""
 
-#: inc/admin/options-init.php:2944
+#: inc/admin/options-init.php:2949
 msgid "Follow BuddyBoss on Twitter"
 msgstr ""
 
-#: inc/admin/options-init.php:2949
+#: inc/admin/options-init.php:2954
 msgid "Like BuddyBoss on Facebook"
 msgstr ""
 
-#: inc/admin/options-init.php:2959
+#: inc/admin/options-init.php:2964
 msgid ""
 "<p>To access any of your saved options from within your code you can use "
 "your global variable: <strong>$%1$s</strong></p>"
 msgstr ""
 
-#: inc/admin/options-init.php:2961
+#: inc/admin/options-init.php:2966
 msgid ""
 "<p>This text is displayed above the options panel. It isn't required, but "
 "more info is always better! The intro_text field accepts all HTML.</p>"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/footer.tpl.php:58
+#: inc/admin/redux-templates/panel/header-stickybar.tpl.php:22
+msgid "Save Changes"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/footer.tpl.php:62
+#: inc/admin/redux-templates/panel/header-stickybar.tpl.php:26
+msgid "Reset Section"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/footer.tpl.php:63
+#: inc/admin/redux-templates/panel/header-stickybar.tpl.php:27
+msgid "Reset All"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/footer.tpl.php:67
+#: inc/admin/redux-templates/panel/header-stickybar.tpl.php:31
+msgid "Working..."
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header-stickybar.tpl.php:16
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1229
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:313
+#: learndash/ld30/lesson/listing.php:159
+#: learndash/ld30/lesson/partials/row.php:304
+#: learndash/ld30/lesson/partials/row.php:306
+#: learndash/ld30/shortcodes/profile/course-row.php:64
+msgid "Expand"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:11
+#: inc/admin/redux-templates/panel/header.tpl.php:48
+msgid "Developer Mode Enabled"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:20
+msgid "WP_DEBUG is enabled"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:26
+msgid "you are working in a localhost environment"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:31
+msgid "and"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:34
+msgid "This has been automatically enabled because"
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:36
+msgid ""
+"If you are not a developer, your theme/plugin author shipped with developer "
+"mode enabled. Contact them directly to fix it."
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:51
+msgid "The \"forced_dev_mode_off\" argument has been set to true."
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:52
+msgid ""
+"Support options are not available while this argument is enabled.  You will "
+"also need to switch this argument to false before deploying your project.  "
+"If you are a user of this product and you are seeing this message, please "
+"contact the author of this theme/plugin."
+msgstr ""
+
+#: inc/admin/redux-templates/panel/header.tpl.php:57
+msgid "FORCED DEV MODE OFF ENABLED"
 msgstr ""
 
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:72
@@ -4444,30 +4615,30 @@ msgid ""
 "Menu."
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/menu-icons.php:109
+#: inc/plugins/buddyboss-menu-icons/menu-icons.php:110
 msgid ""
 "<p><strong>Menu Icons can't be activated.</strong></p> <p>The BuddyBoss "
 "Themes can't work while Menu Icons plugin is active.</p>"
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/menu-icons.php:136
+#: inc/plugins/buddyboss-menu-icons/menu-icons.php:137
 msgid ""
 "<p>Looks like BuddyBoss Menu Icons was installed via Composer. Please "
 "activate Icon Picker first.</p>"
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/menu-icons.php:179
+#: inc/plugins/buddyboss-menu-icons/menu-icons.php:180
 msgid "deactivate"
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/menu-icons.php:181
+#: inc/plugins/buddyboss-menu-icons/menu-icons.php:182
 msgid ""
 "<p><strong>Menu Icons is deactivate.</strong></p> <p>BuddyBoss Themes can't "
 "work while Menu Icons plugin is active. So Menu Icons is been "
 "deactivated</p>"
 msgstr ""
 
-#: inc/plugins/buddyboss-menu-icons/menu-icons.php:266
+#: inc/plugins/buddyboss-menu-icons/menu-icons.php:267
 msgid "Menu Icons: No registered icon types found."
 msgstr ""
 
@@ -5911,7 +6082,7 @@ msgid "Log In"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php:1518
-#: inc/theme/functions.php:1555 inc/theme/template-functions.php:1469
+#: inc/theme/functions.php:1555 inc/theme/template-functions.php:1497
 #: paid-memberships-pro/pages/account.php:233
 #: template-parts/header-profile-menu.php:518
 msgid "Log Out"
@@ -8822,15 +8993,6 @@ msgstr ""
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1219
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1224
 msgid "Exclamation"
-msgstr ""
-
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1229
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:313
-#: learndash/ld30/lesson/listing.php:159
-#: learndash/ld30/lesson/partials/row.php:304
-#: learndash/ld30/lesson/partials/row.php:306
-#: learndash/ld30/shortcodes/profile/course-row.php:64
-msgid "Expand"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1234
@@ -12004,11 +12166,6 @@ msgstr ""
 msgid "Classic"
 msgstr ""
 
-#: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:147
-#: inc/plugins/elementor/widgets/gallery/bb-gallery.php:520
-msgid "Cover"
-msgstr ""
-
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:173
 msgid "Posts Per Page"
 msgstr ""
@@ -12201,7 +12358,7 @@ msgstr ""
 
 #: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:116
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-activity-template.php:103
-#: learndash/ld30/learndash-sidebar.php:224
+#: learndash/ld30/learndash-sidebar.php:225
 msgid "% Completed"
 msgstr ""
 
@@ -12633,11 +12790,11 @@ msgid "Continue"
 msgstr ""
 
 #: inc/plugins/lifterlms-helper.php:1588
-#: learndash/ld30/learndash-sidebar.php:220
-#: learndash/ld30/learndash-sidebar.php:280
-#: learndash/ld30/learndash-sidebar.php:313
-#: learndash/ld30/learndash-sidebar.php:364
-#: learndash/ld30/learndash-sidebar.php:421
+#: learndash/ld30/learndash-sidebar.php:221
+#: learndash/ld30/learndash-sidebar.php:294
+#: learndash/ld30/learndash-sidebar.php:340
+#: learndash/ld30/learndash-sidebar.php:404
+#: learndash/ld30/learndash-sidebar.php:474
 #: learndash/ld30/shortcodes/course_list_grid_template.php:129
 #: learndash/ld30/shortcodes/course_list_grid_template.php:136
 #: learndash/ld30/shortcodes/profile.php:106
@@ -12919,7 +13076,7 @@ msgid "Create an Account"
 msgstr ""
 
 #: inc/theme/login.php:392 inc/theme/login.php:398
-#: template-parts/content-buddypress.php:20 template-parts/header-aside.php:142
+#: template-parts/content-buddypress.php:20 template-parts/header-aside.php:154
 msgid "Sign in"
 msgstr ""
 
@@ -12931,26 +13088,26 @@ msgstr ""
 msgid "The passwords do not match."
 msgstr ""
 
-#: inc/theme/multi-post-thumbnails.php:63
+#: inc/theme/multi-post-thumbnails.php:64
 msgid ""
 "The 'label' and 'id' values of the 'args' parameter of '%s::%s()' are "
 "required"
 msgstr ""
 
-#: inc/theme/multi-post-thumbnails.php:145
+#: inc/theme/multi-post-thumbnails.php:146
 msgid "Set as %3$s"
 msgstr ""
 
-#: inc/theme/multi-post-thumbnails.php:428
-#: inc/theme/multi-post-thumbnails.php:435
+#: inc/theme/multi-post-thumbnails.php:429
+#: inc/theme/multi-post-thumbnails.php:436
 msgid "Set %s"
 msgstr ""
 
-#: inc/theme/multi-post-thumbnails.php:449
+#: inc/theme/multi-post-thumbnails.php:450
 msgid "Replace image"
 msgstr ""
 
-#: inc/theme/multi-post-thumbnails.php:451
+#: inc/theme/multi-post-thumbnails.php:452
 msgid "Remove %s"
 msgstr ""
 
@@ -13105,11 +13262,11 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: inc/theme/template-functions.php:1626 inc/theme/template-functions.php:1653
+#: inc/theme/template-functions.php:1654 inc/theme/template-functions.php:1681
 msgid "You need to be loggedin."
 msgstr ""
 
-#: inc/theme/template-functions.php:2191
+#: inc/theme/template-functions.php:2219
 msgid "Edit Post Privacy"
 msgstr ""
 
@@ -13552,27 +13709,27 @@ msgstr ""
 msgid "Light Mode"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:141
-#: learndash/ld30/learndash-sidebar.php:406
+#: learndash/ld30/learndash-sidebar.php:142
+#: learndash/ld30/learndash-sidebar.php:446
 #: learndash/ld30/lesson/partials/row.php:45
 #: learndash/ld30/quiz/partials/row.php:32
 msgid "You don't currently have access to this content"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:222
-#: learndash/ld30/learndash-sidebar.php:286
-#: learndash/ld30/learndash-sidebar.php:321
-#: learndash/ld30/learndash-sidebar.php:370
-#: learndash/ld30/learndash-sidebar.php:427
+#: learndash/ld30/learndash-sidebar.php:223
+#: learndash/ld30/learndash-sidebar.php:300
+#: learndash/ld30/learndash-sidebar.php:348
+#: learndash/ld30/learndash-sidebar.php:410
+#: learndash/ld30/learndash-sidebar.php:480
 msgid "Not Completed"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:446
+#: learndash/ld30/learndash-sidebar.php:499
 #: lifterlms/lesson/template-single-lesson-sidebar.php:110
 msgid "Participants"
 msgstr ""
 
-#: learndash/ld30/learndash-sidebar.php:495
+#: learndash/ld30/learndash-sidebar.php:548
 #: lifterlms/lesson/template-single-lesson-sidebar.php:149
 msgid "Show more"
 msgstr ""
@@ -14321,7 +14478,7 @@ msgstr ""
 msgid "View Comments"
 msgstr ""
 
-#: template-parts/header-aside.php:145
+#: template-parts/header-aside.php:157
 msgid "Sign up"
 msgstr ""
 

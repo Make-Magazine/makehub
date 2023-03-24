@@ -115,7 +115,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 				$desktop_logo_dark_info   = array(
 					'slug'     => 'desktop_logo_dark_options_info',
 					'id'       => 'desktop_logo_dark_info',
-					'desc'     => 'Desktop Logo (Dark Mode)',
+					'desc'     => __( 'Desktop Logo (Dark Mode)', 'buddyboss-theme' ),
 					'type'     => 'info',
 					'required' => array( 'logo_switch', 'equals', '1' ),
 				);
@@ -158,7 +158,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 				$mobile_logo_dark_info    = array(
 					'slug'     => 'mobile_logo_dark_options_info',
 					'id'       => 'mobile__logo_dark_info',
-					'desc'     => 'Mobile Logo (Dark Mode)',
+					'desc'     => __( 'Mobile Logo (Dark Mode)', 'buddyboss-theme' ),
 					'type'     => 'info',
 					'required' => array( 'mobile_logo_switch', 'equals', '1' ),
 				);
@@ -209,7 +209,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 					array(
 						'slug' => 'desktop_logo_options_info',
 						'id'   => 'desktop_logo_info',
-						'desc' => 'Desktop Logo',
+						'desc' => __( 'Desktop Logo', 'buddyboss-theme' ),
 						'type' => 'info',
 					),
 					array(
@@ -254,7 +254,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 					array(
 						'slug' => 'mobile_logo_options_info',
 						'id'   => 'mobile_logo_info',
-						'desc' => 'Mobile Logo',
+						'desc' => __( 'Mobile Logo', 'buddyboss-theme' ),
 						'type' => 'info',
 					),
 					array(
@@ -298,7 +298,7 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 					array(
 						'slug' => 'favicon_options_info',
 						'id'   => 'favicon_info',
-						'desc' => 'Site Icon',
+						'desc' => __( 'Site Icon', 'buddyboss-theme' ),
 						'type' => 'info',
 					),
 					array(
@@ -1744,12 +1744,12 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 							'</em>',
 						),
 						'options'  => array(
-							'1' => '1 Column',
-							'2' => '2 Columns',
-							'3' => '3 Columns',
-							'4' => '4 Columns',
-							'5' => '5 Columns',
-							'6' => '6 Columns',
+							'1' => __('1 Column', 'buddyboss-theme' ),
+							'2' => __('2 Column', 'buddyboss-theme' ),
+							'3' => __('3 Column', 'buddyboss-theme' ),
+							'4' => __('4 Column', 'buddyboss-theme' ),
+							'5' => __('5 Column', 'buddyboss-theme' ),
+							'6' => __('6 Column', 'buddyboss-theme' ),
 						),
 						'default'  => '4',
 						'required' => array( 'footer_widgets', 'equals', '1' ),
@@ -2193,8 +2193,8 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 							'title'    => esc_html__( 'Forum Grids', 'buddyboss-theme' ),
 							'subtitle' => esc_html__( 'Set forum grid layouts to Card or Cover style.', 'buddyboss-theme' ),
 							'options'  => array(
-								'card'  => 'Card',
-								'cover' => 'Cover',
+								'card'  => esc_html__( 'Card', 'buddyboss-theme' ),
+								'cover' => esc_html__( 'Cover', 'buddyboss-theme' ),
 							),
 							'default'  => 'card',
 						),
@@ -2239,13 +2239,14 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 							'required'      => array( 'bbpress_banner_switch', 'equals', '1' ),
 						),
 						array(
-							'id'       => 'bbpress_banner_text',
-							'type'     => 'color',
-							'title'    => esc_html__( 'Banner Text Color', 'buddyboss-theme' ),
-							'subtitle' => esc_html__( 'Select text color for banner area.', 'buddyboss-theme' ),
-							'default'  => '#ffffff',
-							'validate' => 'color',
-							'required' => array( 'bbpress_banner_switch', 'equals', '1' ),
+							'id'          => 'bbpress_banner_text',
+							'type'        => 'color',
+							'title'       => esc_html__( 'Banner Text Color', 'buddyboss-theme' ),
+							'subtitle'    => esc_html__( 'Select text color for banner area.', 'buddyboss-theme' ),
+							'default'     => '#ffffff',
+							'validate'    => 'color',
+							'required'    => array( 'bbpress_banner_switch', 'equals', '1' ),
+							'transparent' => false,
 						),
 						array(
 							'id'       => 'bbpress_banner_title',
@@ -2932,6 +2933,10 @@ if ( ! class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 				// Disable the footer credit of Redux. Please leave if you can help it.
 				'output_location'      => array( 'frontend', 'login' ),
 				// For enqueue font and css for front side and login.
+
+				// Updated template path to perform translation.
+				// @todo Update the template path here when update the redux core.
+				'templates_path'       => dirname( __FILE__ ) . '/redux-templates/panel/'
 			);
 			// SOCIAL ICONS -> Setup custom links in the footer for quick links in your panel footer icons.
 			$this->args['share_icons'][] = array(
