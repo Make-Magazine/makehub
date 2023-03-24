@@ -1969,10 +1969,10 @@ function bb_notification_read_for_moderated_members() {
 	if(!empty($notification_ids)){
 		$update_query = "UPDATE {$bp->notifications->table_name} SET `is_new` = 0 WHERE id IN ( " . 
 		implode(",", $notification_ids).")";
-		$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, 	
+		$wpdb->query( $update_query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 	}
+
 	
-	WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 	// Clear notifications cache.
 	if (
