@@ -13,8 +13,9 @@ $export_csv  = (isset($_GET['export_csv'])?TRUE:FALSE);
 
 //sql query to retrieve transactions
 $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, status, created_at, 
-        (select post_title from wp_posts where wp_posts.ID=coupon_id) as coupon_name,
-        expires_at,
+            (select meta_value from wp_mepr_transaction_meta where meta_key="_gift_status" and transaction_id=wp_mepr_transactions.ID limit 1) as gift_status,
+            (select post_title from wp_posts where wp_posts.ID=coupon_id) as coupon_name,
+            expires_at,
             (select post_title from wp_posts where wp_posts.ID=product_id) as product_name,
             (select meta_value from wp_usermeta where wp_usermeta.user_id =wp_mepr_transactions.user_id  and meta_key = "first_name" limit 1) as first_name,
             (select meta_value from wp_usermeta where wp_usermeta.user_id =wp_mepr_transactions.user_id  and meta_key = "last_name" limit 1) as last_name,
@@ -51,8 +52,8 @@ if($export_csv){
     $file = fopen('php://output', 'w');
 
     // send the column headers
-    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Created At', 'Expires',
-                         'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country'));
+    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Gift Status', 'Created At', 
+                         'Expires', 'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country'));
 
     //send the data
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -62,8 +63,9 @@ if($export_csv){
         $state = ($row['customer_state']!=''?$row['customer_state']:$row['mepr_address_state']);
         $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
         $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
+        $giftStatus = ($row['gift_status']!='NULL'?$row['gift_status']:'');
         $output = array($row['ID'],$row['status'],$row['product_name'],
-                        $row['amount'], $row['coupon_name'], $row['created_at'],$row['expires_at'],
+                        $row['amount'], $row['coupon_name'], $giftStatus,$row['created_at'],$row['expires_at'],
                         $row['user_id'],
                         $row['first_name'] . ' '.$row['last_name'],
                         $row['user_email'],
@@ -132,6 +134,7 @@ if($export_csv){
                     <!-- Transaction information -->
                     <td>Amount</td>
                     <td>Coupon</td>
+                    <td>Gift Status</td>
                     <td>Created At</td>
                     <td>Expires</td>
                     <td>User ID</td>
@@ -150,6 +153,7 @@ if($export_csv){
                     $state = ($row['customer_state']!=''?$row['customer_state']:$row['mepr_address_state']);
                     $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
                     $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
+                    $giftStatus = ($row['gift_status']!='NULL'?$row['gift_status']:'');
                     ?>
                     <tr>
                         <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
@@ -157,6 +161,7 @@ if($export_csv){
                         <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
                         <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
                         <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
+                        <td tabindex=<?php echo $tabIndex+4?>><?php echo $giftStatus;?></td>
                         <td tabindex=<?php echo $tabIndex+5;?>><?php echo $row['created_at']?></td>
                         <td tabindex=<?php echo $tabIndex+6;?>><?php echo $row['expires_at']?></td>
                         <!--User information -->
@@ -178,6 +183,7 @@ if($export_csv){
                 ?>
             </tbody>
         </table>
+        <br/><br/>
     </body>
 </html>
 <?php } ?>
