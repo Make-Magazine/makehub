@@ -268,7 +268,7 @@ class BP_Zoom_Group {
 		$group_id = bp_is_group() ? bp_get_current_group_id() : false;
 
 		$zoom_web_meeting = filter_input( INPUT_GET, 'wm', FILTER_VALIDATE_INT );
-		$meeting_id       = filter_input( INPUT_GET, 'mi', FILTER_SANITIZE_STRING );
+		$meeting_id       = bb_pro_filter_input_string( INPUT_GET, 'mi' );
 
 		// Check access before starting web meeting.
 		if ( ! empty( $meeting_id ) && 1 === $zoom_web_meeting ) {
@@ -295,7 +295,7 @@ class BP_Zoom_Group {
 			add_action( 'wp_footer', 'bp_zoom_pro_add_zoom_web_meeting_append_div' );
 		}
 
-		$webinar_id = filter_input( INPUT_GET, 'wi', FILTER_SANITIZE_STRING );
+		$webinar_id = bb_pro_filter_input_string( INPUT_GET, 'wi' );
 
 		// Check access before starting web meeting.
 		if ( ! empty( $webinar_id ) && 1 === $zoom_web_meeting ) {
@@ -678,7 +678,7 @@ class BP_Zoom_Group {
 				</div>
 
 				<div class="bb-field-wrap">
-					<label for="bp-group-zoom-api-webhook-token" class="group-setting-label"><?php esc_html_e( 'Verification Token', 'buddyboss-pro' ); ?></label>
+					<label for="bp-group-zoom-api-webhook-token" class="group-setting-label"><?php esc_html_e( 'Security Token', 'buddyboss-pro' ); ?></label>
 
 					<div class="bp-input-wrap">
 						<input type="text" name="bp-group-zoom-api-webhook-token" id="bp-group-zoom-api-webhook-token" class="zoom-group-instructions-main-input" value="<?php echo esc_attr( $webhook_token ); ?>"/>
@@ -720,7 +720,7 @@ class BP_Zoom_Group {
 									<li class="selected"><a href="#step-1"><?php esc_html_e( 'Zoom Login', 'buddyboss-pro' ); ?></a></li>
 									<li><a href="#step-2"><?php esc_html_e( 'Create App', 'buddyboss-pro' ); ?></a></li>
 									<li><a href="#step-3"><?php esc_html_e( 'App Credentials', 'buddyboss-pro' ); ?></a></li>
-									<li><a href="#step-4"><?php esc_html_e( 'Verification Token', 'buddyboss-pro' ); ?></a></li>
+									<li><a href="#step-4"><?php esc_html_e( 'Security Token', 'buddyboss-pro' ); ?></a></li>
 									<li><a href="#step-5"><?php esc_html_e( 'Finish', 'buddyboss-pro' ); ?></a></li>
 								</ul>
 							</div> <!-- .bp-step-nav -->
@@ -808,12 +808,12 @@ class BP_Zoom_Group {
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-events_3.png' ) ); ?>" />
 										<p><?php esc_html_e( 'Click "Done" to close the popup. In the "Event Subscriptions" box, click "Save".', 'buddyboss-pro' ); ?></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-event_save.png' ) ); ?>" />
-										<p><?php esc_html_e( 'You should now see a "Verification Token" created at the top of the page. Click "Copy" and then paste the token into the Verification Token field at the bottom of this form. You\'re almost done!', 'buddyboss-pro' ); ?></p>
+										<p><?php esc_html_e( 'You should now see a "Security Token" created at the top of the page. Click "Copy" and then paste the token into the Security Token field at the bottom of this form. You\'re almost done!', 'buddyboss-pro' ); ?></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-token.png' ) ); ?>" />
 
 										<div class="bb-group-zoom-settings-container">
 											<div class="bb-field-wrap">
-												<label for="bp-group-zoom-api-webhook-token-popup" class="group-setting-label"><?php esc_html_e( 'Verification Token', 'buddyboss-pro' ); ?></label>
+												<label for="bp-group-zoom-api-webhook-token-popup" class="group-setting-label"><?php esc_html_e( 'Security Token', 'buddyboss-pro' ); ?></label>
 												<div class="bp-input-wrap">
 													<input type="text" name="bp-group-zoom-api-webhook-token-popup" class="zoom-group-instructions-cloned-input" value="<?php echo esc_attr( $webhook_token ); ?>">
 												</div>
@@ -896,7 +896,7 @@ class BP_Zoom_Group {
 			return;
 		}
 
-		$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
+		$nonce = bb_pro_filter_input_string( INPUT_POST, '_wpnonce' );
 
 		// Admin Nonce check.
 		if ( is_admin() ) {
@@ -910,11 +910,11 @@ class BP_Zoom_Group {
 		global $wpdb, $bp;
 
 		$edit_zoom     = filter_input( INPUT_POST, 'bp-edit-group-zoom', FILTER_VALIDATE_INT );
-		$manager       = filter_input( INPUT_POST, 'bp-group-zoom-manager', FILTER_SANITIZE_STRING );
-		$api_key       = filter_input( INPUT_POST, 'bp-group-zoom-api-key', FILTER_SANITIZE_STRING );
-		$api_secret    = filter_input( INPUT_POST, 'bp-group-zoom-api-secret', FILTER_SANITIZE_STRING );
+		$manager       = bb_pro_filter_input_string( INPUT_POST, 'bp-group-zoom-manager' );
+		$api_key       = bb_pro_filter_input_string( INPUT_POST, 'bp-group-zoom-api-key' );
+		$api_secret    = bb_pro_filter_input_string( INPUT_POST, 'bp-group-zoom-api-secret' );
 		$api_email     = filter_input( INPUT_POST, 'bp-group-zoom-api-email', FILTER_VALIDATE_EMAIL );
-		$webhook_token = filter_input( INPUT_POST, 'bp-group-zoom-api-webhook-token', FILTER_SANITIZE_STRING );
+		$webhook_token = bb_pro_filter_input_string( INPUT_POST, 'bp-group-zoom-api-webhook-token' );
 
 		$edit_zoom = ! empty( $edit_zoom ) ? true : false;
 		$manager   = ! empty( $manager ) ? $manager : bp_zoom_group_get_manager( $group_id );
@@ -2198,18 +2198,14 @@ class BP_Zoom_Group {
 			if ( ! empty( $group_id ) && 0 < $group_id && bp_zoom_is_group_setup( $group_id ) && ! empty( groups_get_group( $group_id ) ) ) {
 				$content = file_get_contents( 'php://input' );
 				$json    = json_decode( $content, true );
-				$token   = false;
-
-				foreach ( getallheaders() as $header_name => $header_value ) {
-					if ( 'Authorization' === $header_name ) {
-						$token = $header_value;
-						break;
-					}
-				}
 
 				$group_token = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-webhook-token', true );
 
-				if ( empty( trim( $group_token ) ) || trim( $group_token ) !== trim( $token ) ) {
+				if ( ! empty( $json['event'] ) && 'endpoint.url_validation' === $json['event'] && ! empty( $json['payload']['plainToken'] ) ) {
+					$this->zoom_url_validate( $json, $group_token );
+				}
+
+				if ( empty( trim( $group_token ) ) ) {
 					$this->forbid( 'No token detected' );
 					exit;
 				}
@@ -2464,6 +2460,31 @@ class BP_Zoom_Group {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Validate zoom webhook URL.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param array  $parameters Webhook validate API request params.
+	 * @param string $group_token zoom api webhook token.
+	 */
+	public function zoom_url_validate( $parameters, $group_token ) {
+		$plain_token     = $parameters['payload']['plainToken'];
+		$encrypted_token = hash_hmac( 'sha256', $plain_token, $group_token );
+		$retval = array(
+			'plainToken'     => $plain_token,
+			'encryptedToken' => $encrypted_token,
+		);
+
+		// setup status code.
+		http_response_code( 200 );
+
+		echo json_encode( $retval );
+
+		// stop executing.
+		exit;
 	}
 
 	/**

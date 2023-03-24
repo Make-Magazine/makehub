@@ -542,7 +542,7 @@ class BP_Zoom_Meeting {
 			)
 		);
 
-		$this->start_date_utc = mysql_to_rfc3339( $this->start_date_utc );
+		$this->start_date_utc = mysql_to_rfc3339( $this->start_date_utc ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
 
 		/**
 		 * Fires before the current meeting item gets saved.

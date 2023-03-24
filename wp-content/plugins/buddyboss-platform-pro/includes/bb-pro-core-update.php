@@ -141,6 +141,11 @@ function bbp_pro_version_updater() {
 		if ( $raw_db_version < 255 ) {
 			bbp_pro_update_to_2_2_1_2();
 		}
+
+		// Version 2.3.0.
+		if ( $raw_db_version < 265 ) {
+			bbp_pro_update_to_2_3_0();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -212,4 +217,38 @@ function bbp_pro_update_to_2_2_1_2() {
 	delete_site_transient( 'bb_updates_bp-loader' );
 	delete_site_transient( 'bb_updates_buddyboss-theme' );
 	delete_site_transient( 'bb_updates_buddyboss-platform-pro' );
+}
+
+/**
+ * Update migration for version 2.3.0
+ *
+ * @since 2.3.0
+ */
+function bbp_pro_update_to_2_3_0() {
+	global $wpdb;
+
+	$group_meta_table = $wpdb->base_prefix . 'bp_groups_groupmeta';
+
+	$groupmeta_table_exists = (bool) $wpdb->get_results( "DESCRIBE {$group_meta_table};" ); // phpcs:ignore
+
+	if ( true === $groupmeta_table_exists ) {
+
+		// get all group ids with meta key exists.
+		$group_ids = array_column(
+			// phpcs:ignore
+			$wpdb->get_results(
+				$wpdb->prepare( "SELECT DISTINCT group_id FROM {$group_meta_table} WHERE `meta_key` = %s", 'bp-group-zoom-api-webhook-token' )
+			),
+			'group_id'
+		);
+
+		// Delete mata key that not used anymore.
+		$wpdb->query( "DELETE FROM {$group_meta_table} WHERE `meta_key` = 'bp-group-zoom-api-webhook-token'" ); // phpcs:ignore
+
+		// Update group cache data.
+		if ( function_exists( 'bp_groups_update_meta_cache' ) && ! empty( $group_ids ) ) {
+			bp_groups_update_meta_cache( $group_ids );
+		}
+	}
+
 }

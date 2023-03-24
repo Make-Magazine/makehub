@@ -48,15 +48,59 @@ abstract class BB_Access_Control_Abstract {
 	public function has_access( $user_id = 0, $settings_data = array(), $threaded = false ) {
 
 		$has_access = null;
-		if ( empty( $settings_data ) || empty( $settings_data['access-control-options'] ) || ( 0 !== $user_id && bp_user_can( $user_id, 'bp_moderate' ) ) || bp_current_user_can( 'bp_moderate' ) ) {
+		if (
+			(
+				empty( $settings_data ) ||
+				empty( $settings_data['access-control-options'] ) ||
+				(
+					0 !== $user_id &&
+					bp_user_can( $user_id, 'bp_moderate' ) &&
+					get_current_user_id() === $user_id
+				) ||
+				bp_current_user_can( 'bp_moderate' )
+			)
+		) {
 			$has_access = true;
-		} elseif ( ( ! empty( $settings_data['access-control-type'] ) && ( ! empty( $settings_data['plugin-access-control-type'] ) || ! empty( $settings_data['gamipress-access-control-type'] ) ) && ! empty( $settings_data['access-control-options'] ) ) && ! bbp_pro_is_license_valid() ) {
+		} elseif (
+			(
+				! empty( $settings_data['access-control-type'] ) &&
+				(
+					! empty( $settings_data['plugin-access-control-type'] ) ||
+					! empty( $settings_data['gamipress-access-control-type'] )
+				) &&
+				! empty( $settings_data['access-control-options'] )
+			) &&
+			! bbp_pro_is_license_valid()
+		) {
 			$has_access = false;
-		} elseif ( ( ! empty( $settings_data['access-control-type'] ) && ( ! empty( $settings_data['plugin-access-control-type'] ) || ! empty( $settings_data['gamipress-access-control-type'] ) ) && empty( $settings_data['access-control-options'] ) ) && bbp_pro_is_license_valid() ) {
+		} elseif (
+			(
+				! empty( $settings_data['access-control-type'] ) &&
+				(
+					! empty( $settings_data['plugin-access-control-type'] ) ||
+					! empty( $settings_data['gamipress-access-control-type'] )
+				) &&
+				empty( $settings_data['access-control-options'] )
+			) &&
+			bbp_pro_is_license_valid()
+		) {
 			$has_access = true;
-		} elseif ( ( ! empty( $settings_data['access-control-type'] ) && ( ! empty( $settings_data['plugin-access-control-type'] ) || ! empty( $settings_data['gamipress-access-control-type'] ) ) && empty( $settings_data['access-control-options'] ) ) && ! bbp_pro_is_license_valid() ) {
+		} elseif (
+			(
+				! empty( $settings_data['access-control-type'] ) &&
+				(
+					! empty( $settings_data['plugin-access-control-type'] ) ||
+					! empty( $settings_data['gamipress-access-control-type'] )
+				) &&
+				empty( $settings_data['access-control-options'] )
+			) &&
+			! bbp_pro_is_license_valid()
+		) {
 			$has_access = true;
-		} elseif ( ! $user_id || ! bbp_pro_is_license_valid() ) {
+		} elseif (
+			! $user_id ||
+			! bbp_pro_is_license_valid()
+		) {
 			$has_access = false;
 		}
 

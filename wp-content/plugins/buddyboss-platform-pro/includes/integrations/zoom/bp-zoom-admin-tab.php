@@ -86,8 +86,8 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since 1.0.0
 	 */
 	public function settings_save() {
-		$bp_zoom_api_key    = filter_input( INPUT_POST, 'bp-zoom-api-key', FILTER_SANITIZE_STRING );
-		$bp_zoom_api_secret = filter_input( INPUT_POST, 'bp-zoom-api-secret', FILTER_SANITIZE_STRING );
+		$bp_zoom_api_key    = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-api-key' );
+		$bp_zoom_api_secret = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-api-secret' );
 		$bp_zoom_api_email  = filter_input( INPUT_POST, 'bp-zoom-api-email', FILTER_VALIDATE_EMAIL );
 
 		if ( ! empty( $bp_zoom_api_secret ) && ! empty( $bp_zoom_api_key ) && ! empty( $bp_zoom_api_email ) ) {

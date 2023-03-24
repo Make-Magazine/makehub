@@ -422,7 +422,7 @@ function bb_pro_onesignal_update_device_info() {
 	}
 
 	$user_id         = filter_input( INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT );
-	$player_id       = filter_input( INPUT_POST, 'player_id', FILTER_SANITIZE_STRING );
+	$player_id       = bb_pro_filter_input_string( INPUT_POST, 'player_id' );
 	$active          = filter_input( INPUT_POST, 'active', FILTER_VALIDATE_BOOLEAN );
 	$update_via_curl = filter_input( INPUT_POST, 'update_via_curl', FILTER_VALIDATE_BOOLEAN );
 	$auth_key        = bb_onesignal_auth_key();

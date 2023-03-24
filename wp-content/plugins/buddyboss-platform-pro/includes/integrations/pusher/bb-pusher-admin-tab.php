@@ -89,8 +89,8 @@ class BB_Pusher_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since 2.1.6
 	 */
 	public function settings_save() {
-		$bb_pusher_app_cluster    = filter_input( INPUT_POST, 'bb-pusher-app-cluster', FILTER_SANITIZE_STRING );
-		$bb_pusher_custom_cluster = filter_input( INPUT_POST, 'bb-pusher-app-custom-cluster', FILTER_SANITIZE_STRING );
+		$bb_pusher_app_cluster    = bb_pro_filter_input_string( INPUT_POST, 'bb-pusher-app-cluster' );
+		$bb_pusher_custom_cluster = bb_pro_filter_input_string( INPUT_POST, 'bb-pusher-app-custom-cluster' );
 
 		if ( 'custom' === $bb_pusher_app_cluster && ! empty( $bb_pusher_custom_cluster ) ) {
 			bp_update_option( 'bb-pusher-app-custom-cluster', $bb_pusher_custom_cluster );

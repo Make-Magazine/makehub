@@ -151,14 +151,14 @@ function bb_onesignal_web_push_setting_fields_save( $current_tab ) {
 		return;
 	}
 
-	$bb_onesignal_permission_validate = filter_input( INPUT_POST, 'bb-onesignal-permission-validate', FILTER_SANITIZE_STRING );
+	$bb_onesignal_permission_validate = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-permission-validate' );
 	$bb_onesignal_request_permission  = filter_input( INPUT_POST, 'bb-onesignal-request-permission', FILTER_VALIDATE_BOOLEAN );
 	if ( $bb_onesignal_request_permission ) {
 		bp_update_option( 'bb-onesignal-permission-validate', $bb_onesignal_permission_validate );
 	}
 
-	$bb_onesignal_allow_button  = filter_input( INPUT_POST, 'bb-onesignal-enable-soft-prompt-allow-button', FILTER_SANITIZE_STRING );
-	$bb_onesignal_cancel_button = filter_input( INPUT_POST, 'bb-onesignal-enable-soft-prompt-cancel-button', FILTER_SANITIZE_STRING );
+	$bb_onesignal_allow_button  = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-enable-soft-prompt-allow-button' );
+	$bb_onesignal_cancel_button = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-enable-soft-prompt-cancel-button' );
 
 	bp_update_option( 'bb-onesignal-enable-soft-prompt-allow-button', $bb_onesignal_allow_button );
 	bp_update_option( 'bb-onesignal-enable-soft-prompt-cancel-button', $bb_onesignal_cancel_button );
@@ -424,6 +424,9 @@ function bb_onesignal_manage_web_push_notification( $retval, $notification ) {
 				'bb_activity_following_post',
 				'bb_groups_subscribed_activity',
 				'bb_groups_subscribed_discussion',
+				'bb_forums_subscribed_reply',
+				'bb_forums_subscribed_discussion',
+				'bbp_new_reply',
 			),
 			true
 		) &&

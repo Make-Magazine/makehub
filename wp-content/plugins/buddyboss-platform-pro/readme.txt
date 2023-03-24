@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 6.1.1
 Requires PHP: 5.6.20
-Stable tag: 2.2.9
+Stable tag: 2.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,15 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 2.3.0 =
+* Member Access Controls - Handled message permission issues from members on the network to the administrator
+* OneSignal - Small improvements to not trigger multiple Web Push notifications for forum discussion and reply when members are mentioned
+* Zoom - Small zoom integration update for the social group by replacing the deprecated 'verification token' field in the settings with 'security token'
+* Zoom - Handled gutenberg block timezone sync issue with the zoom dashboard
+* Zoom - Handled group reminder email for zoom meeting/webinar is missing join link issue
+* Coding Standards - Significant code refactoring to fix PHP 8 warnings and notices
+* Coding Standards - Significant code refactoring to fix PHP 8.2 deprecation errors, warnings, and notices
 
 = 2.2.9 =
 * Moderation - Small pusher compatibility update for private messages new moderation workflow

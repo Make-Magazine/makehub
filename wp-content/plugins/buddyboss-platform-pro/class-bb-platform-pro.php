@@ -13,6 +13,7 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 	 * @class BB_Platform_Pro
 	 * @version 1.0.0
 	 */
+	#[\AllowDynamicProperties]
 	final class BB_Platform_Pro {
 
 		/**
@@ -115,8 +116,8 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		 * @since 1.0.0
 		 */
 		private function setup_globals() {
-			$this->version        = '2.2.9';
-			$this->db_version     = 255;
+			$this->version        = '2.3.0';
+			$this->db_version     = 265;
 			$this->db_version_raw = (int) bp_get_option( '_bbp_pro_db_version' );
 
 			// root directory.
