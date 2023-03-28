@@ -584,21 +584,6 @@ section.llms-instructor-info .llms-author .name {
   display: none;
 }
 
-.bb-sfwd-aside .site-header {
-  width: 100%;
-  z-index: 610;
-  -webkit-transition: all .2s;
-          transition: all .2s;
-}
-
-@media screen and (min-width: 800px) {
-  .bb-buddypanel.buddypanel-open.bb-sfwd-aside .site-header:not(.site-header--elementor) {
-    width: -webkit-calc(100% - 230px);
-    width: calc(100% - 230px);
-    -webkit-transition: all .2s;
-            transition: all .2s;
-  }
-}
 @media screen and (max-width: 544px) {
   .llms-course-navigation .llms-course-nav {
     width: 100%;
@@ -857,8 +842,8 @@ section.llms-instructor-info .llms-author .name {
   line-height: 16px;
   text-align: center;
   font-weight: 300;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
   position: absolute;
   left: -10px;
   top: 15px;
@@ -1181,8 +1166,7 @@ section.llms-instructor-info .llms-author .name {
 .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke {
   stroke: #939597;
 }
-.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-fill,
-.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke.ql-fill {
+.llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-fill, .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-snow .ql-stroke.ql-fill {
   fill: #939597;
 }
 .llms-quiz-ui .llms-question-wrapper.type--long_answer .llms-aq-long-answer .ql-toolbar.ql-snow {
@@ -1396,18 +1380,6 @@ section.llms-instructor-info .llms-author .name {
     margin-bottom: 20px !important;
   }
 }
-.llms-pa-posts.llms-pa-posts--single .llms-pa-discussion-list .llms_pa_post_comment.llms-pa-read:after,
-.nf-form-wrap .nf-form-content .nf-field-element input[type=button],
-.frm_submit button,
-.llms-button-action.clicked,
-.llms-button-primary.clicked,
-.llms-quiz-ui .llms-question-wrapper.type--scale .llms-aq-scale .llms-aq-scale-range .llms-aq-scale-radio input[type="radio"]:checked + .llms-aq-scale-button,
-.llms-quiz-ui .llms-question-wrapper.type--scale .llms-aq-scale .llms-aq-scale-range .llms-aq-scale-radio .llms-aq-scale-button:hover,
-.llms-pointer.llms-inner .lifterlms-lesson-nav .lifterlms_next_prev_link a:hover,
-.lifter-sidebar-widgets li.widget a.button:not(.logout-link):hover {
-  background-color: var(--bb-primary-color);
-}
-
 .llms-checkout.llms-checkout-cols-2 {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -2987,7 +2959,6 @@ body:not(.has-sidebar) .llms-student-dashboard:not(.dashboard) .llms-sd-notifica
       -ms-flex-pack: center;
           justify-content: center;
   font-size: 16px;
-  color: var(--bb-headings-color);
 }
 .single-course.llms-pointer .llms-instructor-info .llms-author-holder .llms-author-number-courses {
   font-size: 14px;
@@ -3748,13 +3719,6 @@ body:not(.has-sidebar) .llms-student-dashboard:not(.dashboard) .llms-sd-notifica
   background-color: var(--bb-primary-color);
 }
 
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-lesson-preview.is-incomplete .llms-lesson-link:after,
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-lesson-preview.is-complete .llms-lesson-preview.llms-quizz-preview.is-incomplete .llms-lesson-link:after,
-.llms-pointer.llms-inner .llms-lesson-link-locked:after,
-.llms-loop-item.course .llms-pa-permalink {
-  border-color: var(--bb-headings-color);
-}
-
 .status-in-progress {
   background: var(--bb-primary-color);
   color: #fff;
@@ -3933,10 +3897,6 @@ body:not(.single-sfwd-courses) .bb-single-course-sidebar .bb-course-member-wrap 
     width: 100%;
   }
 }
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-quizz-preview .llms-lesson-link h5 {
-  color: var(--bb-headings-color);
-}
-
 body:not(.bb-dark-theme).llms-pointer.llms-inner .sfwd-light-mode {
   display: none;
 }
@@ -4133,8 +4093,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button {
   margin-left: 0px;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button.ld-button-alternate {
   -webkit-transform: rotate(-90deg);
@@ -4162,8 +4122,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
   line-height: 16px;
   text-align: center;
   font-weight: bold;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-pointer.llms-inner .llms-lesson-preview .ld-item-details .ld-expand-button .ld-icon-arrow-down:before {
   content: "\e861";
@@ -5182,8 +5142,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button {
   margin-left: 18px;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button.ld-button-alternate {
   -webkit-transform: rotate(-90deg);
@@ -5211,8 +5171,8 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
   line-height: 16px;
   text-align: center;
   font-weight: bold;
-  -webkit-transition: color .3s ease, background .3s ease;
-  transition: color .3s ease, background .3s ease;
+  -webkit-transition: color .3s ease,background .3s ease;
+  transition: color .3s ease,background .3s ease;
 }
 .llms-syllabus-wrapper .ld-item-details .ld-expand-button .ld-icon-arrow-down:before {
   content: "\e861";
@@ -5247,10 +5207,6 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 .single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p,
 .single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p {
   margin-bottom: 1.5rem;
-}
-.single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p a,
-.single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p a {
-  color: var(--bb-headings-color);
 }
 .single-llms_assignment #lifterlms-page-content .lifterlms_content_wrap p.llms-error a,
 .single-llms_quiz #lifterlms-page-content .lifterlms_content_wrap p.llms-error a {
@@ -5355,40 +5311,6 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 }
 .llms-pointer.llms-inner .llms-course-navigation .llms-tooltip.show:after {
   display: none;
-}
-
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper .llms-lesson-link:hover .llms-main h5,
-.llms-pointer.llms-inner .lifterlms-lessions-list .llms-syllabus-wrapper-quizzes .llms-quizz-preview .llms-lesson-link:hover h5,
-.llms-pointer.llms-inner .llms-lesson-preview.llms-quizz-preview:hover .llms-lesson-link h5,
-.llms-syllabus-wrapper .llms-lesson-preview.llms-quizz-preview:hover .llms-lesson-link h5,
-.llms-syllabus-wrapper .llms-lesson-preview .llms-lesson-link:hover .llms-lesson-title,
-.bb-llms-content-wrap .llms-syllabus-wrapper .llms-lesson-preview .llms-lesson-link:hover .llms-extra .llms-lesson-counter,
-.single-course.llms-pointer .llms-instructor-info .llms-author-holder a:hover .llms-author-info.name,
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .llms-quiz-attempt-question-header:hover h3.llms-question-title,
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .llms-quiz-attempt-question-header:hover .toggle-answer:before,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-meta strong a:hover,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-title a:hover,
-.llms-loop-item-content .llms-loop-title:hover,
-.llms-widget-syllabus .lesson-title a:hover,
-.llms-widget-syllabus .lesson-title.done a:hover,
-.llms-syllabus-wrapper .llms-lesson-main .llms-lesson-holder .llms-lesson-link:hover .llms-main h5 {
-  color: var(--bb-primary-color);
-}
-
-.llms-pa-posts.llms-pa-posts--single .llms-pa-discussion-list .llms_pa_post_comment.llms-pa-read:after,
-.llms-pa-posts.llms-pa-posts--single #llms-pa-post-discussion-form .llms-form-field.type-submit #llms_pa_leave_comment,
-.nf-form-wrap .nf-form-content .nf-field-element input[type=button] {
-  border-color: var(--bb-primary-color);
-}
-
-.single-llms_quiz.llms-pointer #lifterlms-page-content .lifterlms_content_wrap p:not(.llms-error) a,
-.post-type-archive-course.llms-pointer .bb-course-items .bb-course-item-wrap .bb-cover-list-item .bb-card-course-details .bb-course-meta strong a {
-  color: var(--bb-headings-color);
-}
-
-.single-lesson.llms-pointer #lifterlms-page-content #lifterlms-lesson-header .lifterlms-header-instructor .bb-about-instructor > .flex .bb-content-wrap h5 .bb-about-instructor-date::before,
-.single-llms_quiz.llms-pointer #lifterlms-page-content #lifterlms-lesson-header .lifterlms-header-instructor .bb-about-instructor > .flex .bb-content-wrap h5 .bb-about-instructor-date::before {
-  background-color: var(--bb-alternate-text-color);
 }
 
 .tax-course_track footer.footer-bottom,
@@ -5588,20 +5510,6 @@ body.llms-pointer.llms-inner.buddypanel-open:not(.buddypanel-header) .site-heade
 
 .bb-course-items .bb-course-cover--videoTile {
   background-color: var(--bb-cover-image-background-color);
-  border-radius: var(--bb-block-radius) var(--bb-block-radius) 0 0;
-}
-.bb-course-items .bb-course-cover--videoTile iframe {
-  border-radius: var(--bb-block-radius) var(--bb-block-radius) 0 0;
-}
-.bb-course-items.list-view .bb-course-cover--videoTile {
-  border-radius: var(--bb-block-radius) 0 0 var(--bb-block-radius);
-}
-.bb-course-items.list-view .bb-course-cover--videoTile iframe {
-  border-radius: var(--bb-block-radius) 0 0 var(--bb-block-radius);
-}
-.entry-content .bb-course-items .bb-course-cover--videoTile .fluid-width-video-wrapper {
-  margin-top: 0;
-  margin-bottom: 0;
 }
 
 .bb-course-items.grid-view .bb-course-item-wrap {
@@ -7093,8 +7001,6 @@ body div.wpforms-container-full .wpforms-form button[type=submit]:hover {
   text-decoration: none;
   color: #fff;
   box-shadow: inset 0 0 0 99999px rgba(0, 0, 0, 0.1);
-  background-color: var(--bb-primary-color);
-  border-color: var(--bb-primary-color);
 }
 
 .single-lesson.llms-pointer #lifterlms-page-content .lifterlms_content_wrap .wpforms-confirmation-container-full,
@@ -7110,11 +7016,6 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 body .wpforms-confirmation-container-full p,
 body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-redirection-message) p {
   margin: 0.5rem 0;
-}
-
-body .wpforms-confirmation-container-full,
-body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-redirection-message) {
-  border-color: var(--bb-primary-color);
 }
 
 .frm_forms .frm_form_fields fieldset {
@@ -7315,11 +7216,6 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
   margin-bottom: 0px;
 }
 
-.lifterlms .llms-sd-items .llms-sd-item:hover a,
-.llms-widget-syllabus .lesson-complete-placeholder.done {
-  color: var(--bb-primary-color);
-}
-
 .nf-form-wrap .nf-form-content .nf-field-element select,
 .nf-form-wrap .nf-form-content .nf-field-element select.ninja-forms-field:not([multiple]) {
   -webkit-appearance: none;
@@ -7363,8 +7259,8 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 .llms-print-certificate .back_to_home_page {
   font-size: 14px;
 }
-.llms-print-certificate button i {
-  font-size: 18px;
+.llms-print-certificate .llms-button-secondary:focus, .llms-print-certificate .llms-button-secondary:active {
+  color: #fff;
 }
 .llms-print-certificate .back_to_home_page {
   padding-top: 10px;
@@ -8475,10 +8371,6 @@ ul.llms-payment-gateways li:last-child:after {
   opacity: 1;
 }
 
-.llms-pointer.llms-inner.bb-dark-theme {
-  /* Header statrs */
-  /* Header Ends */
-}
 .llms-pointer.llms-inner.bb-dark-theme .buddypanel {
   background-color: #121212;
 }
@@ -8491,18 +8383,15 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme .buddypanel .panel-head .bb-toggle-panel:hover {
   color: #aaa;
 }
-.llms-pointer.llms-inner.bb-dark-theme .bb-mobile-panel-inner .side-panel-menu .sub-menu {
-  background: #121212;
-}
-.llms-pointer.llms-inner.bb-dark-theme .bb-mobile-panel-inner .side-panel-menu a > i {
-  color: #fff;
+.llms-pointer.llms-inner.bb-dark-theme .buddypanel-menu > li > a.bb-menu-item:hover > i {
+  color: #1c1c1c;
 }
 .llms-pointer.llms-inner.bb-dark-theme .buddypanel-menu > li > .bb-menu-item > i:not(.bb-icon-angle-down) {
   color: #fff;
 }
 .llms-pointer.llms-inner.bb-dark-theme .site-header {
   background: #232323;
-  box-shadow: 0px 3px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 1px -4px rgba(0, 0, 0, 0.22);
 }
 .llms-pointer.llms-inner.bb-dark-theme .site-header .bb-toggle-panel {
   color: #fff;
@@ -8523,10 +8412,10 @@ ul.llms-payment-gateways li:last-child:after {
   color: #aaa;
 }
 .llms-pointer.llms-inner.bb-dark-theme .site-header .user-wrap a.user-link:hover i {
-  color: #aaa;
+  color: #aaa !important;
 }
 .llms-pointer.llms-inner.bb-dark-theme .site-header .user-wrap a.user-link i {
-  color: #fff;
+  color: #fff !important;
 }
 .llms-pointer.llms-inner.bb-dark-theme .site-header #header-aside i {
   color: #fff;
@@ -8539,218 +8428,6 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme .site-header [data-balloon][data-balloon-pos='down']:before {
   background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%2236px%22%20height%3D%2212px%22%3E%3Cpath%20fill%3D%22rgba(255,255,255,0.95)%22%20transform%3D%22rotate(180 18 6)%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
   background-size: 100% auto;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .header-search-primary {
-  background: #232323;
-}
-.llms-pointer.llms-inner.bb-dark-theme .header-search-wrap,
-.llms-pointer.llms-inner.bb-dark-theme .header-search-wrap input.search-field {
-  background: #000;
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li:hover {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li:hover.menu-item-has-children:after {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li:hover > a > i,
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li:hover > a span {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li.menu-item-has-children:after {
-  color: #939597;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li.menu-item > .ab-submenu:before {
-  border-color: #232323 #232323 transparent transparent;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item:hover > a {
-  background: rgba(255, 255, 255, 0.15);
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item:hover > a > i {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item.menu-item-has-children:after {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item.menu-item-has-children:hover:after {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item > a {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item > a > i {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li .ab-submenu .bb-sub-menu li.menu-item.menu-item.menu-item-has-children > a:after {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li > a {
-  color: #939597;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li > a > i {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme #primary-navbar .primary-menu > li > a:hover {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .more-button > i {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .more-button .active:after {
-  border-color: #232323 #232323 transparent transparent;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu a {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu li:hover > a {
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.15);
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu .wrapper .sub-menu-inner .menu-item .ab-submenu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu .wrapper .sub-menu-inner .menu-item .ab-submenu:before,
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu .wrapper .sub-menu-inner .menu-item .ab-submenu .bb-sub-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #primary-navbar #navbar-collapse .sub-menu .wrapper .sub-menu-inner .menu-item .ab-submenu li:hover > a {
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.15);
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu a,
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu .user-mention,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu a,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu .user-mention {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu a > i,
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu a:before,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu a > i,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu a:before {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu li:hover > a,
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu li:hover > a > i,
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu li:hover a:before,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li:hover > a,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li:hover > a > i,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li:hover a:before {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu li.no-icon > a:before,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li.no-icon > a:before {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu:before,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu:before {
-  border-color: #232323 #232323 transparent transparent;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu .wrapper li .wrapper {
-  background-color: transparent;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu .wrapper li .wrapper:before {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu .wrapper li .wrapper .ab-submenu {
-  background-color: #000;
-  box-shadow: none;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header .sub-menu .user-link {
-  border-color: #333 #333 transparent transparent;
-}
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li:hover > a,
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu a:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li .wrapper .bb-sub-menu {
-  background-color: #000;
-}
-.llms-pointer.llms-inner.bb-dark-theme .user-wrap.menu-item-has-children #header-my-account-menu li .wrapper .bb-sub-menu a:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #header-aside .user-wrap.menu-item-has-children .user-link > i {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #header-aside .user-wrap.menu-item-has-children .user-link:hover .user-name,
-.llms-pointer.llms-inner.bb-dark-theme .site-header #header-aside .user-wrap.menu-item-has-children .user-link:hover > i {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme .site-header #header-aside .user-wrap.menu-item-has-children .user-name {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme.bb-template-v2 .primary-menu > li:hover > a:before {
-  background: rgba(255, 255, 255, 0.1);
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget .dropzone .dz-default {
-  background-color: #333;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget .dropzone .dz-default .dz-button > strong,
-.llms-pointer.llms-inner.bb-dark-theme .widget .dropzone .dz-default .dz-button:hover > strong {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget #whats-new-toolbar .emojionearea .emojionearea-button:before,
-.llms-pointer.llms-inner.bb-dark-theme .widget #whats-new-toolbar a [class*=" bb-icon-"] {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget #whats-new-toolbar .post-emoji .emojionearea.medium-editor-placeholder {
-  padding: 0;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active {
-  background-color: #333;
-  bottom: 0;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active .medium-editor-toolbar-actions button b,
-.llms-pointer.llms-inner.bb-dark-theme .widget div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active .medium-editor-toolbar-actions button b:hover {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .widget div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active .medium-editor-toolbar-actions button b:before,
-.llms-pointer.llms-inner.bb-dark-theme .widget div .bbp-topic-form #whats-new-toolbar .medium-editor-toolbar.active .medium-editor-toolbar-actions button b:hover:before {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .select2-container .select2-dropdown {
-  background: #000;
-  border: 1px solid #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme .select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background: #333;
-}
-.llms-pointer.llms-inner.bb-dark-theme .entry-content .widget .bbp_topic_tags_wrapper li.select2-search {
-  margin-bottom: 0;
-}
-.llms-pointer.llms-inner.bb-dark-theme .entry-content .widget .bbp-topic-form .bbp_topic_tags_wrapper,
-.llms-pointer.llms-inner.bb-dark-theme .entry-content .widget .bbp-topic-form .bbp-the-content-wrapper {
-  background-color: #333;
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme.bb-template-v2 .site-header .user-wrap.menu-item-has-children .user-link .user-name {
-  color: #aaa;
-}
-.llms-pointer.llms-inner.bb-dark-theme.bb-template-v2 .site-header .user-wrap.menu-item-has-children .user-link:hover .user-name {
-  color: #fff;
-}
-.llms-pointer.llms-inner.bb-dark-theme.bb-template-v2 .site-header .user-wrap.menu-item-has-children .user-link:hover:before {
-  background: rgba(255, 255, 255, 0.1);
-}
-.llms-pointer.llms-inner.bb-dark-theme.bb-template-v2 .site-header .user-wrap.menu-item-has-children.selected .user-link:before {
-  background: rgba(255, 255, 255, 0.1);
 }
 .llms-pointer.llms-inner.bb-dark-theme .lifter-topic-sidebar-wrapper {
   background-color: #1c1c1c;
@@ -8855,8 +8532,7 @@ ul.llms-payment-gateways li:last-child:after {
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .listradio-wrap .nf-field-element label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap div.wpforms-container-full .wpforms-form .wpforms-field-label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap div.wpforms-container-full .wpforms-form .wpforms-field-label-inline,
-.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container .frm_primary_label,
-.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container label.frm_primary_label,
+.llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container .frm_primary_label, .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_top_container label.frm_primary_label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .with_frm_style .vertical_radio .frm_checkbox label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .with_frm_style .vertical_radio .frm_radio label,
 .llms-pointer.llms-inner.bb-dark-theme #lifterlms-page-content .lifterlms_content_wrap .frm_forms .frm_form_fields fieldset .frm_description {
@@ -8989,74 +8665,17 @@ ul.llms-payment-gateways li:last-child:after {
 .bb-sfwd-aside.bb-dark-theme .llms-widget-syllabus .llms-lesson-complete .fa-check-circle:before {
   color: #1c1c1c;
 }
-.bb-sfwd-aside.bb-dark-theme.bb-template-v2 .buddypanel .bb-toggle-panel:hover {
-  background: rgba(255, 255, 255, 0.15);
-}
-.bb-sfwd-aside.bb-dark-theme.bb-template-v2 .buddypanel .side-panel-menu li:not(.current-menu-item) a,
-.bb-sfwd-aside.bb-dark-theme .side-panel-menu .bb-menu-section a,
 .bb-sfwd-aside.bb-dark-theme .side-panel-menu a {
-  color: var(--bb-alternate-text-color);
-  background-color: transparent;
-}
-.bb-sfwd-aside.bb-dark-theme.bb-template-v2 .buddypanel .side-panel-menu li:not(.current-menu-item) a:hover,
-.bb-sfwd-aside.bb-dark-theme .side-panel-menu .bb-menu-section a:hover,
-.bb-sfwd-aside.bb-dark-theme .side-panel-menu a:hover {
   color: #fff;
-  background-color: transparent;
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .sub-menu li:hover > a {
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.15);
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .sub-menu li:hover > a:hover {
-  color: #aaa;
-  background: rgba(255, 255, 255, 0.15);
-}
-.bb-sfwd-aside.bb-dark-theme.bb-template-v2 .buddypanel .side-panel-menu .current-menu-item > a,
-.bb-sfwd-aside.bb-dark-theme .buddypanel .side-panel-menu .current-menu-item > a {
-  color: #fff;
-  background: #121212;
-}
-.bb-sfwd-aside.bb-dark-theme.bb-template-v2 .buddypanel .side-panel-menu .current-menu-item > a:hover,
-.bb-sfwd-aside.bb-dark-theme .buddypanel .side-panel-menu .current-menu-item > a:hover {
-  background-color: transparent;
-}
-.bb-sfwd-aside.bb-dark-theme .buddypanel .side-panel-menu li:not(.current-menu-item) a i:not(.bb-icon-angle-down) {
-  opacity: 1;
-  color: #fff;
-}
-.bb-sfwd-aside.bb-dark-theme .side-panel-menu a {
-  color: var(--bb-alternate-text-color);
 }
 .bb-sfwd-aside.bb-dark-theme .side-panel-menu a:hover {
-  color: #fff;
+  color: #1c1c1c;
 }
 .bb-sfwd-aside.bb-dark-theme .llms-course-members-list .course-members-list a,
 .bb-sfwd-aside.bb-dark-theme .lifterlms-lessions-list .llms-syllabus-wrapper .llms-lesson-link .llms-main h5,
 .bb-sfwd-aside.bb-dark-theme .widget .item-list .item-title a,
 .bb-sfwd-aside.bb-dark-theme .lifter-sidebar-widgets li.widget a, .bb-sfwd-aside.bb-dark-theme.llms-pointer.llms-inner .llms-lesson-preview.llms-quizz-preview .llms-lesson-link h5 {
   color: #fff;
-}
-.bb-sfwd-aside.bb-dark-theme .bb-progress .bb-progress-circle {
-  border-color: var(--bb-primary-color);
-}
-
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-inner {
-  background: #121212;
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .bb-icon-close {
-  color: #fff;
-  background-color: rgba(146, 164, 183, 0.2);
-}
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-wrapper .bb-mobile-panel-header {
-  background-color: #121212;
-}
-.bb-sfwd-aside.bb-dark-theme .bb-mobile-panel-header .user-name {
-  color: #fff;
-}
-.bb-sfwd-aside.bb-dark-theme .site-header .header-aside i,
-.bb-sfwd-aside.bb-dark-theme .site-header .bb-left-panel-mobile > i {
-  color: var(--bb-alternate-text-color);
 }
 
 .llms-sl-directory {

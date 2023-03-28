@@ -60,7 +60,7 @@ if ( ! function_exists( 'learndash_focus_mode_comments_list' ) ) {
 				<div class="ld-comment-reply">
 					<?php comment_reply_link( array_merge( $args,
 						array(
-							'reply_text' => esc_html__( 'Reply', 'buddyboss-theme' ),
+							'reply_text' => 'Reply',
 							'after'      => '',
 							'depth'      => $depth,
 							'max_depth'  => $args['max_depth']
@@ -103,17 +103,12 @@ if ( function_exists( 'lesson_visible_after' ) ) {
 				return $content;
 			}
 
-			$course_id = learndash_get_course_id( $post );
-			if ( empty( $course_id ) ) {
-				return $content;
-			}
-
 			if ( $post->post_type == 'sfwd-lessons' ) {
 				$lesson_id = $post->ID;
 			} else {
 				if ( $post->post_type == 'sfwd-topic' || $post->post_type == 'sfwd-quiz' ) {
-					$topic_id = $post->ID;
 					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+						$course_id = learndash_get_course_id( $post );
 						$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 					} else {
 						$lesson_id = learndash_get_setting( $post, 'lesson' );
@@ -121,6 +116,10 @@ if ( function_exists( 'lesson_visible_after' ) ) {
 				} else {
 					return $content;
 				}
+			}
+
+			if ( empty( $lesson_id ) ) {
+				return $content;
 			}
 
 			if ( is_user_logged_in() ) {
@@ -143,36 +142,24 @@ if ( function_exists( 'lesson_visible_after' ) ) {
 
 			// For logged in users to allow an override filter.
 			$bypass_course_limits_admin_users = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $user_id, $post->ID, $post );
-			
-			$lesson_access_from = learndash_course_step_available_date( $post->ID, $course_id, get_current_user_id(), true );
+
+			$lesson_access_from = ld_lesson_access_from( $lesson_id, get_current_user_id() );
 			if ( ( empty( $lesson_access_from ) ) || ( $bypass_course_limits_admin_users ) ) {
 			    return $content;
 			} else {
-
-				$context = learndash_get_post_type_key( $post->post_type );
-
-				if ( learndash_get_post_type_slug( 'lesson' ) === $post->post_type ) {
-					$lesson_id = $post->ID;
-				} else {
-					$lesson_id = 0;
-				}
-		
 				$content = SFWD_LMS::get_template(
 					'learndash_course_lesson_not_available',
 					array(
 						'user_id'                 => get_current_user_id(),
-						'course_id'               => learndash_get_course_id( $post->ID ),
-						'step_id'                 => $post->ID,
+						'course_id'               => learndash_get_course_id( $lesson_id ),
 						'lesson_id'               => $lesson_id,
 						'lesson_access_from_int'  => $lesson_access_from,
 						'lesson_access_from_date' => learndash_adjust_date_time_display( $lesson_access_from ),
-						'context'                 => $context,
-					),
-					false
+						'context'                 => 'lesson'
+					), false
 				);
 
 				return $content;
-
 			}
 
 			return $content;

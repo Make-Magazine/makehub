@@ -65,12 +65,12 @@ class BB_Access_Control {
 	public function bb_get_access_control_level_options() {
 
 		$access_controls              = self::bb_get_access_control_lists();
-		$selected_access_control_type = bb_pro_filter_input_string( INPUT_POST, 'value' );
-		$key                          = bb_pro_filter_input_string( INPUT_POST, 'key' );
+		$selected_access_control_type = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
+		$key                          = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
 		$threaded                     = filter_input( INPUT_POST, 'threaded', FILTER_VALIDATE_BOOLEAN );
-		$label                        = bb_pro_filter_input_string( INPUT_POST, 'label' );
-		$sub_label                    = bb_pro_filter_input_string( INPUT_POST, 'sub_label' );
-		$component_settings           = ! empty( $_POST['component_settings'] ) ? map_deep( wp_unslash( $_POST['component_settings'] ), 'sanitize_text_field' ) : array();
+		$label                        = filter_input( INPUT_POST, 'label', FILTER_SANITIZE_STRING );
+		$sub_label                    = filter_input( INPUT_POST, 'sub_label', FILTER_SANITIZE_STRING );
+		$component_settings           = filter_input( INPUT_POST, 'component_settings', FILTER_REQUIRE_ARRAY );
 		$html                         = '';
 		$ajax                         = true;
 
@@ -128,13 +128,13 @@ class BB_Access_Control {
 	public function bb_get_gamipress_access_control_level_options() {
 
 		$access_controls              = self::bb_get_access_control_lists();
-		$selected_access_control_type = bb_pro_filter_input_string( INPUT_POST, 'value' );
-		$key                          = bb_pro_filter_input_string( INPUT_POST, 'key' );
+		$selected_access_control_type = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
+		$key                          = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
 		$html                         = '';
 		$threaded                     = filter_input( INPUT_POST, 'threaded', FILTER_VALIDATE_BOOLEAN );
-		$label                        = bb_pro_filter_input_string( INPUT_POST, 'label' );
-		$sub_label                    = bb_pro_filter_input_string( INPUT_POST, 'sub_label' );
-		$component_settings           = ! empty( $_POST['component_settings'] ) ? map_deep( wp_unslash( $_POST['component_settings'] ), 'sanitize_text_field' ) : array();
+		$label                        = filter_input( INPUT_POST, 'label', FILTER_SANITIZE_STRING );
+		$sub_label                    = filter_input( INPUT_POST, 'sub_label', FILTER_SANITIZE_STRING );
+		$component_settings           = filter_input( INPUT_POST, 'component_settings', FILTER_REQUIRE_ARRAY );
 		$ajax                         = true;
 
 		if ( '' !== trim( $selected_access_control_type ) ) {
@@ -185,13 +185,13 @@ class BB_Access_Control {
 	public function bb_get_plugin_access_control_level_options() {
 
 		$access_controls              = self::bb_get_access_control_lists();
-		$selected_access_control_type = bb_pro_filter_input_string( INPUT_POST, 'value' );
-		$key                          = bb_pro_filter_input_string( INPUT_POST, 'key' );
+		$selected_access_control_type = filter_input( INPUT_POST, 'value', FILTER_SANITIZE_STRING );
+		$key                          = filter_input( INPUT_POST, 'key', FILTER_SANITIZE_STRING );
 		$html                         = '';
 		$threaded                     = filter_input( INPUT_POST, 'threaded', FILTER_VALIDATE_BOOLEAN );
-		$label                        = bb_pro_filter_input_string( INPUT_POST, 'label' );
-		$sub_label                    = bb_pro_filter_input_string( INPUT_POST, 'sub_label' );
-		$component_settings           = ! empty( $_POST['component_settings'] ) ? map_deep( wp_unslash( $_POST['component_settings'] ), 'sanitize_text_field' ) : array();
+		$label                        = filter_input( INPUT_POST, 'label', FILTER_SANITIZE_STRING );
+		$sub_label                    = filter_input( INPUT_POST, 'sub_label', FILTER_SANITIZE_STRING );
+		$component_settings           = filter_input( INPUT_POST, 'component_settings', FILTER_REQUIRE_ARRAY );
 		$ajax                         = true;
 
 		if ( '' !== trim( $selected_access_control_type ) ) {

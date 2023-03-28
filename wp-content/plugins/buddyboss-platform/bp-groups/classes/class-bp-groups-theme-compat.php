@@ -257,15 +257,9 @@ class BP_Groups_Theme_Compat {
 	 */
 	public function single_dummy_post() {
 		$groups_page_id = bp_core_get_directory_page_id( 'groups' );
-		$groups_page_id = ! empty( $groups_page_id ) ? $groups_page_id : 0;
-
-		// If page is single group then pass page ID as zero.
-		if ( bp_is_group() ) {
-			$groups_page_id = 0;
-		}
 		bp_theme_compat_reset_post(
 			array(
-				'ID'             => $groups_page_id,
+				'ID'             => ! empty( $groups_page_id ) ? $groups_page_id : 0,
 				'post_title'     => bp_get_current_group_name(),
 				'post_author'    => 0,
 				'post_date'      => 0,

@@ -187,8 +187,8 @@ class BP_Zoom_Groups_Notification extends BP_Core_Notification_Abstract {
 			$meeting = new BP_Zoom_Webinar( $secondary_item_id );
 		}
 
-		if ( property_exists( $meeting, 'start_date_utc' ) && ! empty( $meeting->start_date_utc ) ) {
-			$start_date = new DateTime( $meeting->start_date_utc, new DateTimeZone( $meeting->timezone ) );
+		if ( property_exists( $meeting, 'start_date' ) ) {
+			$start_date = new DateTime( $meeting->start_date );
 			$start_date = $start_date->format( 'd-m-Y' );
 		}
 

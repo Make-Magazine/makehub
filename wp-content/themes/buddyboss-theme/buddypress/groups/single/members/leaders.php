@@ -48,17 +48,8 @@ $follow_class     = $is_follow_active ? 'follow-active' : '';
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
 							<a href="<?php bp_group_member_domain(); ?>">
-								<?php
-								if ( function_exists( 'bb_user_presence_html' ) ) {
-									bb_user_presence_html( bp_get_group_member_id() );
-								} elseif ( function_exists( 'bb_current_user_status' ) ) {
-									bb_current_user_status( bp_get_group_member_id() );
-								} else {
-									bb_user_status( bp_get_group_member_id() );
-								}
-
-								bp_group_member_avatar();
-								?>
+								<?php function_exists( 'bb_current_user_status' ) ? bb_current_user_status( bp_get_group_member_id() ) : bb_user_status( bp_get_group_member_id() ); ?>
+								<?php bp_group_member_avatar(); ?>
 							</a>
 						</div>
 

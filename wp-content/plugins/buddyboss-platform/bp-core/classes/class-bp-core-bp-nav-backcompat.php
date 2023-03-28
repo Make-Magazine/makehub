@@ -60,7 +60,6 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @param mixed $offset Array offset.
 	 * @param array $value  Nav item.
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetSet( $offset, $value ) {
 		_doing_it_wrong(
 			'bp_nav',
@@ -95,7 +94,6 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @param mixed $offset Array offset.
 	 * @return BP_Core_BP_Nav_BackCompat
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetGet( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
@@ -121,7 +119,6 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 * @param mixed $offset Array offset.
 	 * @return bool
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetExists( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',
@@ -148,7 +145,6 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 *
 	 * @param mixed $offset Array offset.
 	 */
-	#[\ReturnTypeWillChange]
 	public function offsetUnset( $offset ) {
 		_doing_it_wrong(
 			'bp_nav',

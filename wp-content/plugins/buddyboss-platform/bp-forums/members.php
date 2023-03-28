@@ -65,11 +65,9 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * @uses add_action() To add various actions
 		 */
 		private function setup_filters() {
-			add_filter( 'bbp_pre_get_user_profile_url', array( $this, 'get_user_profile_url' ) );
-			add_filter( 'bbp_pre_get_user_topics_created_url', array( $this, 'get_topics_created_url' ) );
-			add_filter( 'bbp_pre_get_user_replies_created_url', array( $this, 'get_replies_created_url' ) );
-			add_filter( 'bbp_pre_get_favorites_permalink', array( $this, 'get_favorites_permalink' ) );
-			add_filter( 'bbp_pre_get_subscriptions_permalink', array( $this, 'get_subscriptions_permalink' ) );
+			add_filter( 'bbp_pre_get_user_profile_url', array( $this, 'user_profile_url' ) );
+			add_filter( 'bbp_get_favorites_permalink', array( $this, 'get_favorites_permalink' ), 10, 2 );
+			add_filter( 'bbp_get_subscriptions_permalink', array( $this, 'get_subscriptions_permalink' ), 10, 2 );
 		}
 
 		/** Filters ***************************************************************/
@@ -78,64 +76,72 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * Override Forums profile URL with BuddyBoss profile URL
 		 *
 		 * @since bbPress (r3401)
-		 * @since bbPress (r6320) Add engagements support
 		 *
-		 * @param int $user_id
+		 * @param int $user_id user id.
+		 *
 		 * @return string
 		 */
-		public function get_user_profile_url( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id );
-		}
+		public function user_profile_url( $user_id ) {
 
-		/**
-		 * Override Forums topics created URL with BuddyBoss profile URL
-		 *
-		 * @since bbPress (r3721)
-		 * @since bbPress (r6803) Use private method
-		 *
-		 * @param int $user_id
-		 * @return string
-		 */
-		public function get_topics_created_url( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id, bbp_get_topic_archive_slug() );
-		}
-		/**
-		 * Override Forums replies created URL with BuddyBoss profile URL
-		 *
-		 * @since bbPress (r3721)
-		 * @since bbPress (r6803) Use private method
-		 *
-		 * @param int $user_id
-		 * @return string
-		 */
-		public function get_replies_created_url( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id, bbp_get_reply_archive_slug() );
+			// Define local variable(s).
+			$profile_url    = '';
+			$component_slug = bbpress()->extend->buddypress->slug;
+
+			// Special handling for forum component.
+			if ( bp_is_current_component( $component_slug ) ) {
+
+				// Empty action or 'topics' action.
+				if ( ! bp_current_action() || bp_is_current_action( bbp_get_topic_archive_slug() ) ) {
+					$profile_url = bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_topic_archive_slug();
+
+					// Empty action or 'topics' action.
+				} elseif ( bp_is_current_action( bbp_get_reply_archive_slug() ) ) {
+					$profile_url = bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_reply_archive_slug();
+
+					// 'favorites' action
+				} elseif ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
+					$profile_url = $this->get_favorites_permalink( '', $user_id );
+
+					// 'subscriptions' action
+				} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) && bp_loggedin_user_id() === $user_id ) {
+					$profile_url = $this->get_subscriptions_permalink( '', $user_id );
+				} else {
+					$profile_url = bp_core_get_user_domain( $user_id );
+				}
+
+				// Not in users' forums area.
+			} else {
+				$profile_url = bp_core_get_user_domain( $user_id );
+			}
+
+			return trailingslashit( $profile_url );
 		}
 
 		/**
 		 * Override Forums favorites URL with BuddyBoss profile URL
 		 *
 		 * @since bbPress (r3721)
-		 * @since bbPress (r6803) Use private method
-		 *
-		 * @param int $user_id
+		 * @param string $url
+		 * @param int    $user_id
 		 * @return string
 		 */
-		public function get_favorites_permalink( $user_id = 0 ) {
-			return $this->get_profile_url( $user_id, bbp_get_user_favorites_slug() );
+		public function get_favorites_permalink( $url, $user_id ) {
+			$component_slug = bbpress()->extend->buddypress->slug;
+			$url            = trailingslashit( bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_user_favorites_slug() );
+			return $url;
 		}
 
 		/**
 		 * Override Forums subscriptions URL with BuddyBoss profile URL
 		 *
 		 * @since bbPress (r3721)
-		 * @since bbPress (r6803) Use private method
-		 *
-		 * @param int $user_id
+		 * @param string $url
+		 * @param int    $user_id
 		 * @return string
 		 */
 		public function get_subscriptions_permalink( $url, $user_id ) {
-			$url = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() ) . 'notifications/subscriptions';
+			$component_slug = bbpress()->extend->buddypress->slug;
+			$url            = trailingslashit( bp_core_get_user_domain( $user_id ) . $component_slug . '/' . bbp_get_user_subscriptions_slug() );
 			return $url;
 		}
 
@@ -144,7 +150,6 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		 * pages.
 		 *
 		 * @since bbPress (r4615)
-		 * @since bbPress (r6320) Support all profile sections
 		 *
 		 * @global WP_Query $wp_query
 		 * @return If not viewing your own profile
@@ -152,61 +157,28 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 		public function set_member_forum_query_vars() {
 
 			// Special handling for forum component
-			if ( ! bp_is_my_profile() && ! bbp_is_single_user() ) {
+			if ( ! bp_is_my_profile() ) {
 				return;
 			}
 
-			// Get the main query object
-			$wp_query = bbp_get_wp_query();
+			global $wp_query;
 
-			// 'topics' action
-			if ( bp_is_current_action( bbp_get_topic_archive_slug() ) ) {
-				$wp_query->bbp_is_single_user_topics = true;
+			// 'favorites' action
+			if ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
+				$wp_query->bbp_is_single_user_favs = true;
+
+				// 'subscriptions' action
+			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
+				$wp_query->bbp_is_single_user_subs = true;
 
 				// 'replies' action
 			} elseif ( bp_is_current_action( bbp_get_reply_archive_slug() ) ) {
 				$wp_query->bbp_is_single_user_replies = true;
 
-				// 'favorites' action
-			} elseif ( bbp_is_favorites_active() && bp_is_current_action( bbp_get_user_favorites_slug() ) ) {
-				$wp_query->bbp_is_single_user_favs = true;
+				// 'topics' action
+			} elseif ( bp_is_current_action( bbp_get_topic_archive_slug() ) ) {
+				$wp_query->bbp_is_single_user_topics = true;
 			}
-		}
-
-		/** Private Methods *******************************************************/
-
-		/**
-		 * Private method used to concatenate user IDs and slugs into URLs.
-		 *
-		 * @since bbPress (r6803)
-		 *
-		 * @param int    $user_id User id.
-		 * @param string $slug    Slug of the current active page.
-		 *
-		 * @return string
-		 */
-		private function get_profile_url( $user_id = 0, $slug = '' ) {
-
-			// Do not filter if not on BuddyPress root blog.
-			if ( empty( $user_id ) || ! bp_is_root_blog() ) {
-				return false;
-			}
-
-			// Setup profile URL.
-			$url = array( bp_core_get_user_domain( $user_id ) );
-
-			// Maybe push slug to end of URL array.
-			if ( ! empty( $slug ) ) {
-				array_push( $url, bbpress()->extend->buddypress->slug );
-				array_push( $url, $slug );
-			}
-
-			if ( ! empty( array_filter( $url ) ) ) {
-				// Return.
-				return implode( '', array_map( 'trailingslashit', $url ) );
-			}
-
-			return '';
 		}
 	}
 endif;

@@ -130,3 +130,4 @@ require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/
  * @since 2.0.0
  */
 require_once trailingslashit( get_template_directory() ) . 'blocks/blocks.php';
+

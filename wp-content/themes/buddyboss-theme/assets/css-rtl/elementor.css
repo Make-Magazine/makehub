@@ -89,6 +89,8 @@
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -ms-flex-flow: column;
+      flex-flow: column;
 }
 #content .elementor-widget-container li.product:hover,
 #content .wp-block-woocommerce-handpicked-products li.product:hover,
@@ -177,29 +179,8 @@
 #content .wp-block-woocommerce-product-best-sellers li.product .button {
   width: 100%;
   border-radius: 0;
-  padding: .618em 1em;
+  padding: 12px 10px;
   margin-top: auto;
-}
-#content .elementor-widget-container li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-handpicked-products li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-product-category li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-product-new li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-product-on-sale li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-product-top-rated li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-products-by-attribute li.product .button .add_to_cart_button.added,
-#content .wp-block-woocommerce-product-best-sellers li.product .button .add_to_cart_button.added {
-  width: 50%;
-  border-left: 1px solid var(--bb-content-border-color);
-}
-#content .elementor-widget-container li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-handpicked-products li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-product-category li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-product-new li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-product-on-sale li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-product-top-rated li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-products-by-attribute li.product .button .added_to_cart.wc-forward,
-#content .wp-block-woocommerce-product-best-sellers li.product .button .added_to_cart.wc-forward {
-  border-left: 0;
 }
 #content .elementor-widget-container li.product .button:hover,
 #content .wp-block-woocommerce-handpicked-products li.product .button:hover,
@@ -390,31 +371,33 @@
   width: auto;
 }
 
-/* WooCommerce Issues */
-.elementor-element.elementor-products-grid .woocommerce ul.products li.product {
-  max-width: inherit;
-  width: inherit;
+/* Fix for floating buttons in "Learndash Activity" and "Forum Activity" */
+@media (min-width: 768px) {
+  .elementor-max-50 .elementor-heading-title {
+    max-width: 50%;
+  }
+
+  .bb-ldactivity-main-section,
+  .elementor-widget-ld-activity {
+    padding-top: 60px;
+  }
+
+  .elementor-max-50 + section .bb-ldactivity-main-section,
+  .elementor-max-50 + section .elementor-widget-ld-activity {
+    padding-top: 0;
+  }
 }
-.elementor-element.elementor-products-grid .woocommerce ul.products li.product .onsale.onsale {
+/* WooCommerce Issues */
+.elementor-element.elementor-products-grid ul.products li.product {
+  max-width: 100%;
+}
+
+.elementor-element.elementor-products-grid ul.products li.product .onsale.onsale {
   padding: 10px;
 }
-.elementor-element.elementor-products-grid .woocommerce ul.products li.product h2.woocommerce-loop-category__title {
+
+.elementor-element.elementor-products-grid h2.woocommerce-loop-category__title {
   text-align: center;
-}
-.elementor-element.elementor-products-grid .woocommerce .woocommerce-pagination a:hover {
-  color: var(--bb-body-background-color);
-}
-.elementor-element.elementor-products-grid .woocommerce .woocommerce-pagination a.next,
-.elementor-element.elementor-products-grid .woocommerce .woocommerce-pagination a.prev {
-  font-size: 0;
-  color: var(--bb-body-text-color);
-  padding: 0;
-}
-.elementor-element.elementor-products-grid .woocommerce .woocommerce-pagination a.next:before,
-.elementor-element.elementor-products-grid .woocommerce .woocommerce-pagination a.prev:before {
-  line-height: 28px;
-  display: inline-block;
-  width: 28px;
 }
 
 .site-content-grid > .woocommerce-notices-wrapper {
@@ -449,33 +432,9 @@ nav.elementor-pagination {
   border-right: 0;
 }
 
-.elementor-element.elementor-products-grid ul.products li.product a.woocommerce-loop-product__link {
-  -webkit-box-flex: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  -ms-flex: 0 0 100%;
-      flex: 0 0 100%;
-}
-
-.elementor-element.elementor-products-grid ul.products li.product a.button:last-child {
-  -webkit-box-flex: 0;
-      -ms-flex: none;
-          flex: none;
-}
-
-.elementor-element.elementor-products-grid ul.products li.product .woocommerce-loop-product__title {
-  padding-right: 5px;
-  padding-left: 5px;
-}
-
 @media (max-width: 1024px) {
   #content .elementor-element.elementor-products-grid ul.products.products {
     grid-template-columns: repeat(3, 1fr);
-  }
-}
-@media screen and (min-width: 800px) {
-  .bb-buddypanel.bb-sfwd-aside .site-header.site-header--elementor {
-    width: auto;
   }
 }
 @media (max-width: 768px) {
@@ -749,72 +708,6 @@ div.elementor-price-table__ribbon-inner {
   background-color: var(--bb-primary-color);
 }
 
-.header-mini-cart {
-  overflow: hidden;
-}
-.header-mini-cart .elementor-menu-cart__product {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--bb-content-border-color);
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-image img {
-  max-width: 36px;
-  width: 36px;
-  border-radius: 50%;
-  margin-left: 10px;
-  margin-right: 0;
-  float: none;
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-name {
-  max-width: 240px;
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-name a {
-  color: var(--bb-headings-color);
-  font-size: 14px;
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-name a:hover {
-  color: var(--bb-primary-color);
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-price {
-  margin-right: auto;
-  font-size: 13px;
-  color: var(--bb-alternate-text-color);
-}
-.header-mini-cart .elementor-menu-cart__product .elementor-menu-cart__product-price .quantity {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-.header-mini-cart .elementor-menu-cart__subtotal {
-  margin: 15px 20px 15px 0;
-  font-size: 14px;
-  color: var(--bb-alternate-text-color);
-  float: right;
-}
-.header-mini-cart .elementor-menu-cart__subtotal strong {
-  font-weight: normal;
-}
-.header-mini-cart .elementor-menu-cart__footer-buttons {
-  margin: 15px 0 15px 20px;
-  float: left;
-}
-.header-mini-cart .elementor-menu-cart__footer-buttons .elementor-button {
-  background-color: transparent;
-  font-size: 14px;
-  margin-right: 5px;
-}
-.bb-template-v2 .header-mini-cart .elementor-menu-cart__product {
-  border-bottom: 0;
-}
-.bb-template-v2 .header-mini-cart .elementor-menu-cart__products {
-  border-bottom: 1px solid var(--bb-content-border-color);
-}
-
 .bb-sfwd-aside .site > .elementor-location-header {
   -webkit-transition: padding-right 0.3s ease-in-out;
           transition: padding-right 0.3s ease-in-out;
@@ -871,11 +764,6 @@ div.elementor-price-table__ribbon-inner {
   padding: 1.25rem 0.9375rem;
 }
 
-.elementor-widget-search-form .elementor-search-form__input {
-  height: auto;
-  outline: none;
-}
-
 /** header bar widget */
 .site-header.site-header--elementor,
 .sticky-header .site-header.site-header--elementor,
@@ -896,7 +784,7 @@ body:not(.lms-side-panel-close) .site-header--elementor .header-minimize-link {
 
 .site-header.site-header--elementor,
 body.bp-search .site-header.site-header--elementor {
-  z-index: 9;
+  z-index: 600;
   padding-left: 0;
   padding-right: 0;
 }
@@ -928,11 +816,6 @@ body.bp-search .site-header.site-header--elementor {
 }
 .site-header--elementor .bb-header-buttons {
   white-space: nowrap;
-}
-.site-header--elementor .user-mention .bp-suggestions-mention {
-  padding: 0;
-  margin: 0;
-  color: inherit;
 }
 
 .site-header--elementor .sub-menu .ab-submenu a:hover {
@@ -996,7 +879,7 @@ body.bp-search .site-header.site-header--elementor {
   right: 0;
   top: 0;
   height: var(--bb-header-height);
-  background-color: var(--bb-header-background);
+  background: #fff;
   box-shadow: 0 1px 0 0 rgba(139, 141, 157, 0.05), 0 5px 18px 0 rgba(65, 71, 108, 0.22);
   opacity: 0;
   visibility: hidden;
@@ -1022,7 +905,6 @@ body.bp-search .site-header.site-header--elementor {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  max-width: 100%;
 }
 .header-search-wrap--elementor .search-form label {
   -webkit-box-flex: 1;
@@ -1043,7 +925,6 @@ body.bp-search .site-header.site-header--elementor {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  background-color: var(--bb-header-background);
 }
 .header-search-wrap--elementor input.search-submit {
   position: absolute;
@@ -1079,24 +960,6 @@ body.bp-search .site-header.site-header--elementor {
 
 .site-header--elementor.site-header--is-logo:not(.site-header--is-nav) #site-logo {
   margin-left: auto;
-}
-
-.site-header--elementor:not(.site-header--is-logo) .bb-mobile-header-wrapper, .site-header--elementor:not(.site-header--is-nav) .bb-mobile-header-wrapper {
-  display: none;
-}
-
-@media (max-width: 799px) {
-  .site-header--elementor .site-header-container {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-  }
-  .site-header--elementor.site-header--is-logo.site-header--is-nav .site-header-container {
-    display: none;
-  }
-}
-.elementor-widget-header-bar.is-active {
-  z-index: 12;
 }
 
 .elementor-element--logo-position-right .site-header-container #site-navigation {
@@ -3881,13 +3744,10 @@ Due to the split circle of progress-left and progress right, we must use the ani
 }
 
 @media (min-width: 768px) {
-  .elementor-widget-ld-activity, .elementor-widget-ld-activity .elementor-widget-container, .bb-ldactivity {
+  .elementor-widget-ld-activity,
+  .elementor-widget-ld-activity .elementor-widget-container,
+  .bb-ldactivity {
     height: 100%;
-  }
-  .elementor-column[data-col="100"] .elementor-widget-ld-activity, .elementor-col-100 .elementor-widget-ld-activity,
-  .elementor-column[data-col="100"] .elementor-widget-ld-activity .elementor-widget-container, .elementor-col-100 .elementor-widget-ld-activity .elementor-widget-container,
-  .elementor-column[data-col="100"] .bb-ldactivity, .elementor-col-100 .bb-ldactivity {
-    height: auto;
   }
 }
 .bb-la.bb-la-composer,
@@ -4258,20 +4118,6 @@ body.rtl .bb-la-activity-btn__link i {
 }
 
 /* Animation End **/
-/* Fix for floating buttons in "Learndash Activity" */
-@media (min-width: 768px) {
-  .elementor-max-50 .elementor-heading-title {
-    max-width: 50%;
-  }
-
-  .bb-ldactivity-main-section {
-    padding-top: 60px;
-  }
-
-  .elementor-max-50 + section .bb-ldactivity-main-section {
-    padding-top: 0;
-  }
-}
 /** ld courses widget */
 .learndash-course-list--elementor .grid-box-solid .bb-course-items .bb-cover-list-item {
   border-style: solid;
@@ -6542,13 +6388,10 @@ body.rtl .bb-gallery .slick-arrow.bb-slide-next {
   }
 }
 /** bb activity widget */
-.elementor-widget-bbp-activity, .elementor-widget-bbp-activity .elementor-widget-container, .bb-activity {
+.elementor-widget-bbp-activity,
+.elementor-widget-bbp-activity .elementor-widget-container,
+.bb-activity {
   height: 100%;
-}
-.elementor-column[data-col="100"] .elementor-widget-bbp-activity, .elementor-col-100 .elementor-widget-bbp-activity,
-.elementor-column[data-col="100"] .elementor-widget-bbp-activity .elementor-widget-container, .elementor-col-100 .elementor-widget-bbp-activity .elementor-widget-container,
-.elementor-column[data-col="100"] .bb-activity, .elementor-col-100 .bb-activity {
-  height: auto;
 }
 
 .bb-activity {
@@ -6826,13 +6669,10 @@ html .bb-activity .activity-lists.item-list.elementor-activity-widget.grid > li 
 }
 
 /** bb members widget */
-.elementor-widget-bbp-members, .elementor-widget-bbp-members .elementor-widget-container, .bb-members {
+.elementor-widget-bbp-members,
+.elementor-widget-bbp-members .elementor-widget-container,
+.bb-members {
   height: 100%;
-}
-.elementor-column[data-col="100"] .elementor-widget-bbp-members, .elementor-col-100 .elementor-widget-bbp-members,
-.elementor-column[data-col="100"] .elementor-widget-bbp-members .elementor-widget-container, .elementor-col-100 .elementor-widget-bbp-members .elementor-widget-container,
-.elementor-column[data-col="100"] .bb-members, .elementor-col-100 .bb-members {
-  height: auto;
 }
 
 .bb-members {
@@ -6956,13 +6796,10 @@ div.item-options .bb-members__tab.selected {
 }
 
 /** bb forums widget */
-.elementor-widget-bbp-forums, .elementor-widget-bbp-forums .elementor-widget-container, .bb-forums {
+.elementor-widget-bbp-forums,
+.elementor-widget-bbp-forums .elementor-widget-container,
+.bb-forums {
   height: 100%;
-}
-.elementor-column[data-col="100"] .elementor-widget-bbp-forums, .elementor-col-100 .elementor-widget-bbp-forums,
-.elementor-column[data-col="100"] .elementor-widget-bbp-forums .elementor-widget-container, .elementor-col-100 .elementor-widget-bbp-forums .elementor-widget-container,
-.elementor-column[data-col="100"] .bb-forums, .elementor-col-100 .bb-forums {
-  height: auto;
 }
 
 .bb-forums {
@@ -6976,12 +6813,6 @@ div.item-options .bb-members__tab.selected {
 }
 .bb-forums .item-title a {
   font-size: 14px;
-}
-.bb-forums .bb-forums__list .bb-forums__item .item-meta .bs-replied > a:hover {
-  color: var(--bb-primary-color);
-}
-.bb-forums .bb-forums__list .bb-forums__item .item-title > a:hover {
-  color: var(--bb-primary-color);
 }
 .bb-forums .bb-forums__avatar + .item .bs-last-reply {
   padding-right: 0;
@@ -7134,14 +6965,11 @@ body.rtl .bb-forums__avatar {
 
 /** bb forums activity widget */
 @media (min-width: 768px) {
-  .elementor-widget-bbp-forums-activity, .elementor-widget-bbp-forums-activity .elementor-widget-container, .bb-forums-activity, .bb-forums-activity-wrapper {
+  .elementor-widget-bbp-forums-activity,
+  .elementor-widget-bbp-forums-activity .elementor-widget-container,
+  .bb-forums-activity,
+  .bb-forums-activity-wrapper {
     height: 100%;
-  }
-  .elementor-column[data-col="100"] .elementor-widget-bbp-forums-activity, .elementor-col-100 .elementor-widget-bbp-forums-activity,
-  .elementor-column[data-col="100"] .elementor-widget-bbp-forums-activity .elementor-widget-container, .elementor-col-100 .elementor-widget-bbp-forums-activity .elementor-widget-container,
-  .elementor-column[data-col="100"] .bb-forums-activity, .elementor-col-100 .bb-forums-activity,
-  .elementor-column[data-col="100"] .bb-forums-activity-wrapper, .elementor-col-100 .bb-forums-activity-wrapper {
-    height: auto;
   }
 }
 .bb-forums-activity {
@@ -7250,20 +7078,6 @@ body.rtl .bb-forums__avatar {
   margin: 0 auto;
 }
 
-/* Fix for floating buttons in "Forum Activity" */
-@media (min-width: 768px) {
-  .elementor-max-50 .elementor-heading-title {
-    max-width: 50%;
-  }
-
-  .elementor-widget-bbp-forums-activity {
-    padding-top: 60px;
-  }
-
-  .elementor-max-50 + section .elementor-widget-bbp-forums-activity {
-    padding-top: 0;
-  }
-}
 .bb-forums-activity-wrapper {
   position: relative;
   min-height: 250px;

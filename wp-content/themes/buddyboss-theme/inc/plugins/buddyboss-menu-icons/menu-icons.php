@@ -9,7 +9,6 @@ if ( ! class_exists( 'Buddyboss_Menu_Icons' ) ) {
 	/**
 	 * Main plugin class
 	 */
-	#[\AllowDynamicProperties]
 	final class Buddyboss_Menu_Icons {
 
 		const VERSION = '1.0.0';

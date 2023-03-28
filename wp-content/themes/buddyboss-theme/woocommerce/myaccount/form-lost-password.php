@@ -12,7 +12,7 @@
  *
  * @see https://docs.woocommerce.com/document/template-structure/
  * @package WooCommerce/Templates
- * @version 7.0.1
+ * @version 3.5.2
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -23,39 +23,39 @@ wc_print_notices(); ?>
 
 <div class="bsMyAccount">
 
-	<div class="woocommerce-MyAccount-content">
-
-		<div class="wc-MyAccount-sub-heading">
-			<h2><?php esc_html_e( 'Lost your password?', 'buddyboss-theme' ); ?></h2>
-		</div>
-
-		<div class="wc-LostPassword">
-
-			<form method="post" class="woocommerce-ResetPassword lost_reset_password">
-
+    <div class="woocommerce-MyAccount-content">
+    
+        <div class="wc-MyAccount-sub-heading">
+            <h2><?php esc_html_e( 'Lost your password?', 'buddyboss-theme' ); ?></h2>
+        </div>
+        
+        <div class="wc-LostPassword">
+    
+            <form method="post" class="woocommerce-ResetPassword lost_reset_password">
+            
             	<p class="bs_woocommerce_reset_message"><?php echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Please enter your username or email address. You will receive a link to create a new password via email.', 'buddyboss-theme' ) ); ?></p><?php // @codingStandardsIgnoreLine ?>
-
-				<p class="woocommerce-form-row woocommerce-form-row--first form-row">
-					<label for="user_login"><?php esc_html_e( 'Username or email', 'buddyboss-theme' ); ?></label>
-					<input class="woocommerce-Input woocommerce-Input--text input-text" type="text" name="user_login" id="user_login" autocomplete="username" />
-				</p>
-
-				<div class="clear"></div>
-
-				<?php do_action( 'woocommerce_lostpassword_form' ); ?>
-
-				<p class="woocommerce-form-row form-row bs_woocommerce_reset_ctrls">
-					<input type="hidden" name="wc_reset_password" value="true" />
-					<button type="submit" class="woocommerce-Button button" value="<?php esc_attr_e( 'Reset password', 'buddyboss-theme' ); ?>"><?php esc_html_e( 'Reset password', 'buddyboss-theme' ); ?></button>
-				</p>
-
-				<?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>
-
-			</form>
-
-		</div>
-
-	</div>
+            
+            	<p class="woocommerce-form-row woocommerce-form-row--first form-row">
+            		<label for="user_login"><?php esc_html_e( 'Username or email', 'buddyboss-theme' ); ?></label>
+            		<input class="woocommerce-Input woocommerce-Input--text input-text" type="text" name="user_login" id="user_login" autocomplete="username" />
+            	</p>
+            
+            	<div class="clear"></div>
+            
+            	<?php do_action( 'woocommerce_lostpassword_form' ); ?>
+            
+            	<p class="woocommerce-form-row form-row bs_woocommerce_reset_ctrls">
+            		<input type="hidden" name="wc_reset_password" value="true" />
+            		<button type="submit" class="woocommerce-Button button" value="<?php esc_attr_e( 'Reset password', 'buddyboss-theme' ); ?>"><?php esc_html_e( 'Reset password', 'buddyboss-theme' ); ?></button>
+            	</p>
+            
+            	<?php wp_nonce_field( 'lost_password', 'woocommerce-lost-password-nonce' ); ?>
+            
+            </form>
+        
+        </div>
+    
+    </div>
 
 </div>
 

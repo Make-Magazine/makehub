@@ -187,10 +187,10 @@ if ( ! function_exists( 'buddyboss_theme_body_classes' ) ) {
 			// LearnDash sidebar.
 			$sidebar   = ' sidebar-' . buddyboss_theme_get_option( 'learndash' );
 			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
-		} elseif ( is_active_sidebar( 'learndash_lesson_sidebar' ) && buddyboss_is_learndash_inner() ) {
-			// LearnDash lesson sidebar
-			$sidebar   = ' sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
-			$classes[] = 'has-sidebar sfwd-sidebar' . $sidebar;
+		} elseif ( is_active_sidebar( 'learndash_sidebar' ) && buddyboss_is_learndash() ) {
+			// LearnDash sidebar.
+			$sidebar   = 'sfwd-single-sidebar-' . buddyboss_theme_get_option( 'learndash_single_sidebar' );
+			$classes[] = $sidebar;
 		} elseif ( buddyboss_is_lifterlms() ) {
 			// LifterLMS class.
 			$classes[] = 'llms-pointer';
@@ -483,7 +483,7 @@ if ( ! function_exists( 'buddyboss_theme_entry_header_image' ) ) {
 			ob_start();
 			?>
 			<div class="ratio-wrap">
-				<a href="<?php the_permalink(); ?>" title="
+				<a href="<?php the_permalink(); ?> title="
 					<?php
 					echo esc_attr(
 						sprintf(
@@ -806,7 +806,7 @@ function bb_custom_excerpt_length( $length ) {
 	return 25;
 }
 
-add_filter( 'excerpt_length', 'bb_custom_excerpt_length', 15 );
+add_filter( 'excerpt_length', 'bb_custom_excerpt_length', 999 );
 
 /**
  * Filter the excerpt "read more" string.
@@ -841,12 +841,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 
 			<?php
 			if ( 0 != $args['avatar_size'] ) {
-				$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-				if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
-					$user_link = bp_core_get_user_domain( $comment->user_id );
-				} else {
-					$user_link = get_comment_author_url( $comment );
-				}
+				$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $comment->user_id ) : get_comment_author_url( $comment );
 				?>
 				<div class="comment-author vcard">
 					<a href="<?php echo esc_url( $user_link ); ?>">
@@ -862,8 +857,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					/* translators: %s: Author related metas. */
 					__( '%s', 'buddyboss-theme' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped, WordPress.WP.I18n.NoEmptyStrings
 					sprintf(
-						'<cite class="fn comment-author"><a href="%s" rel="external nofollow ugc" class="url">%s</a></cite>',
-						esc_url( $user_link ),
+						'<cite class="fn comment-author">%s</cite>',
 						get_comment_author_link( $comment )
 					)
 				);
@@ -908,7 +902,6 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 					array_merge(
 						$args,
 						array(
-							'reply_text' => esc_html__( 'Reply', 'buddyboss-theme' ),
 							'add_below' => $add_below,
 							'depth'     => $depth,
 							'max_depth' => $args['max_depth'],
@@ -919,7 +912,7 @@ if ( ! function_exists( 'buddyboss_comment' ) ) {
 				);
 				?>
 
-				<?php edit_comment_link( esc_html__( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
+				<?php edit_comment_link( __( 'Edit', 'buddyboss-theme' ), '', '' ); ?>
 			</footer>
 		</div>		</article>
 		<?php
@@ -1159,34 +1152,6 @@ if ( ! function_exists( 'buddyboss_is_learndash_inner' ) ) {
 				return ( ( 'sfwd-topic' == $post->post_type ) || ( 'sfwd-lessons' == $post->post_type ) || ( 'sfwd-quiz' == $post->post_type ) );
 			}
 		}
-	}
-}
-
-/**
- * Check if LearnDash focus mode is enabled.
- *
- * @package BuddyBoss_Theme
- */
-if ( ! function_exists( 'ld_30_focus_mode_enable' ) ) {
-	function ld_30_focus_mode_enable() {
-
-		if ( class_exists( 'SFWD_LMS' ) ) {
-			$focus_mode = \LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Theme_LD30', 'focus_mode_enabled' );
-
-			$post_types = [
-				'sfwd-lessons',
-				'sfwd-topic',
-				'sfwd-assignment',
-				'sfwd-quiz',
-			];
-
-			if ( in_array( get_post_type(), $post_types ) ) {
-				if ( 'yes' === $focus_mode ) {
-					return true;
-				}
-			}	
-		}
-
 	}
 }
 
@@ -1924,7 +1889,7 @@ if ( ! function_exists( 'bb_set_unread_notification' ) ) {
 			return;
 		}
 
-		$notif_id = bb_theme_filter_input_string( INPUT_POST, 'notification_id' );
+		$notif_id = filter_input( INPUT_POST, 'notification_id', FILTER_SANITIZE_STRING );
 		if ( 'all' !== $notif_id ) {
 			$notif_id = filter_input( INPUT_POST, 'notification_id', FILTER_SANITIZE_NUMBER_INT );
 		}
@@ -2281,7 +2246,7 @@ add_filter( 'cancel_comment_reply_link', 'buddyboss_theme_remove_blog_comment_re
  *
  * @return string Return HTML markup for cancel reply link and submit button.
  */
-function buddyboss_theme_add_blog_comment_reply_link( $submit_button, $args ) {
+function buddyboss_theme_add_blog_comment_reply_link( $submit_field, $args ) {
 	$cancel_reply_link = '';
 
 	if ( get_option( 'thread_comments' ) ) {
@@ -2291,7 +2256,6 @@ function buddyboss_theme_add_blog_comment_reply_link( $submit_button, $args ) {
 		$cancel_reply_link .= $args['cancel_reply_after'];
 	}
 
-	return $cancel_reply_link . $submit_button;
+	return $submit_field . $cancel_reply_link;
 }
-add_action( 'comment_form_submit_button', 'buddyboss_theme_add_blog_comment_reply_link', 99, 2 );
-
+add_action( 'comment_form_submit_field', 'buddyboss_theme_add_blog_comment_reply_link', 99, 2 );

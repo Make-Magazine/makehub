@@ -14,7 +14,7 @@ if ( ! function_exists( 'buddyboss_theme_update' ) ) {
 	 * @since 1.7.3
 	 */
 	function buddyboss_theme_update() {
-		$current_version = wp_get_theme( get_template() )->get( 'Version' );
+		$current_version = wp_get_theme()->get( 'Version' );
 		$old_version     = get_option( 'buddyboss_theme_version', '1.7.2' );
 
 		if ( $old_version !== $current_version ) {
@@ -24,19 +24,14 @@ if ( ! function_exists( 'buddyboss_theme_update' ) ) {
 				bb_theme_update_1_7_3();
 			}
 
-			// Call to back up default cover images.
+			// Call to backup default cover images.
 			if ( version_compare( $current_version, '1.8.2', '>' ) && function_exists( 'bb_theme_update_1_8_3' ) ) {
 				bb_theme_update_1_8_3();
 			}
 
-			// Call to back up default cover images.
+			// Call to backup default cover images.
 			if ( version_compare( $current_version, '1.8.6', '>' ) && function_exists( 'bb_theme_update_1_8_7' ) ) {
 				bb_theme_update_1_8_7();
-			}
-
-			// Call to back up default cover images.
-			if ( version_compare( $current_version, '2.2.5', '>' ) && function_exists( 'bb_theme_update_2_2_6' ) ) {
-				bb_theme_update_2_2_6();
 			}
 
 			// update not to run twice.
@@ -222,18 +217,6 @@ function bb_theme_version_updater() {
 	// Add the conditional logic for each version migration code.
 	if ( $raw_db_version < 400 ) {
 		bb_theme_update_2_0_0();
-	}
-
-	if ( $raw_db_version < 430 ) {
-		// Function to migrate all menu icon type.
-		bb_theme_update_nav_menu_icon_type_2_0_5();
-
-		// Function to migrate image icon type to enabled by defaults.
-		bb_theme_update_support_custom_icon_2_0_5();
-	}
-
-	if ( $raw_db_version < 435 ) {
-		bb_theme_update_2_2_1_2();
 	}
 
 	// Bump the version.
@@ -452,156 +435,4 @@ function bb_theme_update_2_0_0() {
 		buddyboss_theme_compressed_transient_delete();
 	}
 
-}
-
-/**
- * Function to delete transient data from database.
- *
- * @since 2.2.1.2
- */
-function bb_theme_update_2_2_1_2() {
-	delete_transient( 'update_themes' );
-	delete_transient( 'update_plugins' );
-	delete_transient( 'bb_updates_bp-loader' );
-	delete_transient( 'bb_updates_buddyboss-theme' );
-	delete_transient( 'bb_updates_buddyboss-platform-pro' );
-	// For Multi site.
-	delete_site_transient( 'update_themes' );
-	delete_site_transient( 'update_plugins' );
-	delete_site_transient( 'bb_updates_bp-loader' );
-	delete_site_transient( 'bb_updates_buddyboss-theme' );
-	delete_site_transient( 'bb_updates_buddyboss-platform-pro' );
-}
-
-/**
- * Function to migrate all menu icon type.
- *
- * @since 2.0.5
- */
-function bb_theme_update_nav_menu_icon_type_2_0_5() {
-	$mapping_array = array(
-		'buddyboss' => array(),
-		'legacy'    => array(),
-	);
-	$args          = array(
-		'post_type'   => 'nav_menu_item',
-		'post_status' => 'publish',
-	);
-
-	if ( ! class_exists( 'Icon_Picker_Type_BuddyBoss_Legacy' ) ) {
-		require_once buddyboss_theme()->inc_dir() . '/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss_legacy.php';
-	}
-
-	if ( ! class_exists( 'Icon_Picker_Type_BuddyBoss' ) ) {
-		require_once buddyboss_theme()->inc_dir() . '/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php';
-	}
-
-	// Get BuddyBoss icons.
-	$buddyboss_icon_object = new Icon_Picker_Type_BuddyBoss();
-	$buddyboss_icon_array  = $buddyboss_icon_object->get_items();
-
-	// Get BuddyBoss Legacy icons.
-	$buddyboss_legacy_icon_object = new Icon_Picker_Type_BuddyBoss_Legacy();
-	$buddyboss_legacy_icon_array  = $buddyboss_legacy_icon_object->get_items();
-
-	$r              = wp_parse_args( null, $args );
-	$get_posts      = new \WP_Query();
-	$nav_menu_items = $get_posts->query( $r );
-
-	if ( isset( $nav_menu_items ) && ! empty( $nav_menu_items ) ) {
-		$nav_menu_items = wp_list_pluck( $nav_menu_items, 'ID' );
-		foreach ( $nav_menu_items as $menu_id ) {
-			$menu_icons = get_post_meta( $menu_id, 'menu-icons', true );
-
-			$menu_icon      = '';
-			$menu_icon_type = '';
-
-			if ( isset( $menu_icons['icon'] ) && ! empty( $menu_icons['icon'] ) ) {
-				$menu_icon = $menu_icons['icon'];
-			}
-
-			if ( ! empty( $menu_icon ) ) {
-
-				if ( isset( $mapping_array['buddyboss'][ $menu_icon ] ) ) {
-					$menu_icon_type = 'buddyboss';
-				} elseif ( isset( $mapping_array['legacy'][ $menu_icon ] ) ) {
-					$menu_icon_type = 'buddyboss_legacy';
-				}
-
-				if ( empty( $menu_icon_type ) ) {
-					$buudyboss_icon_key = array_search( $menu_icon, array_column( $buddyboss_icon_array, 'id' ), true );
-
-					if ( 0 <= $buudyboss_icon_key && isset( $buddyboss_icon_array[ $buudyboss_icon_key ] ) ) {
-						$menu_icon_type                           = 'buddyboss';
-						$mapping_array['buddyboss'][ $menu_icon ] = $buddyboss_icon_array[ $buudyboss_icon_key ];
-					} else {
-
-						$legacy_icon_key = array_search( $menu_icon, array_column( $buddyboss_legacy_icon_array, 'id' ), true );
-
-						if ( 0 <= $legacy_icon_key && isset( $buddyboss_legacy_icon_array[ $legacy_icon_key ] ) ) {
-							$menu_icon_type                        = 'buddyboss_legacy';
-							$mapping_array['legacy'][ $menu_icon ] = $buddyboss_legacy_icon_array[ $legacy_icon_key ];
-						}
-					}
-				}
-
-				if ( ! empty( $menu_icon_type ) ) {
-					$menu_icons['type'] = $menu_icon_type;
-					update_post_meta( $menu_id, 'menu-icons', $menu_icons );
-				}
-			}
-		}
-	}
-}
-
-/**
- * Function to migrate image icon type to enabled by defaults.
- *
- * @since 2.0.5
- */
-function bb_theme_update_support_custom_icon_2_0_5() {
-	// Add the default icon types.
-	$menu_icons = get_option( 'menu-icons' );
-	if ( isset( $menu_icons['global']['icon_types'] ) && ! empty( $menu_icons['global']['icon_types'] ) ) {
-		if ( ! in_array( 'image', $menu_icons['global']['icon_types'], true ) ) {
-			$menu_icons['global']['icon_types'][] = 'image';
-		}
-		if ( ! in_array( 'manage', $menu_icons['global']['icon_types'], true ) ) {
-			$menu_icons['global']['icon_types'][] = 'manage';
-		}
-	} else {
-		$menu_icons = array(
-			'global' => array(
-				'icon_types' => array(
-					'buddyboss',
-					'buddyboss_legacy',
-					'image',
-					'manage',
-				),
-			),
-		);
-	}
-	// update option.
-	update_option( 'menu-icons', $menu_icons );
-}
-
-/**
- * Run the DB engine update.
- *
- * @since 2.2.6
- *
- * @return void
- *
- * @throws ReflectionException
- */
-function bb_theme_update_2_2_6() {
-	if ( function_exists( 'buddyboss_theme' ) ) {
-		$base_theme_reflection = new ReflectionClass( get_class( buddyboss_theme() ) );
-		$related_posts_helper  = $base_theme_reflection->getProperty( '_related_posts_helper' );
-		$related_posts_helper->setAccessible( true );
-		$releated_post_class = $related_posts_helper->getValue( buddyboss_theme() );
-		if ( is_a( $releated_post_class, 'BuddyBossTheme\RelatedPostsHelper' ) ) {
-			$releated_post_class->crp_create_index();
-		}
-	}
 }

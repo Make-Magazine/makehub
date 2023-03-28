@@ -181,7 +181,7 @@ llms_print_notices();
 				llms_get_template(
 					'checkout/form-switch-source.php',
 					array(
-						'confirm' => bb_theme_filter_input_string( INPUT_GET, 'confirm-switch' ),
+						'confirm' => llms_filter_input( INPUT_GET, 'confirm-switch', FILTER_SANITIZE_STRING ),
 						'order'   => $order,
 					)
 				);

@@ -16,8 +16,6 @@ $class_list_active = ( 'list' === $view ) ? 'active' : '';
 $class_grid_show   = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';
 $class_list_show   = ( 'list' === $view ) ? 'list-view bb-list' : '';
 
-$courses_label	   = LearnDash_Custom_Label::get_label( 'courses' );
-
 ?>
 	<div id="primary" class="content-area">
 		<main id="main" class="site-main">
@@ -30,7 +28,7 @@ $courses_label	   = LearnDash_Custom_Label::get_label( 'courses' );
 						<div id="courses-dir-search" class="bs-dir-search" role="search">
 							<div id="search-members-form" class="bs-search-form">
 								<label for="bs_members_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss-theme' ); ?></label>
-								<input type="text" name="search" id="bs_members_search" value="<?php echo ! empty( $_GET['search'] ) ? $_GET['search'] : ''; ?>" placeholder="<?php echo sprintf( esc_html__( 'Search %s...', 'buddyboss-theme' ), $courses_label ); ?>">
+								<input type="text" name="search" id="bs_members_search" value="<?php echo ! empty( $_GET['search'] ) ? $_GET['search'] : ''; ?>" placeholder="<?php _e( 'Search', 'buddyboss-theme' ); ?> <?php echo LearnDash_Custom_Label::get_label( 'courses' ) . '...'; ?>">
 							</div>
 						</div>
 					</div>
@@ -38,11 +36,11 @@ $courses_label	   = LearnDash_Custom_Label::get_label( 'courses' );
 						<ul class="component-navigation courses-nav">
 							<?php
 							$navs = array(
-								'all' => '<div class="bb-component-nav-item-point">' . sprintf( esc_html__( 'All %s', 'buddyboss-theme' ), $courses_label ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_all_courses_count() . '</span>',
+								'all' => '<div class="bb-component-nav-item-point">' . esc_html__( 'All', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_all_courses_count() . '</span>',
 							);
 
 							if ( is_user_logged_in() ) {
-								$navs['my-courses'] = '<div class="bb-component-nav-item-point">' . sprintf( esc_html__( 'My %s', 'buddyboss-theme' ), $courses_label ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count() . '</span>';
+								$navs['my-courses'] = '<div class="bb-component-nav-item-point">' . esc_html__( 'My', 'buddyboss-theme' ) . ' ' . LearnDash_Custom_Label::get_label( 'courses' ) . '</div>' . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count() . '</span>';
 							}
 
 							$navs = apply_filters( 'BuddyBossTheme/Learndash/Archive/Navs', $navs );

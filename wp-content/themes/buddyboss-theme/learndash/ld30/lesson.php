@@ -45,8 +45,7 @@ if ( empty( $course_id ) ) {
 		$course_id = (int) buddyboss_theme()->learndash_helper()->ld_30_get_course_id( $lesson_data->ID );
 	}
 }
-$lession_list            = learndash_get_course_lessons_list( $course_id, null, array( 'num' => - 1 ) );
-$lession_list            = array_column( $lession_list, 'post' );
+$lession_list            = learndash_get_lesson_list( $course_id, array( 'num' => - 1 ) );
 $lesson_topics_completed = learndash_lesson_topics_completed( $post->ID );
 $content_urls            = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination( $course_id, $lession_list );
 $pagination_urls         = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url( $content_urls );
@@ -130,7 +129,7 @@ if ( empty( $course ) ) {
 									$courses_access_from = ld_course_access_from( $course_id, $user_id );
 									$expire_access_days  = learndash_get_setting( $course_id, 'expire_access_days' );
 									$date_format         = get_option( 'date_format' );
-									$expire_date         = learndash_adjust_date_time_display( $expire_date_calc );
+									$expire_date         = date_i18n( $date_format, $expire_date_calc );
 									$current             = time();
 									$expire_string       = ( $expire_date_calc > $current ) ? __( 'Expires at', 'buddyboss-theme' ) : __( 'Expired at', 'buddyboss-theme' );
 									if ( $expire_date_calc > 0 && abs( intval( $expire_access_days ) ) > 0 && ( ! empty( $user_id ) ) ) {
@@ -182,7 +181,7 @@ if ( empty( $course ) ) {
 							/**
 							 * If the user needs to complete the previous lesson display an alert
 							 */
-							if ( ( ! learndash_is_sample( $post ) ) && @$lesson_progression_enabled && ! @$previous_lesson_completed ) :
+							if ( @$lesson_progression_enabled && ! @$previous_lesson_completed ) :
 								$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
 								learndash_get_template_part(
 									'modules/messages/lesson-progression.php',

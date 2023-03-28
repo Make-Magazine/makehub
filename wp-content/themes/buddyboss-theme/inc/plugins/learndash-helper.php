@@ -400,29 +400,27 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 		public function boss_theme_convert_social_learner_video_to_ld_video_progression() {
 			if ( is_singular( [ 'sfwd-lessons', 'sfwd-topic' ] ) ) {
 				global $post;
-				$value            = get_post_meta( $post->ID, '_boss_edu_post_video', true );
-				$is_video_migrate = get_post_meta( $post->ID, 'is_boss_edu_post_video_migrate', true );
-				$lesson_settings  = learndash_get_setting( $post->ID );
-				if ( $value && false === $is_video_migrate ) {
-					if ( ( isset( $lesson_settings['lesson_video_enabled'] ) ) && ( 'on' === $lesson_settings['lesson_video_enabled'] ) ) {
+				$value           = get_post_meta( $post->ID, '_boss_edu_post_video', true );
+				$lesson_settings = learndash_get_setting( $post->ID );
+				if ( $value ) {
+					if ( ( isset( $lesson_settings['lesson_video_enabled'] ) ) && ( $lesson_settings['lesson_video_enabled'] == 'on' ) ) {
 					} else {
 						learndash_update_setting( $post->ID, 'lesson_video_enabled', 'on' );
 						learndash_update_setting( $post->ID, 'lesson_video_url', $value );
 						learndash_update_setting( $post->ID, 'lesson_video_shown', 'BEFORE' );
 						learndash_update_setting( $post->ID, 'lesson_video_auto_start', 'on' );
 						learndash_update_setting( $post->ID, 'lesson_video_show_controls', 'on' );
-						update_post_meta( $post->ID, 'is_boss_edu_post_video_migrate', true );
+						//update_post_meta( $post->ID, '_boss_edu_post_video', '' );
 					}
 				}
 			}
 
 			if ( is_singular( [ 'sfwd-courses' ] ) ) {
 				global $post;
-				$value            = get_post_meta( $post->ID, '_boss_edu_post_video', true );
-				$is_video_migrate = get_post_meta( $post->ID, 'is_boss_edu_post_video_migrate', true );
-				if ( $value && false === $is_video_migrate ) {
+				$value = get_post_meta( $post->ID, '_boss_edu_post_video', true );
+				if ( $value ) {
 					update_post_meta( $post->ID, '_buddyboss_lms_course_video', $value );
-					update_post_meta( $post->ID, 'is_boss_edu_post_video_migrate', true );
+					//update_post_meta( $post->ID, '_boss_edu_post_video', '' );
 				}
 			}
 		}
@@ -715,21 +713,6 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 			$order_by_current = isset ( $_GET['orderby'] ) ? $_GET['orderby'] : '';
 
-			$pagination_url = '';
-			if ( isset( $_GET['request_url'] ) && ! empty( $_GET['request_url'] ) ) {
-				// Decode the requested URL.
-				$pagination_url = urldecode_deep( $_GET['request_url'] );
-
-				// Validate the requested URL.
-				if ( false === strpos( $pagination_url, get_site_url() ) ) {
-					$pagination_url = '';
-				}
-			}
-
-			if ( empty( $pagination_url ) ) {
-				$pagination_url = get_post_type_archive_link( 'sfwd-courses' );
-			}
-
 			if ( 'my-progress' === $order_by_current ) {
 				$this->_my_course_progress = $this->get_courses_progress( get_current_user_id() );
 			}
@@ -795,7 +778,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				$translated = __( 'Page', 'buddyboss-theme' ); // Supply translatable string
 
 				$html .= paginate_links( [
-					'base'               => trailingslashit( $pagination_url ) . 'page/%#%/',
+					'base'               => trailingslashit( get_post_type_archive_link( 'sfwd-courses' ) ) . 'page/%#%/',
 					'format'             => '?paged=%#%',
 					'current'            => ( isset( $_GET['current_page'] ) ? absint( $_GET['current_page'] ) : 1 ),
 					'total'              => $c_q->max_num_pages,
@@ -1328,6 +1311,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 		protected function _set_archive_orderby( $query ) {
 			$order_by_options = $this->_get_orderby_options();
+
 			$default = apply_filters( 'BuddyBossTheme/Learndash/Archive/DefaultOrderBy', 'alphabetical' );
 			if ( ! isset( $order_by_options[ $default ] ) ) {
 				foreach ( $order_by_options as $k => $v ) {
@@ -1336,7 +1320,12 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				}
 			}
 
-			$order_by_current = isset( $_GET['orderby'] ) ? $_GET['orderby'] : $default;
+			$order_by_current = isset ( $_GET['orderby'] ) ? $_GET['orderby'] : $default;
+			$order_by_current = isset( $order_by_options[ $order_by_current ] ) ? $order_by_current : $default;
+
+			$query_order_by = 'date';
+			$query_order    = 'desc';
+
 			switch ( $order_by_current ) {
 				case 'alphabetical':
 					$query_order_by = 'title';
@@ -1349,12 +1338,12 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 					add_filter( 'posts_clauses', [ $this, 'alter_query_parts' ], 10, 2 );
 					break;
 				default:
-					$query_order_by = isset( $_GET['orderby'] ) ? $_GET['orderby'] : 'date';
-					$query_order    = isset( $_GET['order'] ) ? $_GET['order'] : 'desc';
+					$query_order_by = 'date';
+					$query_order    = 'desc';
 					break;
 			}
 
-            $query->set( 'orderby', $query_order_by );
+			$query->set( 'orderby', $query_order_by );
 			$query->set( 'order', $query_order );
 
 			return $query;
@@ -1523,8 +1512,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 					$step_course_id = $course_id;
 					$course         = get_post( $step_course_id );
 
-					$lession_list = learndash_get_course_lessons_list( $course_id );
-					$lession_list = array_column( $lession_list, 'post' );
+					$lession_list = learndash_get_lesson_list( $course_id );
 					$url          = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_continue_url_arr( $course_id, $lession_list );
 
 					if ( isset( $course ) && 'sfwd-courses' === $course->post_type ) {
@@ -1580,8 +1568,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				$course_price_type = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
 				if ( $course_price_type == 'open' ) {
 
-					$lession_list = learndash_get_course_lessons_list( $course_id );
-					$lession_list = array_column( $lession_list, 'post' );
+					$lession_list = learndash_get_lesson_list( $course_id );
 					$url          = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_continue_url_arr( $course_id, $lession_list );
 
 					return $url;
@@ -2280,7 +2267,7 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 
 				foreach ( $group_course_ids as $course_id ) {
 
-					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, $force_refresh = true );
+					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, $force_refresh = true );	
 
 					$this->buddyboss_theme_ld_course_enrolled_users_list( $course_id, true );
 				}

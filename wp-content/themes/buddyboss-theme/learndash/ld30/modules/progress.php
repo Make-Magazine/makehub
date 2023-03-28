@@ -146,20 +146,12 @@ if ( $progress ) :
 								date_i18n( get_option( 'date_format' ), strtotime( $date_time_display ) )
 							);
 						} else {
-							echo '<span class="ld-progress-steps-total"><span>' .
-							     sprintf(
-							         // translators: placeholders: completed steps.
-								     esc_html_x( '%d', 'placeholders: completed steps', 'buddyboss-theme' ),
-								     esc_html( $progress['completed'] )
-							     ) .
-							     '</span>/<span>' .
-							     sprintf(
-							         // translators: placeholders:  total steps.
-								     esc_html_x( '%d', 'placeholders: total steps', 'buddyboss-theme' ),
-								     esc_html( $progress['total'] )
-							     ) .
-							     '</span></span> ' .
-							     __( 'Steps', 'buddyboss-theme' );
+							echo sprintf(
+								// translators: placeholders: completed steps, total steps.
+								esc_html_x( '%1$d/%2$d Steps', 'placeholders: completed steps, total steps', 'buddyboss-theme' ),
+								esc_html( $progress['completed'] ),
+								esc_html( $progress['total'] )
+							);
 						}
 					endif;
 					?>

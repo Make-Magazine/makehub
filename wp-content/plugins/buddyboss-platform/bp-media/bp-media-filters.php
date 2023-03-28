@@ -231,6 +231,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 
 		if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
 			if ( bp_is_group_media_support_enabled() ) {
+				$args['privacy'] = array( 'grouponly' );
 				if ( ! bp_is_group_albums_support_enabled() ) {
 					$args['album_id'] = 'existing-media';
 				}
@@ -239,12 +240,7 @@ function bp_media_activity_append_media( $content, $activity ) {
 				$args['album_id'] = 'existing-media';
 			}
 		} else {
-			$args['privacy'] = bp_media_query_privacy( $activity->user_id, $group_id, $activity->component );
-
-			if ( 'activity_comment' === $activity->type ) {
-				$args['privacy'][] = 'comment';
-			}
-
+			$args['privacy'] = bp_media_query_privacy( $activity->user_id, 0, $activity->component );
 			if ( ! bp_is_profile_media_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
@@ -395,13 +391,8 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	$medias           = filter_input( INPUT_POST, 'media', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$medias           = ! empty( $medias ) ? $medias : array();
-	$actions          = bb_filter_input_string( INPUT_POST, 'action' );
+	$actions          = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 	$moderated_medias = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-
-	if ( ! empty( $medias ) ) {
-		$media_order = array_column( $medias, 'menu_order' );
-		array_multisort( $media_order, SORT_ASC, $medias );
-	}
 
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_medias ) ) {
 		$moderated_medias = explode( ',', $moderated_medias );
@@ -477,7 +468,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 						$media_ids[] = $media_id;
 					}
 					if ( ! in_array( $media_id, $media_ids ) ) {
-						bp_media_delete( array( 'id' => $media_id ), 'activity' );
+						bp_media_delete( array( 'id' => $media_id ) );
 					}
 				}
 
@@ -601,8 +592,8 @@ function bp_media_update_media_privacy( $album ) {
 				$media_obj->privacy = $privacy;
 				$media_obj->save();
 
-				$attachment_id          = $media_obj->attachment_id;
-				$main_activity_id       = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+				$attachment_id    = $media_obj->attachment_id;
+				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
 				$video_main_activity_id = get_post_meta( $attachment_id, 'bp_video_parent_activity_id', true );
 
 				if ( ! empty( $main_activity_id ) ) {
@@ -646,11 +637,6 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		// save media.
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
-
-		if ( ! empty( $medias ) ) {
-			$media_order = array_column( $medias, 'menu_order' );
-			array_multisort( $media_order, SORT_ASC, $medias );
-		}
 
 		// fetch currently uploaded media ids.
 		$existing_media                = array();
@@ -2078,7 +2064,7 @@ function bp_media_download_headers( $file_path, $filename, $download_range = arr
  * @param int $limit Time limit.
  */
 function bp_media_set_time_limit( $limit = 0 ) {
-	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
+	if ( function_exists( 'set_time_limit' ) && false === strpos( ini_get( 'disable_functions' ), 'set_time_limit' ) && ! ini_get( 'safe_mode' ) ) { // phpcs:ignore PHPCompatibility.IniDirectives.RemovedIniDirectives.safe_modeDeprecatedRemoved
 		@set_time_limit( $limit ); // @codingStandardsIgnoreLine
 	}
 }
@@ -2693,7 +2679,6 @@ function bp_media_activity_append_gif( $content, $activity ) {
 function bb_setup_attachment_media_preview() {
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]', 'top' );
 	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]', 'top' );
-	add_rewrite_rule( 'bb-attachment-media-preview/([^/]+)/([^/]+)/([^/]+)/?$', 'index.php?media-attachment-id=$matches[1]&size=$matches[2]&media-thread-id=$matches[3]', 'top' );
 }
 
 /**
@@ -2708,10 +2693,6 @@ function bb_setup_attachment_media_preview() {
 function bb_setup_attachment_media_preview_query( $query_vars ) {
 	$query_vars[] = 'media-attachment-id';
 	$query_vars[] = 'size';
-
-	if ( bp_is_active( 'messages' ) ) {
-		$query_vars[] = 'media-thread-id';
-	}
 
 	return $query_vars;
 }

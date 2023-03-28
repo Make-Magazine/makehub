@@ -58,7 +58,8 @@ function bb_theme_get_404_svg_code( $version = 1 ) {
 			<circle class="circle-fill-404" cx="297.156" cy="53.9609" r="1.16671" fill="#385DFF" stroke="#385DFF" stroke-width="0.583353"/>
 			<defs>
 			<filter id="filter0_b_6658_10486" x="24.4381" y="18.0847" width="249.384" height="104.73" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-			<feFlood flood-opacity="0" result="BackgroundImageFix"/>			
+			<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+			<feGaussianBlur in="BackgroundImage" stdDeviation="1.16671"/>
 			<feComposite in2="SourceAlpha" operator="in" result="effect1_backgroundBlur_6658_10486"/>
 			<feBlend mode="normal" in="SourceGraphic" in2="effect1_backgroundBlur_6658_10486" result="shape"/>
 			</filter>
@@ -125,48 +126,4 @@ function bb_theme_kses_allowed_tags() {
 			'strong' => array(),
 		)
 	);
-}
-
-if ( ! function_exists( 'bb_theme_filter_input_string' ) ) {
-	/**
-	 * Function used to sanitize user input in a manner similar to the (deprecated) FILTER_SANITIZE_STRING.
-	 *
-	 * In many cases, the usage of `FILTER_SANITIZE_STRING` can be easily replaced with `FILTER_SANITIZE_FULL_SPECIAL_CHARS` but
-	 * in some cases, especially when storing the user input, encoding all special characters can result in an stored XSS injection
-	 * so this function can be used to preserve the pre PHP 8.1 behavior where sanitization is expected during the retrieval
-	 * of user input.
-	 *
-	 * @since BuddyBoss 2.2.9
-	 *
-	 * @param string $type          One of INPUT_GET, INPUT_POST, INPUT_COOKIE, INPUT_SERVER, or INPUT_ENV.
-	 * @param string $variable_name Name of a variable to retrieve.
-	 * @param int[]  $flags         Array of supported filter options and flags.
-	 *                              Accepts `FILTER_REQUIRE_ARRAY` in order to require the input to be an array.
-	 *                              Accepts `FILTER_FLAG_NO_ENCODE_QUOTES` to prevent encoding of quotes.
-	 * @return string|string[]|null|boolean Value of the requested variable on success, `false` if the filter fails, or `null` if the `$variable_name` variable is not set.
-	 */
-	function bb_theme_filter_input_string( $type, $variable_name, $flags = array() ) {
-
-		$require_array = in_array( FILTER_REQUIRE_ARRAY, $flags, true );
-		$string        = filter_input( $type, $variable_name, FILTER_UNSAFE_RAW, $require_array ? FILTER_REQUIRE_ARRAY : array() );
-
-		// If we have an empty string or the input var isn't found we can return early.
-		if ( empty( $string ) ) {
-			return $string;
-		}
-
-		/**
-		 * This differs from strip_tags() because it removes the contents of
-		 * the `<script>` and `<style>` tags. E.g. `strip_tags( '<script>something</script>' )`
-		 * will return 'something'. wp_strip_all_tags will return ''
-		 */
-		$string = $require_array ? array_map( 'strip_tags', $string ) : strip_tags( $string );
-
-		if ( ! in_array( FILTER_FLAG_NO_ENCODE_QUOTES, $flags, true ) ) {
-			$string = str_replace( array( "'", '"' ), array( '&#39;', '&#34;' ), $string );
-		}
-
-		return $string;
-
-	}
 }

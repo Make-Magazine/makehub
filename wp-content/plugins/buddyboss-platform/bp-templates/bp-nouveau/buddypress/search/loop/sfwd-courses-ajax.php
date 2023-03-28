@@ -32,13 +32,7 @@ $course_id = get_the_ID();  ?>
 			<div class="item-desc">
 				<?php
 				if ( get_the_excerpt( $course_id ) ) {
-					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_excerpt( $course_id ) ),
-						100,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					);
+					echo mb_strimwidth( get_the_excerpt( $course_id ), 0, 100 ) . '...';
 				}
 				?>
 

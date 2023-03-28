@@ -106,15 +106,15 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 					'array'     => true,
 				) );
 
-				$status = isset( $progress['percentage'] ) && ( 100 === absint( $progress['percentage'] ) ) ? 'completed' : 'notcompleted';
+				$status = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
 
-				if ( isset( $progress['percentage'] ) && $progress['percentage'] > 0 && $progress['percentage'] !== 100 ) {
+				if ( $progress['percentage'] > 0 && $progress['percentage'] !== 100 ) {
 					$status = 'progress';
 				}
 
 				if ( is_user_logged_in() && isset( $user_course_has_access ) && $user_course_has_access ) {
 
-					if ( ( isset( $course_pricing['type'] ) && $course_pricing['type'] === 'open' && isset( $progress['percentage'] ) && $progress['percentage'] === 0 ) || ( isset( $course_pricing['type'] ) && $course_pricing['type'] !== 'open' && $user_course_has_access && isset( $progress['percentage'] ) && $progress['percentage'] === 0 ) ) {
+					if ( ( isset( $course_pricing['type'] ) && $course_pricing['type'] === 'open' && $progress['percentage'] === 0 ) || ( isset( $course_pricing['type'] ) && $course_pricing['type'] !== 'open' && $user_course_has_access && $progress['percentage'] === 0 ) ) {
 
 						echo '<div class="ld-status ld-status-progress ld-primary-background">' . __( 'Start ', 'buddyboss' ) . sprintf( __( '%s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</div>';
 
@@ -124,15 +124,15 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 
 					}
 
-				} elseif ( isset( $course_pricing['type'] ) && 'free' === $course_pricing['type'] ) {
+				} elseif ( $course_pricing['type'] == 'free' ) {
 
 					echo '<div class="ld-status ld-status-incomplete ld-third-background">' . __( 'Free', 'buddyboss' ) . '</div>';
 
-				} elseif ( isset( $course_pricing['type'] ) && 'open' !== $course_pricing['type'] ) {
+				} elseif ( $course_pricing['type'] !== 'open' ) {
 
 					echo '<div class="ld-status ld-status-incomplete ld-third-background">' . __( 'Not Enrolled', 'buddyboss' ) . '</div>';
 
-				} elseif ( isset( $course_pricing['type'] ) && 'open' === $course_pricing['type'] ) {
+				} elseif ( $course_pricing['type'] === 'open' ) {
 
 					echo '<div class="ld-status ld-status-progress ld-primary-background">' . __( 'Start ', 'buddyboss' ) . sprintf( __( '%s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ) . '</div>';
 

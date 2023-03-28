@@ -24,20 +24,20 @@ defined( 'ABSPATH' ) || exit;
 
 	<button class="llms-button-secondary" onClick="window.print()" type="button">
 		<?php echo esc_html__( 'Print', 'buddyboss-theme' ); ?>
-		<i class="bb-icon-f bb-icon-printer" aria-hidden="true"></i>
+		<i class="fa fa-print" aria-hidden="true"></i>
 	</button>
 
 	<form action="" method="POST">
 
 		<button class="llms-button-secondary" type="submit" name="llms_generate_cert">
 			<?php echo esc_html__( 'Save', 'buddyboss-theme' ); ?>
-			<i class="bb-icon-f bb-icon-cloud-download" aria-hidden="true"></i>
+			<i class="fa fa-cloud-download" aria-hidden="true"></i>
 		</button>
 
 		<?php if ( ! $is_template ) : ?>
 			<button class="llms-button-secondary" type="submit" name="llms_enable_cert_sharing" value="<?php echo esc_attr( ! $is_sharing_enabled ); ?>">
 			<?php echo $is_sharing_enabled ? esc_html__( 'Disable sharing', 'buddyboss-theme' ) : esc_html__( 'Enable sharing', 'buddyboss-theme' ); ?>
-				<i class="bb-icon-f bb-icon-share-dots" aria-hidden="true"></i>
+				<i class="fa fa-share-alt" aria-hidden="true"></i>
 			</button>
 		<?php endif; ?>
 

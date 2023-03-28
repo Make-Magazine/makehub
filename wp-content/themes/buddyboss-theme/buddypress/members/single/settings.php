@@ -10,7 +10,7 @@ $profile_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slu
 
 <header class="entry-header settings-header flex align-items-center">
 	<h1 class="entry-title settings-title"><?php esc_attr_e( 'Account Settings', 'buddyboss-theme' ); ?></h1>
-	<a href="<?php echo $profile_link; ?>" class="push-right button outline small"><i class="bb-icon-f bb-icon-user"></i> <?php esc_attr_e( 'View Profile', 'buddyboss-theme' ); ?></a>
+	<a href="<?php echo $profile_link; ?>" class="push-right button outline small"><i class="bb-icon-l bb-icon-user"></i> <?php esc_attr_e( 'View My Profile', 'buddyboss-theme' ); ?></a>
 </header>
 
 <div class="bp-settings-container">

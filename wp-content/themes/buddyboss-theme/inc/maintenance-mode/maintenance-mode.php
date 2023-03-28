@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Maintenance Page
  *
@@ -8,25 +9,27 @@
  * @return void
  */
 
-if ( ! function_exists( 'bb_maintenance_mode' ) ) {
+if ( !function_exists( 'bb_maintenance_mode' ) ) {
 
-	function bb_maintenance_mode( $template ) {
+	function bb_maintenance_mode() {
+
 		global $pagenow;
 
-		$switch = buddyboss_theme_get_option( 'maintenance_mode' );
+        $switch = buddyboss_theme_get_option( 'maintenance_mode' );
 
-		if ( $switch && 'wp-login.php' !== $pagenow && ! current_user_can( 'manage_options' ) && ! is_admin() ) {
+		if ( $switch && $pagenow !== 'wp-login.php' && !current_user_can( 'manage_options' ) && !is_admin() ) {
 
 			if ( file_exists( dirname( __FILE__ ) . '/views/maintenance.php' ) ) {
-				$template = dirname( __FILE__ ) . '/views/maintenance.php';
+				require_once dirname( __FILE__ ) . '/views/maintenance.php';
 			}
-		}
 
-		return $template;
+			die();
+		}
 	}
 
-	if ( buddyboss_theme_get_option( 'maintenance_mode' ) ) {
-		add_action( 'template_include', 'bb_maintenance_mode', PHP_INT_MAX );
+	if( buddyboss_theme_get_option( 'maintenance_mode' ) ) {
+		add_action( 'template_include', 'bb_maintenance_mode' );
 		add_action( 'bb_maintenance_head', 'boss_generate_option_css', 99 );
 	}
+
 }

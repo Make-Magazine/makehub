@@ -12,18 +12,6 @@ $logo_dark       = ( $show && $show_dark && $logo_dark_id ) ? wp_get_attachment_
 // This is for better SEO
 $elem       = ( is_front_page() && is_home() ) ? 'h1' : 'div';
 $logo_class = $buddypanel ? $buddypanel_logo ? 'buddypanel_logo_display_on' : 'buddypanel_logo_display_off' : '';
-
-// Show Logo in header if buddypanel does not have menu to show
-if ( 'buddypanel_logo_display_on' === $logo_class ) {
-
-	$menu = is_user_logged_in() ? 'buddypanel-loggedin' : 'buddypanel-loggedout';
-
-	if ( has_nav_menu( $menu ) ) {
-		$logo_class = 'buddypanel_logo_display_on';
-	} else {
-		$logo_class = 'buddypanel_logo_display_off';
-	}
-}
 ?>
 
 <div id="site-logo" class="site-branding <?php echo esc_attr( $logo_class ); ?>">

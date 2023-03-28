@@ -15,7 +15,6 @@
  * - ReduxFramework_typography
  */
 if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
-	#[\AllowDynamicProperties]
 	class ReduxFramework_bb_typography {
 		/**
 		 * Array of data for typography preview.
@@ -897,13 +896,13 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 						}
 					}
 					if ( empty( $value ) && in_array(
-						$key,
-						array(
-							'font-weight',
-							'font-style',
-						),
-						true
-					) && true === $font_value_set ) {
+							$key,
+							array(
+								'font-weight',
+								'font-style',
+							),
+							true
+						) && true === $font_value_set ) {
 						$value = 'normal';
 					}
 					if ( 'font-weight' === $key && false === $this->field['font-weight'] ) {
@@ -911,9 +910,6 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 					}
 					if ( 'font-style' === $key && false === $this->field['font-style'] ) {
 						continue;
-					}
-					if ( 'font-weight' === $key && in_array( substr( $value, 0, 3 ), array( '100', '200', '300', '400', '500', '600', '700', '800', '900' ), true ) ) {
-						$value = substr( $value, 0, 3 );
 					}
 					if ( 'google' === $key || 'subsets' === $key || 'font-backup' === $key || empty( $value ) ) {
 						continue;
@@ -1217,36 +1213,38 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 		 */
 		private function get_variants( array $var ): array {
 			$result = array();
+			$italic = array();
 			foreach ( $var as $v ) {
 				$name = '';
-				$first_char = (string) $v[0];
-				if ( '1' === $first_char ) {
+				if ( 1 === $v[0] ) {
 					$name = 'Ultra-Light 100';
-				} elseif ( '2' === $first_char ) {
+				} elseif ( 2 === $v[0] ) {
 					$name = 'Light 200';
-				} elseif ( '3' === $first_char ) {
+				} elseif ( 3 === $v[0] ) {
 					$name = 'Book 300';
-				} elseif ( '4' === $first_char || 'r' === $first_char ) {
+				} elseif ( 4 === $v[0] || 'r' === $v[0] || 'i' === $v[0] ) {
 					$name = 'Normal 400';
-				} elseif ( '5' === $first_char ) {
+				} elseif ( 5 === $v[0] ) {
 					$name = 'Medium 500';
-				} elseif ( '6' === $first_char ) {
+				} elseif ( 6 === $v[0] ) {
 					$name = 'Semi-Bold 600';
-				} elseif ( '7' === $first_char ) {
+				} elseif ( 7 === $v[0] ) {
 					$name = 'Bold 700';
-				} elseif ( '8' === $first_char ) {
+				} elseif ( 8 === $v[0] ) {
 					$name = 'Extra-Bold 800';
-				} elseif ( '9' === $first_char ) {
+				} elseif ( 9 === $v[0] ) {
 					$name = 'Ultra-Bold 900';
 				}
-
+				if ( 'regular' === $v ) {
+					$v = '400';
+				}
 				if ( strpos( $v, 'italic' ) || 'italic' === $v ) {
 					$name .= ' Italic';
-					$name  = trim( $name );
+					$name = trim( $name );
 					if ( 'italic' === $v ) {
 						$v = '400italic';
 					}
-					$result[] = array(
+					$italic[] = array(
 						'id'   => $v,
 						'name' => $name,
 					);
@@ -1257,10 +1255,13 @@ if ( ! class_exists( 'ReduxFramework_bb_typography' ) ) {
 					);
 				}
 			}
-
+			foreach ( $italic as $item ) {
+				$result[] = $item;
+			}
+			
 			return array_filter( $result );
 		}
-
+		
 		/**
 		 * Enable output_variables to be generated.
 		 *

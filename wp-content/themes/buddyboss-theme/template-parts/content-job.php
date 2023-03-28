@@ -53,14 +53,6 @@ global $post;
                 	<li class="location"><?php the_job_location(); ?></li>
                 
                 	<li class="date-posted"><?php the_job_publish_date(); ?></li>
-
-					<?php
-						$job_salary = the_job_salary('', '', false);
-						if ( ! empty( $job_salary ) ) : ?>
-							<li class="salary"><?php echo esc_html( $job_salary ); ?> </li>
-						<?php
-						endif;
-					?>
                 
                 	<?php if ( is_position_filled() ) : ?>
                 		<li class="position-filled"><?php _e( 'This position has been filled', 'buddyboss-theme' ); ?></li>

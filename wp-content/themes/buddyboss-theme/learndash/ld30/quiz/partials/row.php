@@ -31,7 +31,6 @@ $is_sample    = ( isset( $lesson['sample'] ) ? $lesson['sample'] : false );
  */
 $atts               = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-balloon-pos="up" data-balloon="' . esc_html__( "You don't currently have access to this content", 'buddyboss-theme' ) . '"' : '' ) );
 $atts_access_marker = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? '<span class="lms-is-locked-ico"><i class="bb-icon-f bb-icon-lock"></i></span>' : '' ) );
-$attributes         = learndash_get_course_step_attributes( $quiz['post']->ID, $course_id, $user_id );
 
 /**
  * Fires before the quiz row listing.
@@ -84,18 +83,6 @@ do_action( 'learndash-quiz-row-before', $quiz['post']->ID, $course_id, $user_id 
 
 					?>
 				</div>
-
-				<?php
-				if ( ! empty( $attributes ) && empty( $atts ) ) :
-					foreach ( $attributes as $attribute ) :
-						if ( $attribute['icon'] == 'ld-icon-calendar' ) :
-							?>
-							<span class="lms-quiz-status-icon" data-balloon-pos="left" data-balloon="<?php echo esc_attr( $attribute['label'] ); ?>"><i class="bb-icon-f bb-icon-lock"></i></span>
-							<?php
-						endif;
-					endforeach;
-				endif;
-				?>
 
 				<?php
 				/**

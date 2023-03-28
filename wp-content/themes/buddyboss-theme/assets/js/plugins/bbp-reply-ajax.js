@@ -145,6 +145,9 @@ jQuery(
 
 						var editor_element_key = $bbpress_forums_element.find( '.bbp-reply-form form' ).find( '.bbp-the-content' ).data( 'key' );
 						if ( typeof window.forums_medium_reply_editor !== 'undefined' && typeof window.forums_medium_reply_editor[editor_element_key] !== 'undefined' ) {
+							// Reset formatting of editor.
+							window.forums_medium_reply_editor[editor_element_key].execAction( 'selectAll' );
+							window.forums_medium_reply_editor[editor_element_key].execAction( 'removeFormate' );
 							window.forums_medium_reply_editor[editor_element_key].resetContent();
 						}
 						$bbpress_forums_element.find( '.bbp-reply-form form' ).find( '.bbp-the-content' ).removeClass( 'error' );
@@ -158,7 +161,6 @@ jQuery(
 						if ( response.total_reply_count ) {
 							$bbpress_forums_element.find( '.header-total-reply-count .topic-reply-count' ).html( response.total_reply_count );
 							$bbpress_forums_element.find( '.topic-lead .bs-replies' ).html( response.total_reply_count );
-							$( '.bs-forums-items' ).removeClass( 'topic-list-no-replies' )
 						}
 
 						if ( $bbpress_forums_element.find( '.replies-content .bp-feedback.info' ).length > 0 ) {
@@ -173,8 +175,8 @@ jQuery(
 						var scrubberposts = $bbpress_forums_element.find( '.scrubberpost' );
 
 						if ( scrubberposts.length ) {
-							scrubberposts.each( function( i ) {
-								if ( $( this ).hasClass( 'post-' + response.reply_id ) ) {
+							for ( var k in scrubberposts ) {
+								if ( $( scrubberposts[ k ] ).hasClass( 'post-' + response.reply_id ) ) {
 
 									var scrubbers_obj, scrubber_key;
 									$( '.scrubber' ).each(
@@ -189,10 +191,10 @@ jQuery(
 									);
 									scrubbers_obj.total_item = parseInt( scrubbers_obj.total_item, 10 ) + 1;
 									scrubbers_obj.to = parseInt( scrubbers_obj.to, 10 ) + 1;
-									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( i, 10 ) + 1, '', scrubber_key );
-									return false;
+									window.BuddyBossThemeBbpScrubber.goToPost( parseInt( k, 10 ) + 1, 'last', scrubber_key );
+									break;
 								}
-							} );
+							}
 						}
 						
 					} else {
@@ -326,7 +328,6 @@ jQuery(
 		var bbp_quick_reply = {
 			init: function () {
 				this.ajax_call();
-				this.moveToReply();
 			},
 
 			// Quick Reply AJAX call
@@ -371,7 +372,6 @@ jQuery(
 								if ( $bbpress_forums_element.find('div.bb-quick-reply-form-wrap').length ) {
 									var $quick_reply_wrap = $bbpress_forums_element.find('div.bb-quick-reply-form-wrap');
 									$quick_reply_wrap.show();
-									$quick_reply_wrap.not('[data-component="activity"]').hide();
 
 									if ( $quick_reply_wrap.find('.bbp-reply-form').length ) {
 										$quick_reply_wrap.find('.bbp-reply-form').addClass('bb-modal bb-modal-box');
@@ -636,31 +636,6 @@ jQuery(
 					}
 				}
 			},
-			
-			// When click on notification then move to particular reply.
-			moveToReply: function () {
-				if ( window.location.href.indexOf( '#post-' ) > 0 ) {
-					var varUrl = window.location.href.split( '#post-' );
-					var postID = varUrl && undefined !== varUrl[1] ? varUrl[1] : '';
-					if ( !postID || $( '#post-' + postID ).length == 0 ) {
-						return;
-					}
-					var scrollTop, admin_bar_height = 0;
-			
-					if ( $( '#wpadminbar' ).length > 0 ) {
-						admin_bar_height = $( '#wpadminbar' ).innerHeight();
-					}
-			
-					if ( $( 'body' ).hasClass( 'sticky-header' ) ) {
-						scrollTop = ( $( '#post-' + postID ).parent().offset().top - $( '#masthead' ).innerHeight() - admin_bar_height );
-					} else {
-						scrollTop = ( $( '#post-' + postID ).parent().offset().top - admin_bar_height );
-					}
-					$( 'html, body' ).animate( {
-						scrollTop: scrollTop
-					}, 200 );
-				}
-			}
 
 		};
 

@@ -56,8 +56,6 @@ $topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? '
 $topic_settings                = learndash_get_setting( $topic );
 $lesson_video_enabled          = isset( $topic_settings['lesson_video_enabled'] ) ? $topic_settings['lesson_video_enabled'] : null;
 $topic_video_progression_class = ! empty( $lesson_video_enabled ) ? 'ld-topic__video' : '';
-$learndash_available_date      = learndash_course_step_available_date( $topic->ID, $course_id, $user_id, true );
-$attributes                    = learndash_get_course_step_attributes( $topic->ID, $course_id, $user_id );
 
 /**
  * Fires before a topic row.
@@ -69,7 +67,7 @@ $attributes                    = learndash_get_course_step_attributes( $topic->I
  * @param int $user_id   User ID.
  */
 do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
-<div class="ld-table-list-item <?php echo esc_attr( $topic_video_progression_class ); ?> <?php echo ( ! empty( $learndash_available_date ) ) ? 'lms-topic-is-locked' : 'lms-topic-not-locked'; ?>" id="<?php echo esc_attr( 'ld-table-list-item-' . $topic->ID ); ?>">
+<div class="ld-table-list-item <?php echo esc_attr( $topic_video_progression_class ); ?>" id="<?php echo esc_attr( 'ld-table-list-item-' . $topic->ID ); ?>">
 	<a class="<?php echo esc_attr( $topic_class ); ?>" href="<?php echo esc_url( learndash_get_step_permalink( $topic->ID, $course_id ) ); ?>">
 		<?php
 		/**
@@ -98,20 +96,7 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		 */
 		do_action( 'learndash-topic-row-title-before', $topic->ID, $course_id, $user_id );
 		?>
-		<span class="ld-topic-title">
-			<?php echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ); ?>
-			<?php
-			if ( ! empty( $attributes ) ) :
-				foreach ( $attributes as $attribute ) :
-					if ( $attribute['icon'] == 'ld-icon-calendar' ) :
-						?>
-						<span class="lms-topic-status-icon" data-balloon-pos="left" data-balloon="<?php echo esc_attr( $attribute['label'] ); ?>"><i class="bb-icon-f bb-icon-lock"></i></span>
-						<?php
-					endif;
-				endforeach;
-			endif;
-			?>
-		</span> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
+		<span class="ld-topic-title"><?php echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ); ?></span> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 		<?php
 		/**
 		 * Fires after the topic title.

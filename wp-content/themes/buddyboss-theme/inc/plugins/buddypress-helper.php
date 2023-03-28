@@ -47,11 +47,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			add_action( THEME_HOOK_PREFIX . 'header_user_menu_items', array( $this, 'render_header_menu' ), 8 );
 			add_action( 'bp_after_member_header', array( $this, 'change_sitewide_notices' ) );
 
-			if (
-				function_exists( 'bp_disable_advanced_profile_search' ) &&
-				false === bp_disable_advanced_profile_search() &&
-				function_exists( 'bp_profile_search_show_form' )
-			) {
+			if ( function_exists( 'bp_disable_advanced_profile_search' ) && false === bp_disable_advanced_profile_search() ) {
 				// Remove profile search form.
 				remove_action( 'bp_before_directory_members', 'bp_profile_search_show_form' );
 				add_action( THEME_HOOK_PREFIX . 'before_members_widgets', 'bp_profile_search_show_form' );
@@ -74,11 +70,6 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 			add_filter( 'heartbeat_nopriv_received', array( $this, 'heartbeat_unread_notifications' ), 11 );
 
 			add_action( 'admin_footer', array( $this, 'buddyboss_theme_header_menu_admin_js' ), 999 ); // For back-end.
-
-			add_filter( 'comments_template_query_args', array( $this, 'buddyboss_theme_template_query_arguments' ), 999, 1 );
-			add_filter( 'comments_template', array( $this, 'buddyboss_theme_comments_template' ), 999, 1 );
-
-			add_filter( 'bp_nouveau_get_single_item_subnav_classes', array( $this, 'buddyboss_theme_single_item_subnav_classes' ), 10, 1 );
 		}
 
 		public function is_active() {
@@ -464,62 +455,6 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyPressHelper' ) ) {
 		public function has_message_threads_parse_args( $args ) {
 			$args['per_page'] = 20;
 			return $args;
-		}
-
-		/**
-		 * Remove the user profile link when theme settings has been disabled.
-		 *
-		 * @since 2.1.6
-		 *
-		 * @param array $comment_args Comments query arguments.
-		 *
-		 * @return mixed
-		 */
-		public function buddyboss_theme_template_query_arguments( $comment_args ) {
-			$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-			if ( function_exists( 'bp_core_filter_comments' ) && ! $platform_author_link ) {
-				remove_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
-			}
-
-			return $comment_args;
-		}
-
-		/**
-		 * Remove the user profile link when theme settings has been disabled.
-		 *
-		 * @since 2.1.6
-		 *
-		 * @param string $theme_template The path to the theme template file.
-		 *
-		 * @return mixed
-		 */
-		public function buddyboss_theme_comments_template( $theme_template ) {
-			$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-			if ( function_exists( 'bp_core_filter_comments' ) && ! $platform_author_link ) {
-				add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
-			}
-
-			return $theme_template;
-		}
-
-		/**
-		 * Adding the subnavigation classes to change the UI for the responsive.
-		 *
-		 * @since 2.2.5
-		 *
-		 * @param string $class Classed.
-		 *
-		 * @return mixed|string
-		 */
-		public function buddyboss_theme_single_item_subnav_classes( $class ) {
-			if (
-				( function_exists( 'bp_is_settings_component' ) && bp_is_settings_component() ) ||
-				( function_exists( 'bp_is_user_profile' ) && bp_is_user_profile() )
-			) {
-				$class .= ' bb-subnav-private';
-			}
-
-			return $class;
 		}
 	}
 }

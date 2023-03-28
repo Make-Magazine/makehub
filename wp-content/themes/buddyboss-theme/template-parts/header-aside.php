@@ -91,19 +91,7 @@ $profile_dropdown   = buddyboss_theme_get_option( 'profile_dropdown' );
 									</a>
 								</li>
 								<?php
-								$theme_menu_locations = get_nav_menu_locations();
-								
-								if ( class_exists( 'SFWD_LMS' ) && ld_30_focus_mode_enable() && isset( $theme_menu_locations['ld30_focus_mode'] ) ) {
-									wp_nav_menu(
-										array(
-											'theme_location' => 'ld30_focus_mode',
-											'container' => false,
-											'fallback_cb' => false,
-											'walker'  => new BuddyBoss_SubMenuWrap(),
-											'menu_class' => 'bb-my-account-menu',
-										)
-									);
-								} elseif ( function_exists( 'bp_is_active' ) ) {
+								if ( function_exists( 'bp_is_active' ) ) {
 									$header_menu = wp_nav_menu(
 										array(
 											'theme_location' => 'header-my-account',

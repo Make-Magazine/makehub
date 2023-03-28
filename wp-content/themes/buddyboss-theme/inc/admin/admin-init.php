@@ -38,7 +38,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 
 	function register_buddyboss_menu_page() {
 		// don't create menu if buddyboss platform in activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
 			return;
 		}
 
@@ -67,7 +67,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 	function buddyboss_theme_menu_order( $menu_order ) {
 
 		// don't create separator if buddyboss platform is activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
 			return $menu_order;
 		}
 
@@ -102,7 +102,7 @@ if ( ! function_exists( 'register_buddyboss_menu_page' ) ) {
 	function buddyboss_theme_plugins_menu_order( $menu_order ) {
 
 		// don't create separator if buddyboss platform is activated.
-		if ( function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ) {
+		if ( function_exists( 'buddypress' ) && isset( buddypress()->boddyboss ) ) {
 			return $menu_order;
 		}
 
@@ -239,7 +239,7 @@ if ( ! function_exists( 'boss_custom_panel_styles_scripts' ) ) {
 		wp_register_style( 'redux-custom-panel', get_template_directory_uri() . '/inc/admin/assets/css/redux-custom-panel.css', array( 'redux-admin-css' ), time(), 'all' );
 		wp_enqueue_style( 'redux-custom-panel' );
 
-		wp_register_script( 'redux-custom-script', get_template_directory_uri() . '/inc/admin/assets/js/boss-custom-admin.js', array( 'wp-i18n' ) );
+		wp_register_script( 'redux-custom-script', get_template_directory_uri() . '/inc/admin/assets/js/boss-custom-admin.js' );
 		wp_enqueue_script( 'redux-custom-script' );
 
 		wp_localize_script(
@@ -247,7 +247,6 @@ if ( ! function_exists( 'boss_custom_panel_styles_scripts' ) ) {
 			'BOSS_CUSTOM_ADMIN',
 			array(
 				'elementor_pro_active' => ! empty( buddyboss_theme()->elementor_pro_helper() ) ? '1' : '0',
-				'ieInfo' => esc_html__( 'Please click "Reset All" at the top, before doing an import in order for your changes to take effect.', 'buddyboss-theme' ),
 			)
 		);
 

@@ -198,7 +198,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 					$css .= 'src: ';
 					$arr = array();
 					if ( ! empty( $font_face['woff2']['url'] ) ) {
-						$arr[] = 'url(' . esc_url( $font_face['woff2']['url'] ) . ") format('woff2')";
+						$arr[] = 'url(' . esc_url( $font_face['woff']['url'] ) . ") format('woff2')";
 					}
 					if ( ! empty( $font_face['woff']['url'] ) ) {
 						$arr[] = 'url(' . esc_url( $font_face['woff']['url'] ) . ") format('woff')";

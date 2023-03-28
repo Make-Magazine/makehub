@@ -12,7 +12,7 @@ $profile_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slu
 <?php if ( bp_is_user_profile_edit() || bp_is_user_change_avatar() || bp_is_user_change_cover_image() ) { ?>
 	<header class="profile-header flex align-items-center">
 		<h1 class="entry-title bb-profile-title"><?php esc_attr_e( 'Edit Profile', 'buddyboss-theme' ); ?></h1>
-		<a href="<?php echo $profile_link; ?>" class="push-right button outline small"><i class="bb-icon-f bb-icon-user"></i> <?php esc_attr_e( 'View Profile', 'buddyboss-theme' ); ?></a>
+		<a href="<?php echo $profile_link; ?>" class="push-right button outline small"><i class="bb-icon-l bb-icon-user"></i> <?php esc_attr_e( 'View My Profile', 'buddyboss-theme' ); ?></a>
 	</header>
 <?php } ?>
 

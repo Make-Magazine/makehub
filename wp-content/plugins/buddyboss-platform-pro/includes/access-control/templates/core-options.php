@@ -27,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 $is_default_disabled = false;
 
 if ( ! empty( $component_settings ) ) {
-	$current_tab = bb_pro_filter_input_string( INPUT_GET, 'tab' );
+	$current_tab = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
 	if ( 'bp-groups' === $current_tab && bb_access_control_create_group_key() === $db_option_key && isset( $component_settings['component'] ) && 'groups' === $component_settings['component'] && isset( $component_settings['notices'] ) && isset( $component_settings['notices']['disable_group_creation']['is_disabled'] ) && $component_settings['notices']['disable_group_creation']['is_disabled'] ) {
 		$is_default_disabled = true;
 		bb_access_control_display_feedback( $component_settings['notices']['disable_group_creation']['message'], $component_settings['notices']['disable_group_creation']['type'] );

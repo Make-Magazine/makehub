@@ -91,7 +91,7 @@ if ( is_user_logged_in() ) {
 							</a>
 						</li>
 					<?php } ?>
-					<?php if ( bp_is_active('groups') && function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) { ?>
+					<?php if ( function_exists( 'bp_core_can_edit_settings' ) && bp_core_can_edit_settings() ) { ?>
 						<li id="wp-admin-bar-my-account-settings-group-invites">
 							<a class="ab-item" href="<?php echo esc_url( trailingslashit( $settings_link . 'invites' ) ); ?>">
 								<?php esc_html_e( 'Group Invites', 'buddyboss-theme' ); ?>
@@ -238,7 +238,7 @@ if ( is_user_logged_in() ) {
 		}
 
 		?>
-		<li id="wp-admin-bar-my-account-messages" class="menupop parent wp-admin-bar-my-account-messages-<?php echo esc_attr( bp_loggedin_user_id() ); ?>">
+		<li id="wp-admin-bar-my-account-messages" class="menupop parent">
 			<a class="ab-item" aria-haspopup="true" href="<?php echo esc_url( $messages_link ); ?>">
 				<i class="bb-icon-l bb-icon-inbox"></i>
 				<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo wp_kses_post( $title ); ?>
@@ -246,7 +246,7 @@ if ( is_user_logged_in() ) {
 			<div class="ab-sub-wrapper wrapper">
 				<ul id="wp-admin-bar-my-account-messages-default" class="ab-submenu">
 					<li id="wp-admin-bar-my-account-messages-inbox">
-						<a class="ab-item" href="<?php echo esc_url( $messages_link ); ?>"><?php esc_html_e( 'Messages', 'buddyboss-theme' ); ?></a>
+						<a class="ab-item" href="<?php echo esc_url( $messages_link ); ?>"><?php echo wp_kses_post( $inbox ); ?></a>
 					</li>
 					<li id="wp-admin-bar-my-account-messages-compose">
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $messages_link . 'compose' ) ); ?>"><?php esc_html_e( 'New Message', 'buddyboss-theme' ); ?></a>
@@ -385,10 +385,10 @@ if ( is_user_logged_in() ) {
 						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $forums_link . bbp_get_user_favorites_slug() ) ); ?>"><?php esc_html_e( 'My Favorites', 'buddyboss-theme' ); ?></a>
 					</li>
 					<?php } ?>
-					<?php if ( ! function_exists( 'bb_is_enabled_subscription' ) && function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) { ?>
-						<li id="wp-admin-bar-my-account-forums-subscriptions">
-							<a class="ab-item" href="<?php echo esc_url( trailingslashit( $forums_link . bbp_get_user_subscriptions_slug() ) ); ?>"><?php esc_html_e( 'Subscriptions', 'buddyboss-theme' ); ?></a>
-						</li>
+					<?php if ( function_exists( 'bbp_is_subscriptions_active' ) && bbp_is_subscriptions_active() ) { ?>
+					<li id="wp-admin-bar-my-account-forums-subscriptions">
+						<a class="ab-item" href="<?php echo esc_url( trailingslashit( $forums_link . bbp_get_user_subscriptions_slug() ) ); ?>"><?php esc_html_e( 'Subscriptions', 'buddyboss-theme' ); ?></a>
+					</li>
 					<?php } ?>
 				</ul>
 			</div>

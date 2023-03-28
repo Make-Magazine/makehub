@@ -244,7 +244,6 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 		}
 
 		public function admin_menu() {
-			$this->settings_page    = function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ? 'buddyboss-platform' : $this->settings_page;
 			$this->page_hook_suffix = add_submenu_page(
 				$this->settings_page, __( 'BuddyBoss License Keys', 'buddyboss-theme' ), __( 'License Keys', 'buddyboss-theme' ), $this->capability, $this->plugin_slug, array(
 					$this,
@@ -662,8 +661,8 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ):
 			$saved_licenses = $this->_get_saved_licenses();
 			if ( ! empty( $saved_licenses ) ) {
 				foreach ( $saved_licenses as $package_id => $license_details ) {
-					// parent plugin should be active as well
-					if ( isset( $license_details['is_active'] ) && $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
+					//parent plugin should be active as well
+					if ( $license_details['is_active'] && isset( $this->packages[ $package_id ] ) && ! empty( $this->packages[ $package_id ] ) ) {
 						if ( ! empty( $license_details['product_keys'] ) && is_array( $license_details['product_keys'] ) && in_array( $product_key, $license_details['product_keys'] ) ) {
 							if ( $get_extra_info ) {
 								$valid_license_key = array(

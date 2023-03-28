@@ -226,25 +226,13 @@
             }
 
             var data = $form.serialize();
-    
-            if ( bs_data.lifterlms.course_category_id > 0 ) {
-                //update url.
-                var new_url = bs_data.lifterlms.course_category_url;
-            } else {
-                //update url.
-                var new_url = bs_data.lifterlms.course_archive_url;
-            }
-
-            if ( $form.hasClass('bb-elementor-widget') ) {
-                new_url = $form.data('current_page_url');
-            }
 
             //view
             var view = 'grid';
             if ( $form.find( '.layout-list-view' ).hasClass( 'active' ) ) {
                 view = 'list';
             }
-            data += '&view=' + view + '&request_url=' + encodeURIComponent( new_url );
+            data += '&view=' + view;
 
             $.ajax({
                 method  : 'GET',
@@ -252,7 +240,17 @@
                 data    : data + '&action=buddyboss_lms_get_courses&_wpnonce=' + bs_data.lifterlms.nonce_get_courses + '&course_category_url=' + bs_data.lifterlms.course_category_url + '&is_course_category=' + bs_data.lifterlms.is_course_category + '&course_category_id=' +  bs_data.lifterlms.course_category_id + '&course_category_name=' +  bs_data.lifterlms.course_category_name,
                 success : function ( response ) {
 
+                    if ( bs_data.lifterlms.course_category_id > 0 ) {
+                        //update url
+                        var new_url = bs_data.lifterlms.course_category_url;
+                    } else {
+                        //update url
+                        var new_url = bs_data.lifterlms.course_archive_url;
+                    }
 
+                    if ( $form.hasClass('bb-elementor-widget') ) {
+                        new_url = $form.data('current_page_url');
+                    }
 
                     var current_page = $form.find( '[name="current_page"]' ).val();
                     if ( isNaN( current_page ) ) {
@@ -376,25 +374,12 @@
             var $form = $( '#bb-courses-directory-form' );
             var data = $form.serialize();
 
-            if ( bs_data.lifterlms.course_category_id > 0 ) {
-                //update url.
-                var new_url = bs_data.lifterlms.course_category_url;
-            } else {
-                //update url.
-                var new_url = bs_data.lifterlms.course_archive_url;
-            }
-
-            if ( $form.hasClass('bb-elementor-widget') ) {
-                new_url = $form.data('current_page_url');
-            }
-
             //view
             var view = 'list';
             if ( $form.find( '.layout-grid-view' ).hasClass( 'active' ) ) {
                 view = 'grid';
             }
-
-            data += '&view=' + view + '&request_url=' + encodeURIComponent( new_url );
+            data += '&view=' + view;
 
             $.ajax({
                 method  : 'GET',
@@ -402,7 +387,17 @@
                 data    : data + '&action=buddyboss_lms_get_courses&_wpnonce=' + bs_data.lifterlms.nonce_get_courses + '&course_category_url=' + bs_data.lifterlms.course_category_url + '&is_course_category=' + bs_data.lifterlms.is_course_category + '&course_category_id=' +  bs_data.lifterlms.course_category_id + '&course_category_name=' +  bs_data.lifterlms.course_category_name,
                 success : function ( response ) {
 
+                    if ( bs_data.lifterlms.course_category_id > 0 ) {
+                        //update url
+                        var new_url = bs_data.lifterlms.course_category_url;
+                    } else {
+                        //update url
+                        var new_url = bs_data.lifterlms.course_archive_url;
+                    }
 
+                    if ( $form.hasClass('bb-elementor-widget') ) {
+                        new_url = $form.data('current_page_url');
+                    }
 
                     var current_page = $form.find( '[name="current_page"]' ).val();
                     if ( isNaN( current_page ) ) {

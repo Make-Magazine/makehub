@@ -107,7 +107,7 @@ class BB_Lms_Activity extends Widget_Base {
 	 * @since  1.1.0
 	 * @access protected
 	 */
-	protected function register_controls() {
+	protected function _register_controls() {
 		$shortName = $this->get_active_plugin_short_name();
 
 		if ( empty( $shortName ) ) {

@@ -16,18 +16,18 @@ if ( !function_exists( 'buddyboss_theme_redux_register_custom_extension_loader' 
 			}
 
 			$extension_class = 'ReduxFramework_Extension_' . $folder;
-
-			if ( ! class_exists( $extension_class ) ) {
+            
+			if ( !class_exists( $extension_class ) ) {
 				// In case you wanted override your override, hah.
-				$class_file = $path . $folder . '/extension_' . $folder . '.php';
-				$class_file = apply_filters( 'redux/extension/' . $ReduxFramework->args['opt_name'] . '/' . $folder, $class_file );
-				if ( $class_file && file_exists( $class_file ) ) {
+				$class_file	 = $path . $folder . '/extension_' . $folder . '.php';
+				$class_file	 = apply_filters( 'redux/extension/' . $ReduxFramework->args[ 'opt_name' ] . '/' . $folder, $class_file );
+				if ( $class_file ) {
 					require_once( $class_file );
-
-					if ( ! isset( $ReduxFramework->extensions[ $folder ] ) ) {
-						$ReduxFramework->extensions[ $folder ] = new $extension_class( $ReduxFramework );
-					}
 				}
+			}
+
+			if ( !isset( $ReduxFramework->extensions[ $folder ] ) ) {
+				$ReduxFramework->extensions[ $folder ] = new $extension_class( $ReduxFramework );
 			}
 		}
 	}

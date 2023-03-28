@@ -20,7 +20,6 @@ if ( ! class_exists( 'Redux', false ) ) {
 	 *
 	 * @since       3.0.0
 	 */
-	#[\AllowDynamicProperties]
 	class Redux {
 
 

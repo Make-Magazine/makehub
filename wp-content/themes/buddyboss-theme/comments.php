@@ -27,12 +27,7 @@ if ( post_password_required() ) {
 	<h4 class="comments-title"><?php esc_html_e( 'Responses', 'buddyboss-theme' ); ?></h4>
 
 	<?php
-	$platform_author_link = buddyboss_theme_get_option( 'blog_platform_author_link' );
-	if ( function_exists( 'bp_core_get_user_domain' ) && $platform_author_link ) {
-		$user_link = bp_core_get_user_domain( get_current_user_id() );
-	} else {
-		$user_link = get_author_posts_url( get_current_user_id() );
-	}
+	$user_link = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( get_current_user_id() ) : get_author_posts_url( get_current_user_id() );
 
 	// You can start editing here -- including this comment!
 	$args = array(
@@ -45,9 +40,9 @@ if ( post_password_required() ) {
 		 * %3$s - User Name
          */
 		'logged_in_as'       => '<p class="logged-in-as">' . sprintf( __( '<a class="comment-author" href="%1$s"><span class="vcard">%2$s</span><span class="name">%3$s</span></a>', 'buddyboss-theme' ), $user_link, get_avatar( get_current_user_id(), 80 ), $user_identity ) . '</p>',
-		'class_submit'       => 'submit button small',
-		'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
-		'title_reply_after'  => '</h2>',
+		'class_submit'       => 'submit button outline small',
+		'title_reply_before' => '',
+		'title_reply_after'  => '',
 		'label_submit'       => __( 'Publish', 'buddyboss-theme' ),
 	);
 

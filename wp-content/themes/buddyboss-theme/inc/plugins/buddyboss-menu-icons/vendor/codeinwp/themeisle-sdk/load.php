@@ -17,8 +17,7 @@ $themeisle_sdk_path    = dirname( __FILE__ );
 global $themeisle_sdk_max_version;
 global $themeisle_sdk_max_path;
 
-$theme_max_version = ! empty ( $themeisle_sdk_max_version ) ? $themeisle_sdk_max_version : '';
-if ( version_compare( $themeisle_sdk_version, $theme_max_version ) >= 0 ) {
+if ( version_compare( $themeisle_sdk_version, $themeisle_sdk_max_version ) >= 0 ) {
 	$themeisle_sdk_max_version = $themeisle_sdk_version;
 	$themeisle_sdk_max_path    = $themeisle_sdk_path;
 }

@@ -4,7 +4,6 @@ namespace BuddyBossTheme;
 
 if (!class_exists('\BuddyBossTheme\BuddyBossMultiPostThumbnails')) {
 
-	#[\AllowDynamicProperties]
 	class BuddyBossMultiPostThumbnails {
 
 		/**

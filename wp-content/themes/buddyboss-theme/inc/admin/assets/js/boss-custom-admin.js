@@ -16,8 +16,7 @@
             $( '.boss-support-area' ).parents( '.form-table' ).find( 'th' ).css( { 'padding': '0', 'width': '0' } );
         },
         importExportInfo: function () {
-            var $ieInfo = BOSS_CUSTOM_ADMIN.ieInfo;
-            $( '#redux-import-code-button' ).parent().before( '<p class="bb-description">' + $ieInfo + '</p>' );
+            $( '#redux-import-code-button' ).parent().before( '<p class="bb-description">Please click "Reset All" at the top, before doing an import in order for your changes to take effect.</p>' );
         },
         thumbScale: function () {
 

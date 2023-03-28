@@ -31,7 +31,6 @@ if ( ! class_exists( 'ReduxFramework_custom_image_select' ) ) {
 	 *
 	 * @since       1.0.0
 	 */
-	#[\AllowDynamicProperties]
 	class ReduxFramework_custom_image_select {
 
 		/**

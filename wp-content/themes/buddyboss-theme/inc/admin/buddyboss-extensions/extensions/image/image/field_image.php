@@ -31,7 +31,6 @@ if ( ! class_exists( 'ReduxFramework_image' ) ) {
 	 *
 	 * @since 2.0.0
 	 */
-	#[\AllowDynamicProperties]
 	class ReduxFramework_image {
 
 		/**

@@ -95,7 +95,7 @@
             Minutes: minutesStr,
             Seconds: secondsStr
         }, function (key,value) {
-            $('<span class="count' + key + '">').html(
+            $('<span class="count' + value + '">').html(
                 '<span class="countdown_label">' + value + '</span>\<span class="position">\
                     <span class="digit static">0</span>\
                 </span>\
