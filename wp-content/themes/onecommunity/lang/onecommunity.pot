@@ -1,0 +1,692 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: OneCommunity\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-08-09 13:43+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.4.1; wp-5.4.2"
+
+#. 1: date, 2: time
+#: functions.php:518
+#, php-format
+msgid "%1$s at %2$s"
+msgstr ""
+
+#. 1: Taxonomy singular name, 2: Current taxonomy term
+#: functions.php:655
+#, php-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: functions.php:619
+#, php-format
+msgid "%s"
+msgstr ""
+
+#: single-event.php:26 single.php:26 archive.php:80 search.php:29 index.php:51
+#: template-parts/blog-classic.php:20 template-parts/blog-grid.php:13
+#, php-format
+msgctxt "%s = human-readable time difference"
+msgid "%s ago"
+msgstr ""
+
+#: search.php:80
+msgid "&laquo;"
+msgstr ""
+
+#: search.php:81
+msgid "&raquo;"
+msgstr ""
+
+#: functions.php:518
+msgid "(Edit)"
+msgstr ""
+
+#. Description of the theme
+msgid "A BuddyPress Theme"
+msgstr ""
+
+#: recovery.php:46
+msgid "A message will be send to your e-mail address."
+msgstr ""
+
+#: buddypress/groups/single/cover-image-header.php:49
+msgid "Active"
+msgstr ""
+
+#: template-parts/header-user-panel.php:7
+msgid "Activity"
+msgstr ""
+
+#: template-parts/header-user-panel.php:7
+msgid "activity"
+msgstr ""
+
+#: template-parts/header-user-panel.php:14
+msgid "Add a New Post"
+msgstr ""
+
+#: functions.php:657
+msgid "Archives"
+msgstr ""
+
+#: functions.php:651
+#, php-format
+msgid "Archives: %s"
+msgstr ""
+
+#: search.php:29
+msgid "Author"
+msgstr ""
+
+#: template-parts/biography.php:16
+msgid "Author:"
+msgstr ""
+
+#: functions.php:623
+#, php-format
+msgid "Author: %s"
+msgstr ""
+
+#. Name of the template
+msgid "Blog - Masonry"
+msgstr ""
+
+#. Name of the template
+msgid "Blog - Masonry (No Sidebar)"
+msgstr ""
+
+#. Name of the template
+msgid "Blog Classic"
+msgstr ""
+
+#: archive.php:91 index.php:62 bbpress/loop-single-topic.php:62
+#: template-parts/blog-grid.php:24
+msgid "by"
+msgstr ""
+
+#: search.php:29
+msgid "Category"
+msgstr ""
+
+#: functions.php:1452
+msgid "Comment"
+msgstr ""
+
+#: search.php:29
+msgid "Comments"
+msgstr ""
+
+#: comments.php:58
+msgid "Comments are closed."
+msgstr ""
+
+#. 1: number of comments, 2: post title
+#: comments.php:29
+#, php-format
+msgctxt "comments title"
+msgid "%1$s comments"
+msgid_plural "%1$s comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#. Name of the template
+msgid "Contact Form"
+msgstr ""
+
+#: search.php:52 functions.php:558
+msgid "Continue reading &rarr;"
+msgstr ""
+
+#. %s: Name of current post
+#: inc/template-tags.php:174 template-parts/content.php:16
+#, php-format
+msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr ""
+
+#: functions.php:629
+msgctxt "daily archives date format"
+msgid "F j, Y"
+msgstr ""
+
+#: search.php:29
+msgid "Date"
+msgstr ""
+
+#: functions.php:629
+#, php-format
+msgid "Day: %s"
+msgstr ""
+
+#. Author of the theme
+msgid "Diabolique Design"
+msgstr ""
+
+#: functions.php:1491 learnpress/content-single-course.php:74
+msgid "Duration"
+msgstr ""
+
+#. %s: Name of current post
+#: template-parts/content-search.php:18 template-parts/content-search.php:33
+#, php-format
+msgid "Edit<span class=\"screen-reader-text\"> \"%s\"</span>"
+msgstr ""
+
+#: functions.php:1452
+msgid "Favorite"
+msgstr ""
+
+#: template-parts/content.php:3
+msgid "Featured"
+msgstr ""
+
+#: template-parts/header-user-panel.php:13
+msgid "Forums"
+msgstr ""
+
+#: template-parts/header-user-panel.php:13
+msgid "forums"
+msgstr ""
+
+#: template-parts/header-user-panel.php:11
+msgid "Friend Requests"
+msgstr ""
+
+#: template-parts/header-user-panel.php:11
+msgid "friends"
+msgstr ""
+
+#. Name of the template
+msgid "Frontpage 1"
+msgstr ""
+
+#. Name of the template
+msgid "Frontpage 2"
+msgstr ""
+
+#. Name of the template
+msgid "Frontpage 3"
+msgstr ""
+
+#. Name of the template
+msgid "Frontpage Page Builder"
+msgstr ""
+
+#: leaderboard.php:19
+msgid "General"
+msgstr ""
+
+#: template-parts/header-user-panel.php:12
+msgid "Group Invites"
+msgstr ""
+
+#: rtmedia/main.php:97 buddypress/groups/single/home.php:6
+msgid "Groups"
+msgstr ""
+
+#: template-parts/header-user-panel.php:12
+msgid "groups"
+msgstr ""
+
+#: template-parts/header-user-panel.php:27
+msgid "Hello"
+msgstr ""
+
+#: single-event.php:11 blog-classic.php:14 image.php:12 leaderboard.php:13
+#: blog-2.php:14 contact.php:16 page.php:20 page.php:34 page.php:52
+#: page-no-sidebar.php:16 404.php:8 blog-1.php:14 single.php:11 archive.php:11
+#: recovery.php:14 index.php:8 rtmedia/main.php:49 rtmedia/main.php:97
+#: gamipress/custom-single-rank.php:11 buddypress/activity/index.php:47
+#: buddypress/groups/index.php:5 buddypress/groups/create.php:6
+#: buddypress/members/activate.php:15 buddypress/members/index.php:5
+#: buddypress/members/register.php:17 docs/single/index.php:13
+#: docs/single/edit.php:13 buddypress/activity/single/home.php:13
+#: buddypress/groups/single/home.php:6 buddypress/members/single/home.php:16
+msgid "Home"
+msgstr ""
+
+
+#: bbpress/loop-mysingle-topic.php:8
+msgid "in"
+msgstr ""
+
+#: 404.php:19
+msgid "It looks like nothing was found at this location."
+msgstr ""
+
+#: template-parts/content-none.php:24
+msgid ""
+"It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps "
+"searching can help."
+msgstr ""
+
+#: buddypress/groups/single/group-header.php:99
+#: buddypress/groups/single/cover-image-header.php:78
+msgid "Join Group"
+msgstr ""
+
+#: bbpress/loop-single-forum.php:65
+msgid "Last post by"
+msgstr ""
+
+#: bbpress/loop-single-topic.php:62
+msgid "last reply"
+msgstr ""
+
+#. Name of the template
+msgid "Leaderboard"
+msgstr ""
+
+#: inc/template-tags.php:40
+#, php-format
+msgid "Leave a comment<span class=\"screen-reader-text\"> on %s</span>"
+msgstr ""
+
+#: learnpress/content-single-course.php:62
+msgid "Lessons"
+msgstr ""
+
+#: blog-classic.php:56 blog-2.php:63 blog-1.php:56 archive.php:117 index.php:81
+msgid "Load More"
+msgstr ""
+
+#: template-parts/header-user-panel.php:16
+msgid "Log Out"
+msgstr ""
+
+#: header.php:85 header.php:87
+msgid "Login"
+msgstr ""
+
+#. Name of the template
+msgid "Login Page"
+msgstr ""
+
+#: functions.php:976
+msgid "Login successful, redirecting..."
+msgstr ""
+
+#: login.php:39
+msgid "Lost your password?"
+msgstr ""
+
+#: functions.php:1249 template-parts/header-notifications.php:22
+msgid "Manage"
+msgstr ""
+
+#: learnpress/content-single-course.php:84
+msgid "Max students"
+msgstr ""
+
+#: rtmedia/main.php:49 buddypress/members/single/home.php:16
+msgid "Members"
+msgstr ""
+
+#: template-parts/header-user-panel.php:10
+msgid "Messages"
+msgstr ""
+
+#: template-parts/header-messages.php:25
+#: template-parts/header-user-panel.php:10
+msgid "messages"
+msgstr ""
+
+#: functions.php:627
+#, php-format
+msgid "Month: %s"
+msgstr ""
+
+#: functions.php:627
+msgctxt "monthly archives date format"
+msgid "F Y"
+msgstr ""
+
+#: blog-classic.php:26 blog-2.php:26 blog-1.php:27 archive.php:40 index.php:20
+msgid "Most commented"
+msgstr ""
+
+#: blog-classic.php:27 blog-2.php:25 blog-1.php:26 archive.php:39 index.php:19
+msgid "Most liked"
+msgstr ""
+
+#: single-event.php:121 single.php:153
+msgid "Next"
+msgstr ""
+
+#: image.php:79
+msgid "Next Image"
+msgstr ""
+
+#: single-event.php:122 single.php:154
+msgid "Next post:"
+msgstr ""
+
+#: archive.php:105
+msgid "Not Found"
+msgstr ""
+
+#: 404.php:8 404.php:11
+msgid "Not Found!"
+msgstr ""
+
+#: template-parts/content-none.php:9
+msgid "Nothing Found"
+msgstr ""
+
+#: template-parts/header-user-panel.php:9
+msgid "Notifications"
+msgstr ""
+
+#: template-parts/header-notifications.php:22
+#: template-parts/header-user-panel.php:9
+msgid "notifications"
+msgstr ""
+
+#. %s: post title
+#: comments.php:25
+msgid "One comment"
+msgstr ""
+
+#: index.php:8 index.php:11
+msgid "Our Articles"
+msgstr ""
+
+#: single-event.php:103 image.php:53 page.php:92 single.php:135
+#: gamipress/custom-single-rank.php:29 template-parts/content.php:25
+#: template-parts/content-page.php:20
+msgid "Page"
+msgstr ""
+
+#: single-event.php:99 image.php:49 page.php:88 single.php:131
+#: gamipress/custom-single-rank.php:25 template-parts/content.php:21
+#: template-parts/content-page.php:16
+msgid "Pages:"
+msgstr ""
+
+#: single-event.php:116 image.php:93 single.php:148
+msgctxt "Parent post link"
+msgid ""
+"<span class=\"meta-nav\">Published in</span><span class=\"post-title\">"
+"%title</span>"
+msgstr ""
+
+#: learnpress/content-single-course.php:80
+msgid "Passing condition"
+msgstr ""
+
+#: login.php:37
+msgid "Password"
+msgstr ""
+
+#. Name of the template
+msgid "Password Recovery"
+msgstr ""
+
+#: searchform.php:3
+msgctxt "placeholder"
+msgid "Search &hellip;"
+msgstr ""
+
+#: recovery.php:38
+msgid ""
+"Please enter your username or email address. You will receive a link to "
+"create a new password via email."
+msgstr ""
+
+#: functions.php:632
+msgctxt "post format archive title"
+msgid "Asides"
+msgstr ""
+
+#: functions.php:646
+msgctxt "post format archive title"
+msgid "Audio"
+msgstr ""
+
+#: functions.php:648
+msgctxt "post format archive title"
+msgid "Chats"
+msgstr ""
+
+#: functions.php:634
+msgctxt "post format archive title"
+msgid "Galleries"
+msgstr ""
+
+#: functions.php:636
+msgctxt "post format archive title"
+msgid "Images"
+msgstr ""
+
+#: functions.php:642
+msgctxt "post format archive title"
+msgid "Links"
+msgstr ""
+
+#: functions.php:640
+msgctxt "post format archive title"
+msgid "Quotes"
+msgstr ""
+
+#: functions.php:644
+msgctxt "post format archive title"
+msgid "Statuses"
+msgstr ""
+
+#: functions.php:638
+msgctxt "post format archive title"
+msgid "Videos"
+msgstr ""
+
+#: bbpress/loop-single-forum.php:58
+msgid "Posts"
+msgstr ""
+
+#: single-event.php:124 single.php:156
+msgid "Previous"
+msgstr ""
+
+#: image.php:78
+msgid "Previous Image"
+msgstr ""
+
+#: single-event.php:125 single.php:157
+msgid "Previous post:"
+msgstr ""
+
+#: template-parts/header-user-panel.php:8
+msgid "Profile"
+msgstr ""
+
+#: template-parts/header-user-panel.php:8
+msgid "profile"
+msgstr ""
+
+#: learnpress/content-single-course.php:68
+msgid "Quizzes"
+msgstr ""
+
+#: single-event.php:96 single.php:128 gamipress/custom-single-rank.php:22
+#: template-parts/blog-classic.php:32
+msgid "Read more"
+msgstr ""
+
+#: template-parts/content-none.php:15
+#, php-format
+msgid ""
+"Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
+msgstr ""
+
+#: blog-classic.php:28 blog-2.php:27 blog-1.php:28 archive.php:41 index.php:21
+msgid "Recent"
+msgstr ""
+
+#: bbpress/loop-topics.php:13
+msgid "Recent topics"
+msgstr ""
+
+#: header.php:82
+msgid "Register"
+msgstr ""
+
+#: functions.php:1459
+msgid "Reply"
+msgstr ""
+
+#: recovery.php:45
+msgid "Reset my password"
+msgstr ""
+
+#: search.php:5
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: single.php:93
+msgid "See also:"
+msgstr ""
+
+#: functions.php:956
+msgid "Sending user info, please wait..."
+msgstr ""
+
+#: template-parts/header-user-panel.php:15
+msgid "Settings"
+msgstr ""
+
+#: template-parts/header-user-panel.php:15
+msgid "settings"
+msgstr ""
+
+#: single-event.php:79 single.php:114
+msgid "Share:"
+msgstr ""
+
+#: template-parts/content-none.php:19
+msgid ""
+"Sorry, but nothing matched your search terms. Please try again with some "
+"different keywords."
+msgstr ""
+
+#: bbpress/loop-single-topic.php:62
+msgid "Started by"
+msgstr ""
+
+#: learnpress/single-course/students.php:31
+msgid "Students"
+msgstr ""
+
+#: functions.php:621
+#, php-format
+msgid "Tag: %s"
+msgstr ""
+
+#: single-event.php:60 single.php:71
+msgid "Tags:"
+msgstr ""
+
+#: template-parts/header-messages.php:31
+msgid "There are no messages to display."
+msgstr ""
+
+#: bbpress/loop-single-forum.php:57
+msgid "Topics"
+msgstr ""
+
+#: inc/template-tags.php:88
+msgctxt "Used before category names."
+msgid "Categories"
+msgstr ""
+
+#: image.php:66
+msgctxt "Used before full size attachment link."
+msgid "Full size"
+msgstr ""
+
+#: inc/template-tags.php:15
+msgctxt "Used before post author name."
+msgid "Author"
+msgstr ""
+
+#: inc/template-tags.php:28
+msgctxt "Used before post format."
+msgid "Format"
+msgstr ""
+
+#: inc/template-tags.php:69
+msgctxt "Used before publish date."
+msgid "Posted on"
+msgstr ""
+
+#: inc/template-tags.php:96
+msgctxt "Used before tag names."
+msgid "Tags"
+msgstr ""
+
+#: inc/template-tags.php:85 inc/template-tags.php:93
+msgctxt "Used between list items, there is a space after the comma."
+msgid ", "
+msgstr ""
+
+#: login.php:36
+msgid "Username"
+msgstr ""
+
+#: recovery.php:40
+msgid "Username or Email"
+msgstr ""
+
+#: functions.php:1268 template-parts/header-messages.php:25
+msgid "View all messages"
+msgstr ""
+
+#: template-parts/biography.php:21
+#, php-format
+msgid "View all posts by %s"
+msgstr ""
+
+#: functions.php:974
+msgid "Wrong username or password."
+msgstr ""
+
+#: functions.php:625
+#, php-format
+msgid "Year: %s"
+msgstr ""
+
+#: functions.php:625
+msgctxt "yearly archives date format"
+msgid "Y"
+msgstr ""
+
+#: single-event.php:11 blog-classic.php:14 image.php:12 leaderboard.php:13
+#: blog-2.php:14 page.php:20 page.php:34 page.php:52 blog-1.php:14
+#: single.php:11 archive.php:11 index.php:8 rtmedia/main.php:49
+#: rtmedia/main.php:97 gamipress/custom-single-rank.php:11
+#: buddypress/activity/index.php:47 buddypress/groups/index.php:5
+#: buddypress/members/activate.php:15 buddypress/members/index.php:5
+#: buddypress/members/register.php:17 learnpress/global/breadcrumb.php:24
+#: buddypress/groups/single/home.php:6 buddypress/members/single/home.php:16
+msgid "You are here:"
+msgstr ""
+
+#: login.php:23 recovery.php:27
+msgid "You are logged in! Redirecting to your profile."
+msgstr ""
+
+#: template-parts/header-notifications.php:18
+msgid "You have no unread notifications"
+msgstr ""
+
+#: functions.php:532
+msgid "Your comment is awaiting moderation."
+msgstr ""
