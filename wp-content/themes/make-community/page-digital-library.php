@@ -34,4 +34,4 @@ endwhile; ?>
 </script>
 
 <?php
-wp_footer();
+get_footer();

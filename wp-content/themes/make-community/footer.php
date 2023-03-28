@@ -2,7 +2,6 @@
 /**
  * The template for displaying the footer
  */
-
 ?>
 			</div><!-- .container -->
 		</div><!-- #content -->
