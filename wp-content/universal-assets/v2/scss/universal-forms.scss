@@ -1,0 +1,139 @@
+/* Hidden & Validation Forms */
+
+li.gform_validation_container, li.gform_hidden {
+    position: absolute;
+    left: -999em;
+	visibility: hidden;
+}
+.hidden_label > label {position:absolute; left:-999em;}
+
+
+/* Error & Validation Messages */
+
+.validation_error, .gform_validation_error li.gfield_error {
+    background: #bf0421 !important; /* Maroon */
+    color: white;
+    padding: 0 1em 1em 1em;
+    margin: 1em 0;
+    border-radius: 3px;
+	input, textarea, select { color: #000; }
+}
+.validation_error {padding-top:1em;}
+
+.gform_wrapper .gform_validation_errors {
+	background: #bf0421 !important;
+    &> h2, &.gform_validation_errors > ol a {
+        color: #fff !important;
+        font-size: 18px;
+    }
+}
+
+.gform_wrapper .gfield_description.validation_message {
+	background: #bf0421;
+	color: #fff;
+	font-weight: 700;
+	padding: 15px 20px 15px !important;
+}
+.gform_wrapper .gf_forms_steps_left {
+	.gfield_description.validation_message {
+		position: absolute;
+		top: -2em;
+	    width: auto;
+	    right: -15px;
+	    left: auto;
+	    background: black;
+	    border-radius: 3px;
+	    padding: .8em 1.2em;
+		color: #fff;
+		font-weight: 900;
+		font-size: 1em;
+		&::before {
+			content:"";
+			width:0;
+			height:0;
+			position:absolute;
+			border-left:5px solid transparent;
+			border-right:5px solid transparent;
+			bottom:-5px; left:1em;
+			border-top:5px solid black;
+		}
+	}
+}
+
+.gform_wrapper li.gfield_error {
+    position: relative;
+    margin-top: 3em;
+}
+
+.gfield_error .ginput_container_select:after {display:none;}
+
+.gfield_error .warningTextareaInfo { color:white; }
+.gfield_error .ginput_container_fileupload {
+    color: black;
+}
+
+.gfield_error img.add_list_item {
+    background-color: white;
+    border-radius: 50%;
+}
+
+// Gravity Datepicker
+#ui-datepicker-div {
+	border: 1px solid #005e9a;
+	width: auto;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+	padding: 0px !important;
+	.ui-datepicker-header {
+		background: #005e9a;
+		border-radius: 0px !important;
+		.ui-datepicker-title {
+			select {
+				color: #333;
+				height: 25px !important;
+				padding: 0px !important;
+				max-width: 60px !important;
+				border: solid 1px #005e9a;
+				border-radius: 2px;
+			}
+		}
+		.ui-state-hover {
+			border: 0px;
+			background: url(../images/arrow.png);
+		}
+		.ui-icon {
+			background-image: none !important;
+		}
+	}
+	table.ui-datepicker-calendar {
+		thead {
+			background: #fff;
+			th { line-height: initial; }
+		}
+		tbody {
+			td {
+				border-top: 1px solid #005e9a;
+				border-right: 1px solid #005e9a;
+				&:last-of-type { border-right: 0px; }
+				&.ui-datepicker-unselectable.ui-state-disabled {
+					background: #7faecc; // half transparent blue without being transparent
+				}
+			}
+			a.ui-state-default {
+				background: #fff;
+				box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+				border: 0px;
+				line-height: inherit;
+				&.ui-state-hover {
+					color: #666;
+				}
+			}
+		}
+	}
+}
+
+.gfield_list_icons button { background-repeat: no-repeat !important; }
+.gform_legacy_markup_wrapper.gf_browser_chrome .gfield_checkbox li input, .gform_legacy_markup_wrapper.gf_browser_chrome .gfield_checkbox li input[type=checkbox], .gform_legacy_markup_wrapper.gf_browser_chrome .gfield_radio li input[type=radio] {
+    margin-top: 0px !important;
+}
