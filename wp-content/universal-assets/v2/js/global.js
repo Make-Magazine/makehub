@@ -1,17 +1,6 @@
 // All the functions and scripts that are just so good they need to be everywhere
 jQuery(window).bind("load", function () {
 
-    // buddyboss Buddypanel
-	jQuery("a.bb-toggle-panel").on("click", function(){
-		if(jQuery("body").hasClass("buddypanel-closed")) {
-			jQuery("body").removeClass("buddypanel-closed");
-			jQuery("body").addClass("buddypanel-open");
-		} else {
-			jQuery("body").addClass("buddypanel-closed");
-			jQuery("body").removeClass("buddypanel-open");
-		}
-	});
-
     /* Provide a class for Safari, the new IE */
     if (navigator.userAgent.indexOf('Safari') != -1 && navigator.userAgent.indexOf('Mac') != -1 && navigator.userAgent.indexOf('Chrome') == -1) {
         // console.log('Safari on Mac detected, applying class...');

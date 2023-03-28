@@ -33,16 +33,6 @@ jQuery(document).ready(function() {
         // we are skipping setting auth0 localStorage as log in is managed by the auth0 plugin
     } else {
         //otherwise we need to call auth0 for login and to show the user drop down
-
-        //If the buddypanel exists, hide it while we check for logged in
-        //TBD, shouldn't this just be done before the if wpLoginRequired check?
-        if (jQuery(".buddypanel").length) {
-            jQuery(".buddypanel .side-panel-inner").prepend("<img src='https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif' height='50px' width='50px' style='margin:auto;' />");
-            jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "none");
-        }
-
-
-        //ok let's check auth0 instead
         var webAuth = new auth0.WebAuth({
             domain: AUTH0_CUSTOM_DOMAIN,
             clientID: AUTH0_CLIENT_ID,
@@ -209,33 +199,8 @@ jQuery(document).ready(function() {
             jQuery("#LoginBtn").css("display", "block");
             jQuery("#profile-view, #LogoutBtn").css('display', 'none');
             jQuery(".login-section").css("display", "block");
-            showBuddypanel();
-            hideSpinner();
         }
 
-    }
-
-    // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-    function showBuddypanel() {
-        //does this site have a bb left hand panel?
-        if (document.body.classList.contains('bb-buddypanel')) {
-            //are they logged into wp or auth0
-            if (wploggedin == false) {
-                jQuery("body").addClass("buddypanel-open");
-            } else {
-                jQuery("body").addClass("buddypanel-closed");
-            }
-			if (!jQuery("body").hasClass("bb-page-loaded")) {
-				jQuery("body").addClass("bb-page-loaded");
-			}
-            //simulate a window resize when buddypanel opens so social wall and other elements that depend on javascript for their positioning get re-adjusted
-            window.dispatchEvent(new Event('resize'));
-        }
-    }
-
-    function hideSpinner() {
-        jQuery(".buddypanel .side-panel-inner img").remove();
-        jQuery(".buddypanel .side-panel-inner #buddypanel-menu").css("display", "block");
     }
 
     function getProfile() {
@@ -285,12 +250,6 @@ jQuery(document).ready(function() {
         // Now that we have the avatar and the drop down, let's call rimark and see what info they have
         callRimark(user);
 
-        //if this is a buddyboss theme site, show the buddypanel
-        if (jQuery("body").is(".buddyboss-theme")) {
-            // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-            hideSpinner();
-            showBuddypanel();
-        }
         return user;
     }
 
@@ -337,21 +296,9 @@ jQuery(document).ready(function() {
                         jQuery('.logged-in-refresh').load(document.URL + " .logged-in-refresh > *");
                     }
 
-                    // if the non-logged in buddypanel is showing for a logged in user, refresh it
-                    if (jQuery("#buddypanel-menu .bp-login-nav").length) {
-                        jQuery('#buddypanel-menu').load(document.URL + " #buddypanel-menu > *", function() {
-                            hideSpinner();
-                        });
-                        jQuery("body").addClass("buddypanel-closed");
-                    } else if (jQuery("#buddypanel-menu .bp-logout-nav").length) {
-                        hideSpinner();
-                    }
-
                     jQuery("body").addClass("logged-in");
                     jQuery('.universal-loading-spinner').remove();
                 }
-                // css will hide buddyboss side panel until page loads and the content of the buddypanel menu refreshes
-                showBuddypanel();
             }).fail(function(xhr, status, error) {
                 jQuery('.universal-loading-spinner').remove();
                 if (status === 'timeout') {
@@ -383,8 +330,6 @@ jQuery(document).ready(function() {
 			clearLocalStorage();
             location.href = location.href;
         });
-        // css will hide buddyboss side panel until page loads
-        showBuddypanel();
     }
 
     //this function is used to set the user avatar and drop down sections in the universal header

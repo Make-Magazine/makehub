@@ -179,7 +179,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 							}
 						}
 						.make-coin { display: flex; }
-                        #menu-secondary_universal_menu, #buddypanel-menu, .dropdown-menu {
+                        #menu-secondary_universal_menu, .dropdown-menu {
                             background: #fff;
                             width: 100%;
                             margin: 0px;
@@ -194,17 +194,9 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                                 &:hover {
                                     background: #f5f5f5;
                                 }
-								i.buddyboss { display: none; }
                             }
 							.bp-logout-nav, .bp-login-nav { display: none; }
                         }
-						#buddypanel-menu {
-							@media screen and (max-width:805px){
-								.bb-menu-item:before, .bb-menu-item:after {
-									display: none;
-								}
-							}
-						}
                     }
                     #primary-menu {
                         margin: 0;
@@ -756,69 +748,6 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 			}
 		}
 	}
-}
-
-body.buddyboss-theme {
-    .site-header-custom {
-        width: 100% !important;
-        left: 0px;
-    }
-    .buddypanel {
-        margin-top: 121px;
-        z-index: 9;
-		margin-left:-230px;
-		font-weight: 400;
-		.bb-toggle-panel {
-			.bb-icon-sidebar:before {
-				content: "\e859";
-			}
-		}
-		li a i { opacity: 1 !important; }
-    }
-	#page.site {
-		margin-left: 0px;
-	}
-	&.buddypanel-open.bb-page-loaded, &.buddypanel-open.buddypanel-closed.bb-page-loaded {
-		.buddypanel { margin-left: 0px }
-		#page.site {
-			margin-left: 230px;
-		}
-		@media screen and (max-width: 805px) {
-			#page.site { margin-left: 0px; }
-		}
-		@media screen and (min-width: 805px) {
-			#makey-sign {
-				margin-left: 180px;
-				&:hover {
-					margin-left: 200px;
-				}
-			}
-		}
-        
-	}
-	&.buddypanel-closed.bb-page-loaded {
-		.buddypanel { margin-left: 0px; }
-        &:not(.sfwd-sidebar) {
-            #page.site {
-                margin-left: 68px;
-                @media screen and (max-width: 805px) {
-                    margin-left: 0px;
-                }
-            }
-        }
-		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
-		&.single-sfwd-lessons #page.site {
-			margin-left: 0px;
-		}
-	}
-}
-// Buddypanel Nav
-body.buddypanel-open {
-    #buddypanel-menu {
-        .bb-menu-item {
-            span { white-space: break-spaces !important; }
-        }
-    }
 }
 
 @media screen and (max-width: 800px) {
