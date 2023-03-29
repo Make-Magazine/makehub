@@ -17,24 +17,24 @@ function disable_new_user_notifications() {
 }
 add_action( 'init', 'disable_new_user_notifications' );
 
-// Include all function files in the make-community/functions directory:
+// Include all function files in the /functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
 
-// Include all custom post type files in the make-experiences/cpts directory:
+// Include all custom post type files in the /cpts directory:
 foreach (glob(get_stylesheet_directory() . '/cpt/*.php') as $file) {
     include_once $file;
 }
 
-// Include all class files in the make-experiences/classes directory:
-foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
+// Include all widget files in the /widgets directory:
+foreach (glob(dirname(__FILE__) . '/widgets/*.php') as $file) {
     include_once $file;
 }
 
-//include any subfolders like 'widgets'
-foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
-  include_once $file;
+// Include all widget files in the /widgets/classes directory:
+foreach (glob(dirname(__FILE__) . '/widgets/classes/*.php') as $file) {
+    include_once $file;
 }
 
 function remove_unnecessary_scripts() {
