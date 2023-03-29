@@ -1,0 +1,77 @@
+.page-template-page-crew {
+	.crew-members-cont {
+		display: flex;
+		flex-wrap: wrap;
+		.crew-member {
+			flex: 0 1 33.33%;
+			margin-top: 50px;
+			padding-left: 15px;
+			padding-right: 15px;
+			img {
+				width: 100%;
+				box-shadow: 1px 2px 8px #dfdfdf;
+				transition: all .2s ease-in-out;
+				&:hover {
+					opacity: .5;
+					transition: all .2s ease-in-out;
+				}
+			}
+			h3 {
+				font-size: 1.875em;
+				color: #f40b0b;
+				padding-left: 10px;
+				margin-top: 10px;
+				margin-bottom: 0px;
+				text-align: left;
+			}
+			p {
+				padding-left: 10px;
+			}
+			a:hover {
+				text-decoration: none;
+			}
+			@media screen and (max-width: 767px) {
+				flex: 0 1 50%;
+				h3 {
+					font-size: calc(8px + 3vw);
+				}
+			}
+		}
+	}
+	.ui-dialog.ui-widget {
+		width: 60% !important;
+		position: fixed !important;
+		@media screen and (max-width: 500px) {
+			width: 90% !important;
+			position: relative !important;
+		}
+	}
+}
+
+.crew-modal {
+	display: flex;
+	padding: 10px 20px;
+	img {
+		align-self: start;
+		flex: 0 1 30%;
+		width: 100%;
+		box-shadow: 1px 3px 10px #dfdfdf;
+		margin-bottom: 15px;
+		margin-right: 20px;
+	}
+	.crew-info {
+		flex: 0 1 70%;
+	}
+	h3 {
+		color: #f40b0b;
+		text-align: left;
+		margin-top: 0;
+	}
+	p, .crew-about {
+		color: #4a4a4a;
+	}
+	@media screen and (max-width: 781px) {
+		flex-direction: column;
+		img { margin-right: 0px;}
+	}
+}

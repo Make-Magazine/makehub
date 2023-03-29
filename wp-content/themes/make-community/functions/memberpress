@@ -1,0 +1,10 @@
+<?php
+// if membership lapses, is canceled or deleted, remove the member type so they don't show up in the members directory count
+add_action('mepr-event-subscription-stopped', 'remove_member_types', 10, 1); // this captures cancels and removals
+add_action('mepr-transaction-expired', 'remove_member_types', 10, 1);
+
+function remove_member_types($user_id) {
+    if (bp_get_member_type($user_id) == 'member') {
+        bp_set_member_type($user_id, '');
+    }
+}
