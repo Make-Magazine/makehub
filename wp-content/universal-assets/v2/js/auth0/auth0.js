@@ -89,7 +89,7 @@ jQuery(document).ready(function() {
 						if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
 							// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 							//TBD - this needs styling as this isn't seen where it's at
-							jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+							jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v2/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 							WPlogin();
 						}
 				  }
@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
 				console.log("not expired");
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
-					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
+					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v2/images/default-makey.png") {
 						console.log(err);
 						checkSession();
 						//jQuery("#LogoutBtn").click();
@@ -155,7 +155,7 @@ jQuery(document).ready(function() {
 					if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {
 						// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 						//TBD - this needs styling as this isn't seen where it's at
-						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+						jQuery('.universal-footer').before('<img src="https://make.co/wp-content/universal-assets/v2/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 						WPlogin();
 					}
 				}
@@ -348,11 +348,11 @@ jQuery(document).ready(function() {
         if (user.user_memlevel != '') {
             switch (user.user_memlevel) {
                 case "premium":
-                    document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/premium-banner.png";
+                    document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v2/images/premium-banner.png";
                     document.querySelector('.avatar-banner').setAttribute('alt', "Premium Member");
                     break;
                 case "upgrade":
-                    document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v1/images/upgrade-banner.png";
+                    document.querySelector('.avatar-banner').src = "https://make.co/wp-content/universal-assets/v2/images/upgrade-banner.png";
                     document.querySelector('.avatar-banner').setAttribute('alt', "Upgrade Membership");
                     break;
                 default:
@@ -363,7 +363,10 @@ jQuery(document).ready(function() {
             jQuery('.avatar-banner').remove();
         }
 		setTimeout(function() {
-			document.querySelector(".avatar-banner").style.display = "block";
+			var avatarBanner = document.querySelector('.avatar-banner') !== null;
+			if(avatarBanner) {
+				document.querySelector(".avatar-banner").style.display = "block";
+			}
 		}, 100);
         document.querySelector('#LoginBtn').style.display = "none";
         document.querySelector('.dropdown-toggle img').style.display = "block";

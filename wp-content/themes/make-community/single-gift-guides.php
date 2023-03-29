@@ -63,7 +63,7 @@ get_header();
 						echo "<div class='gg-gallery-btn'><img class='gg-gallery-thumbnail' src='" . get_resized_remote_image_url($gallery_image, 100, 100) . "' data-src='" . $gallery_image . "' /></div>";
 					}
 					if(!empty($video_url)) {
-						echo "<div class='gg-gallery-btn'><img class='gg-video-thumbnail' src='/wp-content/universal-assets/v1/images/play-btn.png' /></div>";
+						echo "<div class='gg-gallery-btn'><img class='gg-video-thumbnail' src='/wp-content/universal-assets/v2/images/play-btn.png' /></div>";
 					}
 				?>
 			</div>
