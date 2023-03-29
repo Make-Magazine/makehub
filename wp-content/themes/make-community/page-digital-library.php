@@ -6,7 +6,7 @@ get_header();
 
 while ( have_posts() ) : the_post(); ?>
 
-<section class="wrapper">
+<section class="wrapper bluetoad">
     <main id="content" class="no-sidebar">
         <article>
             <?php the_content(); ?>
@@ -27,7 +27,7 @@ endwhile; ?>
         }
         jQuery(".page-template-page-digital-library footer").mouseleave(function () {
             jQuery([document.documentElement, document.body]).animate({
-                scrollTop: jQuery("#page-content.bluetoad iframe").offset().top
+                scrollTop: jQuery(".wrapper.bluetoad iframe").offset().top
             }, 100);
         });
     });

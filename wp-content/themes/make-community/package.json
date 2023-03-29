@@ -1,5 +1,5 @@
 {
-   "name": "Make-Experiences",
+   "name": "Make-Community",
    "version": "1.0.1048",
    "author": "Make: Community",
    "license": "UNLICENSED",
@@ -35,7 +35,7 @@
       "is-fullwidth-code-point": "^4.0.0",
       "jquery": "^3.6.0",
       "jquery.photoswipe": "^1.1.1",
-      "sass": "^1.49.7",
+      "sass": "^1.60.0",
       "strip-ansi": "^6.0.1",
       "uglifyjs": "^2.4.11"
    }
