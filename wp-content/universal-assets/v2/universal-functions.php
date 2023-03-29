@@ -16,7 +16,7 @@ require_once('lib/wp_bootstrap_navwalker.php');
 
 function set_ajax_params(){
 	//pull the style.css to retrieve the version
-	$file = ABSPATH . 'wp-content/universal-assets/v1/package.json';
+	$file = ABSPATH . 'wp-content/universal-assets/v2/package.json';
 	// get the file contents, assuming the file to be readable (and exist)
 	$contents = file_get_contents($file);
 	if($contents){
