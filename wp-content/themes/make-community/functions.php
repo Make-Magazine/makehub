@@ -16,7 +16,7 @@ add_action('wp_enqueue_scripts', 'onecommunity_child_enqueue_styles');
  *
  * @since Make: Community  1.0.0
  */
-function make_experiences_scripts_styles() {
+function make_community_scripts_styles() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     
@@ -31,7 +31,8 @@ function make_experiences_scripts_styles() {
         wp_enqueue_script( 'jquery-ui-tabs' );
     }
 }
-add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
+add_action('wp_enqueue_scripts', 'make_community_scripts_styles', 9999);
+
 
 // the default wp user created emails are bad, we got auth0 for that
 function disable_new_user_notifications() {
@@ -85,3 +86,6 @@ function remove_unnecessary_scripts() {
 	}	
 }
 add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
+
+// prevent password changed email
+add_filter( 'send_password_change_email', '__return_false' );
