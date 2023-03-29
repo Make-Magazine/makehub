@@ -6,7 +6,7 @@
 			</div><!-- .container -->
 		</div><!-- #content -->
 
-		<?php    require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer.html'); ?>
+		<?php    require_once(WP_CONTENT_DIR.'/universal-assets/v2/page-elements/universal-footer.html'); ?>
 	</div><!-- #page -->
 
 	<?php wp_footer(); ?>
