@@ -15,7 +15,7 @@ add_action('wp_enqueue_scripts', 'onecommunity_child_enqueue_styles');
 function onecommunity_js_functions_child() {
 	wp_enqueue_script( 'onecommunity-js-functions-child', get_stylesheet_directory_uri() . '/js/functions.js', true );
 }
-add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
+//add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
 
 // the default wp user created emails are bad, we got auth0 for that
 function disable_new_user_notifications() {
