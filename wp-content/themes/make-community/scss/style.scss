@@ -1,18 +1,19 @@
-@import "global.scss";
+@import "variables.scss";
 
-//@import "contests.scss";
+@import "contests.scss";
 @import "crew-page.scss";
-//@import "giftguides.scss";
-@import "html5-simple-date-input-polyfill.scss";
+@import "giftguides.scss";
 @import "join.scss";
 @import "media-center.scss";
 @import "search.scss";
 @import "videos.scss";
 
 
+//@import "global.scss";
 //@import "dashboard.scss";
 //@import "forms.scss";
 //@import "item-grid.scss";
+
 //Learndash stylesheets
 //@import "learndash.scss";
 //@import "make-rss.scss";

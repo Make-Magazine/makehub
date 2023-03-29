@@ -60,6 +60,12 @@ function remove_unnecessary_scripts() {
             wp_dequeue_script( 'buddyboss-theme-learndash-js' );
             wp_dequeue_style( 'buddyboss-theme-learndash' );
         }
-    }	
+    }
+    if ( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
+		$script = $scripts->registered['jquery'];
+		if ( $script->deps ) {
+			$script->deps = array_diff( $script->deps, array( 'jquery-migrate' ) );
+		}
+	}	
 }
 add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
