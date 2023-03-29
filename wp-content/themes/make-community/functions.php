@@ -11,12 +11,6 @@ function onecommunity_child_enqueue_styles() {
 add_action('wp_enqueue_scripts', 'onecommunity_child_enqueue_styles');
 
 
-//parent theme scripts - required
-function onecommunity_js_functions_child() {
-	wp_enqueue_script( 'onecommunity-js-functions-child', get_stylesheet_directory_uri() . '/js/functions.js', true );
-}
-add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
-
 // the default wp user created emails are bad, we got auth0 for that
 function disable_new_user_notifications() {
     remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
@@ -69,3 +63,6 @@ function remove_unnecessary_scripts() {
 	}	
 }
 add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
+
+// prevent password changed email
+add_filter( 'send_password_change_email', '__return_false' );
