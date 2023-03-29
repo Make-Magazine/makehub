@@ -27,14 +27,12 @@ add_action('admin_init','sort_admin_menu');
  	if ( ! isset( $screen->id ) ) return;
  	add_filter( "manage_{$screen->id}_columns", 'remove_default_columns', 99 );
  } );
-
  function remove_default_columns( $columns ) {
 	unset($columns['essb_shares'], $columns['essb_shareinfo']);
  	return $columns;
  }
 
  add_action('admin_bar_menu', 'toolbar_link_to_mypage', 999);
-
  function toolbar_link_to_mypage($wp_admin_bar) {
      $args = [
          'id' => 'wp-submit-asana-bug',
@@ -53,7 +51,7 @@ add_action('admin_init','sort_admin_menu');
    return $avatar_defaults;
  }
 
-// Allw admin users to edit elementor and wysiwyg without stripping styles and scripts
+// Allow admin users to edit elementor and wysiwyg without stripping styles and scripts
 function allow_unfiltered_html_multisite( $caps, $cap, $user_id, $args ) {
 	if ( $user_id !== 0 && $cap === 'unfiltered_html' ) {
 		$user_meta = get_userdata($user_id);
@@ -76,7 +74,6 @@ function hide_unnecessary_menu_items(){
         remove_menu_page( 'plugins.php' ); //Plugins
         remove_menu_page( 'edit.php?post_type=acf-field-group' ); //Custom Fields
         remove_menu_page( 'edit.php?post_type=search-filter-widget' ); //Search and Filter
-        remove_menu_page( 'activecampaign_for_woocommerce' ); //ActiveCampaign
         remove_menu_page( 'wpa0' ); //Auth0
         remove_menu_page( 'wpseo_dashboard' ); //Yoast
         remove_menu_page( 'members' ); //Members
