@@ -8,6 +8,7 @@ get_header();
 		<main id="content" class="<?php if( !is_active_sidebar('sidebar-pages') ) { ?>no-sidebar<?php } ?>">
 
 			<?php 
+			$body_classes = get_body_class();
 			while ( have_posts() ) : the_post(); 
 				if(!in_array('learnpress-page', $body_classes)) { ?>
 				    <h1 class="page-title"><?php

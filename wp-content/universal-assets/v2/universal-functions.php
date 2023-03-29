@@ -1,10 +1,10 @@
 <?php
-
 if (!defined('ABSPATH'))
     define('ABSPATH', dirname(__FILE__) . '/');
 
 // Disable automatic plugin updates
 add_filter( 'auto_update_plugin', '__return_false' );
+
 //do not display doing it wrong errors
 add_filter('doing_it_wrong_trigger_error', function () {
     return false;

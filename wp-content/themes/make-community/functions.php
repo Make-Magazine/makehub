@@ -27,7 +27,7 @@ add_action( 'init', 'disable_new_user_notifications' );
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
-/*
+
 // Include all custom post type files in the make-experiences/cpts directory:
 foreach (glob(get_stylesheet_directory() . '/cpt/*.php') as $file) {
     include_once $file;
@@ -37,9 +37,8 @@ foreach (glob(get_stylesheet_directory() . '/cpt/*.php') as $file) {
 foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
     include_once $file;
 }
-*/
 
 //include any subfolders like 'widgets'
-//foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
-  //  include_once $file;
-//}
+foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
+  include_once $file;
+}
