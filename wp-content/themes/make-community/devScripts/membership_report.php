@@ -33,7 +33,9 @@ $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, 
             (SELECT meta_value FROM `wp_usermeta` where wp_usermeta.user_id=wp_mepr_transactions.user_id and meta_key = "mepr-address-zip"      ORDER BY wp_usermeta.umeta_id DESC limit 1) as mepr_address_zip,
             (SELECT user_email FROM `wp_users`    where wp_users.ID = wp_mepr_transactions.user_id) as user_email
         FROM `wp_mepr_transactions`
-        where status="complete" and amount != 0.00 and YEAR(created_at)="'.$year_filter.'"
+        where status="complete" and YEAR(created_at)="'.$year_filter.'"
+          AND (select post_title from wp_posts where wp_posts.ID=product_id) <> "Community" 
+          AND (select post_title from wp_posts where wp_posts.ID=product_id) <> "Maker Camp"
         ORDER BY `wp_mepr_transactions`.`id`  DESC';
 
 $mysqli->query("SET NAMES 'utf8'");
