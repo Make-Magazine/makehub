@@ -80,7 +80,6 @@ function extend_login_session( $expire ) {
 // Include all function files in the make-experiences/functions directory:
 $function_files = glob(dirname(__FILE__) .'/functions/*.php');
 
-$count=0;
 foreach ($function_files as $file) {
 	include_once $file;
 }
