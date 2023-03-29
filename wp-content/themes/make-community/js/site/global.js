@@ -81,14 +81,8 @@ jQuery(document).ready(function($) {
 			$(this).attr("target", "_blank");
 		});
 	}
-	jQuery("#flip-card").flip({
-	  trigger: 'manual'
-	});
 });
-jQuery(".flip-toggle").click(function(){
-	jQuery("#flip-card .back").toggleClass('smaller');
-	jQuery("#flip-card").flip('toggle');
-})
+
 
 
 jQuery(".expando-box h4").click(function(){

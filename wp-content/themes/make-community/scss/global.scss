@@ -15,6 +15,8 @@ figure {
 }
 // should above be universal?
 
+#page-header .wrapper .breadcrumbs { display: none; } //hide breadcrumbs
+
 // overwrite the jquery styling, should this be universal?
 .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited, .ui-state-focus a, .ui-state-focus a:hover, .ui-state-focus a:link, .ui-state-focus a:visited {
 	color: #333;
@@ -35,10 +37,16 @@ figure {
 		}
 	}
 }
-.page-template-page-fullscreen .site-content > .container, .page-template-page-fullwidth-content .site-content > .container{
-	max-width: 100% !important;
-	width: 100%;
-	padding: 0px;
+.page-template-page-fullscreen, .page-template-page-fullwidth-content{
+	.site-content {
+		max-width: 100% !important;
+		width: 100%;
+		padding: 0px;
+		& > .container {
+		   width: 100%;
+		   padding: 0px;
+		}
+   }
 }
 @media screen and (min-width: 781px) {
 	body:not(.page-template-page-fullscreen) .site {
