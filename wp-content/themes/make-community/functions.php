@@ -15,7 +15,7 @@ add_action('wp_enqueue_scripts', 'onecommunity_child_enqueue_styles');
 function onecommunity_js_functions_child() {
 	wp_enqueue_script( 'onecommunity-js-functions-child', get_stylesheet_directory_uri() . '/js/functions.js', true );
 }
-//add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
+add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
 
 // the default wp user created emails are bad, we got auth0 for that
 function disable_new_user_notifications() {
@@ -42,3 +42,24 @@ foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
 foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
   include_once $file;
 }
+
+function remove_unnecessary_scripts() {
+    wp_dequeue_style( 'font-awesome' );
+    // Check if LearnDash exists to prevent fatal errors.
+    if ( class_exists( 'SFWD_LMS' ) ) {
+        if( !is_singular( array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment' ) ) ) {
+            // Remove Default LearnDash Styles;
+            wp_dequeue_style( 'learndash_lesson_video-css' );
+            wp_dequeue_style( 'ldvc-css' );
+            wp_dequeue_style( 'learndash_quiz_front_css' );
+            wp_dequeue_style( 'learndash-front' );
+            wp_deregister_style( 'learndash-front' );
+            wp_dequeue_style( 'learndash-front' ); 
+            wp_deregister_script( 'learndash-front' );
+            wp_dequeue_script( 'learndash-front' );
+            wp_dequeue_script( 'buddyboss-theme-learndash-js' );
+            wp_dequeue_style( 'buddyboss-theme-learndash' );
+        }
+    }	
+}
+add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
