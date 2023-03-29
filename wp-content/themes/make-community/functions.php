@@ -11,11 +11,27 @@ function onecommunity_child_enqueue_styles() {
 add_action('wp_enqueue_scripts', 'onecommunity_child_enqueue_styles');
 
 
-//parent theme scripts - required
-function onecommunity_js_functions_child() {
-	wp_enqueue_script( 'onecommunity-js-functions-child', get_stylesheet_directory_uri() . '/js/functions.js', true );
+/**
+ * Enqueues scripts and styles for child theme front-end.
+ *
+ * @since Make: Community  1.0.0
+ */
+function make_experiences_scripts_styles() {
+    $my_theme = wp_get_theme();
+    $my_version = $my_theme->get('Version');
+    
+    ### SUBTHEME STYLES ###
+    wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
+    
+    // lib src packages
+    wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
+    wp_enqueue_script('make_co-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+    
+    if ( is_page_template('page-media-center.php') ) {
+        wp_enqueue_script( 'jquery-ui-tabs' );
+    }
 }
-add_action( 'wp_enqueue_scripts', 'onecommunity_js_functions_child' );
+add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
 // the default wp user created emails are bad, we got auth0 for that
 function disable_new_user_notifications() {

@@ -352,7 +352,7 @@ body:not(.logged-in) {
 	}
 }
 
-// Judge pages
+/* Judge pages -- killing these until we have another need for judge pages at least
 body[class*="page-judge-set"] {
 	.MuiTypography-paragraph { font-size: 16px !important; }
 	.wpvc_card_conthead_row h5 a {
@@ -399,4 +399,4 @@ body[class*="page-judge-set"] {
 		height: 50%;
 	}
 
-}
+} */

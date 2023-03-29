@@ -4,7 +4,7 @@ function isValidEmailAddress(emailAddress) {
 }
 
 jQuery(document).ready(function () {
-	jQuery('#LoginBtn, .bb-menu-item[href*="wp-login.php"]').attr("href", function(i, href) {
+	jQuery('#LoginBtn').attr("href", function(i, href) {
 		if(jQuery(this).attr("data-balloon") != "Log Out") {
 			var redirect_url = window.location.protocol + "//" + window.location.host + "/dashboard/";
 			if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to the referrer if it exists
@@ -44,10 +44,6 @@ jQuery(document).ready(function () {
 			jQuery(this).attr("href", updateLink);
 		});
 	}
-	// ps galleries are photoswipe
-	if(jQuery("#ps-gallery").length) {
-		jQuery('#ps-gallery').photoSwipe();
-    }
 });
 
 function GetURLParameter(sParam) {
@@ -94,24 +90,6 @@ jQuery(".flip-toggle").click(function(){
 	jQuery("#flip-card").flip('toggle');
 })
 
-
-// should this be universal?
-// stick the secondary nav at the top of the hamburglar
-jQuery(document).ready(function () {
-	if (jQuery(window).width() < 767) {
-		jQuery("#menu-secondary_universal_menu").clone().insertBefore(jQuery(".nav-flyout-columns"));
-	}
-	jQuery(window).on('resize', function(){
-		if (jQuery("#nav-flyout #menu-secondary_universal_menu").length == 0 ) {
-			if (jQuery(window).width() < 767) {
-				jQuery("#menu-secondary_universal_menu").clone().insertBefore(jQuery(".nav-flyout-columns"));
-			}
-		}
-		if (jQuery(window).width() > 767) {
-			jQuery("#nav-flyout #menu-secondary_universal_menu").remove();
-		}
-	});
-});
 
 jQuery(".expando-box h4").click(function(){
 	jQuery(this).toggleClass( "open" );
