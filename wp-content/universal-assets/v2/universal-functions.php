@@ -26,7 +26,7 @@ function set_ajax_params(){
 
 	### UNIVERSAL STYLES ###
 	wp_enqueue_style( 'bootstrap', content_url() . '/universal-assets/v2/css/bootstrap-noglyphicons.min.css' );
-	wp_enqueue_style('universal-firstload.css', content_url() . '/universal-assets/v1/css/universal-firstload.min.css', array(), $my_version);
+	wp_enqueue_style('universal-firstload.css', content_url() . '/universal-assets/v2/css/universal-firstload.min.css', array(), $my_version);
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v2/css/universal.min.css', array(), $my_version);
 
 	//auth0
