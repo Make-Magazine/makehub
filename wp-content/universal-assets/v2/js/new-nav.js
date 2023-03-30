@@ -277,29 +277,60 @@ jQuery(document).ready(function () {
 	var profilehtml = '<ul id="header-my-account-menu" class="bb-my-account-menu has-icon">' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/dashboard">' +
-                            '<i class="_icon fa fa-th-list _before" aria-hidden="true"></i><span>My Dashboard</span>' +
+                            '<span>My Dashboard</span>' +
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/mp-membership/">' +
-                            '<i class="_icon fa fa-id-card-o _before" aria-hidden="true"></i><span>My Membership</span>' +
+                            '<span>My Membership</span>' +
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/groups/my-groups/">' +
-                            '<i class="_icon fa fa-users _before" aria-hidden="true"></i><span>My Groups</span>' +
+                            '<span>My Groups</span>' +
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/profile/">' +
-                            '<i class="_icon fa fa-user _before" aria-hidden="true"></i><span>My Profile</span>' +
+                            '<span>My Profile</span>' +
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
                         '<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_account_status&r=">' +
-                            '<i class="_icon fa fa-book-open _before" aria-hidden="true"></i><span>My Magazine Subscription</span>' +
+                            '<span>My Magazine Subscription</span>' +
                         '</a>' +
                     '</li>' +
+                    '<hr />' +
+                    '<li class="menu-item">' +
+                        '<a href="https://discord.gg/mpBkj2hhJ4?utm_source=universal&utm_medium=dropdown&utm_campaign=discord&utm_content=launch">' +
+                            '<span>Make: Discord</span>' +
+                        '</a>' +
+                    '</li>' +  
+                    '<li class="menu-item icon-added">' +
+                        '<a href="https://make.co/activity">' +
+                            '<span>Community Activity</span>' +
+                        '</a>' +
+                    '</li>' +         
+                    '<li class="menu-item">' +
+                        '<a href="https://make.co/groups/">' +
+                            '<span>Groups</span>' +
+                        '</a>' +
+                    '</li>' +
+                    '<li class="menu-item">' +
+                        '<a href="https://make.co/members/">' +
+                            '<span>Member Directory</span>' +
+                        '</a>' +
+                    '</li>' +      
+                    '<li class="menu-item">' +
+                        '<a href="https://make.co/digital/library">' +
+                            '<span title="Premium Member Benefit">Digital Make</span>' +
+                        '</a>' +
+                    '</li>' +
+                    '<li class="menu-item">' +
+                        '<a href="https://make.co/video-library">' +
+                            '<span title="Premium Member Benefit">Make: Video Library</span>' +
+                        '</a>' +
+                    '</li>' +   
                 '</ul>';
 	jQuery("#profileLinks").append(profilehtml);
 
