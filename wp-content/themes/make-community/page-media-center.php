@@ -14,11 +14,10 @@ get_header();
       <div class="flag-banner"></div>
 
       <div class="mcp-body">
-        <div class="container">
-          <div class="row">
-            <div class="content col-xs-12">
+        <div class="wrapper">
+            <div class="content">
               <div class="tabbable" id="tabs">
-                <ul class="nav col-xs-12 col-sm-3">
+                <ul class="nav">
                   <?php 
                   if( have_rows('tabs') ):
                     while( have_rows('tabs') ): the_row();
@@ -57,7 +56,6 @@ get_header();
 
               </div> <!-- .tabbable -->
             </div><!--Content-->
-          </div><!-- .row -->
         </div> <!-- .contaomer-->
       </div><!-- .mcp-body -->
     </div><!--#media-center-page-->

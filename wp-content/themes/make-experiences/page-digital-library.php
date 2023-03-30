@@ -5,7 +5,7 @@
 get_header();
 ?>
 
-<div id="page-content" class="mmBack bluetoad">
+<div id="page-content" class="bluetoad">
 
     <?php
     // theloop
