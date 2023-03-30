@@ -20,6 +20,7 @@ wp_reset_query();
 ?>
 
 <?php    require_once(WP_CONTENT_DIR.'/universal-assets/v2/page-elements/universal-footer.html'); ?>
+</div><!-- .container -->
 
 <?php wp_footer(); ?>
 
