@@ -26,11 +26,10 @@
 
         <div class="container">
 
-        <header id="main">
-
             <?php
             // Universal Nav
             require_once(WP_CONTENT_DIR . '/universal-assets/v2/page-elements/universal-topnav.html');
+            // Universal Subnav
             ?>
             <div id="universal-subnav" class="nav-level-2">
                 <?php
@@ -47,4 +46,3 @@
                     );
                 ?>
             </div>
-        </header>
