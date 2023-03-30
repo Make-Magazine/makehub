@@ -17,31 +17,25 @@ function checkMakeCoMems($user) {
     error_log(print_r($user,TRUE));
     return;
   }
-  $headers = setMemPressHeaders();
-  $memberInfo = basicCurl(NETWORK_HOME_URL."/wp-json/mp/v1/members/".$user->ID, $headers);
-  $memberArray = json_decode($memberInfo);
-
-  $membershipType = 'none';
-  if(isset($memberArray->active_memberships)) {
-    //create an array of memberships using the title field
-    $memArray = array_column($memberArray->active_memberships, 'title');
-
-    if(!empty($memArray)){
-      //look for the needle in any part of the title field in the multi level array
-      if(array_find('premium', $memArray, 'title') !== false ||
-         array_find('multi-seat', $memArray, 'title') !== false ||
-         array_find('school maker faire', $memArray, 'title') !== false ||
-         array_find('magazine', $memArray, 'title') !== false
-       ){
+  
+  //This needs to stay here instead of being moved to a function for max efficiency
+  if(class_exists('MeprUtils')) {       
+    $member = new MeprUser(); // initiate the class
+    $member->ID = $user->ID; // if using this in admin area, you'll need this to make user id the member id
+    $memLevel = $member->get_active_subscription_titles(); //MeprUser function that gets subscription title    
+    
+    if($memLevel==''){
+      $membershipType = 'none';
+    }elseif(stripos($memLevel, 'premium') !== false ||
+        stripos($memLevel, 'multi-seat') !== false || 
+        stripos($memLevel, 'school maker faire') !== false ||
+        stripos($memLevel, 'multi-seat') !== false) {
         //Premium Membership
         $membershipType = "premium";
-      }else{
-        //free membership, upgrade now
-        $membershipType = "upgrade";
-      }
+    }else{
+      //free membership, upgrade now
+      $membershipType = "upgrade";    
     }
-  }else{
-    $membershipType = "none";
   }
   return $membershipType;
 }
