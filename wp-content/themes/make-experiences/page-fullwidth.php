@@ -9,7 +9,7 @@
 get_header();
 ?>
 
-<div id="primary" class="content-area bb-grid-cell">
+<div id="primary" class="content-area">
 	<main id="main" class="site-main">
 
 		<?php if ( have_posts() ) :
