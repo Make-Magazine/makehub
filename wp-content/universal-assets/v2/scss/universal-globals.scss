@@ -22,41 +22,50 @@ body {
 .main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid {
     padding: 0px; // no awkward paddings on our bootstrap containers
 }
-a { // don't let genesis molest our links
-    text-decoration: none;
-	word-break: break-word;
-}
 
-// These are based off the commonly used btn colors of makerfaire
-.btn-red, .btn-reversed {
-    font-weight: 300;
-    padding: 15px 50px;
-    font-size: 18px;
-    margin-top: 10px;
-    line-height: 1em;
-    border: none;
-    border-radius: 25px;
-    background-color: #EA002A;
-    color: #ffffff;
-    transition: background-color 0.2s;
-    display: inline-block;
-    &:visited {
-        color: #fff;
+// responsive hidden fields
+@media (min-width: 1200px) {
+    .hidden-lg {
+        display: none!important;
     }
 }
-.btn-red:hover, .btn-red:active, .btn-red:focus {
-    color: #fff;
-    background-color: #FF0000;
-    transition: background-color 0.2s;
-    text-decoration: underline !important;
+@media (min-width: 992px) and (max-width: 1199px) {
+    .hidden-md {
+        display: none!important;
+    }
 }
-.btn-reversed {
-    border: solid 1px #ccc;
-    background: transparent;
-    cursor: default;
-    &:hover, &:active, &:focus { color: #fff; }
+@media (min-width: 768px) and (max-width: 991px) {
+    .hidden-sm {
+        display: none!important;
+    }
 }
-
+@media (max-width: 767px) {
+    .hidden-xs {
+        display: none!important;
+    }
+}
+// Responsive wrapper sizes
+.wrapper {
+    width: 1240px;
+    margin: 0 auto !important;
+    overflow: hidden;
+    position: relative;
+}
+@media screen and (max-width: 1300px) {
+    .wrapper {
+        width: 960px !important;
+    }
+}
+@media screen and (max-width: 1024px) {
+    .wrapper {
+        width: 680px !important;
+    }
+}
+@media screen and (max-width: 760px) {
+    .wrapper {
+        width: 310px !important;
+    }
+}
 
 .wp-block-button__link {
     border-radius: 15px;
@@ -505,12 +514,12 @@ input.cmn-toggle-round:checked + label:after {
     transform: rotate(45deg);
 }
 
-.genesis-skip-link {
-    display: none;
-}
 
 // SAFARI FIXES
 .safari-mac {
+	.row:before, .row:after {
+		display: none;
+	}
     @media (min-width: 992px) {
         .col-md-6 {
             width: 49.9%;
@@ -544,7 +553,6 @@ input.cmn-toggle-round:checked + label:after {
 		}
 	}
 }
-
 
 // don't print urls
 @media print {

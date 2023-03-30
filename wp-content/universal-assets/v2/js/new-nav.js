@@ -58,7 +58,7 @@ jQuery(document).ready(function () {
                 // except for makercampus which gets it's own logo and subnav items
                 jQuery("h2.site-title a").attr("href", "https://make.co/maker-campus");
                 jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
-                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
+                document.getElementById("navLogo").src = "/wp-content/universal-assets/v2/images/MakerCampus_Logo_Boxless.png";
                 //jQuery("#universal-subnav .community-subnav-item, #primary-navbar .community-subnav-item").css("display", "none");
                 //jQuery("#universal-subnav .campus-subnav-item, #primary-navbar .campus-subnav-item").css("display", "block");
             }
