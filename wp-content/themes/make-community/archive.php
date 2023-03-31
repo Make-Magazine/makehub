@@ -103,7 +103,7 @@ if ( have_posts() || $categoryPage) : ?>
 				        $title = '<div class="rssTitle">' . $title . "</div>";
 
 				        //set image
-				        $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 140, 100) . '" alt="' . $item->get_title() . '" width="140" height="100" />';
+				        $image = '<img src="' . get_first_image_url($item->get_content()) . '" alt="' . $item->get_title() . '" />';
 
 				        //author				        			       
 			            $author = $item->get_author();
