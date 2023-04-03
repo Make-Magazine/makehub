@@ -147,20 +147,36 @@ function make_widget_rss_output($rss, $args = array()) {
         $title      = $item['title'];
         $image      = $item['image'];
         $desc       = $item['desc'];
-        $summary    = $item['summary'];
+        $summary    = ($show_summary && isset($item['summary']) ? $item['summary']: '');
         $author     = $item['author'];
 
         if ($item['show_date']) {
             $date = '<date>' . $item['date'] . '</date>';
         }
 
-        if ($link == '') {
-            echo "<li>{$image}<div class='rss-widget-text'>$title{$date}{$summary}{$author}</div></li>";
-        } elseif ($show_summary) {
-            echo "<li><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$summary}{$author}</a></div></li>";
-        } else {
-            echo "<li><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$author}</a></div></li>";
-        }
+        echo '<li>';
+            //left side
+            echo '<div class="pop-left">';
+            if($link !== ''){
+                echo "<a class='rss-image-link' href='$link' target='_blank'>$image</a>";    
+            }else{
+                echo $image;
+            }
+            echo '</div>';
+
+            //right side
+            echo '<div class="pop-right">
+                    <div class="title">'.
+                        ($link!==''?"<a class='rss-image-link' href='$link' target='_blank'>":'').$title.
+                        ($link!==''?"</a>":'').
+
+                 "  </div>
+                    <div class='details'>
+                        $date $summary $author
+                    </div>";
+            echo '</div>';        
+            echo '<div class="clear"></div>';                    
+        echo '</li>';
     }
     echo '</ul>';
     $rss->__destruct();

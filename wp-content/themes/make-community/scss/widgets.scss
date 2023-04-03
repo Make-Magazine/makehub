@@ -1,0 +1,39 @@
+// our Custom RSS feed widget styling
+.widget_fancy_rss {
+    .custom-rss {
+        li {
+            .pop-left {
+                float: left;
+                width: 22%;
+            }   
+            .pop-right {
+                float: right;
+                width: 71%;
+            }     
+            img {
+                padding: 5px;
+                border: 1px solid #efefef;
+                width: 100%;
+                height: auto;
+            }
+            .rss-widget-text {            
+                .rssTitle {
+                    font-size: 16px;
+                    font-weight: 700;
+                    line-height: 1.2em;
+                }
+                .details {
+                    margin-top: 8px;
+                    font-size: 0px;
+                    color: #999;
+                }
+                cite {
+                    font-weight: 500;
+                    font-size: 12px;
+                    line-height: 12px;
+                }
+            }
+        }
+
+    }
+}
