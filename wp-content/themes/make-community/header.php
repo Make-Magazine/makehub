@@ -22,7 +22,10 @@
 
     <?php if ( get_theme_mod( 'onecommunity_preloader_enable', false ) == true ) {
         echo '<div id="loader-wrapper"></div>';
-    } ?>
+    }
+    if( function_exists( 'wd_asp' ) ) { ?>
+		<div class="ajax-site-search" style="display:none;"><?php echo do_shortcode('[wd_asp id=1]'); ?></div>
+	<?php } ?>
 
         <div class="container">
 
@@ -31,6 +34,7 @@
             require_once(WP_CONTENT_DIR . '/universal-assets/v2/page-elements/universal-topnav.html');
             // Universal Subnav
             ?>
+            
             <div id="universal-subnav" class="nav-level-2">
                 <?php
                     wp_nav_menu( array(

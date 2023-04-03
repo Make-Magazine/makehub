@@ -782,9 +782,15 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     display: none;
 }
 
-.makezine {
+.makezine, .makeco, .makercamp, .makerspaces, .makershed {
     #sb-search {
         display: block;
+    }
+    .ajax-site-search {
+        position: absolute;
+        top: 82px;
+        z-index: 999;
+        right: 20px;
     }
 }
 
