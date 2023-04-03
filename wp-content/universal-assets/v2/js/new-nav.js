@@ -1,6 +1,6 @@
 jQuery(document).ready(function () {
 
-	    // Change logo based on site
+	// Change logo based on site
     var site = window.location.hostname
 	var sitename = "Make: Community";
     switch (site) {
@@ -272,6 +272,14 @@ jQuery(document).ready(function () {
 			jQuery(this).attr('href', href);
 		}
 	});
+	
+	// search
+	if(jQuery(".ajax-site-search").length) {
+		jQuery(".sb-search").after(jQuery(".ajax-site-search"));
+		jQuery(".sb-search").on("click", function(){
+			jQuery(".ajax-site-search").toggle();
+		});
+	}
 
 	// add profile links to the user dropdown
 	var profilehtml = '<ul id="header-my-account-menu" class="bb-my-account-menu has-icon">' +
