@@ -70,6 +70,13 @@ figure {
 	}
 	.jetpack-podcast-player__track-link {
 		padding-left: 0px !important;
+		&:active {
+			font-family: "Roboto Bold";
+			font-weight: 500;
+			a {
+				color: inherit !important;
+			}
+		}
 	}
 }
 .mejs-controls {
