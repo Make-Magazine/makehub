@@ -24,7 +24,7 @@
         echo '<div id="loader-wrapper"></div>';
     }
     if( function_exists( 'wd_asp' ) ) { ?>
-		<div class="ajax-site-search" style="display:none;"><?php echo do_shortcode('[wd_asp id=2]'); ?></div>
+		<div class="ajax-site-search" style="display:none;"><?php echo do_shortcode('[wd_asp id=1]'); ?></div>
 	<?php } ?>
 
         <div class="container">
