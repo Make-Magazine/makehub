@@ -788,9 +788,9 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     }
     .ajax-site-search {
         position: absolute;
-        top: 82px;
+        top: 83px;
         z-index: 999;
-        right: 20px;
+        right: 40px;
     }
 }
 
@@ -812,7 +812,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     .sb-search {
         position: relative;
         width: 0%;
-        min-width: 32px;
+        min-width: 332px;
         height: 32px;
         font-size: 24px;
         float: right;
@@ -880,11 +880,3 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 }
 
 .menu-item.invisible { display: none; }
-
-
-// for the facilitators
-body:not(.facilitator-user) {
-    .menu-item-facilitator-portal {
-        display: none;
-    }
-}
