@@ -602,6 +602,10 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 				left: -20px;
 				min-width: 90px;
 			}
+            &:after {
+                content: "";
+                border: 0px;
+            }
 		}
         .profile-info {
             display: flex;
@@ -788,9 +792,10 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     }
     .ajax-site-search {
         position: absolute;
-        top: 83px;
+        top: 81px;
         z-index: 999;
-        right: 40px;
+        right: 20px;
+        padding: 0px 1px;
     }
 }
 
@@ -815,8 +820,6 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
         min-width: 33px;
         height: 32px;
         font-size: 24px;
-        float: right;
-        overflow: hidden;
         cursor: pointer;
         -webkit-backface-visibility: hidden;
         top: 5px;
