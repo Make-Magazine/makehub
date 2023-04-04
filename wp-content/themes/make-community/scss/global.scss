@@ -67,17 +67,18 @@ figure {
 	}
 	.jetpack-podcast-player__tracks {
 		margin-top: 5px;
-	}
-	.jetpack-podcast-player__track-link {
-		padding-left: 0px !important;
-		&:active {
+		.jetpack-podcast-player__track.is-active {
 			font-family: "Roboto Bold";
 			font-weight: 500;
 			a {
 				color: inherit !important;
 			}
 		}
+		.jetpack-podcast-player__track-link {
+			padding-left: 0px !important;
+		}
 	}
+	
 }
 .mejs-controls {
 	display: inline-flex;
