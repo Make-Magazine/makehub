@@ -7,7 +7,7 @@
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
-	#groups-list {
+	ul[id^="groups-list"] {
 		display: flex;
 		flex-wrap: wrap;
 		.item {
