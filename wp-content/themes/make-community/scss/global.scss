@@ -59,7 +59,7 @@ figure {
 
 // Podcast widget
 .wp-block-jetpack-podcast-player {
-	.jetpack-podcast-player__current-track-info {
+	.jetpack-podcast-player__current-track-info, .jetpack-podcast-player__track-description {
 		padding: 0px !important;
 	}
 	.jetpack-podcast-player__podcast-title {
@@ -68,9 +68,13 @@ figure {
 	.jetpack-podcast-player__tracks {
 		margin-top: 5px;
 	}
+	.jetpack-podcast-player__track-link {
+		padding-left: 0px;
+	}
 }
 .mejs-controls {
 	display: inline-flex;
+	padding: 0px !important;
 	button { 
 		border: 0px;
 		padding: 0px;
