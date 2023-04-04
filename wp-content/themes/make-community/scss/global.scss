@@ -57,51 +57,29 @@ figure {
 	}
 }
 
-
+.wp-block-jetpack-podcast-player {
+	.jetpack-podcast-player__current-track-info {
+		padding: 0px;
+	}
+	.jetpack-podcast-player__podcast-title {
+		display: none;
+	}
+}
+.mejs-controls {
+	display: inline-flex;
+	button { 
+		border: 0px;
+		padding: 0px;
+		width: 20px;
+		font-size: 0px;
+	 }
+}
 
 .truncated { // this is the basic style for read more... should it be universal?
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
-}
-
-/*
-.social-links {
-	margin-left: 20px;
-	margin-top: 15px;
-	a {
-		visibility: hidden;
-		font-size: 24px;
-		&::before {
-			font-family: FontAwesome;
-			visibility: visible;
-		}
-		&[href*="facebook"]::before {
-			content: "\f09a";
-			color: #3b5998;
-		}
-		&[href*="twitter"]::before {
-			content: "\f099";
-			color: #1da1f2;
-		}
-		&[href*="instagram"]::before {
-			content: "\f16d";
-			color: #e1306c;
-		}
-		&[href*="youtube"]::before {
-			content: "\f167";
-			color: #ff0000;
-		}
-		&[href*="linkedin"]::before {
-			content: "\f08c";
-			color: #0077b5;
-		}
-		&[href*="snapchat"]::before {
-			content: "\f2ab";
-			color: #fffc00''
-		}
-	}
 }
 
 button, input[type="submit"] {
@@ -120,24 +98,6 @@ button, input[type="submit"] {
 }
 input[type="submit"].disabled { color: #fff !important; }
 
-.nice-table {
-	background: #fff;
-	border-radius: 1em;
-	overflow: hidden;
-	border-collapse: collapse;
-	box-shadow: $color-light-grey 0px 0px 2px 2px;
-	thead td { font-weight: $font-bold	}
-	td, th {
-		padding: 10px 15px !important;
-		vertical-align: middle;
-	}
-	tr:last-of-type td {
-		border-bottom: 0px;
-	}
-}
-
-*/
-
 .feedback-btn {
 	position: fixed;
 	z-index: 9999;
@@ -145,6 +105,8 @@ input[type="submit"].disabled { color: #fff !important; }
     background: $color-red;
 	color: #fff;
 	border: solid 1px $color-red;
+	padding: 5px 10px;
+	border-radius: 5px;
     width: 120px;
     right: -15px;
 	transition: 0.3s;
