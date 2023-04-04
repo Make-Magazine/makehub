@@ -4,3 +4,15 @@
 		min-height: 100px;
 	}
 }
+
+// Dynamic groups widget
+.bp-dynamic-block-container {
+	#groups-list {
+		display: flex;
+		flex-wrap: wrap;
+		.item {
+			margin-left: 0px !important;
+			margin-top: 30px !important;
+		}
+	}
+}
