@@ -2,6 +2,10 @@
 #groups-dir-list {
 	.item-block {
 		min-height: 100px;
+		.groups-title a {
+			font-family: "Roboto Bold";
+			font-weight: 500;
+		}
 	}
 }
 
