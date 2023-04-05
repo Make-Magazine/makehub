@@ -10,6 +10,7 @@
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
+	position: relative;
 	h2 .menu-button { margin-top: 15px; }
 	.item-options{ top: 75px; }
 	ul[id^="groups-list"] {
