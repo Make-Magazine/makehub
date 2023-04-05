@@ -29,15 +29,14 @@ function makegblocks_enqueue_scripts() {
 add_action('wp_enqueue_scripts', 'makegblocks_enqueue_styles');
 
 function makegblocks_enqueue_styles() {
-    //$my_version = '1.0.24';
-    //wp_enqueue_style('makehub-style', plugins_url( '/css/style.min.css', __FILE__ ), array(), $my_version );
+    $my_version = '1.0.25';
+    wp_enqueue_style('makehub-style', plugins_url( '/css/panels.css', __FILE__ ), array(), $my_version );
 }
 
 // Plugin styles, add bootstrap and panels.less for easy previewing
 function wpdocs_enqueue_custom_admin_styles() {
 	$my_version = '1.0.25';
     //wp_enqueue_style('bootstrap-css', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css', array(), null, 'all');
-	wp_enqueue_style('font-awesome-css', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css', '', 'all' );
     // in the package json, we've compiled the css necessary for the panels/blocks here
     wp_enqueue_style('admin-style-css', get_stylesheet_directory_uri() . '/css/admin-style.min.css', array(), $my_version, 'all');
     wp_enqueue_style('admin-preview-css', plugins_url('css/admin-preview.css', __FILE__), array(), null, 'all');
