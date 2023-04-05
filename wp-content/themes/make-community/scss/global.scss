@@ -66,7 +66,7 @@ figure {
 		display: none;
 	}
 	.jetpack-podcast-player__tracks {
-		margin-top: 5px;
+		margin-top: 5px !important;
 		.jetpack-podcast-player__track.is-active {
 			font-family: "Roboto Bold";
 			font-weight: 500;
@@ -76,6 +76,7 @@ figure {
 		}
 		.jetpack-podcast-player__track-link {
 			padding-left: 0px !important;
+			padding-top: 3px;
 		}
 	}
 	

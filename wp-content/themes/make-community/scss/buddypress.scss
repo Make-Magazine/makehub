@@ -17,5 +17,8 @@
 			margin-left: 0px !important;
 			margin-top: 30px !important;
 		}
+		.item-avatar .bp-tooltip:after {
+			display: none !important;
+		}
 	}
 }
