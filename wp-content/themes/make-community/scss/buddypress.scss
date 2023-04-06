@@ -3,8 +3,14 @@
 	.item-block {
 		min-height: 100px;
 		.groups-title a {
+			@extend .truncated;
+			-webkit-line-clamp: 2;
 			font-family: "Roboto Bold";
 		}
+	}
+	.item-avatar {
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
 	}
 }
 
