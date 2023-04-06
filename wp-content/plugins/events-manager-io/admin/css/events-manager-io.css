@@ -1,0 +1,97 @@
+#emio-editor table h2 {
+	margin: 0px 0px 10px;
+	padding:0px 0px 10px;
+	border-bottom: 1px solid #dedede;
+	font-size:18px;
+}
+.emio-import-formats li a {
+	display : block;
+	width : 50%;
+	border:1px solid #aaa;
+	background-color: #ddd;
+	font-size:18px;
+	padding:10px 20px;
+	color:#555;
+	margin:10px 0px;
+	cursor:pointer;
+	text-decoration:none;
+	font-weight:bold;
+}
+
+.emio-import-fuzzy-location table, .emio-import-fuzzy-location .emio-trigger-hide { display:none; }
+.emio-trigger-show:after {
+	font: normal 14px dashicons;
+    content: "\f140";
+}
+.emio-trigger-hide:after {
+	font: normal 14px dashicons;
+    content: "\f142";
+}
+#emio-fuzzy-location-format .dashicons { color:#cdcdcd; padding-right:10px; }
+#emio-fuzzy-location-format .emio-fuzzy-location-format-ph {
+		width:100%;
+		height:18px;
+		border:1px dashed #aaa;
+		background-color: #ddd;
+		font-size:18px;
+}
+#emio_source_row .emio-source-type-text { display:none; font-style:italic; }
+#emio_source_type.min-size { width: 20%; }
+#emio_source_type.mid-size { width: 40%; }
+#emio_source.emio-source-text { width:100%; }
+#emio_source.emio-source-text.min-size { width:79%; }
+table.emio-field-mapping, table.emio-field-mapping caption, table.emio-field-mapping tbody, table.emio-field-mapping tfoot, table.emio-field-mapping thead, table.emio-field-mapping tr, table.emio-field-mapping th, table.emio-field-mapping td {
+    margin: 0; padding: 0; border: 0; outline: 0; font-size: 100%; vertical-align: baseline; background: transparent; border-spacing:0;
+}
+table.emio-field-mapping { border:1px solid #cccccc; }
+table.emio-field-mapping td, table.emio-field-mapping th {
+	border: 1px solid #dedede;
+	padding: 1px 5px;
+}
+
+/* import preview section */
+#emio-import-preview { margin-top:20px; padding-top:10px; }
+#emio-import-preview h1 { margin-bottom:20px; }
+.emio-import-actions { margin-top:15px; }
+#emio-import-preview .skip { opacity:0.6; }
+#emio-import-preview th.location-status, #emio-import-preview td.location-status { width:18px; padding-right:0px; }
+#emio-import-preview td.location-status .dashicons { font-size:18px; width:18px; height:18px; padding-top:3px; }
+#emio-import-preview td.location div span { border-bottom:dotted 1px #bcbcbc; }
+#emio-import-preview td.location .dashicons-location {margin-left:6px; font-size:20px; }
+#emio-import-preview td.location .dashicons-location.coords-404 { color:#e2d0d0; }
+
+/* Settings Page */
+.events-manager-io-settings .postbox .handlediv { display:none; visibility: hidden; }
+.events-manager-io-settings .postbox h3 { cursor:pointer; }
+.events-manager-io-settings .postbox-container { width: 100%; }
+.events-manager-io-settings .postbox.always-open .inside { display:block !important; }
+.events-manager-io-settings .postbox.closed { border-bottom:1px solid #ccd0d4; }
+.events-manager-io-settings .postbox.emio-service-connect { max-width:1000px; min-height: 75px; }
+.events-manager-io-settings .postbox.emio-service-connect > div { margin:11px 20px; }
+.events-manager-io-settings .postbox.emio-service-connect .emio-service-logo { float:left; width:50px; height:50px; }
+.events-manager-io-settings .postbox.emio-service-connect .emio-service-info { margin:0px 120px 0px 70px; }
+.events-manager-io-settings .postbox.emio-service-connect .emio-service-info h2 { margin:0px 0px 10px !important; padding:0px !important; }
+.events-manager-io-settings .postbox.emio-service-connect .emio-service-info p { margin:0 0 1em; }
+.events-manager-io-settings .postbox.emio-service-connect .emio-connect-button { float:right; margin:10px 0px 0px 0px; }
+
+.events-manager-io-settings .postbox.emio-service-connect li.emio-service-account { clear:both; height:16px; padding-bottom:10px; }
+.events-manager-io-settings .postbox.emio-service-connect li.emio-service-account img, .events-manager-io-settings .postbox.emio-service-connect li.emio-service-account > div { float:left; }
+.events-manager-io-settings .postbox.emio-service-connect li.emio-service-account > div { padding: 5px 0 5px 8px}
+.events-manager-io-settings .postbox.emio-service-connect li.emio-account-disconnected img, .events-manager-io-settings .postbox.emio-service-connect li.emio-account-disconnected .emio-account-label { opacity:0.5; }
+.events-manager-io-settings .postbox.emio-service-connect li.emio-account-disconnected .dashicons { width:16px; height: 16px; font-size: 16px; }
+
+@media screen and (max-width: 600px) {
+	.events-manager-io-settings .postbox.emio-service-connect .emio-service-logo { margin:0px 10px 10px 0px; }
+	.events-manager-io-settings .postbox.emio-service-connect .emio-connect-button { margin: 10px 0px 10px 10px; }
+	.events-manager-io-settings .postbox.emio-service-connect .emio-service-info h2 { margin: 0px 0px 5px; padding:0px 5px; }
+	.events-manager-io-settings .postbox.emio-service-connect .emio-service-info { clear:both; margin:0px; }
+}
+
+/* Imports/Exports list table */
+.emio-admin-items .wp-list-table a.activate { color:#006400; }
+.emio-admin-items .wp-list-table a.deactivate { color:#666; }
+
+/* History Section */
+.emio-history h3 { display: inline-block; }
+.emio-history .tablenav.top { padding-top:5px; }
+.emio-history .tablenav .bulkactions { display:none; }
