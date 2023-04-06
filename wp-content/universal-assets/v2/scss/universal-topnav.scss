@@ -48,7 +48,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 	max-width: 100vw;
 	@media screen and (min-width: 768px) {
 		height: 121px; // hardcoded to prevent CLS
-		background: #333;
+		background: $color-grey;
 	}
     i {
         color: #939597;
@@ -111,7 +111,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
             transition: all linear .1s;
             h2.site-title {
                 font-family: 'Roboto';
-                color: #333;
+                color: $color-grey;
                 font-weight: 600;
                 font-size: 1.375rem;
                 margin: 0;
@@ -188,7 +188,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 							&.profile-menu:not(.logged-in) { display: none; }
 							li { min-height: 40px; }
                             a {
-                                color: #333;
+                                color: $color-grey;
                                 padding-left: 30px;
                                 font-size: 16px;
                                 &:hover {
@@ -210,7 +210,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                         a {
                             font-size: 16px;
                             font-weight: 500;
-                            color: #333;
+                            color: $color-grey;
                             font-family: "Roboto Bold";
                             p { margin: 0px; }
                         }
@@ -226,7 +226,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             &:hover {
                                 background: #f1f1f1;
                                 a {
-                                    color: #333;
+                                    color: $color-grey;
                                     text-decoration: none;
                                 }
                             }
@@ -261,7 +261,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                                 }
                             }
 							&.menu-item-has-children.special-menu-item > a {
-								color: #EA002A;
+								color: $color-red;
 							}
                             .sub-menu {
                                 li.menu-item {
@@ -387,7 +387,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             -ms-flex-align: center;
                             align-items: center;
                             padding: 6px 12px;
-                            color: #333;
+                            color: $color-grey;
                         }
                     }
                     .user-wrap {
@@ -414,7 +414,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
             }
             .mobile-toggle-panel {
                 display: block;
-                color: #333;
+                color: $color-grey;
             }
             .search-separator { display: none; }
             #site-navigation-custom {
@@ -547,7 +547,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                     visibility: visible;
                     opacity: 1;
                     li:hover {
-                        a { color: #333; }
+                        a { color: $color-grey; }
                     }
                     .menu-item-has-children:after {
                         display: none;
@@ -558,7 +558,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     }
     .login-section {
         #LoginBtn, #LogoutBtn {
-            color: #333;
+            color: $color-grey;
 			font-size: 16px;
 			font-weight: 400;
         }
@@ -642,17 +642,17 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 	}
 }
 
-.membership-btn {
+.membership-btn { 
 	margin: 10px;
 	padding: 5px 10px;
-	background: #eb002a;
-	border: solid 1px #eb002a;
+	background: $color-red;
+	border: solid 1px $color-red;
 	color: #fff !important;
 	display: flex;
 	font-size: 20px;
 	justify-content: center;
 	&:hover {
-		color: #eb002a !important;
+		color: $color-red!important;
 		background: #fff;
 	}
 }
@@ -701,7 +701,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 				display: none;
 			}
 			a {
-				color: #333;
+				color: $color-grey;
 				display: flex;
 				align-items: center;
 				min-height: 30px;
@@ -833,7 +833,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     }
     .subscribe-call-out {
         float: left;
-        color: #333;
+        color: $color-grey;
         position: relative;
         display: flex;
 		align-items: center;
@@ -848,7 +848,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                 font-size: 16px;
                 font-weight: 300;
                 text-transform: capitalize;
-                color:#333;
+                color:$color-grey;
             }
         }
         #nav-subscribe-img {

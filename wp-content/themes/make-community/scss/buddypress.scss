@@ -2,5 +2,32 @@
 #groups-dir-list {
 	.item-block {
 		min-height: 100px;
+		.groups-title a {
+			@extend .truncated;
+			-webkit-line-clamp: 2;
+			font-family: "Roboto Bold";
+		}
+	}
+	.item-avatar {
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
+	}
+}
+
+// Dynamic groups widget
+.bp-dynamic-block-container {
+	position: relative;
+	h2 .menu-button { margin-top: 15px; }
+	.item-options{ top: 45px; }
+	ul[id^="groups-list"] {
+		display: flex;
+		flex-wrap: wrap;
+		.item {
+			margin-left: 0px !important;
+			margin-top: 30px !important;
+		}
+		.item-avatar .bp-tooltip:after {
+			display: none !important;
+		}
 	}
 }

@@ -110,7 +110,7 @@ hr {
 }
 
 .universal-btn, .btn.universal-btn {
-    background-color: #005e9a;
+    background-color: $color-blue;
     color: #fff;
     display: inline-flex;
     justify-content: center;
@@ -125,20 +125,20 @@ hr {
     font-weight: 300;
     height: 50px;
     padding: 0px 15px;
-    border: solid 1px #005e9a;
+    border: solid 1px $color-blue;
     &:visited, &:active { color: #fff; }
     &:hover, &:focus {
         background: #fff;
-        color: #005e9a;
+        color: $color-blue;
     }
 }
 .universal-btn-red, .btn.universal-btn-red {
     @extend .universal-btn;
-    background-color: #EA002A;
-    border-color: #EA002A;
+    background-color: $color-red;
+    border-color: $color-red;
     &:hover, &:focus {
         background-color: #FFF;
-		color: #EA002A;
+		color: $color-red;
     }
 }
 .universal-btn-navy, .btn.universal-btn-navy {
@@ -162,15 +162,15 @@ hr {
 .universal-btn-reversed, .btn.universal-btn-reversed {
     @extend .universal-btn;
     background-color: #fff;
-    border-color: #005e9a;
-    color: #005e9a !important;
+    border-color: $color-blue;
+    color: $color-blue !important;
     &:hover, &:focus, &:active {
         color: #fff !important;
-        background-color: #005e9a;
+        background-color: $color-blue;
     }
     &:visited {
         background-color: #fff;
-        color: #005e9a !important;
+        color: $color-blue !important;
     }
 }
 .no-click {
@@ -380,7 +380,7 @@ input.cmn-toggle-round:checked + label:after {
             }
         }
         .sb-search-submit {
-            background: #eb002a;
+            background: $color-red;
             border: none;
             border-radius: 20px;
             padding: 8px 25px;
@@ -466,7 +466,7 @@ input.cmn-toggle-round:checked + label:after {
 }
 .fancybox-overlay {
 	z-index: 999999;
-    background: #333;
+    background: $color-grey;
     opacity: .95;
     width: 100vw !important;
     height: 100vh !important;
@@ -474,16 +474,16 @@ input.cmn-toggle-round:checked + label:after {
     top: 0px;
 }
 .info-btn {
-    border: solid 1px #005e9a;
+    border: solid 1px $color-blue;
     padding: 0px 9px;
     border-radius: 40px;
     font-size: 18px;
     font-weight: bold;
-    color: #005e9a;
+    color: $color-blue;
     font-style: normal;
     &:hover {
         color: #fff;
-        background: #005e9a;
+        background: $color-blue;
         text-decoration: none;
     }
 }
