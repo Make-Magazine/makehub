@@ -11,7 +11,7 @@ while ( have_posts() ) : the_post(); ?>
 
 <section class="wrapper">
 
-<main id="content">
+<main>
 
 	<div class="breadcrumbs">
 	<a href="<?php echo home_url(); ?>"><?php esc_attr_e('Home', 'onecommunity'); ?></a> / <span class="current"><?php the_title(); ?></span>
