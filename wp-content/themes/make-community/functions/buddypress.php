@@ -9,3 +9,46 @@ add_filter( 'wp_mail_from', function( $email ) {
 add_filter( 'wp_mail_from_name', function( $name ) {
     return 'Make: Community';
 }, 10, 3 );
+
+// Social Media Icons based on the profile user info
+function member_social_extend(){
+    global $bp;
+	$member_id   = $bp->displayed_user->id;
+
+	$profiles = array(
+		'Twitter',
+		'Facebook',
+		'Discord',
+		'Youtube',
+		'Vimeo',
+		'LinkedIn',
+		'Twitch',
+		'Mastodon',
+		'Instagram',
+        'SnapChat',
+        'Github'
+	);
+
+	$profiles_data = array();
+
+	foreach( $profiles as $profile ) {
+		$profile_content = xprofile_get_field_data( $profile, $member_id );
+		if ( !empty($profile_content) && $profile_content != '<a href="" rel="nofollow"></a>' ) {
+			$profiles_data[ $profile ] = $profile_content;
+		} 
+	}
+    
+	if( !( empty( $profiles_data ) ) ) {
+		echo '<div class="social-icons">';
+		foreach( $profiles_data as $key => $value ) {
+            $value = new SimpleXMLElement($value);
+            $url =  $value['href'];
+            if(!empty($url[0])) {
+                $profile_icon = 'https://make.co/wp-content/universal-assets/v2/images/social-icons/' . sanitize_title( $key ) . '.png';
+                echo '<a href="' . $url . '" title="' . $key . '" target="_blank"><img height="25px" width="25px" src="' . $profile_icon . '" alt="' . $key . '" /></a>';
+            }
+		}
+		echo '</div>';
+	}
+}
+add_filter( 'bp_before_member_header_meta', 'member_social_extend' );
