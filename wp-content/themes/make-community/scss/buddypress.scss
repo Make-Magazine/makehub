@@ -45,6 +45,14 @@
 	gap: 10px;
 }
 
-.single-headers #cover #latest-update, .single-headers #cover .group-description {
-	background:rgba(0,0,0,.6);
+.single-headers #cover {
+	background-repeat: no-repeat;
+	background-size: cover;
+	.blockquote {
+		color: #f1f1f1;
+		border: 0 solid $color-blue;
+	}
+	#latest-update, .group-description {
+		background:rgba(0,0,0,.6);
+	}
 }
