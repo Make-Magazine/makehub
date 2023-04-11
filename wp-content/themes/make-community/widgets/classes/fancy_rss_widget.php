@@ -145,7 +145,7 @@ class fancy_rss_widget extends WP_Widget {
 			<label for="<?php echo $this->get_field_id('hide_mobile'); ?>"><?php _e( 'Hide for Mobile' ); ?></label><br />
 		</p>
 
-        <p><label for="<?php echo $this->get_field_id('class'); ?>"><?php _e('Additional Class(es):'); ?></label>
+        <p><label for="<?php echo $this->get_field_id('class'); ?>"><?php _e('Additional CSS Class(es):'); ?></label>
 		<input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($class); ?>" /></p>
         <p style="color:#999;">Seperate multiple classes with spaces</p>
 	<?php
