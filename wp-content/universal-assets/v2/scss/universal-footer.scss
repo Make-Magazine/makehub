@@ -252,6 +252,9 @@
         background-repeat: no-repeat;
         background-position: 46%;
         background-size: 130px;
+        @media (max-width:1300px) {
+            background-position: 58%;
+        }
         @media (max-width:1200px) {
             background-position: right 40px center;
         }
