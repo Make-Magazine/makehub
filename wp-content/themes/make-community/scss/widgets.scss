@@ -1,7 +1,7 @@
 // our Custom RSS feed widget styling
-.widget_fancy_rss {
+.widget_fancy_rss:not(.make-ad) {
     .custom-rss {
-        li {
+        li {å
             .pop-left {
                 float: left;
                 width: 22%;
@@ -32,7 +32,23 @@
                 line-height: 12px;
             }            
         }
-
+    }
+}
+// we added a make-ad class
+.widget_fancy_rss.make-ad {
+    .sidebar-title {
+        border-bottom: 0px;
+    }
+    a {cursor: pointer; }
+    .custom-rss {
+        img { 
+            width: 100%;
+         }
+         .rssTitle {
+            text-align: center;
+            color: #999;
+            margin-top: 5px;
+         }
     }
 }
 

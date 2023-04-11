@@ -143,7 +143,7 @@ class makeco_widget_user_profile_fields extends WP_Widget {
         if( $profile_field ) { ?>
             <div class="item bg">
                 <div class="left">Website:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="right"><a href="<?php echo esc_attr( $profile_field ) ?>"><?php echo esc_attr( $profile_field ) ?></a></div>
             </div>
         <?php } ?>
         <?php

@@ -49,6 +49,7 @@ class fancy_rss_widget extends WP_Widget {
         $title = !empty( $instance['title'] ) ? $instance['title'] : '';
         $desc = '';
         $link = !empty( $instance['link'] ) ? $instance['link'] : '';
+        $class = !empty( $instance['class'] ) ? $instance['class'] : '';
 
         if (!is_wp_error($rss)) {
             $desc = esc_attr(strip_tags(@html_entity_decode($rss->get_description(), ENT_QUOTES, get_option('blog_charset'))));
@@ -75,7 +76,10 @@ class fancy_rss_widget extends WP_Widget {
             $title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
         }
 
-        echo $args['before_widget'];
+        // add our custom class to the widget
+        $before_widget = str_replace('class="', 'class="'. $class . ' ', $args['before_widget']);
+
+        echo $before_widget;
         if ($title) {
             echo $args['before_title'] . $title . $args['after_title'];
         }
@@ -103,6 +107,8 @@ class fancy_rss_widget extends WP_Widget {
 		$show_date    = isset( $instance['show_date'] ) ? (int) $instance['show_date'] : 0;
 
 		$hide_mobile = isset( $instance['hide_mobile'] ) ? (int) $instance['hide_mobile'] : 0;
+
+		$class = isset( $instance['class'] ) ? $instance['class'] : '';
 
         // Widget admin form
         ?>
@@ -138,6 +144,9 @@ class fancy_rss_widget extends WP_Widget {
 			<input id="<?php echo $this->get_field_id('hide_mobile'); ?>" name="<?php echo $this->get_field_name('hide_mobile'); ?>" type="checkbox" <?php checked( $hide_mobile ); ?>/>
 			<label for="<?php echo $this->get_field_id('hide_mobile'); ?>"><?php _e( 'Hide for Mobile' ); ?></label><br />
 		</p>
+
+        <p><label for="<?php echo $this->get_field_id('class'); ?>"><?php _e('Additional Class:'); ?></label>
+		<input class="widefat" id="<?php echo $this->get_field_id('class'); ?>" name="<?php echo $this->get_field_name('class'); ?>" type="text" value="<?php echo esc_attr($class); ?>" /></p>
 	<?php
     }
 
@@ -152,6 +161,8 @@ class fancy_rss_widget extends WP_Widget {
 		$instance['show_author'] = (!empty($new_instance['show_author'])) ? 1 : 0;
 		$instance['show_date'] = (!empty($new_instance['show_date'])) ? 1 : 0;
 		$instance['hide_mobile'] = (!empty($new_instance['hide_mobile'])) ? 1 : 0;
+
+        $instance['class'] = (!empty($new_instance['class']) ) ? strip_tags($new_instance['class']) : '';
         return $instance;
 	}
 
