@@ -56,3 +56,15 @@
 		background:rgba(0,0,0,.6);
 	}
 }
+
+.makeco-profile-fields {
+	.item.bg {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		word-break: break-word;
+		a {
+			text-decoration: underline;
+		}
+	}
+}

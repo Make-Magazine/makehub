@@ -87,7 +87,7 @@ class makeco_widget_user_profile_fields extends WP_Widget {
         if ( ! empty( $title ) )
             echo $args['before_title'] . $title . $args['after_title'];
         ?>
-        <div class="bp-profile-fields">
+        <div class="bp-profile-fields makeco-profile-fields">
         <?php
             $profile_field = bp_get_member_profile_data( 'field=Description' );
             if( $profile_field ) { ?>
@@ -96,8 +96,8 @@ class makeco_widget_user_profile_fields extends WP_Widget {
             </div>
         <?php } ?>
             <div class="item bg">
-                <div class="left">Joined:</div>
-                <div class="right">
+                <div class="label">Joined:</div>
+                <div class="content">
                 <?php
                 global $bp;
                 $currentuser = get_userdata( $bp->displayed_user->id );
@@ -110,48 +110,48 @@ class makeco_widget_user_profile_fields extends WP_Widget {
         $profile_field = bp_get_member_profile_data( 'field=Display Name' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">First Name:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="label">First Name:</div>
+                <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } ?>
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Last Name' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">Last Name:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="label">Last Name:</div>
+                <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } ?>
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Country' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">Country:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="label">Country:</div>
+                <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } ?>
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Job Title' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">Job Title:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="label">Job Title:</div>
+                <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } ?>
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Website' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">Website:</div>
-                <div class="right"><a href="<?php echo esc_attr( $profile_field ) ?>"><?php echo esc_attr( $profile_field ) ?></a></div>
+                <div class="label">Website:</div>
+                <div class="content"><a href="<?php echo esc_attr( $profile_field ) ?>"><?php echo esc_attr( $profile_field ) ?></a></div>
             </div>
         <?php } ?>
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Topics' );
         if( $profile_field ) { ?>
             <div class="item bg">
-                <div class="left">Interests:</div>
-                <div class="right"><?php echo esc_attr( $profile_field ) ?></div>
+                <div class="label">Interests:</div>
+                <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } ?>
 
