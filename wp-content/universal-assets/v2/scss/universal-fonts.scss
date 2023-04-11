@@ -50,6 +50,10 @@ p {
   font-weight: 300;
   margin: 0 0 1em;
 }
+.elementor-element p {
+  font-size: inherit;
+  color: inherit;
+}
 
 // youtube
 .epyt-gallery-title {
