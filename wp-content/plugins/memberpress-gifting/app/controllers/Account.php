@@ -15,9 +15,11 @@ class Account extends lib\BaseCtrl {
     add_action('mepr_account_nav_content', array($this, 'gifts_list'));
     add_action('mepr-txn-status-refunded', array($this, 'handle_txn_refund'));
     add_action('wp_ajax_mpgft_send_gift_email', array($this, 'send_gift_email'));
+    add_action('wp_ajax_mpgft_txn_status', array($this, 'query_txn_status'));
 
     add_action('mepr_recurring_subscriptions_table_args', array($this, 'recurring_subscriptions_table_args'));
     add_action('mepr_nonrecurring_subscriptions_table_args', array($this, 'nonrecurring_subscriptions_table_args'));
+    add_action('wp_footer', array($this, 'mepr_mpgft_wp_footer'));
   }
 
   /**
@@ -209,6 +211,56 @@ class Account extends lib\BaseCtrl {
         $giftee_txn->status = \MeprTransaction::$refunded_str;
         $giftee_txn->store();
       }
+    }
+  }
+
+  public function mepr_mpgft_wp_footer(){
+    if (
+      ( isset($_GET['txn']) && is_numeric($_GET['txn']) )
+      && ( isset($_GET['action']) && $_GET['action'] == 'gifts' )
+      && \is_user_logged_in()
+    ) {
+
+      $txn = new \MeprTransaction((int)$_GET['txn']);
+
+      if($txn->get_meta(models\Gift::$is_gift_pending_str, true) && \MeprTransaction::$pending_str === (string) $txn->status ){
+
+        $mepr_options = \MeprOptions::fetch();
+        $account_url = $mepr_options->account_page_url();
+
+        $redirect_to = \add_query_arg( array(
+          'action' => 'gifts',
+          'txn' => $txn->id,
+          'processed' => time(),
+        ), $account_url );
+
+        require_once(base\VIEWS_PATH . '/account/gift-txn-processing.php');
+      }
+    }
+  }
+
+  /**
+   * @return [type]
+   */
+  public function query_txn_status() {
+    check_ajax_referer('mpgft_txn_status', 'security');
+
+    if( ! isset($_POST['txn_id']) ) {
+       wp_send_json_error(__('Transaction id is missing.', 'memberpress-gifting'));
+    }
+
+    $txn_id = (int) $_POST['txn_id'];
+    $txn = new \MeprTransaction($txn_id);
+
+    $mepr_current_user = \MeprUtils::get_currentuserinfo();
+    if( $txn->user_id != $mepr_current_user->ID ) {
+      wp_send_json_error(__('Invalid request.', 'memberpress-gifting'));
+    }
+
+    if( \MeprTransaction::$complete_str === (string) $txn->status ) {
+      wp_send_json_success(\MeprTransaction::$complete_str);
+    } else {
+      wp_send_json_error($txn->status);
     }
   }
 }

@@ -11,17 +11,21 @@ use memberpress\gifting\emails as emails;
 
 class Reminders extends lib\BaseCtrl {
   public function load_hooks() {
+
     $disable_reminder_crons = get_option('mepr_disable_reminder_crons');
+
     if(!$disable_reminder_crons) {
       $r = new models\Reminder();
       foreach($r->event_actions as $e) {
         add_action($e, array($this, 'send_reminders'));
       }
     }
+
     add_action('mepr-reminder-trigger-option', array($this, 'add_reminder_option_html'));
     add_action('mepr_reminders_worker', array($this, 'worker'));
     add_filter("mepr-sub-expires-reminder-disable", array($this, 'disable_reminder_email'), 10, 5);
     add_filter("mepr_reminder_lookup", array($this, 'add_reminder_lookup'), 10, 2);
+    add_action('manage_posts_custom_column', array( $this, 'custom_columns'), 10, 2);
   }
 
 
@@ -203,4 +207,32 @@ class Reminders extends lib\BaseCtrl {
     //return $option;
   }
 
+  public function custom_columns($column, $post_id) {
+    $reminder = $this->get_valid_reminder($post_id);
+
+    if($reminder!==false) {
+      switch( $reminder->trigger_event ) {
+        case 'gift-expires':
+          $uclass = base\EMAILS_NAMESPACE.'\\'.'UserGiftExpiresReminderEmail';
+          break;
+        default:
+          echo '';
+          return;
+      }
+
+      // TODO: Yah, not pretty but works ... change at some point
+      $cval = '<span style="color: %s; font-size: 120%%;"><strong>%s</strong></span>';
+
+      if("send_to_admin" == $column) {
+        isset($aclass) && (int)$reminder->emails[$aclass]['enabled'] > 0 ? printf( $cval, 'limegreen', '✔︎' ) : printf( $cval, 'red', '✖︎' );
+      }
+      elseif("send_to_member" == $column) {
+        (int)$reminder->emails[$uclass]['enabled'] > 0 ? printf( $cval, 'limegreen', '✔︎' ) : printf( $cval, 'red', '✖︎' );
+      }
+      elseif("reminder_products" == $column) {
+        echo implode(', ', $reminder->get_formatted_products());
+      }
+    }
+  }
 } //End class
+

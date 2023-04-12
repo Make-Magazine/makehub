@@ -25,13 +25,13 @@ class UserGiftExpiresReminderEmail extends lib\BaseReminderEmail {
                        );
 
     $this->test_vars = array(
-       'reminder_id'               => 28,
+       'reminder_id'               => 28000,
        'reminder_trigger_length'   => 2,
        'reminder_trigger_interval' => 'days',
        'reminder_trigger_timing'   => 'after',
        'reminder_trigger_event'    => 'gift-expires',
-       'reminder_name'             => __('Gift Membership Expiring', 'memberpress-gifting'),
-       'reminder_description'      => __('Gift Membership Expiring in 2 days', 'memberpress-gifting')
+       'reminder_name'             => __('Gift Membership Expired', 'memberpress-gifting'),
+       'reminder_description'      => __('Your Gift Membership expired 1 Day ago', 'memberpress-gifting')
     );
   }
 }
