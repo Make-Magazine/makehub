@@ -55,7 +55,7 @@ class GravityView_Inline_Edit_GFAddon extends GFAddOn {
     function add_settings( $plugins_data ) {
 
 	    // Sanity check for class alias existing.
-	    if ( ! class_exists( 'GravityKitFoundation' ) ) {
+	    if ( ! class_exists( 'GravityKitFoundation' ) || ! GravityKitFoundation::settings() ) {
 		    return $plugins_data;
 	    }
 

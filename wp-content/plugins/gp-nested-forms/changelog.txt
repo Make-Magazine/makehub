@@ -1,6 +1,33 @@
 
 # Changelog
 
+## 1.1.23
+
+	- Fixed an issue with Save & Continue not working when nested entries were spammed or deleted.
+
+## 1.1.22
+
+	- Added bullet-proofing to ensure that child forms always have AJAX enabled.
+
+## 1.1.21
+
+	- Fixed issue where the submit button for child forms would not be properly handled if the child form's submit button's location is set to end of the last row.
+
+## 1.1.20
+
+	- Updated how we ensure `GFFormDisplay` is loaded when printing entries to also prevent the error when printing with Gravity Flow and other add-ons.
+	- Fixed issue where "Honeypot validation" enabled for nested child forms could cause the child form submission to fail in certain cases.
+
+## 1.1.19
+
+	- Fixed issue where runtime hashcode was not unique to the session.
+	- Fixed a potential fatal error that can happen when printing parent forms with Nested Form fields using Gravity Forms 2.7 or newer.
+	- Fixed issue where PHP warnings and/or notices could show if a Nested Form field has a form that does not exist selected as the child form.
+
+## 1.1.18
+
+	- Added support for including post payment actions (like delaying feed processing until payment is collected) based on child feeds.
+
 ## 1.1.17
 
 	- Added `gpnf_should_load_child_entries_from_session` filter to allow disabling loading child entries from the session. This will be used by Advanced Save & Continue to prevent drafts from inheriting child entries from other drafts.

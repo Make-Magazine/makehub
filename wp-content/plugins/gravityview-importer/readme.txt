@@ -5,6 +5,7 @@ Tested up to: 6.1
 Stable tag: trunk
 Contributors: The GravityKit Team
 License: GPL 3 or higher
+Requires PHP: 7.2.0
 
 The best way to import entries into Gravity Forms. Proud to be a Gravity Forms Certified Add-On.
 
@@ -19,6 +20,13 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.c
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.4.6 on March 9, 2023 =
+
+**Note: GravityImport now requires PHP 7.2 or newer**
+
+* Added: Option to ignore field conditional logic during import
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.10
 
 = 2.4.5 on January 5, 2023 =
 
@@ -456,4 +464,4 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 == Upgrade Notice ==
 
 
-= 1677172796-4249 =
+= 1681311166-4249 =

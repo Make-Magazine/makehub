@@ -35,7 +35,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gform_admin_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_render', array( $this, 'replace_lmts_in_checkable_choices' ), 7 );
-		add_filter( 'gform_pre_render', array( $this, 'reset_gf_cache' ), 15 );
+		add_filter( 'gform_pre_render', array( $this, 'reset_gf_is_field_hidden_cache' ), 15 );
 		add_filter( 'gform_before_resend_notifications', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_submission_filter', array( $this, 'populate_lmt_whitelist' ), 5 );
 
@@ -86,6 +86,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gpps_pre_replace_merge_tags', array( $this, 'escape_live_merge_tags' ) );
 		add_filter( 'gpps_post_replace_merge_tags', array( $this, 'unescape_live_merge_tags' ) );
 
+		/**
+		 * Replace Live Merge Tags in labels of fields when printing.
+		 */
+		add_action( 'gform_print_entry_header', array( $this, 'add_printing_hooks' ) );
 	}
 
 
@@ -181,15 +185,25 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	/**
-	 * Resets the GF cache after the form is mostly processed (priority 15). The reason for this is to ensure GFFormsModel::is_field_hidden() returns
-	 * the most accurate value possible when getting Live Merge Tag values.
+	 * Resets the GF cache's is hidden keys after the form is mostly processed (priority 15).
+	 *
+	 * The reason for this is to ensure GFFormsModel::is_field_hidden() returns the most accurate value possible when
+	 * getting Live Merge Tag values.
 	 *
 	 * @param $form
 	 *
 	 * @return array
 	 */
-	public function reset_gf_cache( $form ) {
-		GFCache::flush();
+	public function reset_gf_is_field_hidden_cache( $form ) {
+		// Re-fetch the form as GP_Populate_Anything::ajax_get_batch_field_html() will pare down the fields to only
+		// those that need updating.
+		$full_form = GFAPI::get_form( $form['id'] );
+
+		if ( ! empty( $full_form['fields'] ) && is_array( $full_form['fields'] ) ) {
+			foreach ( $full_form['fields'] as $field ) {
+				GFCache::delete( 'GFFormsModel::is_field_hidden_' . $full_form['id'] . '_' . $field->id );
+			}
+		}
 
 		return $form;
 	}
@@ -857,6 +871,22 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			if ( ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
+				// Convert input array to individual inputs.
+				if ( ! empty( $field->inputs ) && is_array( $entry_value ) ) {
+					unset( $entry_values[ $input_id ] );
+
+					foreach ( $entry_value as $input_name => $input_value ) {
+						$entry_values[ $input_name ] = $input_value;
+					}
+
+					continue;
+				}
+
+				// Convert array values to comma-separated strings.
+				if ( is_array( $entry_value ) ) {
+					$entry_values[ $input_id ] = implode( ', ', $entry_value );
+				}
+
 				continue;
 			}
 
@@ -1136,9 +1166,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		return $value;
 	}
 
-	public function replace_field_label_live_merge_tags_static( $form ) {
-		$entry = false;
-
+	public function replace_field_label_live_merge_tags_static( $form, $entry = null ) {
 		if ( in_array( GFForms::get_page(), array( 'entry_detail', 'entry_detail_edit' ), true ) ) {
 			$entry = GFAPI::get_entry( rgget( 'lid' ) );
 		}
@@ -1197,5 +1225,43 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		return $form;
+	}
+
+	/**
+	 * Adds the necessary hooks to replace Live Merge Tags in field labels when printing.
+	 */
+	public function add_printing_hooks() {
+		remove_action( 'gform_print_entry_content', 'gform_default_entry_content' );
+		remove_action( 'gform_print_entry_content', array( $this, 'print_entry_content' ) );
+
+		add_action( 'gform_print_entry_content', array( $this, 'print_entry_content' ), 10, 3 );
+	}
+
+	/**
+	 * Overrides gform_default_entry_content() to replace Live Merge Tags in field labels first.
+	 */
+	public function print_entry_content( $form, $entry, $entry_ids ) {
+		// Reload the form each time otherwise the form object will be modified by the previous iteration.
+		$form = GFAPI::get_form( $form['id'] );
+
+		// Populate LMT whitelist to know if the form has LMTs or not to avoid unnecessary processing.
+		$this->populate_lmt_whitelist( $form );
+
+		if ( ! $this->form_has_lmts( $form['id'] ) ) {
+			gform_default_entry_content( $form, $entry, $entry_ids );
+
+			return;
+		}
+
+		// Break object references in $form['fields']
+		$form['fields'] = array_map( 'unserialize', array_map( 'serialize', $form['fields'] ) );
+
+		// Run form through gform_admin_pre_render for additional replacements.
+		$form = apply_filters( 'gform_admin_pre_render', $form );
+
+		// Replace Live Merge Tags in field labels (not done during gform_admin_pre_render).
+		$form = gp_populate_anything()->live_merge_tags->replace_field_label_live_merge_tags_static( $form, $entry );
+
+		gform_default_entry_content( $form, $entry, $entry_ids );
 	}
 }

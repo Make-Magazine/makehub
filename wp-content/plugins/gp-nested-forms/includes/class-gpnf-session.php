@@ -7,6 +7,7 @@ class GPNF_Session {
 
 	private $_form_id;
 	private $_cookie;
+	private $_hashcode;
 
 	public function __construct( $form_id ) {
 
@@ -97,14 +98,13 @@ class GPNF_Session {
 	 * @return array|mixed|string|null
 	 */
 	public function get_runtime_hashcode() {
-		static $hashcode;
-		if ( ! $hashcode ) {
-			$hashcode = $this->get( 'hash' );
-			if ( ! $hashcode ) {
-				$hashcode = $this->make_hashcode();
+		if ( ! $this->_hashcode ) {
+			$this->_hashcode = $this->get( 'hash' );
+			if ( ! $this->_hashcode ) {
+				$this->_hashcode = $this->make_hashcode();
 			}
 		}
-		return $hashcode;
+		return $this->_hashcode;
 	}
 
 	public function set_cookie() {

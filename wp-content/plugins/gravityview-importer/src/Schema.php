@@ -222,18 +222,19 @@ function gv_import_entries_get_batch_json_schema() {
 				'description' => 'Special processing flags.',
 				'type'        => 'array',
 				'anyOf'       =>  array(
-					"flush",       // Truncate all existing entries
-					"patch",       // Patch existing entries, keeping undefined values untouched, needs entry ID map rule
-					"auto",        // Autoprocess this batch, all configuration has been supplied upfront
-					"hookless",    // Suppress all before, after hooks, feeds, insert as is
-					"nolog",       // Do not generate binary log, makes rollbacks impossible, faster, saves database space
-					"lock",        // Lock tables for read, write during processing
-					"soft",        // Allow errors in rows through, process to the end
-					"require",     // Do not ignore required fields, consider errored if a field is missing
-					"valid",       // All data is unconditionally valid (unless overridden by filters), but sanitized
-					"notify",      // Run notifications for all imported entries
-					"keepsource",  // Do not remove the local source after import when deleting this batch
-					"remove"       // Remove batch once it has finished with no errors and skips
+					"flush",                       // Truncate all existing entries
+					"patch",                       // Patch existing entries, keeping undefined values untouched, needs entry ID map rule
+					"auto",                        // Autoprocess this batch, all configuration has been supplied upfront
+					"hookless",                    // Suppress all before, after hooks, feeds, insert as is
+					"nolog",                       // Do not generate binary log, makes rollbacks impossible, faster, saves database space
+					"lock",                        // Lock tables for read, write during processing
+					"soft",                        // Allow errors in rows through, process to the end
+					"require",                     // Do not ignore required fields, consider errored if a field is missing
+					"valid",                       // All data is unconditionally valid (unless overridden by filters), but sanitized
+					"notify",                      // Run notifications for all imported entries
+					"ignorefieldconditionallogic", // Ignore conditional logic for fields
+					"keepsource",                  // Do not remove the local source after import when deleting this batch
+					"remove"                       // Remove batch once it has finished with no errors and skips
 				),
 				'context'     =>  array( 'view', 'edit' ),
 				'readonly'    =>  false,

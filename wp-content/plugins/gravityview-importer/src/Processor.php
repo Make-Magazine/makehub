@@ -1880,6 +1880,11 @@ class Processor {
 
 					$field = $textfield;
 				}
+
+				// Disable field conditional logic when the flag is set in the UI.
+				if ( in_array( 'ignorefieldconditionallogic', $batch['flags'] ) && ! empty( $field->conditionalLogic ) ) {
+					$field->conditionalLogic = false;
+				}
 			}
 
 			return $form;
@@ -2618,6 +2623,39 @@ class Processor {
 			return $value;
 		}, 10, 5 );
 
+		add_filter( 'gform_validation', $file_upload_keeplinks_validate = function ( $validation_result ) use ( $fileupload_keeplinks ) {
+			// GF 2.7+ validates file uploads (https://github.com/gravityforms/gravityforms/commit/9ca22da193c1252c707e22a7a3cf3152e53f6aa2)
+			// by checking for file existence and there is no filter to override this behavior. As a workaround, we should remove failed validation
+			// from file upload fields for which "keeplinks" flag is set.
+
+			if ( $validation_result['is_valid'] || ( ! $validation_result['is_valid'] && empty( $fileupload_keeplinks ) ) ) {
+				return $validation_result;
+			}
+
+			$invalid_field_count = 0;
+
+			foreach ( $validation_result['form']['fields'] as $field ) {
+				if ( ! $field->failed_validation ) {
+					continue;
+				}
+
+				if ( ! in_array( $field->id, array_keys( $fileupload_keeplinks ) ) ) {
+					$invalid_field_count++;
+
+					continue;
+				}
+
+				$field->failed_validation  = false;
+				$field->validation_message = '';
+			}
+
+			if ( ! $invalid_field_count ) {
+				$validation_result['is_valid'] = true;
+			}
+
+			return $validation_result;
+		} );
+
 		add_filter( 'gform_save_field_value', $save_field_value_fileupload_keeplinks = function ( $value, $entry, $field, $form, $input_id ) use ( &$fileupload_keeplinks ) {
 			if ( in_array( $field->id, array_keys( $fileupload_keeplinks ) ) ) {
 				return $fileupload_keeplinks[ $field->id ];
@@ -2722,6 +2760,7 @@ class Processor {
 
 			remove_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
 			remove_filter( 'gform_pre_process', $pre_process_validate_callback );
+			remove_filter( 'gform_validation', $file_upload_keeplinks_validate );
 			remove_filter( 'gform_save_field_value', $save_field_value_upload_single_callback );
 			remove_filter( 'gform_save_field_value', $save_field_value_fileupload_keeplinks );
 			remove_filter( 'gform_validation', $global_validation_callback );

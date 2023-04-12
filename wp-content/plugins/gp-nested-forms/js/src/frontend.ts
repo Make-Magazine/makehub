@@ -601,7 +601,7 @@ const ko = window.ko;
 			 * The .first() call here is used in the event that the parent form markup is on the page more than one time. This can happen with
 			 * third-party plugins such as wpDataTables.
 			 */
-			return $( '#gform_page_{0}_{1} .gform_page_footer, #gform_{0} .gform_footer'.format( self.nestedFormId, self.getCurrentPage() ) ).first().find( 'input[type="button"], input[type="submit"], input[type="image"], button' );
+			return $( '#gform_page_{0}_{1} .gform_page_footer, #gform_{0} .gform_footer, .gfield--type-submit'.format( self.nestedFormId, self.getCurrentPage() ) ).first().find( 'input[type="button"], input[type="submit"], input[type="image"], button' );
 		};
 
 		self.handleCancelClick = function( $button ) {

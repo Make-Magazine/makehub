@@ -1,5 +1,35 @@
 # Changelog
 
+## 1.2.49
+
+	- Fixed issue with `reset_gf_is_field_hidden_cache()` not clearing the `GFFormsModel::is_field_hidden` cache key for every field in the form for Live Merge Tags.
+	- Added support for "is in" and "is not in" operators when filtering by Post ID.
+	- Improved accessibility of Add/Remove Filter buttons in the Form Editor.
+
+## 1.2.48
+
+	- Fixed issue where dynamically populated values of inputs in multi-input fields could cause an error to be triggered if no objects are returned and the entry is being edited.
+	- Fixed potential PHP errors/warnings when using Live Merge Tags with multi-input fields.
+
+## 1.2.47
+
+	- Fixed issue where Live Merge Tags would not be replaced in field labels when printing entries.
+	- Updated how we clear Gravity Forms cache prior to using `GFFormsModel::is_field_hidden()` to address potential form rendering issues.
+
+## 1.2.46
+
+	- Added [`gppa_skip_hidden_field_values_during_hydration`](https://gravitywiz.com/documentation/gppa_skip_field_value_during_hydration) filter to enable hiding of field values during hydration.
+
+## 1.2.45
+
+	- Updated `is in` and `is not in` operators to decode any JSON values passed to it into a PHP array.
+
+## 1.2.44
+
+	- Fixed issue where values from hidden fields could show up in merge tags such as `@{order_summary}`.
+	- Fixed potential PHP warnings when using PHP 8 and the GW Manual Entries snippet.
+	- Fixed issue where Live Merge Tags referencing choice-based product fields with populated choices would not reflect the correct value.
+
 ## 1.2.43
 
 	- Fixed an issue with Read Only inputs trigerring Dynamic Population when any input is attempted on them.

@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 06-January-2023 using Strauss.
+ * Modified by The GravityKit Team on 10-March-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -610,7 +610,7 @@ class ProductManager {
 					'licenses'                   => isset( $product_license_map[ $product_data['id'] ] ) ? $product_license_map[ $product_data['id'] ] : [],
 					'failed_system_requirements' => $this->validate_product_system_requirements( $product_data['system_requirements'] ),
 					'failed_plugin_dependencies' => $this->validate_product_plugin_dependencies( $product_data['plugin_dependencies'] ),
-					'settings'                   => esc_url( $product_settings_url ),
+					'settings'                   => esc_url_raw( $product_settings_url ),
 					'has_git_folder'             => $installed_product && file_exists( dirname( $installed_product['plugin_file'] ) . '/.git' ),
 				] );
 

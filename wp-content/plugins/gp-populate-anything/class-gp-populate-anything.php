@@ -535,6 +535,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				'populateChoices'                   => esc_html__( 'Populate choices dynamically', 'gp-populate-anything' ),
 				'populateValues'                    => esc_html__( 'Populate value dynamically', 'gp-populate-anything' ),
 				'addFilter'                         => esc_html__( 'Add Filter', 'gp-populate-anything' ),
+				'removeFilter'                      => esc_html__( 'Remove Filter', 'gp-populate-anything' ),
 				'label'                             => esc_html__( 'Label', 'gp-populate-anything' ),
 				'value'                             => esc_html__( 'Value', 'gp-populate-anything' ),
 				'price'                             => esc_html__( 'Price', 'gp-populate-anything' ),
@@ -681,12 +682,12 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			foreach ( $filter_groups as $filter_group ) {
 				foreach ( $filter_group as $filter ) {
-					$filter_value_exploded = explode( ':', $filter['value'] );
+					$filter_value_exploded = explode( ':', rgar( $filter, 'value' ) );
 					$dependent_fields      = array();
 
 					if ( $filter_value_exploded[0] === 'gf_field' ) {
 						$dependent_fields[] = $filter_value_exploded[1];
-					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $filter['value'], $field_matches ) ) {
+					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', rgar( $filter, 'value' ), $field_matches ) ) {
 						if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
 							$dependent_fields = $field_matches[1];
 						}
@@ -1900,7 +1901,14 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		if ( count( $objects ) === 0 ) {
 			if ( $lead ) {
-				return RGFormsModel::get_lead_field_value( $lead, $field );
+				$value = RGFormsModel::get_lead_field_value( $lead, $field );
+
+				// If the value template is for an input, we need to get that from $value if it's an array.
+				if ( is_array( $value ) && strpos( $template, '.' ) !== false && is_numeric( $template ) ) {
+					return rgar( $value, $template );
+				}
+
+				return $value;
 			}
 		}
 
@@ -2168,6 +2176,10 @@ class GP_Populate_Anything extends GP_Plugin {
 		if ( ! empty( $field->choices ) && is_array( $field->choices ) && rgar( $field, 'gppa-choices-enabled' ) && $require_value_to_be_in_dynamic_choices ) {
 			$choice_values = wp_list_pluck( $field->choices, 'value' );
 
+			$choice_values_with_price_removed = array_map( function( $value ) use ( $field ) {
+				return $this->maybe_extract_value_from_product( $value, $field );
+			}, $choice_values );
+
 			if ( is_array( $field_value ) || ( rgar( $field, 'storageType' ) === 'json' && self::is_json( $field_value ) ) ) {
 				$was_json = self::is_json( $field_value );
 
@@ -2178,12 +2190,12 @@ class GP_Populate_Anything extends GP_Plugin {
 				$field_value = self::maybe_decode_json( $field_value );
 
 				foreach ( $field_value as $field_value_index => $individual_field_value ) {
-					if ( ! in_array( $individual_field_value, $choice_values ) ) {
+					if ( ! in_array( $this->maybe_extract_value_from_product( $individual_field_value, $field ), $choice_values ) ) {
 						unset( $field_value[ $field_value_index ] );
 					}
 				}
 			} else {
-				if ( ! rgblank( $field_value ) && ! in_array( $field_value, $choice_values ) ) {
+				if ( ! rgblank( $field_value ) && ! in_array( $this->maybe_extract_value_from_product( $field_value, $field ), $choice_values ) ) {
 					$field_value = null;
 				}
 			}
@@ -2242,7 +2254,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * Added trim here to improve reliability of LMTs being in textareas. There were situations where the number of
 		 * line breaks would not equal and cause LMTs to stop populating.
 		 */
-		if ( is_string( $field_value ) ) {
+		if ( is_string( $field_value ) && $this->live_merge_tags ) {
 			if ( $this->live_merge_tags->prepare_for_lmt_comparison( $field_value ) == $this->live_merge_tags->prepare_for_lmt_comparison( $request_val ) ) {
 				$field_value = $default_value;
 			}
@@ -2680,7 +2692,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			$entry_value    = RGFormsModel::get_lead_field_value( $entry, $field );
 			list( $value, ) = explode( '|', $entry_value );
 
-			$product['name'] = $this->get_submitted_choice_label( $value, $field, $entry['id'] );
+			$product['name'] = $this->get_submitted_choice_label( $value, $field, rgar( $entry, 'id' ) );
 		}
 
 		return $product_info;
@@ -3049,6 +3061,22 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 
 			/**
+			 * Filter whether a field's value should be skipped during hydration. This can be useful in situations
+			 * such as excluding hidden fields from being displayed in the @{order_summary} merge tag output when
+			 * populated using a Live Merge Tag.
+			 *
+			 * @param bool $skip Whether to skip the field value during hydration.
+			 * @param array $form The form currently being processed.
+			 * @param GF_Field $field The field currently being processed.
+			 * @param array $field_values The field values currently being processed.
+			 *
+			 * @since 1.2.46
+			 */
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+				continue;
+			}
+
+			/**
 			 * If hydrated value is an array of input, add individual fields to gppa-field-values instead
 			 */
 			if ( $this->is_field_value_array_of_input_value( $hydrated_value, $field ) ) {
@@ -3377,6 +3405,43 @@ class GP_Populate_Anything extends GP_Plugin {
 		$_POST = add_magic_quotes( $_POST );
 
 		$fake_lead = $GLOBALS['gppa-field-values'][ $form['id'] ];
+
+		/**
+		 * Allow throwing out field values during hydration using a filter.
+		 *
+		 * One use-case of this is excluding hidden fields from being displayed in the @{order_summary} merge tag.
+		 */
+		foreach ( $fake_lead as $input => $value ) {
+			$field = GFFormsModel::get_field( $form, $input );
+
+			/**
+			 * Filter whether a field's value should be skipped during hydration. This can be useful in situations
+			 * such as excluding hidden fields from being displayed in the @{order_summary} merge tag output when
+			 * populated using a Live Merge Tag.
+			 *
+			 * @param bool $skip Whether to skip the field value during hydration.
+			 * @param array $form The form currently being processed.
+			 * @param GF_Field $field The field currently being processed.
+			 * @param array $field_values The field values currently being processed.
+			 *
+			 * @since 1.2.46
+			 */
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+				unset( $fake_lead[ $input ] );
+
+				if ( isset( $_POST[ 'input_' . $input ] ) ) {
+					unset( $_POST[ 'input_' . $input ] );
+				}
+
+				if ( isset( $field_values[ $input ] ) ) {
+					unset( $field_values[ $input ] );
+				}
+
+				if ( isset( $GLOBALS['gppa-field-values'][ $form['id'] ][ $input ] ) ) {
+					unset( $GLOBALS['gppa-field-values'][ $form['id'] ][ $input ] );
+				}
+			}
+		}
 
 		/**
 		 * Flush GF cache to prevent issues from the fake lead creation from before.

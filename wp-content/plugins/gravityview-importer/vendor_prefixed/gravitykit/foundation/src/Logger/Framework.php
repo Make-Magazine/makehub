@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 06-January-2023 using Strauss.
+ * Modified by The GravityKit Team on 10-March-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -17,11 +17,15 @@ use GravityKit\GravityImport\Monolog\Logger as MonologLogger;
 use GravityKit\GravityImport\Foundation\Settings\Framework as SettingsFramework;
 use GravityKit\GravityImport\Foundation\Encryption\Encryption;
 use Exception;
+use GravityKit\GravityImport\Psr\Log\LoggerInterface;
+use GravityKit\GravityImport\Psr\Log\LoggerTrait;
 
 /**
  * Logging framework for GravityKit.
  */
-class Framework {
+class Framework implements LoggerInterface {
+    use LoggerTrait;
+
 	const DEFAULT_LOGGER_ID = 'gravitykit';
 
 	const DEFAULT_LOGGER_TITLE = 'GravityKit';
@@ -506,4 +510,13 @@ HTML;
 			return call_user_func_array( [ $this->_logger, $name ], $arguments );
 		}
 	}
+
+    /**
+     * @inheritDoc
+     * @since $ver$
+     */
+    public function log($level, $message, array $context = array())
+    {
+        $this->__call($level, [$message, $context]);
+    }
 }

@@ -2,7 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by __root__ on 20-February-2023 using Strauss.
+ * Modified by __root__ on 05-April-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */ declare(strict_types=1);
 

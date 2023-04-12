@@ -63,7 +63,7 @@ class GP_Field_Nested_Form extends GF_Field {
 		$column_count     = count( $nested_field_ids ) + 1; // + 1 for actions column
 
 		// Show warning message when form/fields need to be configured
-		if ( ! $nested_field_ids ) {
+		if ( ! $nested_field_ids || ! $nested_form ) {
 			// GF 2.5 border color
 			$border_color = ( version_compare( GFForms::$version, '2.5.0', '>=' ) ) ? '#ddd' : '#D2E0EB';
 			return sprintf(
@@ -344,6 +344,11 @@ class GP_Field_Nested_Form extends GF_Field {
 
 		if ( $actions['related_entries'] != $related_entries_link ) {
 			$actions['related_entries'] = $related_entries_link;
+		}
+
+		// Ensure GFFormDisplay is loaded in places such as printing entries. This is needed as of GF 2.7+.
+		if ( ! class_exists( 'GFFormDisplay' ) ) {
+			require_once( GFCommon::get_base_path() . '/form_display.php' );
 		}
 
 		$template = new GP_Template( gp_nested_forms() );

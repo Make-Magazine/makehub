@@ -7,12 +7,11 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by __root__ on 20-February-2023 using Strauss.
+ * Modified by __root__ on 05-April-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityEdit\Foundation\ThirdParty\TrustedLogin;
 
-use GravityKit\GravityEdit\Katzgrau\KLogger\Logger;
 
 class Logging {
 
@@ -57,12 +56,6 @@ class Logging {
 	 */
 	private function setup_klogger( $config ) {
 
-		if ( ! class_exists( 'GravityKit\GravityEdit\Katzgrau\KLogger\Logger' ) ) {
-
-			$this->log( 'KLogger not found.', __METHOD__, 'error' );
-
-			return false;
-		}
 
 		$logging_directory = null;
 

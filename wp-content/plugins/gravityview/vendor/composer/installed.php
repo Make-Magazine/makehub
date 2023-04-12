@@ -3,7 +3,7 @@
         'name' => 'gravityview/gravityview',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '2f1862f4f787de0d5233def59872f9d1089059cf',
+        'reference' => '139f4cab6a5e7d5488f7f051c6ac8d987d67a433',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'gettext/gettext' => array(
-            'pretty_version' => 'v4.8.7',
-            'version' => '4.8.7.0',
-            'reference' => '3f7bc5ef23302a9059e64934f3d59e454516bec0',
+            'pretty_version' => 'v4.8.8',
+            'version' => '4.8.8.0',
+            'reference' => '302a00aa9d6762c92c884d879c15d3ed05d6a37d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gettext/gettext',
             'aliases' => array(),
@@ -40,7 +40,7 @@
         'gravitykit/foundation' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'aaece78685cd3fe56ecc2064e86a393dae7ade3c',
+            'reference' => '5ee55e8e3289c9d27f8677ab0bdd3fad1e020496',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gravitykit/foundation',
             'aliases' => array(
@@ -51,7 +51,7 @@
         'gravityview/gravityview' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '2f1862f4f787de0d5233def59872f9d1089059cf',
+            'reference' => '139f4cab6a5e7d5488f7f051c6ac8d987d67a433',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -111,15 +111,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'katzgrau/klogger' => array(
-            'pretty_version' => '1.2.2',
-            'version' => '1.2.2.0',
-            'reference' => '36481c69db9305169a2ceadead25c2acaabd567c',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../katzgrau/klogger',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'monolog/monolog' => array(
             'pretty_version' => '1.27.1',
             'version' => '1.27.1.0',
@@ -135,15 +126,6 @@
             'reference' => '96c132c7f2f7bc3230723b66e89f8f150b29d5ae',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/random_compat',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'paragonie/sodium_compat' => array(
-            'pretty_version' => 'v1.19.0',
-            'version' => '1.19.0.0',
-            'reference' => 'cb15e403ecbe6a6cc515f855c310eb6b1872a933',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../paragonie/sodium_compat',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -181,9 +163,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-mbstring' => array(
-            'pretty_version' => 'v1.26.0',
-            'version' => '1.26.0.0',
-            'reference' => '9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e',
+            'pretty_version' => 'v1.27.0',
+            'version' => '1.27.0.0',
+            'reference' => '8ad114f6b39e2c98a8b0e3bd907732c207c2b534',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
@@ -207,7 +189,7 @@
         'trustedlogin/client' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4d75dfcc0dc2ea316a42137fd16269ad3eb2f7a0',
+            'reference' => 'cee119c6491e1281b3e5e94114f6f6ebd8da7a02',
             'type' => 'library',
             'install_path' => __DIR__ . '/../trustedlogin/client',
             'aliases' => array(

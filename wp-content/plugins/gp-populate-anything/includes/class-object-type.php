@@ -518,6 +518,10 @@ abstract class GPPA_Object_Type {
 
 			case 'is_in':
 			case 'is_not_in':
+				if ( GP_Populate_Anything::is_json( $value ) ) {
+					$value = json_decode( $value, true );
+				}
+
 				$value = is_array( $value ) ? $value : array_map( 'trim', explode( ',', $value ) );
 				return array_map( array( $wpdb, 'esc_like' ), $value );
 

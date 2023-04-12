@@ -157,6 +157,28 @@ class GP_Nested_Forms extends GP_Plugin {
 				$session->delete_cookie();
 			}
 		} );
+
+		add_filter( 'gform_pre_render', array( $this, 'maybe_disable_honeypot_on_pre_render' ), 10, 3 );
+
+		add_filter( 'gform_pre_validation', array( $this, 'maybe_disable_honeypot_on_validation' ), 10, 1 );
+	}
+
+	public function maybe_disable_honeypot_on_pre_render( $form, $ajax, $field_values ) {
+		return $this->maybe_disable_honeypot( $form );
+	}
+
+	public function maybe_disable_honeypot_on_validation( $form ) {
+		return $this->maybe_disable_honeypot( $form );
+	}
+
+	public function maybe_disable_honeypot( $form ) {
+		// Honeypot validation started causing issues when on child forms starting with Gravity Forms 2.7.0.
+		// This disables Honeypot validtion for child forms in this scenario so that the form can be successfully submitted.
+		if ( $this->is_nested_form_submission() && version_compare( GFForms::$version, '2.7', '>=' ) ) {
+			$form['enableHoneypot'] = false;
+		}
+
+		return $form;
 	}
 
 	public function init_admin() {
@@ -1948,6 +1970,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		add_filter( 'gform_form_tag', array( $this, 'add_nested_inputs' ), 10, 2 );
 		add_filter( 'gform_pre_render', array( $this, 'remove_extra_other_choices' ) );
+		add_filter( 'gform_form_args', array( $this, 'force_child_form_ajax' ), PHP_INT_MAX );
 
 		if ( $this->use_jquery_ui_dialog() ) {
 			// Force scripts to load in the footer so that they are not reincluded in the fetched form markup.
@@ -2026,12 +2049,26 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		remove_filter( 'gform_form_tag', array( $this, 'add_nested_inputs' ) );
 		remove_filter( 'gform_pre_render', array( $this, 'remove_extra_other_choices' ) );
+		remove_filter( 'gform_form_args', array( $this, 'force_child_form_ajax' ), PHP_INT_MAX );
 
 		do_action( 'gpnf_unload_nested_form_hooks', rgar( $form_or_id, 'id', $form_or_id ), $this->parent_form_id );
 
 		$this->parent_form_id = null;
 
 		return $form_string;
+	}
+
+	/**
+	 * WCGFPA (and possibly other plugins) add a crazy bit of code that disables AJAX on ALL forms. Not just their own. 😫
+	 * This necessitates us forcing AJAX for child forms very aggressively as it is required for Nested Form fields to work.
+	 *
+	 * @param $form_args
+	 *
+	 * @return mixed
+	 */
+	public function force_child_form_ajax( $form_args ) {
+		$form_args['ajax'] = true;
+		return $form_args;
 	}
 
 	public function replace_post_render_trigger( $form_html, $form ) {
@@ -2380,7 +2417,9 @@ class GP_Nested_Forms extends GP_Plugin {
 				foreach ( $entry_ids as $entry_id ) {
 
 					$entry = GFAPI::get_entry( $entry_id );
-					if ( is_wp_error( $entry ) ) {
+					// Confirm the child entry exists and is not spammed or deleted.
+					// GFAPI will fetch the WP_Error class if entry is deleted.
+					if ( is_wp_error( $entry ) || rgar( $entry, 'status' ) === 'spam' ) {
 						continue;
 					}
 
@@ -3130,8 +3169,13 @@ class GP_Nested_Forms extends GP_Plugin {
 		if ( ! $this->has_child_form( $nested_form_or_id ) ) {
 			$nested_form = is_array( $nested_form_or_id ) ? $nested_form_or_id : GFAPI::get_form( $nested_form_or_id );
 
+			if ( ! $nested_form ) {
+				return false;
+			}
+
 			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form['id'] ), $nested_form, $entry );
 		}
+
 		return false;
 	}
 

@@ -61,13 +61,8 @@
 		</gppa-select-with-custom>
 
 		<div class="repeater-buttons">
-			<a class="add-item" @click="$emit('add-filter')">
-				<i class="gficon-add"></i>
-			</a>
-
-			<a class="remove-item" @click="$emit('remove-filter')">
-				<i class="gficon-subtract"></i>
-			</a>
+			<button class="add-item gform-st-icon gform-st-icon--circle-plus" @click="$emit('add-filter')" :title="i18nStrings.addFilter" />
+			<button class="remove-item gform-st-icon gform-st-icon--circle-minus" @click="$emit('remove-filter')" :title="i18nStrings.removeFilter" />
 		</div>
 
 		<div

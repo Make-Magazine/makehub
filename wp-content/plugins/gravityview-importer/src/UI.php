@@ -308,6 +308,10 @@ class UI {
 					'title'       => esc_html__( 'Skip Field Validation', 'gk-gravityimport' ),
 					'description' => esc_html__( "do not validate imported data", 'gk-gravityimport' ),
 				),
+				'ignore_field_conditional_logic'     => array(
+					'title'       => esc_html__( 'Ignore Field Conditional Logic', 'gk-gravityimport' ),
+					'description' => esc_html__( "data that fails field conditional logic check will still be imported", 'gk-gravityimport' ),
+				),
 				'conditional_import'  => array(
 					'title'            => esc_html__( 'Conditional Import', 'gk-gravityimport' ),
 					'description'      => esc_html__( 'only import rows if they match certain conditions', 'gk-gravityimport' ),

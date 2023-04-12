@@ -1,6 +1,14 @@
 
 # Changelog
 
+## 1.3.12
+
+	- Added new `GPLimitCheckboxes.getCheckboxCheckedCount()` and `GPLimitCheckboxes.isGroupBelowMin()` JavaScript methods.
+
+## 1.3.11
+
+	- Added new `gplc_excluded_input_selectors` JavaScript filter hook.
+
 ## 1.3.10
 
 	- Added German translations. Credit: Florian Rinnhofer of sportunion.at

@@ -365,7 +365,8 @@ body .gpnf-dialog .gform_wrapper ul li.gfield:first-child {
 }
 
 .gpnf-modal .gform_wrapper .gform_footer,
-.gpnf-modal .gform_wrapper .gform_page_footer {
+.gpnf-modal .gform_wrapper .gform_page_footer,
+.gpnf-modal .gform_wrapper .gfield--type-submit {
 	visibility: hidden;
 	position: absolute;
 	text-indent: -999rem;

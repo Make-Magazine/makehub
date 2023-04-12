@@ -3,7 +3,7 @@
  * Plugin Name: GravityImport
  * Plugin URI:  https://www.gravitykit.com/extensions/gravity-forms-entry-importer/
  * Description: The best way to import entries into Gravity Forms. Proud to be a Gravity Forms Certified Add-On.
- * Version:     2.4.5
+ * Version:     2.4.6
  * Author:      GravityKit
  * Author URI:  https://www.gravitykit.com
  * Text Domain: gk-gravityimport
@@ -20,7 +20,7 @@ if ( ! GravityKit\GravityImport\Foundation\should_load( __FILE__ ) ) {
 	return;
 }
 
-define( 'GV_IMPORT_ENTRIES_VERSION', '2.4.5' );
+define( 'GV_IMPORT_ENTRIES_VERSION', '2.4.6' );
 
 define( 'GV_IMPORT_ENTRIES_FILE', __FILE__ );
 

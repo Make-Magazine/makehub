@@ -4,13 +4,12 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit379151ec5db18009f21b9e3254e34ada
+class ComposerStaticInit2d3795c1bb8d6247b1411276487a1767
 {
     public static $files = array (
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -31,10 +30,6 @@ class ComposerStaticInit379151ec5db18009f21b9e3254e34ada
         'M' => 
         array (
             'Monolog\\' => 8,
-        ),
-        'K' => 
-        array (
-            'Katzgrau\\KLogger\\' => 17,
         ),
         'I' => 
         array (
@@ -77,10 +72,6 @@ class ComposerStaticInit379151ec5db18009f21b9e3254e34ada
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
-        ),
-        'Katzgrau\\KLogger\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/katzgrau/klogger/src',
         ),
         'Illuminate\\Validation\\' => 
         array (
@@ -132,16 +123,15 @@ class ComposerStaticInit379151ec5db18009f21b9e3254e34ada
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'Katzgrau\\KLogger\\Logger' => __DIR__ . '/..' . '/katzgrau/klogger/src/Logger.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit379151ec5db18009f21b9e3254e34ada::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit379151ec5db18009f21b9e3254e34ada::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit379151ec5db18009f21b9e3254e34ada::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit379151ec5db18009f21b9e3254e34ada::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2d3795c1bb8d6247b1411276487a1767::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2d3795c1bb8d6247b1411276487a1767::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit2d3795c1bb8d6247b1411276487a1767::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit2d3795c1bb8d6247b1411276487a1767::$classMap;
 
         }, null, ClassLoader::class);
     }
