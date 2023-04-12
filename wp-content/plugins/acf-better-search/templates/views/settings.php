@@ -34,7 +34,6 @@
 					<?php
 					require_once dirname( __DIR__ ) . '/components/widgets/about.php';
 					require_once dirname( __DIR__ ) . '/components/widgets/support.php';
-					require_once dirname( __DIR__ ) . '/components/widgets/donate.php';
 					?>
 				</li>
 			</ul>

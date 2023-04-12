@@ -18,7 +18,7 @@ class Options {
 	 * @return string[]
 	 */
 	public function get_fields_settings(): array {
-		return [
+		$field_types = [
 			'text'     => __( 'Text', 'acf-better-search' ),
 			'textarea' => __( 'Text Area', 'acf-better-search' ),
 			'number'   => __( 'Number', 'acf-better-search' ),
@@ -35,6 +35,12 @@ class Options {
 			'checkbox' => __( 'Checkbox', 'acf-better-search' ),
 			'radio'    => __( 'Radio Button', 'acf-better-search' ),
 		];
+
+		if ( is_plugin_active( 'advanced-custom-fields-table-field/acf-table.php' ) ) {
+			$field_types['table'] = __( 'Table', 'acf-better-search' );
+		}
+
+		return $field_types;
 	}
 
 	/**

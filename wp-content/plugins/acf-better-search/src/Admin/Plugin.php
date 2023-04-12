@@ -23,7 +23,10 @@ class Plugin implements HookableInterface {
 	 * {@inheritdoc}
 	 */
 	public function init_hooks() {
-		add_filter( 'network_admin_plugin_action_links_' . $this->plugin_info->get_plugin_basename(), [ $this, 'add_plugin_links' ] );
+		add_filter(
+			'network_admin_plugin_action_links_' . $this->plugin_info->get_plugin_basename(),
+			[ $this, 'add_plugin_links' ]
+		);
 		add_filter( 'plugin_action_links_' . $this->plugin_info->get_plugin_basename(), [ $this, 'add_plugin_links' ] );
 	}
 
