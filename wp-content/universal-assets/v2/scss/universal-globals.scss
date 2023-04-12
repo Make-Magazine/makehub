@@ -46,24 +46,24 @@ body {
 }
 // Responsive wrapper sizes
 .wrapper {
-    width: 1240px;
+    width: 1300px;
     margin: 0 auto !important;
     overflow: hidden;
     position: relative;
 }
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1330px) {
     .wrapper {
-        width: 960px !important;
+        width: 1020px !important;
     }
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1050px) {
     .wrapper {
-        width: 680px !important;
+        width: 740px !important;
     }
 }
-@media screen and (max-width: 760px) {
+@media screen and (max-width: 770px) {
     .wrapper {
-        width: 310px !important;
+        width: 350px !important;
     }
 }
 .wrapper-fluid {
