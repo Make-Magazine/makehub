@@ -45,9 +45,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$this->settings_screen_id = '';
 			}
 
-			// Note: Tried the side but too narrow for selector.
-			// $this->metabox_context = 'side';
-
 			// Used within the Settings API to uniquely identify this section.
 			$this->settings_metabox_key = 'learndash-group-membership-settings';
 
@@ -104,8 +101,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['groups_membership_enabled'] = '';
 			}
 
-			/** This filter is documented in includes/class-ld-lms.php */
-			if ( ( defined( 'LEARNDASH_SELECT2_LIB' ) ) && ( true === apply_filters( 'learndash_select2_lib', LEARNDASH_SELECT2_LIB ) ) ) {
+			if ( learndash_use_select2_lib() ) {
 				$select_groups_options_default = sprintf(
 					// translators: placeholder: Group.
 					esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),
@@ -131,7 +127,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$post_type_object    = get_post_type_object( $this->_post->post_type );
 				$display_parent_text = sprintf(
 					// translators: placeholders: Post Type singular label, Parent post edit link.
-					esc_html_x( 'The membership configiration for this %1$s is managed by the parent %2$s. You may override the parent by enabling the settings below.', 'placeholders: Post Type singular label, Parent post edit link', 'learndash' ),
+					esc_html_x( 'The membership configuration for this %1$s is managed by the parent %2$s. You may override the parent by enabling the settings below.', 'placeholders: Post Type singular label, Parent post edit link', 'learndash' ),
 					$post_type_object->labels->singular_name,
 					'<a href="' . get_edit_post_link( $this->setting_option_values['groups_membership_parent'] ) . '">' . get_the_title( $this->setting_option_values['groups_membership_parent'] ) . '</a>'
 				);
@@ -157,7 +153,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'placeholder' => $select_groups_options_default,
 				'value_type'  => 'intval',
 				'label'       => sprintf(
-					// translators: placeholder: Grooups.
+					// translators: placeholder: Groups.
 					esc_html_x( 'Associated %s', 'placeholder: Groups', 'learndash' ),
 					learndash_get_custom_label( 'groups' )
 				),

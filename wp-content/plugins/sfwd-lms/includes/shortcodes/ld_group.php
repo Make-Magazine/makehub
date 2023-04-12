@@ -26,13 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int     $group_id Course ID.
  *    @type int     $user_id  User ID.
  *    @type string  $content  The shortcode content.
- *    @type boolean $autop    Whether to replace linebreaks with paragraph elements.
+ *    @type boolean $autop    Whether to replace line breaks with paragraph elements.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_group'.
  *
  * @return string The `ld_group` shortcode output.
  */
-function learndash_ld_group_check_shortcode( $atts = array(), $content = '' ) {
+function learndash_ld_group_check_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_group' ) {
 	global $learndash_shortcode_used;
 
 	if ( ( is_singular() ) && ( ! is_null( $content ) ) && ( is_user_logged_in() ) ) {
@@ -53,6 +54,9 @@ function learndash_ld_group_check_shortcode( $atts = array(), $content = '' ) {
 		} else {
 			$atts['autop'] = false;
 		}
+
+		/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+		$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 		/**
 		 * Filters ld_group shortcode attributes.
@@ -79,4 +83,4 @@ function learndash_ld_group_check_shortcode( $atts = array(), $content = '' ) {
 
 	return '';
 }
-add_shortcode( 'ld_group', 'learndash_ld_group_check_shortcode', 10, 2 );
+add_shortcode( 'ld_group', 'learndash_ld_group_check_shortcode', 10, 3 );

@@ -63,9 +63,13 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$themes = LearnDash_Theme_Register::get_themes();
-
 			$this->themes_list = array();
+
+			$themes = LearnDash_Theme_Register::get_themes();
+			if ( ! is_array( $themes ) ) {
+				$themes = array();
+			}
+
 			foreach ( $themes as $theme ) {
 				$this->themes_list[ $theme['theme_key'] ] = $theme['theme_name'];
 			}
@@ -78,6 +82,28 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['active_theme'] = LEARNDASH_LEGACY_THEME;
 				}
 			}
+
+			$themes_list_options = array();
+
+			$active_theme_key = $this->setting_option_values['active_theme'];
+			if ( ( ! empty( $active_theme_key ) ) && ( isset( $this->themes_list[ $active_theme_key ] ) ) ) {
+				$themes_list_options['active'] = array(
+					'optgroup_label'   => esc_html__( 'Active Theme', 'learndash' ),
+					'optgroup_options' => array(
+						$active_theme_key => $this->themes_list[ $active_theme_key ],
+					),
+				);
+				unset( $this->themes_list[ $active_theme_key ] );
+			}
+
+			if ( ! empty( $this->themes_list ) ) {
+				$themes_list_options['available'] = array(
+					'optgroup_label'   => esc_html__( 'Available Themes', 'learndash' ),
+					'optgroup_options' => $this->themes_list,
+				);
+			}
+
+			$this->themes_list = $themes_list_options;
 		}
 
 		/**

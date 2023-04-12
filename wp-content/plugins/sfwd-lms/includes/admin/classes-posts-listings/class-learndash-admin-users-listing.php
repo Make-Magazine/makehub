@@ -140,7 +140,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			$this->show_post_type_selectors();
 			$this->show_late_selectors();
 
-			$button_id = 'bottom' === $location ? 'ld_submit' : 'ld_submit_bottom';
+			$button_id = 'bottom' === $location ? 'ld_submit' : 'ld_submit_bottom'; // @phpstan-ignore-line
 			submit_button( esc_html__( 'Filter', 'learndash' ), 'learndash', $button_id, false );
 		}
 
@@ -182,7 +182,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @param array $q_vars   Query vars for table listing.
 		 * @param array $selector Array of attributes used to display the filter selector.
 		 *
-		 * @return object $q_vars.
+		 * @return array $q_vars Query vars for table listing.
 		 */
 		protected function listing_filter_by_user_group( $q_vars = array(), $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
@@ -197,8 +197,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $selector['selected'] ) ) {
-					$q_vars['meta_key']     = 'learndash_group_users_' . $selector['selected'];
-					$q_vars['meta_value']   = $selector['selected'];
+					$q_vars['meta_key']     = 'learndash_group_users_' . $selector['selected']; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					$q_vars['meta_value']   = $selector['selected']; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 					$q_vars['meta_compare'] = '=';
 				}
 			}
@@ -229,14 +229,43 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							}
 						}
 						if ( empty( $course_ids ) ) {
-							$filter_course_id = 0;
+							$course_ids = array_map( 'absint', $course_ids );
+							if ( ! in_array( absint( $selector['selected'] ), $course_ids, true ) ) {
+								return $q_vars;
+							}
 						}
 					}
 				}
 
 				if ( ! empty( $selector['selected'] ) ) {
-					$q_vars['meta_key']     = 'course_' . absint( $selector['selected'] ) . '_access_from';
-					$q_vars['meta_compare'] = 'EXISTS';
+					$course_price_type = learndash_get_setting( $selector['selected'], 'course_price_type' );
+					if ( 'open' !== $course_price_type ) {
+						$q_vars['include'] = array( 0 );
+
+						$course_users_query = learndash_get_users_for_course( $selector['selected'], array(), false );
+						if ( is_a( $course_users_query, 'WP_User_Query' ) ) {
+							$q_vars['include'] = $course_users_query->get_results();
+						}
+
+						if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+							$admin_users = get_users(
+								array(
+									'role'   => 'administrator',
+									'fields' => array( 'ID' ),
+								)
+							);
+							if ( ! empty( $admin_users ) ) {
+								$user_ids = wp_list_pluck( $admin_users, 'ID' );
+								if ( ! empty( $user_ids ) ) {
+									$user_ids = array_map( 'absint', $user_ids );
+									$user_ids = array_diff( $user_ids, array( 0 ) );
+								}
+								if ( ! empty( $user_ids ) ) {
+									$q_vars['include'] = array_merge( $q_vars['include'], $user_ids );
+								}
+							}
+						}
+					}
 				}
 			}
 

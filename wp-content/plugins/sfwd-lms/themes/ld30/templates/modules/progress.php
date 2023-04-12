@@ -82,7 +82,7 @@ if ( 'topic' !== $context ) {
 	$progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_course_progress( $progress_args ) );
 
 } else {
-	global $post;
+	//global $post;
 
 	/** This filter is documented in themes/ld30/templates/modules/progress.php */
 	$progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_lesson_progress( $post, $course_id ) );
@@ -133,7 +133,7 @@ if ( $progress ) :
 							);
 							$course_activity = learndash_get_user_activity( $course_args );
 
-							if ( ! empty( $course_activity->activity_updated ) && get_post_type() === 'sfwd-courses' ) :
+							if ( ! empty( $course_activity->activity_updated ) && 'course' === $context ) :
 								echo sprintf(
 									// translators: Last activity date in infobar.
 									esc_html_x( 'Last activity on %s', 'Last activity date in infobar', 'learndash' ),

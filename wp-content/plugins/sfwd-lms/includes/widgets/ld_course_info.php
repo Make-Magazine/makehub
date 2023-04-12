@@ -47,7 +47,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 		public function widget( $args, $instance ) {
 			global $learndash_shortcode_used;
 
-			extract( $args );
+			extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
@@ -183,6 +183,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 
 			$quiz_orderby = esc_attr( $instance['quiz_orderby'] );
 			$quiz_order   = esc_attr( $instance['quiz_order'] );
+			learndash_replace_widgets_alert();
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html__( 'Title:', 'learndash' ); ?></label>
