@@ -276,6 +276,6 @@ function gf_add_entries_link( $wp_admin_bar ) {
 add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
 
 function spinner_url($image_src, $form) {
-    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+    return "/wp-content/universal-assets/v2/images/makey-spinner.gif";
 }
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);

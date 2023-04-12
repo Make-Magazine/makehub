@@ -112,7 +112,7 @@ do_action( 'genesis_before_header' );
 <!-- End Google Tag Manager (noscript) -->
 
    <?php // Nav Level 1 and Hamburger      
-      require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
+      require_once(WP_CONTENT_DIR.'/universal-assets/v2/page-elements/universal-topnav.html');
    ?>
 
 

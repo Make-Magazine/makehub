@@ -131,7 +131,7 @@ function make_campus_enqueue_styles() {
     wp_enqueue_style($parent_style, get_template_directory_uri() . '/style.css');
 
     ### UNIVERSAL STYLES ###
-    wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
+    wp_enqueue_style('universal.css', content_url() . '/universal-assets/v2/css/universal.min.css', array(), $my_version);
 
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-campus-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);

@@ -6,7 +6,7 @@
  */
 /* * **************************** THEME SETUP ***************************** */
 
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 // Defines the child theme (do not remove).
 define('CHILD_THEME_NAME', 'Make - Learn');
@@ -102,7 +102,7 @@ foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function spinner_url($image_src, $form) {
-    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+    return "/wp-content/universal-assets/v2/images/makey-spinner.gif";
 }
 
 function parse_yturl($url) {
