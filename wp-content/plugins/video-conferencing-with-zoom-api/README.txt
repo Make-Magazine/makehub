@@ -3,8 +3,8 @@ Contributors: j__3rk, digamberpradhan
 Tags: zoom video conference, video conference, zoom, zoom video conferencing, web conferencing, online meetings
 Donate link: https://www.paypal.com/donate?hosted_button_id=2UCQKR868M9WE
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 4.0.5
+Tested up to: 6.2
+Stable tag: 4.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,14 +43,15 @@ Video conferencing with Zoom plugin gives you the extensive functionality to man
 
 **DOCUMENTATION LINKS:**
 
-* [Installation](https://zoom.codemanas.com/setup/ "Installation")
-* [Shortcodes](https://zoom.codemanas.com/shortcode/ "Shortcodes")
-* [Documentation](https://zoom.codemanas.com/ "Documentation")
+* [Installation](https://zoomdocs.codemanas.com/setup/ "Installation")
+* [Shortcodes](https://zoomdocs.codemanas.com/shortcode/ "Shortcodes")
+* [Documentation](https://zoomdocs.codemanas.com/ "Documentation")
 * [Usage Documentation /w WP](https://deepenbajracharya.com.np/zoom-api-integration-with-wordpress/ "Usage Documentation")
-* [Webhooks](https://zoom.codemanas.com/webhooks/ "Webhooks")
+* [Webhooks](https://zoomdocs.codemanas.com/webhooks/ "Webhooks")
 
 **EXTENDING AND MAKING MEETINGS PURCHASABLE:**
 
+Addon: **[Video Conferencing with Zoom Pro](https://www.codemanas.com/downloads/video-conferencing-with-zoom-pro/ "Video Conferencing with Zoom Pro")**:
 Addon: **[WooCommerce Integration](https://www.codemanas.com/downloads/zoom-meetings-for-woocommerce/ "WooCommerce Integration")**:
 Addon: **[WCFM Integration](https://www.codemanas.com/downloads/wcfm-integration-for-zoom/ "WCFM Integration")**:
 Addon: **[WooCommerce Booking Integration](https://www.codemanas.com/downloads/zoom-integration-for-woocommerce-booking/ "WooCommerce Booking Integration")**:
@@ -94,9 +95,13 @@ Search for the plugin -> add new dialog and click install, or download and extra
 
 == Frequently Asked Questions ==
 
+= Join via Browser showing Signature Invalid or Timeout =
+
+Please check if you SDK app type is activated and re-check all the app credentials are valid.
+
 = Updating to version 4.0.0 =
 
-Please check how you can do the [Migration from JWT](https://zoom.codemanas.com/migration/ "Migration from JWT")
+Please check how you can do the [Migration from JWT](https://zoomdocs.codemanas.com/migration/ "Migration from JWT")
 
 = Add users not working for me =
 
@@ -108,7 +113,7 @@ This issue is because of HTTPS protocol. You need to use HTTPS to be able to all
 
 = Blank page for Single Meetings page =
 
-If you face blank page in this situation you should refer to [Template Overriding](https://zoom.codemanas.com/template_override/#content-not-showing "Template Overriding") and see Template override section.
+If you face blank page in this situation you should refer to [Template Overriding](https://zoomdocs.codemanas.com/template_override/#content-not-showing "Template Overriding") and see Template override section.
 
 This happens because of the single meeting page template from the plugin not being supported by your theme and i cannot make my plugin support for every theme page template because of which you'll need to override the plugin template from my plugin to your theme's standard. ( Basically, like how WooCommerce does!! )
 
@@ -150,6 +155,80 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 
 == Changelog ==
 
+= 4.1.9 Arpil 6th, 2023 =
+* Updated: WebSDK to version 2.11.0
+* Updated: Websdk Compile method.
+* Updated: Join via web browser design changes.
+
+= 4.1.8 Arpil 3rd, 2023 =
+* Added capability to view recordings by roles who have edit_posts capbilities.
+* Fixed: Duration of meeting not showing correctly when in hours and minutes.
+
+= 4.1.7 March 13th, 2023 =
+* Fix: Admin CSS not working in some pages.
+
+= 4.1.6 March 9th, 2023 =
+* Updated: Translations
+* Fixed: Embed post block not working correctly in block based themes.
+* Fixed: Minutes and Hours translations not working correctly.
+* Updated: Zoom WebSDK to version 2.10.1
+
+= 4.1.5 March 3rd, 2023 =
+* Fixed: Gutenberg blocks on embed posts.
+
+= 4.1.4 February 28th, 2023 =
+* Fix: Template issue for meeting by post id shortcode.
+
+= 4.1.3 February 27th, 2023 =
+* Updated SDK key and SDK secret text on connect tab to sync with Zoom new changes.
+* Bug fix that showed PHP 7.4 above constraint warnings.
+* Bug fix that relates to JWT firebase library update.
+
+= 4.1.2 February 22nd, 2023 =
+* Updated: plugin now requires PHP version 7.4
+
+= 4.1.1 February 21st, 2023 =
+* Removed sorting by meeting ID fields
+* Fixed: JWT signature not generating because of firebase library update.
+
+= 4.1.0 February 21st, 2023 =
+* Updated: WebSDK to version 2.9.7
+* Fixed: removed wc_date_format() function from core.
+* Fixed: Undefined property: stdClass::$start_time in shortcode embed.
+* Added: Ability to join meetings with registrations enabled for PRO version.
+* Fixed: A bug where WP_Error was giving a fatal error in rare case.
+* Developer: Script bundler changed to webpack.
+* Huge bug fixes and code refactoring.
+
+= 4.0.11 December 30th, 2022 =
+* Fixed: Join via browser showing invalid parameters when email field was disabled.
+* Added: Checker if the meeting is webinar then email field will show up regardless of the setting because email field is required to join a webinar.
+
+= 4.0.10 December 19th, 2022 =
+* Fixed: Validate and Escaping on a shortcode reported by WPScan.
+
+= 4.0.9 December 16th, 2022 =
+* Added: Disable momentJS conflict script incase of countdown failure.
+* Fixed: If meeting is expired, ajax fails and shows nothing.
+* Added: If SDK keys are not added then join via browser options won't show.
+* Updated: SDK script updated to latest standards
+
+= 4.0.8 December 1st, 2022 =
+* Fixed: Host to WP User linking.
+* Updated: WebSDK to version 2.9.5
+* Added: Email Validation to join via browser window.
+* Bug Fixes.
+
+= 4.0.7 November 11th, 2022 =
+* Fixed: Import get meetings functions to fetch draft posts.
+* Fixed: Show all zoom users on Host to WP page.
+* Fixed: Elementor widget showing minus values.
+* Fixed: Elementor widget meeting by host was not working when switching between webinar and meeting view.
+* Updated: WebSDK to version 2.9.0
+
+= 4.0.6 September 13th, 2022 =
+* Updated: Minimum PHP version to 7.3
+
 = 4.0.5 August 17th, 2022 =
 * Fix - Minor - Meeting Host should not be editable even if post visibility is set to Private
 
@@ -168,7 +247,7 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 * Fixed: PHP 7.4 below - class strict type declaration removed for backwards compatiblity.
 
 = 4.0.0 July 21st, 2022 =
-* Major Update: Server-to-Server OAuth App and SDK App to replace JWT App as JWT is being deprecated see [JWT App Type Deprecation FAQ](https://marketplace.zoom.us/docs/guides/build/jwt-app/jwt-faq/), users can see new configuration steps in the [documentation](https://zoom.codemanas.com/setup/)
+* Major Update: Server-to-Server OAuth App and SDK App to replace JWT App as JWT is being deprecated see [JWT App Type Deprecation FAQ](https://marketplace.zoom.us/docs/guides/build/jwt-app/jwt-faq/), users can see new configuration steps in the [documentation](https://zoomdocs.codemanas.com/setup/)
 * Updated: WebSDK to version 2.5.0
 
 = 3.9.7 July 13th, 2022 =
@@ -266,7 +345,7 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 * Fixed: Join via browser block fix for webinar.
 
 = 3.8.5 July 8th, 2021 =
-* Added: Ajax pagination for shortcode meeting/webinar list page (https://zoom.codemanas.com/shortcode/#3-list-upcoming-or-past-meetings).
+* Added: Ajax pagination for shortcode meeting/webinar list page (https://zoomdocs.codemanas.com/shortcode/#3-list-upcoming-or-past-meetings).
 
 = 3.8.4 July 1st, 2021 =
 * Changed: Inceased default duration from 40 to 45 as per zoom change.
@@ -348,7 +427,7 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 * Fixed: Post Author Name not showing in single meeting page.
 
 = 3.6.24 January 29th, 2021 =
-* Added filter hook to show or enable different views in join via browser window. See https://zoom.codemanas.com/filters_hooks/#join-via-browser-show-fields
+* Added filter hook to show or enable different views in join via browser window. See https://zoomdocs.codemanas.com/filters_hooks/#join-via-browser-show-fields
 
 = 3.6.23 January 28th, 2021 =
 * Updated: Duration selector when creating meeting.

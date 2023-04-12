@@ -102,10 +102,10 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <input type="hidden" name="userId" value="<?php echo $users[0]->id; ?>">
                             <span><?php echo esc_html( $users[0]->first_name ) . ' ( ' . esc_html( $users[0]->email ) . ' )'; ?></span>
 						<?php } else { ?>
-                            <select name="userId" required class="zvc-hacking-select vczapi-admin-post-type-host-selector">
+                            <select name="userId" required class="zvc-hacking-select vczapi-admin-post-type-host-selector" style="width:50%;">
                                 <option value=""><?php _e( 'Select a Host', 'video-conferencing-with-zoom-api' ); ?></option>
 								<?php foreach ( $users as $user ) { ?>
-                                    <option value="<?php echo $user->id; ?>" <?php selected( $users[0]->id, $user->id ); ?> ><?php echo esc_html( $user->first_name ) . ' ( ' . esc_html( $user->email ) . ' )'; ?></option>
+                                    <option value="<?php echo $user->id; ?>" <?php ! empty( $meeting_fields['userId'] ) ? selected( $meeting_fields['userId'], $user->id ) : ''; ?> ><?php echo esc_html( $user->first_name ) . ' ( ' . esc_html( $user->email ) . ' )'; ?></option>
 								<?php } ?>
                             </select>
                             <p class="vczapi-manually-hostid-wrap"><a href="javascript:void(0);" class="vczapi-admin-hostID-manually-add"><?php _e( 'User not in the list? Click here to manually enter Host.', 'video-conferencing-with-zoom-api' ); ?></a></p>
@@ -310,7 +310,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             </th>
             <td>
 				<?php if ( ! empty( $users ) ) { ?>
-                    <select name="alternative_host_ids[]" multiple class="zvc-hacking-select">
+                    <select name="alternative_host_ids[]" multiple class="zvc-hacking-select" style="width: 50%;">
                         <option value=""><?php _e( 'Select a Host', 'video-conferencing-with-zoom-api' ); ?></option>
 						<?php foreach ( $users as $user ): ?>
                             <option value="<?php echo $user->id; ?>" <?php echo ! empty( $meeting_fields['alternative_host_ids'] ) && in_array( $user->id, $meeting_fields['alternative_host_ids'] ) ? 'selected' : false; ?>><?php echo esc_html( $user->first_name ) . ' ( ' . esc_html( $user->email ) . ' )'; ?></option>

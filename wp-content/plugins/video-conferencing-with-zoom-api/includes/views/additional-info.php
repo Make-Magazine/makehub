@@ -1,9 +1,9 @@
 <ul class="zvc-information-sec">
     <li>
-        <a target="_blank" href="https://zoom.codemanas.com"><?php _e( 'Documentation', 'video-conferencing-with-zoom-api' ); ?></a>
+        <a target="_blank" href="https://zoomdocs.codemanas.com"><?php _e( 'Documentation', 'video-conferencing-with-zoom-api' ); ?></a>
     </li>
     <li>
-        <a target="_blank" href="https://zoom.codemanas.com/shortcode/"><?php _e( 'Shortcode Documentation', 'video-conferencing-with-zoom-api' ); ?></a>
+        <a target="_blank" href="https://zoomdocs.codemanas.com/shortcode/"><?php _e( 'Shortcode Documentation', 'video-conferencing-with-zoom-api' ); ?></a>
     </li>
 </ul>
 <div class="zvc-information-sec">
@@ -17,7 +17,7 @@
     <p>Protect your WordPress users' sessions from shoulder surfers and snoopers!</p>
     <p>Use the Inactive Logout plugin to automatically terminate idle user sessions, thus protecting the site if the users leave unattended sessions.</p>
     <p>
-        <a target="_blank" href="https://wordpress.org/plugins/inactive-logout/">Try inactive logout</a>
+        <a target="_blank" href="https://inactive-logout.com/">Try inactive logout</a>
 </div>
 <div class="zvc-information-sec">
     <h3>Turbocharge your WordPress search ?</h3>

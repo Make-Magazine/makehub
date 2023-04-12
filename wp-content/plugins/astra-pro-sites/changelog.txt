@@ -1,3 +1,13 @@
+v3.2.0 - 04-April-2023
+- Fix: Backup file not created for existing customizer settings.
+- Fix: Icon for Starter Templates plugin isn’t appropriately distributed within the Elementor Editor.
+
+v3.1.27 - 24-February-2023
+- Fix: Templates library won't refresh after the sync process.
+
+v3.1.26 - 22-February-2023
+- Fix: Plugin installation from WordPress plugins dashboard fails when Starter Template is activated.
+
 v3.1.25 - 22-February-2023
 - Improvement: Hardened the security.
 

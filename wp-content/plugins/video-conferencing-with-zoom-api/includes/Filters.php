@@ -15,11 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Filters {
 
-	/**
-	 * Instance
-	 *
-	 * @var null
-	 */
 	private static $_instance = null;
 
 	/**
@@ -40,7 +35,7 @@ class Filters {
 	 *
 	 * @var string
 	 */
-	private $post_type = 'zoom-meetings';
+	private string $post_type = 'zoom-meetings';
 
 	/**
 	 * Zoom_Video_Conferencing_Filters constructor.
@@ -184,5 +179,3 @@ class Filters {
 		return $tax_query;
 	}
 }
-
-new Filters();

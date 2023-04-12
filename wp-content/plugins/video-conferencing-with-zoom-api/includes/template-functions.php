@@ -96,12 +96,20 @@ function video_conference_zoom_meeting_end_author() {
 		)
 	);
 	wp_localize_script( 'video-conferencing-with-zoom-api', 'vczapi_state', $data );
+
+	if ( ! empty( $meeting->code ) ) {
+		return;
+	}
 	?>
     <div class="dpn-zvc-sidebar-state">
 		<?php if ( empty( $meeting->state ) ) { ?>
-            <a href="javascript:void(0);" class="vczapi-meeting-state-change" data-type="post_type" data-state="end" data-postid="<?php echo $post->ID; ?>" data-id="<?php echo $meeting->id ?>"><?php _e( 'End Meeting ?', 'video-conferencing-with-zoom-api' ); ?></a>
+            <a href="javascript:void(0);" class="vczapi-meeting-state-change" data-type="post_type" data-state="end"
+               data-postid="<?php echo $post->ID; ?>"
+               data-id="<?php echo $meeting->id ?>"><?php _e( 'End Meeting ?', 'video-conferencing-with-zoom-api' ); ?></a>
 		<?php } else { ?>
-            <a href="javascript:void(0);" class="vczapi-meeting-state-change" data-type="post_type" data-state="resume" data-postid="<?php echo $post->ID; ?>" data-id="<?php echo $meeting->id ?>"><?php _e( 'Enable Meeting Join ?', 'video-conferencing-with-zoom-api' ); ?></a>
+            <a href="javascript:void(0);" class="vczapi-meeting-state-change" data-type="post_type" data-state="resume"
+               data-postid="<?php echo $post->ID; ?>"
+               data-id="<?php echo $meeting->id ?>"><?php _e( 'Enable Meeting Join ?', 'video-conferencing-with-zoom-api' ); ?></a>
 		<?php } ?>
         <p><?php _e( 'You are seeing this because you are the author of this post.', 'video-conferencing-with-zoom-api' ); ?></p>
     </div>
@@ -122,18 +130,23 @@ function video_conference_zoom_meeting_join() {
 	}
 
 	if ( empty( $zoom['api']->state ) && video_conference_zoom_check_login() ) {
-		$post_id            = get_the_id();
-		$meeting_start_date = get_post_meta( $post_id, '_meeting_field_start_date_utc', true );
-		$data               = array(
-			'ajaxurl'      => admin_url( 'admin-ajax.php' ),
-			'start_date'   => $meeting_start_date,
-			'timezone'     => $zoom['timezone'],
-			'post_id'      => $post_id,
-			'meeting_type' => $zoom['api']->type,
-			'page'         => 'single-meeting'
-		);
-		$data               = apply_filters( 'vczapi_single_meeting_localized_data', $data );
-		wp_localize_script( 'video-conferencing-with-zoom-api', 'mtg_data', $data );
+		if ( ! empty( $zoom['api']->code ) ) {
+			echo '<p>' . $zoom['api']->message . '</p>';
+		} else {
+			$post_id            = get_the_id();
+			$meeting_start_date = get_post_meta( $post_id, '_meeting_field_start_date_utc', true );
+			$data               = array(
+				'ajaxurl'      => admin_url( 'admin-ajax.php' ),
+				'start_date'   => $meeting_start_date,
+				'timezone'     => $zoom['timezone'],
+				'post_id'      => $post_id,
+				'meeting_type' => $zoom['api']->type,
+				'page'         => 'single-meeting'
+			);
+			$data               = apply_filters( 'vczapi_single_meeting_localized_data', $data );
+			wp_localize_script( 'video-conferencing-with-zoom-api', 'mtg_data', $data );
+		}
+
 	} else if ( ! empty( $zoom['api']->state ) && $zoom['api']->state == "ended" ) {
 		echo "<p>" . __( 'This meeting has ended.', 'video-conferencing-with-zoom-api' ) . "</p>";
 	} else {
@@ -155,7 +168,8 @@ function video_conference_zoom_meeting_join_link( $zoom_meeting ) {
 	if ( ! empty( $zoom_meeting->join_url ) && ! $disable_app_join ) {
 		$join_url = ! empty( $zoom_meeting->encrypted_password ) ? vczapi_get_pwd_embedded_join_link( $zoom_meeting->join_url, $zoom_meeting->encrypted_password ) : $zoom_meeting->join_url;
 		?>
-        <a target="_blank" href="<?php echo esc_url( $join_url ); ?>" class="btn btn-join-link btn-join-via-app"><?php echo apply_filters( 'vczapi_join_meeting_via_app_text', __( 'Join Meeting via Zoom App', 'video-conferencing-with-zoom-api' ) ); ?></a>
+        <a target="_blank" href="<?php echo esc_url( $join_url ); ?>"
+           class="btn btn-join-link btn-join-via-app"><?php echo apply_filters( 'vczapi_join_meeting_via_app_text', __( 'Join Meeting via Zoom App', 'video-conferencing-with-zoom-api' ) ); ?></a>
 		<?php
 	}
 
@@ -489,9 +503,15 @@ function video_conference_zoom_before_jbh_html( $zoom ) {
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="robots" content="noindex, nofollow">
         <title><?php echo ! empty( $zoom['api']->topic ) ? $zoom['api']->topic : 'Join Meeting'; ?></title>
-        <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/bootstrap.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
-        <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-select.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
-        <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_PUBLIC_ASSETS_URL . '/css/style.min.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
+        <link rel='stylesheet' type="text/css"
+              href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/bootstrap.css?ver=' . ZVC_PLUGIN_VERSION; ?>"
+              media='all'>
+        <link rel='stylesheet' type="text/css"
+              href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-select.css?ver=' . ZVC_PLUGIN_VERSION; ?>"
+              media='all'>
+        <link rel='stylesheet' type="text/css"
+              href="<?php echo ZVC_PLUGIN_PUBLIC_ASSETS_URL . '/css/style.min.css?ver=' . ZVC_PLUGIN_VERSION; ?>"
+              media='all'>
         <link rel='stylesheet' type="text/css" href="<?php echo get_stylesheet_uri(); ?>" media='all'>
     </head><body class="join-via-browser-body">
 	<?php
@@ -520,7 +540,8 @@ function video_conference_zoom_after_jbh_html() {
 		'redirect_page' => apply_filters( 'vczapi_api_redirect_join_browser', esc_url( $post_link ) ),
 		'meeting_id'    => base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['join'] ) ),
 		'meeting_pwd'   => ! empty( $_GET['pak'] ) ? base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['pak'] ) ) : false,
-		'disableInvite' => ( get_option( 'vczapi_disable_invite' ) == 'yes' ) ? true : false
+		'disableInvite' => ( get_option( 'vczapi_disable_invite' ) == 'yes' ),
+		'sdk_version'   => ZVC_ZOOM_WEBSDK_VERSION
 	);
 
 	/**
@@ -530,14 +551,6 @@ function video_conference_zoom_after_jbh_html() {
 		'meetingInfo'       => [
 			'topic',
 			'host',
-			#'mn',
-			#'pwd',
-			#'telPwd',
-			#'invite',
-			#'participant',
-			#'dc',
-			#'enctype',
-			#'report'
 		],
 		'disableRecord'     => false,
 		'disableJoinAudio'  => false,
@@ -550,17 +563,16 @@ function video_conference_zoom_after_jbh_html() {
 	$localize        = array_merge( $localize, $additional_data );
 	?>
     <script id='video-conferencing-with-zoom-api-browser-js-extra'>
-        var zvc_ajx = <?php echo wp_json_encode( $localize ); ?>;
+      var zvc_ajx = <?php echo wp_json_encode( $localize ); ?>;
     </script>
-    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/jquery.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
 
 <?php if ( ! defined( 'VCZAPI_STATIC_CDN' ) ) { ?>
-    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react.production.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
-    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-dom.production.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-dom.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/redux.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/redux-thunk.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/lodash.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
-    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/zoom-meeting.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/websdk/websdk.bundle.js?ver=' . ZVC_PLUGIN_VERSION; ?>" async></script>
 <?php } else { ?>
     <script src="<?php echo 'https://source.zoom.us/' . ZVC_ZOOM_WEBSDK_VERSION . '/lib/vendor/react.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo 'https://source.zoom.us/' . ZVC_ZOOM_WEBSDK_VERSION . '/lib/vendor/react-dom.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
@@ -569,7 +581,7 @@ function video_conference_zoom_after_jbh_html() {
     <script src="<?php echo 'https://source.zoom.us/' . ZVC_ZOOM_WEBSDK_VERSION . '/lib/vendor/lodash.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo 'https://source.zoom.us/zoom-meeting-' . ZVC_ZOOM_WEBSDK_VERSION . '.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
 <?php } ?>
-    <script src="<?php echo ZVC_PLUGIN_PUBLIC_ASSETS_URL . '/js/zoom-meeting.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/websdk/zoom-meeting.bundle.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
 <?php do_action( 'vczapi_join_via_browser_after_script_load' ); ?>
     </body>
     </html>

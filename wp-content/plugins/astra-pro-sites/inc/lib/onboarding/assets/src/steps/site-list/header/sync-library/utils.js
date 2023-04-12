@@ -124,6 +124,7 @@ export const SyncBlocks = async () => {
 				const formData = new FormData();
 				formData.append( 'action', 'astra-sites-import-blocks' );
 				formData.append( 'page_no', i );
+				formData.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
 
 				allBlocksRequest.push(
 					fetch( ajaxurl, {
@@ -217,6 +218,7 @@ export const SyncImportAllSites = async () => {
 				const formData = new FormData();
 				formData.append( 'action', 'astra-sites-import-sites' );
 				formData.append( 'page_no', i );
+				formData.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
 				allSitesRequests.push(
 					await fetch( ajaxurl, {
 						method: 'post',
