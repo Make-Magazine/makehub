@@ -1,9 +1,12 @@
 {
 	"production": [
+		"blogging-prompt",
 		"business-hours",
 		"button",
 		"calendly",
+		"cookie-consent",
 		"contact-form",
+		"contact-form/salesforce-lead-form",
 		"contact-info",
 		"donations",
 		"eventbrite",
@@ -17,6 +20,7 @@
 		"map",
 		"markdown",
 		"opentable",
+		"payments",
 		"pinterest",
 		"podcast-player",
 		"publicize",
@@ -37,17 +41,25 @@
 		"subscriptions",
 		"tiled-gallery",
 		"videopress",
-		"wordads"
+		"wordads",
+		"payments-intro",
+		"post-publish-qr-post-panel",
+		"payment-buttons",
+		"site-editor-snackbars",
+		"videopress/video"
 	],
 	"beta": [
-		"amazon"
-	],
-	"experimental": [
-		"anchor-fm",
-		"premium-content",
+		"amazon",
 		"conversation",
-		"dialogue"
+		"dialogue",
+		"google-docs-embed",
+		"launchpad-save-modal",
+		"post-publish-promote-post-panel",
+		"recipe",
+		"v6-video-frame-poster",
+		"videopress/video-chapters"
 	],
+	"experimental": [ "ai-image", "ai-paragraph", "anchor-fm", "premium-content" ],
 	"no-post-editor": [
 		"business-hours",
 		"button",
@@ -65,13 +77,11 @@
 		"opentable",
 		"pinterest",
 		"rating-star",
-		"recurring-payments",
 		"related-posts",
 		"repeat-visitor",
 		"revue",
 		"simple-payments",
 		"slideshow",
-		"subscriptions",
 		"tiled-gallery",
 		"videopress",
 		"wordads"

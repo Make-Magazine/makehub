@@ -8,6 +8,7 @@
 use Automattic\Jetpack\Connection\Manager;
 use Automattic\Jetpack\Connection\Tokens;
 use Automattic\Jetpack\Status;
+use Automattic\Jetpack\Waf\Brute_Force_Protection\Brute_Force_Protection_Shared_Functions;
 
 /**
  * Used to manage Jetpack installation on Multisite Network installs
@@ -62,7 +63,6 @@ class Jetpack_Network {
 	 */
 	private function __construct() {
 		require_once ABSPATH . '/wp-admin/includes/plugin.php'; // For the is_plugin... check.
-		require_once JETPACK__PLUGIN_DIR . 'modules/protect/shared-functions.php'; // For managing the global whitelist.
 
 		/**
 		 * Sanity check to ensure the install is Multisite and we
@@ -193,7 +193,6 @@ class Jetpack_Network {
 			}
 			restore_current_blog();
 		}
-
 	}
 
 	/**
@@ -420,7 +419,7 @@ class Jetpack_Network {
 			return;
 		}
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Caller (i.e. `$this->jetpack_sites_list()`) should check.
-		$site_id = ( is_null( $site_id ) ) ? $_GET['site_id'] : $site_id;
+		$site_id = ( $site_id === null ) ? ( isset( $_GET['site_id'] ) ? (int) $_GET['site_id'] : null ) : $site_id;
 		switch_to_blog( $site_id );
 		Jetpack::disconnect();
 		restore_current_blog();
@@ -446,7 +445,7 @@ class Jetpack_Network {
 
 		// Figure out what site we are working on.
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Caller (i.e. `$this->jetpack_sites_list()`) should check.
-		$site_id = ( is_null( $site_id ) ) ? $_GET['site_id'] : $site_id;
+		$site_id = ( $site_id === null ) ? ( isset( $_GET['site_id'] ) ? (int) $_GET['site_id'] : null ) : $site_id;
 
 		/*
 		 * Here we need to switch to the subsite
@@ -576,7 +575,6 @@ class Jetpack_Network {
 		$network_sites_table->prepare_items();
 		$network_sites_table->display();
 		echo '</form></div>';
-
 	}
 
 	/**
@@ -600,7 +598,7 @@ class Jetpack_Network {
 	 */
 	public function save_network_settings_page() {
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'jetpack-network-settings' ) ) {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'jetpack-network-settings' ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			// No nonce, push back to settings page.
 			wp_safe_redirect(
 				add_query_arg(
@@ -611,10 +609,11 @@ class Jetpack_Network {
 			exit();
 		}
 
-		// Try to save the Protect whitelist before anything else, since that action can result in errors.
-		$whitelist = str_replace( ' ', '', $_POST['global-whitelist'] );
-		$whitelist = explode( PHP_EOL, $whitelist );
-		$result    = jetpack_protect_save_whitelist( $whitelist, true );
+		// Try to save the Protect allow list before anything else, since that action can result in errors.
+		$allow_list = isset( $_POST['global-allow-list'] ) ? filter_var( wp_unslash( $_POST['global-allow-list'] ) ) : '';
+		$allow_list = str_replace( ' ', '', $allow_list );
+		$allow_list = explode( PHP_EOL, $allow_list );
+		$result     = Brute_Force_Protection_Shared_Functions::save_allow_list( $allow_list, true );
 		if ( is_wp_error( $result ) ) {
 			wp_safe_redirect(
 				add_query_arg(
@@ -693,7 +692,7 @@ class Jetpack_Network {
 		$data = array(
 			'modules'                   => $modules,
 			'options'                   => $options,
-			'jetpack_protect_whitelist' => jetpack_protect_format_whitelist(),
+			'jetpack_protect_whitelist' => Brute_Force_Protection_Shared_Functions::format_allow_list(),
 		);
 
 		Jetpack::init()->load_view( 'admin/network-settings.php', $data );
