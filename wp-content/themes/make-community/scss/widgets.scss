@@ -54,7 +54,7 @@
 
 //upcoming faires
 .widget_upcoming_mfaires_widget {
-    padding-top: 15px;
+    padding-top: 30px;
     .mf-logo {
         padding: 0 15px;
     }
@@ -78,20 +78,31 @@
         margin-top: -10px;
         ul {
             margin: 0px;
+            margin-top:20px;
             li {
                 list-style: none;
-                padding: 20px 15px 10px;
+                padding: 10px 0px;
                 text-align: left;
-                border-top: solid 1px #ccc;
+                border-top: solid 1px #f1f1f1;
+                border-bottom: 0px;
                 @media screen and ( max-width: 982px ) {
                     text-align: center;
                 }
                 a {
                     font-size: 14px;
+                    color: #999 !important;
+                    display: flex;
+                    flex-wrap: wrap;
                     h4 {
-                        font-size: 18px;
-                        color: $color-light-blue;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #333 !important;
+                        width:100%;
                         margin: 0px;
+                        margin-bottom: 10px;
+                    }
+                    .faire-feed-date {
+                        margin-right: 10px;
                     }
                 }
                 &:first-of-type {
