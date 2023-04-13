@@ -56,6 +56,7 @@ class upcoming_mfaires_widget extends WP_Widget {
 		} else {
 			$return .= "<li>Having trouble getting Maker Faire data right now. Find upcoming Maker Faires <a href='https://makerfaire.com/map' target='_blank'>here!</a>";
 		}
+        $return .= "<a href='https://makerfaire.com/map'>>> All Faires</a>";
         $return .= "</ul></div>";
         echo __($return, 'upcoming_mfaires_widget_domain');
         echo $args['after_widget'];
