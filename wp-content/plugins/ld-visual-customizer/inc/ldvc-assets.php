@@ -51,7 +51,7 @@ function ldvc_bundled_theme_assets( $ldvc_theme = null, $ldvc_template = null ) 
 
         global $post;
 
-        if( has_shortcode( $post->post_content, 'ld_course_list') ) {
+        if( has_shortcode( $post->post_content, 'ld_course_list') || 'sfwd-courses' == get_post_type() || has_block( 'ld-course-list', $post) ) {
             wp_enqueue_style( 'ldvc-course-grid' );
         }
 
@@ -233,10 +233,11 @@ function ldvc_admin_global_scripts() {
      wp_enqueue_style( 'ldvc-admin' );
 }
 
-add_action( 'wp_enqueue_scripts', 'ldvc_custom_styling' );
+add_action( 'wp_enqueue_scripts', 'ldvc_custom_styling', 9999999999 );
 function ldvc_custom_styling() {
 
     $custom_css = get_transient( 'lds_custom_css' );
+
     global $wp_customize;
 
     if( empty($custom_css) || isset($wp_customize) ):
@@ -554,9 +555,9 @@ function ldvc_custom_styling() {
 
                 // Border Size
 
-                $item_border_size = strval(get_option('lds_content_list_border_size'));
+                $item_border_size = strval( get_option('lds_content_list_border_size') );
 
-                if( ( $item_border_size != '0' || !empty($item_border_size) ) && $item_border_color ): ?>
+                if( !empty($item_border_size) ):  ?>
 
                     .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem label,
                     .learndash-wrapper .ld-table-list .ld-table-list-items,
@@ -727,6 +728,7 @@ function ldvc_custom_styling() {
                     'focus',
                     'hide'
                 );
+
                 foreach( $styles as $style ) {
                     include( 'assets/css/' . $style . '.php' );
                 }
@@ -735,7 +737,7 @@ function ldvc_custom_styling() {
 
                     global $post;
 
-                    if( has_shortcode( $post->post_content, 'ld_course_list') || has_block( 'ld-course-list', $post)) {
+                    if( has_shortcode( $post->post_content, 'ld_course_list') || has_block( 'learndash/ld-course-list', $post) || 'sfwd-courses' == get_post_type() ) {
                         include( 'assets/css/course-grid.php' );
                     }
 
@@ -760,6 +762,8 @@ function ldvc_custom_styling() {
         set_transient( 'lds_custom_css', $custom_css, WEEK_IN_SECONDS );
 
     endif;
+
+
 
     wp_add_inline_style( 'learndash-front', $custom_css );
 

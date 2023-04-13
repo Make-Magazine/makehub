@@ -51,7 +51,7 @@
 .single-headers #cover {
 	background-repeat: no-repeat;
 	background-size: cover;
-	.blockquote {
+	blockquote {
 		color: #f1f1f1;
 		border: 0 solid $color-blue;
 	}
@@ -71,3 +71,4 @@
 		}
 	}
 }
+.activity-rss-feed { display: none; }
