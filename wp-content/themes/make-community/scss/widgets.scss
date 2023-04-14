@@ -136,9 +136,18 @@
 
 .widget_block.widget_categories {
     li.cat-item {
-        padding-top: 7.5px;
-        padding-bottom: 7.5 !important;
-        .children { display: none; }
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-size: 16px;
+        border-bottom: 0px;
+        .children { 
+            display: none;
+            li { 
+                font-size: 14px;
+                padding-top: 4px;
+                padding-bottom: 4px; 
+            }
+        }
         &:has(.children) {
             &:hover .children { display: block; }
         }
