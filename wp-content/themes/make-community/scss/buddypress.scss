@@ -51,7 +51,7 @@
 	flex-wrap: wrap;
 	gap: 10px;
 }
-.single-item .wrapper {
+.single-item .wrapper, .archive .wrapper {
 	margin-top: 30px !important;
 }
 .single-headers #cover {

@@ -68,6 +68,7 @@
             margin-left: auto;
             margin-right: auto;
             width: 140px;
+            pointer-events: none;
         }
     }
 }
@@ -136,7 +137,7 @@
 .widget_block.widget_categories {
     li.cat-item {
         padding-top: 7.5px;
-        padding-bottom: 7.5;
+        padding-bottom: 7.5 !important;
         .children { display: none; }
         &:has(.children) {
             &:hover .children { display: block; }

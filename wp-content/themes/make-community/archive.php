@@ -153,7 +153,7 @@ if ( have_posts() || $categoryPage) : ?>
 
 		<?php		
 		if($categoryPage){
-			echo '<a href="'.$url.'" target="_none">See More</a>';
+			echo '<a class="universal-btn-reversed" href="'.$url.'" target="_none">See More</a>';
 		}else{
 			if ($queried_object != NULL) { ?>
 
