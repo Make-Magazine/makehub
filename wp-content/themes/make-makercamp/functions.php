@@ -110,7 +110,7 @@ foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function spinner_url($image_src, $form) {
-    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+    return "/wp-content/universal-assets/v2/images/makey-spinner.gif";
 }
 
 function parse_yturl($url) {
