@@ -137,8 +137,8 @@
     li.cat-item {
         padding-top: 7.5px;
         padding-bottom: 7.5;
+        .children { display: none; }
         &:has(.children) {
-            .children { display: none; }
             &:hover .children { display: block; }
         }
     }

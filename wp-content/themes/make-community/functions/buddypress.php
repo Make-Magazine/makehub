@@ -10,6 +10,13 @@ add_filter( 'wp_mail_from_name', function( $name ) {
     return 'Make: Community';
 }, 10, 3 );
 
+add_action( 'widgets_init', 'parent_overrides', 11 );
+function parent_overrides() {
+    unregister_sidebar('sidebar-groups'); 
+    unregister_sidebar('sidebar-groups-left');
+    unregister_sidebar('sidebar-groups-cached');
+}
+
 // Social Media Icons based on the profile user info
 function member_social_extend(){
     global $bp;
