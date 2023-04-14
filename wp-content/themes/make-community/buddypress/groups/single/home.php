@@ -28,6 +28,12 @@ if ( bp_has_groups() ) :
 
 			<?php endif; ?>
 
+			<div id="item-body" class="item-body">
+
+				<?php bp_nouveau_group_template_part(); ?>
+
+			</div><!-- #item-body -->
+
 		</div><!-- // .bp-wrap -->
 
 		<?php bp_nouveau_group_hook( 'after', 'home_content' ); ?>
