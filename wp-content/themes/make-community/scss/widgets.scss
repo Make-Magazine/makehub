@@ -36,6 +36,7 @@
 }
 // we added a make-ad class
 .widget_fancy_rss.make-ad {
+    position: relative;
     .sidebar-title {
         border-bottom: 0px;
     }
@@ -49,6 +50,25 @@
             color: #999;
             margin-top: 5px;
          }
+    }
+    &:hover {
+        &:after {
+            content: "Buy Now!";
+            font-size: 18px;
+            position: absolute;
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            color: $color-blue;
+            border: solid 1px $color-blue;
+            top: 50%;
+            text-align: center;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 140px;
+        }
     }
 }
 
@@ -109,6 +129,17 @@
                     border-top: none;
                 }
             }
+        }
+    }
+}
+
+.widget_block.widget_categories {
+    li.cat-item {
+        padding-top: 7.5px;
+        padding-bottom: 7.5;
+        &:has(.children) {
+            .children { display: none; }
+            &:hover .children { display: block; }
         }
     }
 }
