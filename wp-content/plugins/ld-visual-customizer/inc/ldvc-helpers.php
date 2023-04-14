@@ -152,3 +152,28 @@ function ldvc_is_focus() {
 
 
 }
+
+add_action( 'template_redirect', 'lds_redirect_to_custom_sales_page' );
+function lds_redirect_to_custom_sales_page() {
+
+     if( get_post_type() !== 'sfwd-courses' ) {
+          return;
+     }
+
+     $course_id  = get_the_ID();
+     $cuser      = wp_get_current_user();
+     $sales_page = esc_url( get_post_meta( $course_id, '_lds_sales_page', true ) );
+
+     if( !$sales_page || empty($sales_page) ) {
+          return;
+     }
+
+     if( sfwd_lms_has_access( $course_id, $cuser->ID ) ) {
+          return;
+     }
+
+     if( wp_redirect( $sales_page ) ) {
+          exit;
+     }
+
+}

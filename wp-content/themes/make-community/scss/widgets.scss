@@ -36,6 +36,7 @@
 }
 // we added a make-ad class
 .widget_fancy_rss.make-ad {
+    position: relative;
     .sidebar-title {
         border-bottom: 0px;
     }
@@ -50,11 +51,31 @@
             margin-top: 5px;
          }
     }
+    &:hover {
+        &:after {
+            content: "Buy Now!";
+            font-size: 18px;
+            position: absolute;
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            color: $color-blue;
+            border: solid 1px $color-blue;
+            top: 50%;
+            text-align: center;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 140px;
+            pointer-events: none;
+        }
+    }
 }
 
 //upcoming faires
 .widget_upcoming_mfaires_widget {
-    padding-top: 15px;
+    padding-top: 30px;
     .mf-logo {
         padding: 0 15px;
     }
@@ -78,26 +99,57 @@
         margin-top: -10px;
         ul {
             margin: 0px;
+            margin-top:20px;
             li {
                 list-style: none;
-                padding: 20px 15px 10px;
+                padding: 10px 0px;
                 text-align: left;
-                border-top: solid 1px #ccc;
+                border-top: solid 1px #f1f1f1;
+                border-bottom: 0px;
                 @media screen and ( max-width: 982px ) {
                     text-align: center;
                 }
                 a {
                     font-size: 14px;
+                    color: #999 !important;
+                    display: flex;
+                    flex-wrap: wrap;
                     h4 {
-                        font-size: 18px;
-                        color: $color-light-blue;
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #333 !important;
+                        width:100%;
                         margin: 0px;
+                        margin-bottom: 10px;
+                    }
+                    .faire-feed-date {
+                        margin-right: 10px;
                     }
                 }
                 &:first-of-type {
                     border-top: none;
                 }
             }
+        }
+    }
+}
+
+.widget_block.widget_categories {
+    li.cat-item {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-size: 16px;
+        border-bottom: 0px;
+        .children { 
+            display: none;
+            li { 
+                font-size: 14px;
+                padding-top: 4px;
+                padding-bottom: 4px; 
+            }
+        }
+        &:has(.children) {
+            &:hover .children { display: block; }
         }
     }
 }

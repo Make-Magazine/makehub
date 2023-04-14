@@ -54,7 +54,7 @@ foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
 }
 
 // Universal functions like auth0
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 add_action( 'after_setup_theme', 'genesis_child_gutenberg_support' );
 /**

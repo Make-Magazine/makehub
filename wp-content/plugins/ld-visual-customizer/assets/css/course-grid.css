@@ -1,39 +1,44 @@
 /* line 3, ../sass/course-grid.scss */
+.ld-course-list-items .ld_course_grid .entry-title {
+  line-height: 1.3;
+}
+/* line 6, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid article.course {
   display: flex !important;
   flex-direction: column;
 }
-/* line 7, ../sass/course-grid.scss */
+/* line 10, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid div.caption {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
 }
-/* line 11, ../sass/course-grid.scss */
+/* line 14, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid div.caption .ld_course_grid_button {
   display: flex;
   align-items: flex-end;
   flex-grow: 1;
+  margin-top: 32px !important;
 }
-/* line 17, ../sass/course-grid.scss */
+/* line 21, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid a:not(.btn) {
   width: 100%;
   display: block;
   height: 185px;
   overflow: hidden;
 }
-/* line 22, ../sass/course-grid.scss */
+/* line 26, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid a:not(.btn) img {
   object-fit: cover !important;
   display: block;
   height: 185px !important;
   width: 100% !important;
 }
-/* line 29, ../sass/course-grid.scss */
+/* line 33, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid .thumbnail.course {
-  height: 100%;
+  height: 100% !important;
 }
-/* line 32, ../sass/course-grid.scss */
+/* line 36, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid .lds-enhanced-meta {
   border-radius: 12px;
   background: #f1f1f1;
@@ -43,7 +48,7 @@
   font-size: 12px;
   align-self: flex-start;
 }
-/* line 40, ../sass/course-grid.scss */
+/* line 44, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid .lds-enhanced-meta .lds-meta-item {
   color: #728188;
   margin-right: 5px;
@@ -51,11 +56,11 @@
   align-items: center;
   font-weight: normal;
 }
-/* line 48, ../sass/course-grid.scss */
+/* line 52, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid a:not(.btn) {
   display: block;
 }
-/* line 50, ../sass/course-grid.scss */
+/* line 54, ../sass/course-grid.scss */
 .ld-course-list-items .ld_course_grid a:not(.btn) img {
   object-fit: cover;
 }

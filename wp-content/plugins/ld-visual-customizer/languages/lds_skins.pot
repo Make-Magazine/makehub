@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Visual Customizer for LearnDash\n"
-"POT-Creation-Date: 2021-03-18 14:10-0400\n"
-"PO-Revision-Date: 2021-03-18 14:10-0400\n"
+"POT-Creation-Date: 2021-12-10 16:18-0500\n"
+"PO-Revision-Date: 2021-12-10 16:18-0500\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,193 +21,271 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
 #: inc/course-grid/ldvc-course-grid.php:37
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:37
 msgid "See more..."
 msgstr ""
 
 #: inc/course-grid/ldvc-course-grid.php:81
 #: inc/course-grid/ldvc-course-grid.php:134
-#: inc/templates/shortcodes/course-list/row.php:43
+#: inc/templates/shortcodes/course-list/row.php:44
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:81
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:134
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:44
 msgid "Free"
 msgstr ""
 
 #: inc/course-grid/ldvc-course-grid.php:146
 #: inc/course-grid/ldvc-course-grid.php:155
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:146
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:155
 msgid "Enrolled"
 msgstr ""
 
 #: inc/course-grid/ldvc-course-grid.php:150
 #: inc/course-grid/ldvc-course-grid.php:159
 #: inc/course-grid/ldvc-course-grid.php:193
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:150
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:159
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:193
 msgid "Completed"
 msgstr ""
 
 #: inc/course-grid/ldvc-course-grid.php:196
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:196
 msgid "In progress"
 msgstr ""
 
 #: inc/course-grid/ldvc-course-grid.php:199
+#: packaged/ld-visual-customizer/inc/course-grid/ldvc-course-grid.php:199
 msgid "Not available"
 msgstr ""
 
 #: inc/customizer/buttons.php:3 legacy/lds-settings.php:596
 #: legacy/lds-wp-customizer-api.php:425
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:3
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:596
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:425
 msgid "Buttons"
 msgstr ""
 
 #: inc/customizer/buttons.php:65 legacy/lds-wp-customizer-api.php:469
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:65
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:469
 msgid "Button Border Radius"
 msgstr ""
 
 #: inc/customizer/buttons.php:81
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:81
 msgid "Standard: Button Text"
 msgstr ""
 
 #: inc/customizer/buttons.php:86
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:86
 msgid "Standard: Button Background"
 msgstr ""
 
 #: inc/customizer/buttons.php:91
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:91
 msgid "Complete: Button Background"
 msgstr ""
 
 #: inc/customizer/buttons.php:96
+#: packaged/ld-visual-customizer/inc/customizer/buttons.php:96
 msgid "Complete: Button Text"
 msgstr ""
 
 #: inc/customizer/colors.php:4
+#: packaged/ld-visual-customizer/inc/customizer/colors.php:4
 msgid "Global Colors"
 msgstr ""
 
 #: inc/customizer/content-list.php:3
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:3
 msgid "Course Content Listings"
 msgstr ""
 
 #: inc/customizer/content-list.php:4
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:4
 msgid ""
 "Adjusts the styling of the listing of course content like lessons, topisc, "
 "and quizzes."
 msgstr ""
 
 #: inc/customizer/content-list.php:190
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:190
 msgid "Lesson / topic item border radius"
 msgstr ""
 
 #: inc/customizer/content-list.php:199
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:199
 msgid "Lesson / topic item border size"
 msgstr ""
 
 #: inc/customizer/content-list.php:208
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:208
 msgid "Lesson / topic item padding"
 msgstr ""
 
 #: inc/customizer/content-list.php:217
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:217
 msgid "Margin below content items"
 msgstr ""
 
 #: inc/customizer/content-list.php:233
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:233
 msgid "Content item text"
 msgstr ""
 
 #: inc/customizer/content-list.php:238
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:238
 msgid "Content item background"
 msgstr ""
 
 #: inc/customizer/content-list.php:243
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:243
 msgid "Expanded content background"
 msgstr ""
 
 #: inc/customizer/content-list.php:248
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:248
 msgid "Content item border"
 msgstr ""
 
 #: inc/customizer/content-list.php:253
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:253
 msgid "Content heading text"
 msgstr ""
 
 #: inc/customizer/content-list.php:258
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:258
 msgid "Content heading background"
 msgstr ""
 
 #: inc/customizer/content-list.php:263
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:263
 msgid "Section heading text"
 msgstr ""
 
 #: inc/customizer/content-list.php:268
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:268
 msgid "Section headings background"
 msgstr ""
 
-#: inc/customizer/content-list.php:281 inc/customizer/course-grid.php:232
+#: inc/customizer/content-list.php:281 inc/customizer/course-grid.php:277
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:281
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:277
 msgid "Drop shadow"
 msgstr ""
 
-#: inc/customizer/content-list.php:286 inc/customizer/course-grid.php:237
-#: inc/customizer/course-grid.php:252
+#: inc/customizer/content-list.php:286 inc/customizer/course-grid.php:282
+#: inc/customizer/course-grid.php:297
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:286
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:282
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:297
 msgid "None"
 msgstr ""
 
-#: inc/customizer/content-list.php:287 inc/customizer/course-grid.php:238
+#: inc/customizer/content-list.php:287 inc/customizer/course-grid.php:283
 #: legacy/lds-settings.php:512
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:287
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:283
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:512
 msgid "Light"
 msgstr ""
 
-#: inc/customizer/content-list.php:288 inc/customizer/course-grid.php:239
+#: inc/customizer/content-list.php:288 inc/customizer/course-grid.php:284
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:288
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:284
 msgid "Light +"
 msgstr ""
 
-#: inc/customizer/content-list.php:289 inc/customizer/course-grid.php:240
+#: inc/customizer/content-list.php:289 inc/customizer/course-grid.php:285
 #: inc/customizer/icons.php:124
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:289
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:285
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:124
 msgid "Medium"
 msgstr ""
 
-#: inc/customizer/content-list.php:290 inc/customizer/course-grid.php:241
+#: inc/customizer/content-list.php:290 inc/customizer/course-grid.php:286
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:290
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:286
 msgid "Medium +"
 msgstr ""
 
-#: inc/customizer/content-list.php:291 inc/customizer/course-grid.php:242
+#: inc/customizer/content-list.php:291 inc/customizer/course-grid.php:287
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:291
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:287
 msgid "Heavy"
 msgstr ""
 
-#: inc/customizer/content-list.php:292 inc/customizer/course-grid.php:243
+#: inc/customizer/content-list.php:292 inc/customizer/course-grid.php:288
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:292
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:288
 msgid "Heavy +"
 msgstr ""
 
 #: inc/customizer/content-list.php:296
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:296
 msgid "Hide topic/quiz counts"
 msgstr ""
 
 #: inc/customizer/content-list.php:302
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:302
 msgid "Hide lesson expand button"
 msgstr ""
 
 #: inc/customizer/content-list.php:308
+#: packaged/ld-visual-customizer/inc/customizer/content-list.php:308
 msgid "Hide expand all button"
 msgstr ""
 
 #: inc/customizer/course-grid.php:5
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:5
 msgid "Course Grid Add-on"
 msgstr ""
 
 #: inc/customizer/course-grid.php:6
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:6
 msgid "Customize the appearance of the LearnDash Course Grid Add-on."
 msgstr ""
 
-#: inc/customizer/course-grid.php:116
+#: inc/customizer/course-grid.php:134
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:134
 msgid "Card border radius"
 msgstr ""
 
-#: inc/customizer/course-grid.php:125
+#: inc/customizer/course-grid.php:143
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:143
 msgid "Card border size"
 msgstr ""
 
-#: inc/customizer/course-grid.php:134
+#: inc/customizer/course-grid.php:152
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:152
 msgid "Card padding"
 msgstr ""
 
-#: inc/customizer/course-grid.php:150
+#: inc/customizer/course-grid.php:161
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:161
+msgid "Heading Text Size"
+msgstr ""
+
+#: inc/customizer/course-grid.php:170
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:170
+msgid "Body Text Size"
+msgstr ""
+
+#: inc/customizer/course-grid.php:179
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:179
+msgid "Button Text Size"
+msgstr ""
+
+#: inc/customizer/course-grid.php:195
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:195
 msgid "Ribbon Style"
 msgstr ""
 
-#: inc/customizer/course-grid.php:155 inc/customizer/icons.php:121
+#: inc/customizer/course-grid.php:200 inc/customizer/icons.php:121
 #: inc/customizer/templates-themes.php:88
 #: inc/customizer/templates-themes.php:112
 #: inc/customizer/templates-themes.php:127 legacy/lds-settings.php:187
@@ -215,686 +293,918 @@ msgstr ""
 #: legacy/lds-settings.php:352 legacy/lds-settings.php:419
 #: legacy/lds-settings.php:511 legacy/lds-wp-customizer-api.php:102
 #: legacy/lds-wp-customizer-api.php:116
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:200
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:121
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:88
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:112
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:127
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:187
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:267
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:269
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:352
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:419
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:511
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:102
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:116
 msgid "Default"
 msgstr ""
 
-#: inc/customizer/course-grid.php:156 inc/customizer/templates-themes.php:113
+#: inc/customizer/course-grid.php:201 inc/customizer/templates-themes.php:113
 #: legacy/lds-settings.php:179 legacy/lds-settings.php:188
 #: legacy/lds-settings.php:321 legacy/lds-wp-customizer-api.php:103
 #: legacy/lds-wp-customizer-api.php:117
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:201
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:113
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:179
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:188
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:321
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:103
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:117
 msgid "Modern"
 msgstr ""
 
-#: inc/customizer/course-grid.php:157
+#: inc/customizer/course-grid.php:202
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:202
 msgid "Band"
 msgstr ""
 
-#: inc/customizer/course-grid.php:158
+#: inc/customizer/course-grid.php:203
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:203
 msgid "Overlay"
 msgstr ""
 
-#: inc/customizer/course-grid.php:159
+#: inc/customizer/course-grid.php:204
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:204
 msgid "Tab"
 msgstr ""
 
-#: inc/customizer/course-grid.php:175
+#: inc/customizer/course-grid.php:220
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:220
 msgid "Card background"
 msgstr ""
 
-#: inc/customizer/course-grid.php:180
+#: inc/customizer/course-grid.php:225
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:225
 msgid "Card border color"
 msgstr ""
 
-#: inc/customizer/course-grid.php:185
+#: inc/customizer/course-grid.php:230
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:230
 msgid "Ribbon Text"
 msgstr ""
 
-#: inc/customizer/course-grid.php:190
+#: inc/customizer/course-grid.php:235
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:235
 msgid "Ribbon Background"
 msgstr ""
 
-#: inc/customizer/course-grid.php:195
+#: inc/customizer/course-grid.php:240
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:240
 msgid "Free: Ribbon Text"
 msgstr ""
 
-#: inc/customizer/course-grid.php:200
+#: inc/customizer/course-grid.php:245
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:245
 msgid "Free: Ribbon Background"
 msgstr ""
 
-#: inc/customizer/course-grid.php:205
+#: inc/customizer/course-grid.php:250
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:250
 msgid "Enrolled: Ribbon Text"
 msgstr ""
 
-#: inc/customizer/course-grid.php:210
+#: inc/customizer/course-grid.php:255
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:255
 msgid "Enrolled: Ribbon Background"
 msgstr ""
 
-#: inc/customizer/course-grid.php:215
+#: inc/customizer/course-grid.php:260
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:260
 msgid "Button Background"
 msgstr ""
 
-#: inc/customizer/course-grid.php:220
+#: inc/customizer/course-grid.php:265
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:265
 msgid "Button Text"
 msgstr ""
 
-#: inc/customizer/course-grid.php:247
+#: inc/customizer/course-grid.php:292
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:292
 msgid "Hover effect"
 msgstr ""
 
-#: inc/customizer/course-grid.php:253
+#: inc/customizer/course-grid.php:298
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:298
 msgid "Highlight"
 msgstr ""
 
-#: inc/customizer/course-grid.php:254
+#: inc/customizer/course-grid.php:299
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:299
 msgid "Elevate"
 msgstr ""
 
-#: inc/customizer/course-grid.php:255
+#: inc/customizer/course-grid.php:300
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:300
 msgid "Flip"
 msgstr ""
 
-#: inc/customizer/course-grid.php:256
+#: inc/customizer/course-grid.php:301
+#: packaged/ld-visual-customizer/inc/customizer/course-grid.php:301
 msgid "Reverse out"
 msgstr ""
 
 #: inc/customizer/elements.php:3
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:3
 msgid "Interface Elements"
 msgstr ""
 
 #: inc/customizer/elements.php:4
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:4
 msgid ""
 "Customize the appearance of LearnDash elements like breadcrumbs, alerts, "
 "status bubbles, and what is displayed."
 msgstr ""
 
 #: inc/customizer/elements.php:68
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:68
 msgid "Status Border Radius"
 msgstr ""
 
 #: inc/customizer/elements.php:77
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:77
 msgid "Pagination Border Radius"
 msgstr ""
 
 #: inc/customizer/elements.php:94
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:94
 msgid "Hide breadcrumbs"
 msgstr ""
 
 #: inc/customizer/elements.php:100
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:100
 msgid "Hide last activity"
 msgstr ""
 
 #: inc/customizer/elements.php:106
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:106
 msgid "Hide X/X steps complete"
 msgstr ""
 
 #: inc/customizer/elements.php:112
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:112
 #, php-format
 msgid "Hide lesson progress stats (% complete, X/X steps)"
 msgstr ""
 
 #: inc/customizer/elements.php:118
+#: packaged/ld-visual-customizer/inc/customizer/elements.php:118
 msgid "Hide points on LearnDash profile shortcode"
 msgstr ""
 
 #: inc/customizer/focus.php:3
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:3
 msgid "Focus Mode"
 msgstr ""
 
 #: inc/customizer/focus.php:121
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:121
 msgid "Welcome message name"
 msgstr ""
 
 #: inc/customizer/focus.php:126
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:126
 msgid "Default (display name)"
 msgstr ""
 
 #: inc/customizer/focus.php:127
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:127
 msgid "First name"
 msgstr ""
 
 #: inc/customizer/focus.php:128
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:128
 msgid "Full name"
 msgstr ""
 
 #: inc/customizer/focus.php:129
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:129
 msgid "Username"
 msgstr ""
 
 #: inc/customizer/focus.php:130
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:130
 msgid "No name"
 msgstr ""
 
 #: inc/customizer/focus.php:134
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:134
 msgid "Hide user welcome message"
 msgstr ""
 
 #: inc/customizer/focus.php:140
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:140
 msgid "Hide user avatar and secondary menu"
 msgstr ""
 
 #: inc/customizer/focus.php:146
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:146
 msgid "Hide progress bar in header"
 msgstr ""
 
 #: inc/customizer/focus.php:152
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:152
 msgid "Hide course home icon"
 msgstr ""
 
 #: inc/customizer/focus.php:158
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:158
 msgid "Hide footer previous / next links"
 msgstr ""
 
 #: inc/customizer/focus.php:182
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:182
 msgid "Sidebar: Background"
 msgstr ""
 
 #: inc/customizer/focus.php:187
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:187
 msgid "Sidebar: Accent"
 msgstr ""
 
 #: inc/customizer/focus.php:192
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:192
 msgid "Sidebar: Border"
 msgstr ""
 
 #: inc/customizer/focus.php:197
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:197
 msgid "Sidebar: Course title background"
 msgstr ""
 
 #: inc/customizer/focus.php:202
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:202
 msgid "Sidebar: Course title text"
 msgstr ""
 
 #: inc/customizer/focus.php:207
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:207
 msgid "Sidebar: Section heading background"
 msgstr ""
 
 #: inc/customizer/focus.php:212
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:212
 msgid "Sidebar: Section heading text"
 msgstr ""
 
 #: inc/customizer/focus.php:217
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:217
 msgid "Sidebar: Lesson text"
 msgstr ""
 
 #: inc/customizer/focus.php:222
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:222
 msgid "Sidebar: Lesson background"
 msgstr ""
 
 #: inc/customizer/focus.php:227
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:227
 msgid "Sidebar: Nested topic / quiz background"
 msgstr ""
 
 #: inc/customizer/focus.php:232
+#: packaged/ld-visual-customizer/inc/customizer/focus.php:232
 msgid "Sidebar: Nested topic / quiz text"
 msgstr ""
 
 #: inc/customizer/fonts.php:8 legacy/lds-settings.php:35
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:8
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:35
 msgid "Fonts"
 msgstr ""
 
 #: inc/customizer/fonts.php:177
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:177
 msgid "Base font"
 msgstr ""
 
 #: inc/customizer/fonts.php:182 inc/customizer/fonts.php:191
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:182
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:191
 msgid "Theme Default"
 msgstr ""
 
 #: inc/customizer/fonts.php:186
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:186
 msgid "Heading font"
 msgstr ""
 
 #: inc/customizer/fonts.php:219
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:219
 msgid "Base font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:227
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:227
 msgid "Heading font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:235
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:235
 msgid "Section heading font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:243
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:243
 msgid "Lesson / Topic / Quiz title font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:251
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:251
 msgid "Lesson meta font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:259
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:259
 msgid "Widget: Heading font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:267
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:267
 msgid "Widget: Section heading font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:275
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:275
 msgid "Widget: Lesson / Topic font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:283
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:283
 msgid "Widget: Lesson meta size"
 msgstr ""
 
 #: inc/customizer/fonts.php:291
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:291
 msgid "Widget: Sub item font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:299
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:299
 msgid "Button font size"
 msgstr ""
 
 #: inc/customizer/fonts.php:307
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:307
 msgid "Focus Mode Sidebar: Course Title"
 msgstr ""
 
 #: inc/customizer/fonts.php:315
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:315
 msgid "Focus Mode Sidebar: Section Heading"
 msgstr ""
 
 #: inc/customizer/fonts.php:323
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:323
 msgid "Focus Mode Sidebar: Lesson Title"
 msgstr ""
 
 #: inc/customizer/fonts.php:331
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:331
 msgid "Focus Mode Sidebar: Lesson Meta"
 msgstr ""
 
 #: inc/customizer/fonts.php:339
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:339
 msgid "Focus Mode Sidebar: Topic / Quiz Title"
 msgstr ""
 
 #: inc/customizer/fonts.php:347
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:347
 msgid "Focus Mode: Page Title Size"
 msgstr ""
 
 #: inc/customizer/fonts.php:355
+#: packaged/ld-visual-customizer/inc/customizer/fonts.php:355
 msgid "Focus Mode: Body Font Size"
 msgstr ""
 
 #: inc/customizer/hide.php:4
+#: packaged/ld-visual-customizer/inc/customizer/hide.php:4
 msgid "Hide Elements"
 msgstr ""
 
 #: inc/customizer/icons.php:3
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:3
 msgid "Icons"
 msgstr ""
 
 #: inc/customizer/icons.php:116
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:116
 msgid "Icon size"
 msgstr ""
 
 #: inc/customizer/icons.php:122
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:122
 msgid "Tiny"
 msgstr ""
 
 #: inc/customizer/icons.php:123
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:123
 msgid "Small"
 msgstr ""
 
 #: inc/customizer/icons.php:125
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:125
 msgid "Large"
 msgstr ""
 
 #: inc/customizer/icons.php:126
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:126
 msgid "X-Large"
 msgstr ""
 
 #: inc/customizer/icons.php:143
 #: legacy/views/grid-banner/partials/item-meta.php:14
 #: legacy/views/grid-banner/partials/item-meta.php:24
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:143
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:14
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:24
 msgid "Complete"
 msgstr ""
 
 #: inc/customizer/icons.php:149 inc/customizer/quiz.php:4
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:149
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:4
 msgid "Quiz"
 msgstr ""
 
 #: inc/customizer/icons.php:155
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:155
 msgid "Sample"
 msgstr ""
 
 #: inc/customizer/icons.php:161
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:161
 msgid "Calendar"
 msgstr ""
 
 #: inc/customizer/icons.php:167
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:167
 msgid "Arrow up"
 msgstr ""
 
 #: inc/customizer/icons.php:173
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:173
 msgid "Arrow down"
 msgstr ""
 
 #: inc/customizer/icons.php:179
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:179
 msgid "Arrow left"
 msgstr ""
 
 #: inc/customizer/icons.php:186
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:186
 msgid "Arrow right"
 msgstr ""
 
 #: inc/customizer/icons.php:192
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:192
 msgid "Content"
 msgstr ""
 
-#: inc/customizer/icons.php:198 inc/ldvc-models.php:70
+#: inc/customizer/icons.php:198 inc/ldvc-models.php:72
 #: legacy/models/lds-lesson-topics.php:51
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:198
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:72
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:51
 msgid "Assignment"
 msgstr ""
 
 #: inc/customizer/icons.php:204
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:204
 msgid "Download"
 msgstr ""
 
 #: inc/customizer/icons.php:210
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:210
 msgid "Materials"
 msgstr ""
 
-#: inc/customizer/icons.php:216 inc/templates/shortcodes/course-list/row.php:60
+#: inc/customizer/icons.php:216 inc/templates/shortcodes/course-list/row.php:61
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:216
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:61
 msgid "Certificate"
 msgstr ""
 
 #: inc/customizer/icons.php:222 inc/customizer/icons.php:228
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:222
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:228
 msgid "Comments"
 msgstr ""
 
 #: inc/customizer/icons.php:234
+#: packaged/ld-visual-customizer/inc/customizer/icons.php:234
 msgid "Alert"
 msgstr ""
 
 #: inc/customizer/quiz.php:66 legacy/lds-wp-customizer-api.php:642
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:66
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:642
 msgid "Quiz Question Background"
 msgstr ""
 
 #: inc/customizer/quiz.php:71
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:71
 msgid "Quiz Question Border"
 msgstr ""
 
 #: inc/customizer/quiz.php:76 legacy/lds-wp-customizer-api.php:647
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:76
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:647
 msgid "Quiz Question Text"
 msgstr ""
 
 #: inc/customizer/quiz.php:81 legacy/lds-wp-customizer-api.php:657
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:81
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:657
 msgid "Quiz Question Correct Text"
 msgstr ""
 
 #: inc/customizer/quiz.php:86 legacy/lds-wp-customizer-api.php:662
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:86
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:662
 msgid "Quiz Question Correct Background"
 msgstr ""
 
 #: inc/customizer/quiz.php:91 legacy/lds-wp-customizer-api.php:667
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:91
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:667
 msgid "Quiz Question Incorrect Text"
 msgstr ""
 
 #: inc/customizer/quiz.php:96 legacy/lds-wp-customizer-api.php:672
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:96
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:672
 msgid "Quiz Question Incorrect Background"
 msgstr ""
 
 #: inc/customizer/quiz.php:108
+#: packaged/ld-visual-customizer/inc/customizer/quiz.php:108
 msgid "Quiz Question Border Radius"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:3 legacy/lds-wp-customizer-api.php:16
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:3
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:16
 msgid "Templates &amp; Themes"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:4
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:4
 msgid "Customize the layout and overall appearance of LearnDash."
 msgstr ""
 
 #: inc/customizer/templates-themes.php:82 legacy/lds-wp-customizer-api.php:74
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:82
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:74
 msgid "Template"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:85
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:85
 msgid "Use the default LearnDash layout or select a custom layout."
 msgstr ""
 
 #: inc/customizer/templates-themes.php:89
-msgid "Expanded"
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:89
+msgid "Outline"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:90
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:90
 msgid "Grid"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:91
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:91
 msgid "Stacked"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:95 legacy/lds-settings.php:244
 #: legacy/lds-wp-customizer-api.php:86
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:95
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:244
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:86
 msgid "Number of Columns"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:106 legacy/lds-wp-customizer-api.php:97
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:106
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:97
 msgid "Base Skin"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:108
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:108
 msgid "Select a predefined theme for quick styling!"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:114
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:114
 msgid "Sleek"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:115
 #: inc/customizer/templates-themes.php:128 legacy/lds-settings.php:189
 #: legacy/lds-wp-customizer-api.php:118
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:115
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:128
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:189
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:118
 msgid "Minimal"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:116 legacy/lds-settings.php:183
 #: legacy/lds-settings.php:337 legacy/lds-wp-customizer-api.php:105
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:116
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:183
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:337
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:105
 msgid "Rustic"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:117 legacy/lds-settings.php:181
 #: legacy/lds-settings.php:192 legacy/lds-settings.php:345
 #: legacy/lds-wp-customizer-api.php:106 legacy/lds-wp-customizer-api.php:120
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:117
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:181
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:192
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:345
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:106
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:120
 msgid "Playful"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:118
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:118
 msgid "Sunny"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:122
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:122
 msgid "Focus Mode Skin"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:129
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:129
 msgid "Sidebar only"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:148
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:148
 msgid "Primary theme color"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:153
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:153
 msgid "Secondary theme color"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:158
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:158
 msgid "Alert color"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:163
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:163
 msgid "Tertiary text color"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:164
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:164
 msgid "Dark gray by default"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:169
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:169
 msgid "Tertiary background color"
 msgstr ""
 
 #: inc/customizer/templates-themes.php:170
+#: packaged/ld-visual-customizer/inc/customizer/templates-themes.php:170
 msgid "Light gray by default"
 msgstr ""
 
 #: inc/ldvc-customizer.php:11 legacy/lds-wp-customizer-api.php:11
+#: packaged/ld-visual-customizer/inc/ldvc-customizer.php:11
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:11
 msgid "LearnDash Styling"
 msgstr ""
 
 #: inc/ldvc-customizer.php:12 legacy/lds-wp-customizer-api.php:12
+#: packaged/ld-visual-customizer/inc/ldvc-customizer.php:12
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:12
 msgid "Control the LearnDash Styling"
 msgstr ""
 
 #: inc/ldvc-customizer.php:35 legacy/lds-settings.php:652
 #: legacy/lds-wp-customizer-api.php:511
+#: packaged/ld-visual-customizer/inc/ldvc-customizer.php:35
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:652
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:511
 msgid "Widgets"
 msgstr ""
 
-#: inc/ldvc-models.php:14
+#: inc/ldvc-models.php:14 packaged/ld-visual-customizer/inc/ldvc-models.php:14
 msgid "Content Type / Duration"
 msgstr ""
 
-#: inc/ldvc-models.php:17
+#: inc/ldvc-models.php:17 packaged/ld-visual-customizer/inc/ldvc-models.php:17
 msgid "Sales Page"
 msgstr ""
 
-#: inc/ldvc-models.php:28
+#: inc/ldvc-models.php:29 packaged/ld-visual-customizer/inc/ldvc-models.php:29
 msgid "Custom sales page"
 msgstr ""
 
-#: inc/ldvc-models.php:30
+#: inc/ldvc-models.php:31 packaged/ld-visual-customizer/inc/ldvc-models.php:31
 msgid "Custom sales page to redirect users who don't have access"
 msgstr ""
 
-#: inc/ldvc-models.php:46 legacy/models/lds-lesson-topics.php:27
+#: inc/ldvc-models.php:48 legacy/models/lds-lesson-topics.php:27
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:48
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:27
 msgid "Course Icon"
 msgstr ""
 
-#: inc/ldvc-models.php:48 legacy/models/lds-lesson-topics.php:29
+#: inc/ldvc-models.php:50 legacy/models/lds-lesson-topics.php:29
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:50
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:29
 msgid "For images use the featured image option on this page."
 msgstr ""
 
-#: inc/ldvc-models.php:61 legacy/models/lds-lesson-topics.php:42
+#: inc/ldvc-models.php:63 legacy/models/lds-lesson-topics.php:42
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:63
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:42
 msgid "Content Type"
 msgstr ""
 
-#: inc/ldvc-models.php:65 legacy/models/lds-lesson-topics.php:46
+#: inc/ldvc-models.php:67 legacy/models/lds-lesson-topics.php:46
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:67
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:46
 msgid "Text"
 msgstr ""
 
-#: inc/ldvc-models.php:66 legacy/models/lds-lesson-topics.php:47
+#: inc/ldvc-models.php:68 legacy/models/lds-lesson-topics.php:47
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:68
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:47
 msgid "Video"
 msgstr ""
 
-#: inc/ldvc-models.php:67 legacy/models/lds-lesson-topics.php:48
+#: inc/ldvc-models.php:69 legacy/models/lds-lesson-topics.php:48
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:69
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:48
 msgid "Image"
 msgstr ""
 
-#: inc/ldvc-models.php:68 legacy/models/lds-lesson-topics.php:49
+#: inc/ldvc-models.php:70 legacy/models/lds-lesson-topics.php:49
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:70
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:49
 msgid "Audio"
 msgstr ""
 
-#: inc/ldvc-models.php:69 legacy/models/lds-lesson-topics.php:50
+#: inc/ldvc-models.php:71 legacy/models/lds-lesson-topics.php:50
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:71
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:50
 msgid "Presentation"
 msgstr ""
 
-#: inc/ldvc-models.php:82 legacy/models/lds-lesson-topics.php:63
+#: inc/ldvc-models.php:84 legacy/models/lds-lesson-topics.php:63
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:84
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:63
 msgid "Content Icon"
 msgstr ""
 
-#: inc/ldvc-models.php:84
+#: inc/ldvc-models.php:86 packaged/ld-visual-customizer/inc/ldvc-models.php:86
 msgid "FontAwesome icon options"
 msgstr ""
 
-#: inc/ldvc-models.php:95 legacy/models/lds-lesson-topics.php:78
+#: inc/ldvc-models.php:97 legacy/models/lds-lesson-topics.php:78
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:97
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:78
 msgid "Estimated Duration"
 msgstr ""
 
-#: inc/ldvc-models.php:97 legacy/models/lds-lesson-topics.php:80
+#: inc/ldvc-models.php:99 legacy/models/lds-lesson-topics.php:80
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:99
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:80
 msgid "e.g. 5min, 10min 1hr"
 msgstr ""
 
-#: inc/ldvc-models.php:100 legacy/models/lds-lesson-topics.php:83
+#: inc/ldvc-models.php:102 legacy/models/lds-lesson-topics.php:83
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:102
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:83
 msgid "Short Description"
 msgstr ""
 
-#: inc/ldvc-models.php:102 legacy/models/lds-lesson-topics.php:85
+#: inc/ldvc-models.php:104 legacy/models/lds-lesson-topics.php:85
+#: packaged/ld-visual-customizer/inc/ldvc-models.php:104
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:85
 msgid "One or two sentances is ideal."
 msgstr ""
 
 #: inc/ldvc-settings.php:5 legacy/lds-settings.php:18
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:5
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:18
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
 #: inc/ldvc-settings.php:30 inc/ldvc-settings.php:185
 #: legacy/lds-settings.php:771
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:30
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:185
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:771
 msgid "LearnDash Visual Customizer"
 msgstr ""
 
 #: inc/ldvc-settings.php:31
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:31
 msgid ""
 "Customize or completely change the LearnDash design in a matter of clicks!"
 msgstr ""
 
 #: inc/ldvc-settings.php:36
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:36
 msgid "Customize Learndash"
 msgstr ""
 
 #: inc/ldvc-settings.php:37
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:37
 msgid ""
 "LearnDash Visual Customizer is configured through the Theme Customizer. "
 "Please select a course to preview to start your customizations."
 msgstr ""
 
 #: inc/ldvc-settings.php:42
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:42
 msgid "Preview Course"
 msgstr ""
 
 #: inc/ldvc-settings.php:60
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:60
 msgid "Customize LearnDash"
 msgstr ""
 
 #: inc/ldvc-settings.php:62
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:62
 msgid "Please create a course to start customizing"
 msgstr ""
 
 #: inc/ldvc-settings.php:72
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:72
 msgid "Getting Started"
 msgstr ""
 
 #: inc/ldvc-settings.php:88
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:88
 msgid "Manage License"
 msgstr ""
 
 #: inc/ldvc-settings.php:105 legacy/lds-settings.php:73
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:105
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:73
 msgid "License Key"
 msgstr ""
 
 #: inc/ldvc-settings.php:123
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:123
 msgid "Settings"
 msgstr ""
 
 #: inc/ldvc-settings.php:132 legacy/lds-settings.php:719
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:132
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:719
 msgid "FontAwesome Version"
 msgstr ""
 
 #: inc/ldvc-settings.php:134
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:134
 msgid "If you're icons are not rendering as intended try switching to V4"
 msgstr ""
 
 #: inc/ldvc-settings.php:157
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:157
 msgid "Disable FontAwesome Icon Picker"
 msgstr ""
 
 #: inc/ldvc-settings.php:159
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:159
 msgid "If you're having trouble with Gutenberg blocks, try disabling this"
 msgstr ""
 
 #: inc/ldvc-settings.php:197
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:197
 msgid "Visual Customizer"
 msgstr ""
 
@@ -903,530 +1213,745 @@ msgstr ""
 #: legacy/views/enhanced/lesson.php:114 legacy/views/enhanced/topic.php:122
 #: legacy/views/shortcodes/course_content-enhanced.php:110
 #: legacy/views/shortcodes/lds_lesson_list.php:21
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:264
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course-header.php:8
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:124
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:229
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:114
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:122
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/course_content-enhanced.php:110
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/lds_lesson_list.php:21
 msgid "Status"
 msgstr ""
 
 #: inc/ldvc-settings.php:269 legacy/lds-settings.php:90
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:269
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:90
 msgid "Active"
 msgstr ""
 
 #: inc/ldvc-settings.php:273 legacy/lds-settings.php:94
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:273
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:94
 msgid "Deactivate License"
 msgstr ""
 
 #: inc/ldvc-settings.php:277 legacy/lds-settings.php:98
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:277
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:98
 msgid "Inactive"
 msgstr ""
 
 #: inc/ldvc-settings.php:281 legacy/lds-settings.php:85
 #: legacy/lds-settings.php:102
+#: packaged/ld-visual-customizer/inc/ldvc-settings.php:281
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:85
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:102
 msgid "Activate License"
 msgstr ""
 
 #: inc/ldvc-views.php:105 inc/ldvc-views.php:114 inc/ldvc-views.php:124
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:105
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:114
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:124
 msgid "View"
 msgstr ""
 
 #: inc/ldvc-views.php:1347 legacy/lds-shortcodes.php:215
 #: legacy/lds-shortcodes.php:494 legacy/lds-views.php:155
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:1347
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:215
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:494
+#: packaged/ld-visual-customizer/legacy/lds-views.php:155
 msgid "Categories"
 msgstr ""
 
 #: inc/ldvc-views.php:1349 legacy/lds-shortcodes.php:217
 #: legacy/lds-shortcodes.php:496 legacy/lds-views.php:157
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:1349
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:217
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:496
+#: packaged/ld-visual-customizer/legacy/lds-views.php:157
 msgid "Select category"
 msgstr ""
 
 #: inc/ldvc-views.php:1380
+#: packaged/ld-visual-customizer/inc/ldvc-views.php:1380
 #, php-format
 msgctxt "placeholder: LD Category label"
 msgid "Select %s"
 msgstr ""
 
-#: inc/ldvc-widgets.php:5
+#: inc/ldvc-widgets.php:5 packaged/ld-visual-customizer/inc/ldvc-widgets.php:5
 msgid "LearnDash Focus Mode: Right Sidebar"
 msgstr ""
 
-#: inc/ldvc-widgets.php:7
+#: inc/ldvc-widgets.php:7 packaged/ld-visual-customizer/inc/ldvc-widgets.php:7
 msgid ""
 "Widgets in this area will be shown to the right of the content in focus mode"
 msgstr ""
 
 #: inc/ldvc-widgets.php:14
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:14
 msgid "LearnDash Focus Mode: Below Menu"
 msgstr ""
 
 #: inc/ldvc-widgets.php:16
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:16
 msgid ""
 "Widgets in this area will be shown below the course menu on the left side"
+msgstr ""
+
+#. translators: placeholder: Course.
+#: inc/ldvc-widgets.php:69
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:69
+#, php-format
+msgctxt "placeholder: Course"
+msgid ""
+"LearnDash Outline - %s Navigation. Shows lessons and topics on the current "
+"course in the outline style."
+msgstr ""
+
+#. translators: placeholder: Course.
+#: inc/ldvc-widgets.php:73
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:73
+#, php-format
+msgctxt "Course Navigation Label"
+msgid "Outline %s Navigation"
+msgstr ""
+
+#: inc/ldvc-widgets.php:218 legacy/lds-widgets.php:100
+#: legacy/lds-widgets.php:230
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:218
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:100
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:230
+msgid "Title:"
+msgstr ""
+
+#. translators: placeholders: Course, Quizzes.
+#: inc/ldvc-widgets.php:226
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:226
+#, php-format
+msgctxt "placeholders: Course, Quizzes"
+msgid "Show %1$s %2$s?"
+msgstr ""
+
+#. translators: placeholders: Lesson, Quizzes.
+#: inc/ldvc-widgets.php:235
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:235
+#, php-format
+msgctxt "placeholders: Lesson, Quizzes"
+msgid "Show %1$s %2$s?"
+msgstr ""
+
+#. translators: placeholders: Topic, Quizzes.
+#: inc/ldvc-widgets.php:244
+#: packaged/ld-visual-customizer/inc/ldvc-widgets.php:244
+#, php-format
+msgctxt "placeholders: Topic, Quizzes"
+msgid "Show %1$s %2$s?"
 msgstr ""
 
 #: inc/templates/grid-banner/group/course-row.php:76
 #: inc/templates/grid-banner/group/course-row.php:78
 #: inc/templates/grid-banner/lesson/partials/row.php:172
+#: packaged/ld-visual-customizer/inc/templates/grid-banner/group/course-row.php:76
+#: packaged/ld-visual-customizer/inc/templates/grid-banner/group/course-row.php:78
+#: packaged/ld-visual-customizer/inc/templates/grid-banner/lesson/partials/row.php:172
 msgid "Expand"
 msgstr ""
 
 #: inc/templates/grid-banner/group/course-row.php:76
+#: packaged/ld-visual-customizer/inc/templates/grid-banner/group/course-row.php:76
 msgid "Collapse"
 msgstr ""
 
 #: inc/templates/grid-banner/lesson/partials/row.php:32
+#: packaged/ld-visual-customizer/inc/templates/grid-banner/lesson/partials/row.php:32
 msgid "You don't currently have access to this content"
 msgstr ""
 
-#: inc/templates/shortcodes/course-list/row.php:43
+#: inc/templates/shortcodes/course-list/row.php:44
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:44
 msgid "Closed"
 msgstr ""
 
-#: inc/templates/shortcodes/course-list/row.php:50
+#: inc/templates/shortcodes/course-list/row.php:51
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:51
 #, php-format
 msgctxt "Recurring duration message"
 msgid "Every %s %s"
 msgstr ""
 
-#: inc/templates/shortcodes/course-list/row.php:66
+#: inc/templates/shortcodes/course-list/row.php:67
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:67
 #, php-format
 msgctxt "placeholder: completed steps, total steps"
 msgid "%1$d/%2$d Steps Completed"
 msgstr ""
 
-#: inc/templates/shortcodes/course-list/row.php:73
+#: inc/templates/shortcodes/course-list/row.php:74
+#: packaged/ld-visual-customizer/inc/templates/shortcodes/course-list/row.php:74
 msgid "Not Enrolled"
 msgstr ""
 
 #: lds-visual-customizer.php:100 lds-visual-customizer.php:101
+#: packaged/ld-visual-customizer/lds-visual-customizer.php:100
+#: packaged/ld-visual-customizer/lds-visual-customizer.php:101
 msgid "LearnDash Appearance"
 msgstr ""
 
-#: ldvc-license.php:225
+#. translators: the plugin name.
+#: ldvc-license.php:222 packaged/ld-visual-customizer/ldvc-license.php:222
 #, php-format
-msgid ""
-"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgid "There is a new version of %1$s available."
 msgstr ""
 
-#: ldvc-license.php:233
+#. translators: 1. opening anchor tag, do not translate 2. the new plugin version 3. closing anchor tag, do not translate.
+#: ldvc-license.php:229 packaged/ld-visual-customizer/ldvc-license.php:229
 #, php-format
-msgid ""
-"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
-"or %5$supdate now%6$s."
+msgid " %1$sView version %2$s details%3$s."
 msgstr ""
 
-#: ldvc-license.php:466
+#: ldvc-license.php:236 packaged/ld-visual-customizer/ldvc-license.php:236
+#, php-format
+msgid " %1$sView version %2$s details%3$s or %4$supdate now%5$s."
+msgstr ""
+
+#: ldvc-license.php:247 packaged/ld-visual-customizer/ldvc-license.php:247
+msgid "Update now."
+msgstr ""
+
+#: ldvc-license.php:463 packaged/ld-visual-customizer/ldvc-license.php:463
 msgid "You do not have permission to install plugin updates"
 msgstr ""
 
-#: ldvc-license.php:466
+#: ldvc-license.php:463 packaged/ld-visual-customizer/ldvc-license.php:463
 msgid "Error"
 msgstr ""
 
 #: legacy/lds-settings.php:33 legacy/lds-settings.php:68
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:33
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:68
 msgid "Overview"
 msgstr ""
 
 #: legacy/lds-settings.php:34
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:34
 msgid "Themes &amp; Templates"
 msgstr ""
 
 #: legacy/lds-settings.php:36
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:36
 msgid "Colors"
 msgstr ""
 
 #: legacy/lds-settings.php:37 legacy/lds-settings.php:114
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:37
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:114
 msgid "Shortcodes"
 msgstr ""
 
 #: legacy/lds-settings.php:38
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:38
 msgid "Advanced"
 msgstr ""
 
 #: legacy/lds-settings.php:77
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:77
 msgid "Enter your license key"
 msgstr ""
 
 #: legacy/lds-settings.php:171 legacy/lds-wp-customizer-api.php:79
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:171
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:79
 msgid "LearnDash Default"
 msgstr ""
 
 #: legacy/lds-settings.php:172 legacy/lds-wp-customizer-api.php:80
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:172
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:80
 msgid "LearnDash Enhanced"
 msgstr ""
 
 #: legacy/lds-settings.php:173 legacy/lds-wp-customizer-api.php:81
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:173
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:81
 msgid "Expanded Style"
 msgstr ""
 
 #: legacy/lds-settings.php:174 legacy/lds-wp-customizer-api.php:82
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:174
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:82
 msgid "Grid with banners"
 msgstr ""
 
 #: legacy/lds-settings.php:180 legacy/lds-settings.php:329
 #: legacy/lds-wp-customizer-api.php:104
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:180
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:329
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:104
 msgid "Classic"
 msgstr ""
 
 #: legacy/lds-settings.php:182 legacy/lds-settings.php:360
 #: legacy/lds-wp-customizer-api.php:107
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:182
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:360
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:107
 msgid "Upscale"
 msgstr ""
 
 #: legacy/lds-settings.php:190 legacy/lds-wp-customizer-api.php:119
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:190
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:119
 msgid "Chunky"
 msgstr ""
 
 #: legacy/lds-settings.php:191 legacy/lds-wp-customizer-api.php:121
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:191
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:121
 msgid "Circles"
 msgstr ""
 
 #: legacy/lds-settings.php:195
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:195
 msgid "Themes"
 msgstr ""
 
 #: legacy/lds-settings.php:216
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:216
 msgid "LearnDash Template"
 msgstr ""
 
 #: legacy/lds-settings.php:228
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:228
 msgid ""
 "LearnDash Enhanced adds content type, duration and short description to "
 "listings."
 msgstr ""
 
 #: legacy/lds-settings.php:233
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:233
 msgid "Show Course Stats"
 msgstr ""
 
 #: legacy/lds-settings.php:237
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:237
 msgid "Yes"
 msgstr ""
 
 #: legacy/lds-settings.php:238
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:238
 msgid "No"
 msgstr ""
 
 #: legacy/lds-settings.php:262
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:262
 msgid "Theme"
 msgstr ""
 
 #: legacy/lds-settings.php:277
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:277
 msgid "Note: Changing skins will reset color selections to theme default."
 msgstr ""
 
 #: legacy/lds-settings.php:281 legacy/lds-wp-customizer-api.php:111
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:281
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:111
 msgid "Icon Style"
 msgstr ""
 
 #: legacy/lds-settings.php:295
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:295
 msgid "Animation"
 msgstr ""
 
 #: legacy/lds-settings.php:297
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:297
 msgid "Fade in course listing and user profile"
 msgstr ""
 
 #: legacy/lds-settings.php:305
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:305
 msgid "Grid With Banners"
 msgstr ""
 
 #: legacy/lds-settings.php:312
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:312
 msgid "Expanded Template"
 msgstr ""
 
 #: legacy/lds-settings.php:317
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:317
 msgid "Preview of this theme's default color scheme"
 msgstr ""
 
 #: legacy/lds-settings.php:321
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:321
 msgid "Flat, minimal and clean with rich blues, grays and greens."
 msgstr ""
 
 #: legacy/lds-settings.php:329
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:329
 msgid ""
 "Soft grays, strong geometric lines add up to a clean, professional "
 "appearance."
 msgstr ""
 
 #: legacy/lds-settings.php:337
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:337
 msgid "Rounded corners and earth tones paired with a dash of depth."
 msgstr ""
 
 #: legacy/lds-settings.php:345
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:345
 msgid ""
 "Fun and entertaining, with bright colors, handwriting fonts and a dash of "
 "style."
 msgstr ""
 
 #: legacy/lds-settings.php:352
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:352
 msgid ""
 "The default LearnDash theme. Customize the colors but keep the original look "
 "and feel."
 msgstr ""
 
 #: legacy/lds-settings.php:360
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:360
 msgid ""
 "A luxurious mix of rich leather and gold, perfect for any premium course."
 msgstr ""
 
 #: legacy/lds-settings.php:371 legacy/lds-wp-customizer-api.php:142
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:371
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:142
 msgid "Font Sizes"
 msgstr ""
 
 #: legacy/lds-settings.php:375
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:375
 msgid "Table Heading"
 msgstr ""
 
 #: legacy/lds-settings.php:376 legacy/lds-wp-customizer-api.php:221
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:376
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:221
 msgid "Table Row"
 msgstr ""
 
 #: legacy/lds-settings.php:377 legacy/lds-wp-customizer-api.php:229
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:377
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:229
 msgid "Table Sub Row"
 msgstr ""
 
 #: legacy/lds-settings.php:378 legacy/lds-wp-customizer-api.php:237
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:378
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:237
 msgid "Widget Heading"
 msgstr ""
 
 #: legacy/lds-settings.php:379 legacy/lds-wp-customizer-api.php:245
 #: legacy/lds-wp-customizer-api.php:555
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:379
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:245
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:555
 msgid "Widget Text"
 msgstr ""
 
 #: legacy/lds-settings.php:435
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:435
 msgid "Customize Colors"
 msgstr ""
 
 #: legacy/lds-settings.php:437
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:437
 msgid "Customize major colors of the selected Learn Dash LMS theme"
 msgstr ""
 
 #: legacy/lds-settings.php:442
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:442
 msgid "Course, Lesson and Quiz Listings"
 msgstr ""
 
 #: legacy/lds-settings.php:444
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:444
 msgid "Headings that appear in course and lesson listing tables"
 msgstr ""
 
 #: legacy/lds-settings.php:448
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:448
 msgid "Table heading background"
 msgstr ""
 
 #: legacy/lds-settings.php:454
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:454
 msgid "Table & grid heading text"
 msgstr ""
 
 #: legacy/lds-settings.php:460
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:460
 msgid "Table row background"
 msgstr ""
 
 #: legacy/lds-settings.php:466
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:466
 msgid "Alt. table row background"
 msgstr ""
 
 #: legacy/lds-settings.php:472
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:472
 msgid "Table row text"
 msgstr ""
 
 #: legacy/lds-settings.php:478
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:478
 msgid "Sub table row background"
 msgstr ""
 
 #: legacy/lds-settings.php:484
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:484
 msgid "Sub table row alt background"
 msgstr ""
 
 #: legacy/lds-settings.php:490
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:490
 msgid "Table sub row text"
 msgstr ""
 
 #: legacy/lds-settings.php:496
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:496
 msgid "Quiz Background Color"
 msgstr ""
 
 #: legacy/lds-settings.php:502
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:502
 msgid "Quiz Text Color"
 msgstr ""
 
 #: legacy/lds-settings.php:508
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:508
 msgid "Quiz Border Color"
 msgstr ""
 
 #: legacy/lds-settings.php:513
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:513
 msgid "Dark"
 msgstr ""
 
 #: legacy/lds-settings.php:518
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:518
 msgid "Quiz Correct Answer Background"
 msgstr ""
 
 #: legacy/lds-settings.php:524
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:524
 msgid "Quiz Correct Answer Text"
 msgstr ""
 
 #: legacy/lds-settings.php:530
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:530
 msgid "Quiz Incorrect Answer Background"
 msgstr ""
 
 #: legacy/lds-settings.php:536
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:536
 msgid "Quiz Incorrect Answer Text"
 msgstr ""
 
 #: legacy/lds-settings.php:547
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:547
 msgid "Visual Elements"
 msgstr ""
 
 #: legacy/lds-settings.php:549
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:549
 msgid ""
 "Core visual elements like the progress bar, completed colors, icons, etc..."
 msgstr ""
 
 #: legacy/lds-settings.php:554
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:554
 msgid "Progress bar"
 msgstr ""
 
 #: legacy/lds-settings.php:568
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:568
 msgid "Checkbox incomplete"
 msgstr ""
 
 #: legacy/lds-settings.php:574
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:574
 msgid "Checkbox complete"
 msgstr ""
 
 #: legacy/lds-settings.php:580
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:580
 msgid "Arrow incomplete"
 msgstr ""
 
 #: legacy/lds-settings.php:586
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:586
 msgid "Arrow complete"
 msgstr ""
 
 #: legacy/lds-settings.php:598
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:598
 msgid "Complete, course, apply buttons"
 msgstr ""
 
 #: legacy/lds-settings.php:602
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:602
 msgid "Rounded Corners"
 msgstr ""
 
 #: legacy/lds-settings.php:624
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:624
 msgid "Standard button"
 msgstr ""
 
 #: legacy/lds-settings.php:630
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:630
 msgid "Standard button text"
 msgstr ""
 
 #: legacy/lds-settings.php:636
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:636
 msgid "Complete button background"
 msgstr ""
 
 #: legacy/lds-settings.php:642
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:642
 msgid "Complete button text"
 msgstr ""
 
 #: legacy/lds-settings.php:654
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:654
 msgid "Course listing, progress widget, etc..."
 msgstr ""
 
 #: legacy/lds-settings.php:659
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:659
 msgid "Widget background"
 msgstr ""
 
 #: legacy/lds-settings.php:665
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:665
 msgid "Widget text"
 msgstr ""
 
 #: legacy/lds-settings.php:670 legacy/lds-wp-customizer-api.php:575
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:670
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:575
 msgid "Widget Links"
 msgstr ""
 
 #: legacy/lds-settings.php:675
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:675
 msgid "Header background"
 msgstr ""
 
 #: legacy/lds-settings.php:681
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:681
 msgid "Header text"
 msgstr ""
 
 #: legacy/lds-settings.php:694 legacy/lds-settings.php:699
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:694
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:699
 msgid "Custom CSS"
 msgstr ""
 
 #: legacy/lds-settings.php:695
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:695
 msgid "Customize LearnDash even further with CSS (for experts only)"
 msgstr ""
 
 #: legacy/lds-settings.php:709
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:709
 msgid "Advanced Settings"
 msgstr ""
 
 #: legacy/lds-settings.php:711
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:711
 msgid "Adjust default CSS selectors and enqueue method"
 msgstr ""
 
 #: legacy/lds-settings.php:727
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:727
 msgid "Enqueue Method"
 msgstr ""
 
 #: legacy/lds-settings.php:736
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:736
 msgid "Dequeue Styles"
 msgstr ""
 
 #: legacy/lds-settings.php:739
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:739
 msgid "Enter stylesheet handles separated by a comma"
 msgstr ""
 
 #: legacy/lds-settings.php:743
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:743
 msgid "Widget Wrapper"
 msgstr ""
 
 #: legacy/lds-settings.php:749
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:749
 msgid "Widget Title"
 msgstr ""
 
 #: legacy/lds-settings.php:783
+#: packaged/ld-visual-customizer/legacy/lds-settings.php:783
 msgid "Appearance"
 msgstr ""
 
 #: legacy/lds-shortcodes.php:40
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:40
 #, php-format
 msgid "<strong>%s out of %s steps</strong> completed"
 msgstr ""
 
 #: legacy/lds-shortcodes.php:297 legacy/lds-shortcodes.php:597
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:297
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:597
 msgid "Learn More"
 msgstr ""
 
 #: legacy/lds-shortcodes.php:561
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:561
 msgid "Lesson"
 msgstr ""
 
 #: legacy/lds-shortcodes.php:561
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:561
 msgid "Lessons"
 msgstr ""
 
 #: legacy/lds-shortcodes.php:572
+#: packaged/ld-visual-customizer/legacy/lds-shortcodes.php:572
 msgid "Description"
 msgstr ""
 
 #: legacy/lds-widgets.php:24
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:24
 #, php-format
 msgctxt "placeholders: course"
 msgid "Enhanced LearnDash %s progress bar"
 msgstr ""
 
 #: legacy/lds-widgets.php:27
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:27
 #, php-format
 msgctxt "Course Progress Bar Label"
 msgid "Enhanced %s Progress Bar"
 msgstr ""
 
-#: legacy/lds-widgets.php:100 legacy/lds-widgets.php:230
-msgid "Title:"
-msgstr ""
-
 #: legacy/lds-widgets.php:133
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:133
 #, php-format
 msgctxt ""
 "LearnDash - Course Navigation. Shows lessons and topics on the current "
@@ -1437,124 +1962,154 @@ msgid ""
 msgstr ""
 
 #: legacy/lds-widgets.php:137
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:137
 #, php-format
 msgctxt "Expanded course navigation Label"
 msgid "Expanded %s Navigation"
 msgstr ""
 
 #: legacy/lds-widgets.php:237
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:237
 msgid "Show Course Quizzes?"
 msgstr ""
 
 #: legacy/lds-widgets.php:241
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:241
 msgid "Show Lesson Quizzes?"
 msgstr ""
 
 #: legacy/lds-widgets.php:245
+#: packaged/ld-visual-customizer/legacy/lds-widgets.php:245
 msgid "Show Topic Quizzes?"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:213
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:213
 msgid "Table / Primary Heading"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:262
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:262
 msgid "Course Content Lists"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:354
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:354
 msgid "Table Heading Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:359
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:359
 msgid "Table / Primary Heading Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:364
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:364
 msgid "Table Row / Primary Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:369
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:369
 msgid "Table Row Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:374
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:374
 msgid "Table Row Background (alt)"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:379
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:379
 msgid "Table Sub Row Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:384
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:384
 msgid "Table Sub Row Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:389
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:389
 msgid "Table Sub Row Background (alt)"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:394
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:394
 msgid "Progress Bar"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:399
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:399
 msgid "Complete Checkmark"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:404
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:404
 msgid "Incomplete Checkmark"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:409
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:409
 msgid "Complete Arrow"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:414
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:414
 msgid "Incomplete Arrow"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:485
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:485
 msgid "Default Button Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:490
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:490
 msgid "Default Button Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:495
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:495
 msgid "Complete Button Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:500
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:500
 msgid "Complete Button Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:560
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:560
 msgid "Widget Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:565
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:565
 msgid "Widget Header Text"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:570
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:570
 msgid "Widget Header Background"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:586
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:586
 msgid "Quiz Colors"
 msgstr ""
 
 #: legacy/lds-wp-customizer-api.php:652
+#: packaged/ld-visual-customizer/legacy/lds-wp-customizer-api.php:652
 msgid "Quiz Question Border Color"
 msgstr ""
 
 #: legacy/models/lds-lesson-topics.php:13
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:13
 msgid "Additional Details"
 msgstr ""
 
 #: legacy/models/lds-lesson-topics.php:67
+#: packaged/ld-visual-customizer/legacy/models/lds-lesson-topics.php:67
 msgid ""
 "The icon rendered for the content is set by the content type by default, if "
 "you'd like to specify a different icon, do so here."
@@ -1562,11 +2117,17 @@ msgstr ""
 
 #: legacy/views/enhanced/course.php:55 legacy/views/expanded/course.php:59
 #: legacy/views/grid-banner/course.php:56
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:55
+#: packaged/ld-visual-customizer/legacy/views/expanded/course.php:59
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:56
 msgid "PRINT YOUR CERTIFICATE"
 msgstr ""
 
 #: legacy/views/enhanced/course.php:87 legacy/views/expanded/course.php:90
 #: legacy/views/grid-banner/course.php:86
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:87
+#: packaged/ld-visual-customizer/legacy/views/expanded/course.php:90
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:86
 #, php-format
 msgctxt "Course Materials Label"
 msgid "%s Materials"
@@ -1576,6 +2137,11 @@ msgstr ""
 #: legacy/views/grid-banner/course.php:105
 #: legacy/views/shortcodes/course_content-enhanced.php:38
 #: legacy/views/shortcodes/lds_lesson_list.php:3
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:106
+#: packaged/ld-visual-customizer/legacy/views/expanded/course.php:108
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:105
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/course_content-enhanced.php:38
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/lds_lesson_list.php:3
 #, php-format
 msgctxt "Course Content Label"
 msgid "%s Content"
@@ -1583,11 +2149,15 @@ msgstr ""
 
 #: legacy/views/enhanced/course.php:116
 #: legacy/views/shortcodes/lds_lesson_list.php:13
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:116
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/lds_lesson_list.php:13
 msgid "Expand All"
 msgstr ""
 
 #: legacy/views/enhanced/course.php:116
 #: legacy/views/shortcodes/lds_lesson_list.php:13
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:116
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/lds_lesson_list.php:13
 msgid "Collapse All"
 msgstr ""
 
@@ -1596,6 +2166,12 @@ msgstr ""
 #: legacy/views/shortcodes/course_content-enhanced.php:73
 #: legacy/views/shortcodes/lds_lesson_list.php:48
 #: legacy/views/widgets/course-navigation-expanded.php:61
+#: packaged/ld-visual-customizer/legacy/views/enhanced/course.php:151
+#: packaged/ld-visual-customizer/legacy/views/expanded/course.php:150
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:186
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/course_content-enhanced.php:73
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/lds_lesson_list.php:48
+#: packaged/ld-visual-customizer/legacy/views/widgets/course-navigation-expanded.php:61
 #, php-format
 msgid "Available on: %s "
 msgstr ""
@@ -1605,6 +2181,15 @@ msgstr ""
 #: legacy/views/expanded/topic.php:69 legacy/views/expanded/topic.php:94
 #: legacy/views/grid-banner/lesson.php:30 legacy/views/grid-banner/topic.php:34
 #: legacy/views/grid-banner/topic.php:59
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:41
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:68
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:93
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:42
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:69
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:94
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:30
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:34
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:59
 #, php-format
 msgctxt "placeholders: quiz URL, quiz label"
 msgid ""
@@ -1617,6 +2202,15 @@ msgstr ""
 #: legacy/views/expanded/topic.php:72 legacy/views/expanded/topic.php:97
 #: legacy/views/grid-banner/lesson.php:33 legacy/views/grid-banner/topic.php:37
 #: legacy/views/grid-banner/topic.php:62
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:44
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:71
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:96
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:45
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:72
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:97
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:33
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:37
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:62
 #, php-format
 msgctxt "placeholders: topic URL, topic label"
 msgid ""
@@ -1629,6 +2223,15 @@ msgstr ""
 #: legacy/views/expanded/topic.php:74 legacy/views/expanded/topic.php:99
 #: legacy/views/grid-banner/lesson.php:35 legacy/views/grid-banner/topic.php:39
 #: legacy/views/grid-banner/topic.php:64
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:46
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:73
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:98
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:47
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:74
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:99
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:35
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:39
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:64
 #, php-format
 msgctxt "placeholders: lesson URL, lesson label"
 msgid ""
@@ -1641,6 +2244,15 @@ msgstr ""
 #: legacy/views/expanded/topic.php:78 legacy/views/expanded/topic.php:103
 #: legacy/views/grid-banner/lesson.php:39 legacy/views/grid-banner/topic.php:43
 #: legacy/views/grid-banner/topic.php:68
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:50
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:77
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:102
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:51
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:78
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:103
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:39
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:43
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:68
 #, php-format
 msgctxt "placeholder lesson"
 msgid "Please go back and complete the previous %s."
@@ -1648,6 +2260,9 @@ msgstr ""
 
 #: legacy/views/enhanced/lesson.php:61 legacy/views/expanded/lesson.php:62
 #: legacy/views/grid-banner/lesson.php:50
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:61
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:62
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:50
 #, php-format
 msgctxt "Lesson Materials Label"
 msgid "%s Materials"
@@ -1655,12 +2270,17 @@ msgstr ""
 
 #: legacy/views/enhanced/lesson.php:76 legacy/views/expanded/lesson.php:79
 #: legacy/views/grid-banner/lesson.php:81
+#: packaged/ld-visual-customizer/legacy/views/enhanced/lesson.php:76
+#: packaged/ld-visual-customizer/legacy/views/expanded/lesson.php:79
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/lesson.php:81
 #, php-format
 msgctxt "Lesson Topics Label"
 msgid "%s %s"
 msgstr ""
 
 #: legacy/views/enhanced/topic.php:43 legacy/views/expanded/topic.php:44
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:43
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:44
 #, php-format
 msgctxt "Topic Progress Label"
 msgid "%s Progress:"
@@ -1668,6 +2288,9 @@ msgstr ""
 
 #: legacy/views/enhanced/topic.php:55 legacy/views/expanded/topic.php:56
 #: legacy/views/grid-banner/topic.php:20
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:55
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:56
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:20
 #, php-format
 msgctxt "Back to Lesson Label"
 msgid "Back to %s"
@@ -1675,12 +2298,17 @@ msgstr ""
 
 #: legacy/views/enhanced/topic.php:113 legacy/views/expanded/topic.php:114
 #: legacy/views/grid-banner/topic.php:79
+#: packaged/ld-visual-customizer/legacy/views/enhanced/topic.php:113
+#: packaged/ld-visual-customizer/legacy/views/expanded/topic.php:114
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/topic.php:79
 #, php-format
 msgctxt "Topic Materials Label"
 msgid "%s Materials"
 msgstr ""
 
 #: legacy/views/expanded/course.php:43 legacy/views/grid-banner/course.php:43
+#: packaged/ld-visual-customizer/legacy/views/expanded/course.php:43
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:43
 #, php-format
 msgctxt "Course Status Label"
 msgid "%s Status:"
@@ -1689,37 +2317,50 @@ msgstr ""
 #: legacy/views/grid-banner/course.php:201
 #: legacy/views/grid-banner/partials/item-meta.php:47
 #: legacy/views/shortcodes/course_content-enhanced.php:82
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:201
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:47
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/course_content-enhanced.php:82
 msgid "Topics"
 msgstr ""
 
 #: legacy/views/grid-banner/course.php:240
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:240
 msgid "Revisit Lesson"
 msgstr ""
 
 #: legacy/views/grid-banner/course.php:243
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/course.php:243
 msgid "Start Lesson"
 msgstr ""
 
 #: legacy/views/grid-banner/partials/item-meta.php:6
 #: legacy/views/grid-banner/partials/item-meta.php:18
 #: legacy/views/grid-banner/partials/item-meta.php:24
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:6
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:18
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:24
 msgid "Incomplete"
 msgstr ""
 
 #: legacy/views/grid-banner/partials/item-meta.php:10
 #: legacy/views/grid-banner/partials/item-meta.php:28
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:10
+#: packaged/ld-visual-customizer/legacy/views/grid-banner/partials/item-meta.php:28
 msgid "Not Available"
 msgstr ""
 
 #: legacy/views/shortcodes/login.php:5
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/login.php:5
 msgid "Login"
 msgstr ""
 
 #: legacy/views/shortcodes/login.php:20
+#: packaged/ld-visual-customizer/legacy/views/shortcodes/login.php:20
 msgid "Lost Password"
 msgstr ""
 
 #: legacy/views/widgets/course-navigation-expanded.php:129
+#: packaged/ld-visual-customizer/legacy/views/widgets/course-navigation-expanded.php:129
 msgid "Return to"
 msgstr ""
 

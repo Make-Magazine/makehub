@@ -6,7 +6,7 @@
  */
 /* * **************************** THEME SETUP ***************************** */
 
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 // Defines the child theme (do not remove).
 define('CHILD_THEME_NAME', 'Make - Buddyboss Basic');

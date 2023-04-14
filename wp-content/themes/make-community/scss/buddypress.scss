@@ -1,4 +1,7 @@
 // Theme and buddypress overrides
+.directory.groups .wrapper {
+	padding-top: 45px;
+}
 #groups-dir-list {
 	.item-block {
 		min-height: 100px;
@@ -21,6 +24,7 @@
 .shortcode-bp-groups-tabs-container h6.group-box-title {
 	height: 40px;
 }
+
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
@@ -47,11 +51,13 @@
 	flex-wrap: wrap;
 	gap: 10px;
 }
-
+.single-item .wrapper, .archive .wrapper #content {
+	margin-top: 30px !important;
+}
 .single-headers #cover {
 	background-repeat: no-repeat;
 	background-size: cover;
-	.blockquote {
+	blockquote {
 		color: #f1f1f1;
 		border: 0 solid $color-blue;
 	}
@@ -71,3 +77,4 @@
 		}
 	}
 }
+#activity-rss-feed { display: none; }
