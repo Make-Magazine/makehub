@@ -1,8 +1,9 @@
 /////////// JOIN PAGE //////////////////
 .page-template-page-join {
-    #primary {
-        padding-top: 0px;
+    section.wrapper {
+        width: 100%;
     }
+    article { margin-bottom: 0% !important; }
     p { font-size: 18px; }
     .entry-header {
         background: url('../images/join-heros/5.png');
@@ -134,6 +135,9 @@
         .membership-btn {
             width: 50%;
             margin: 0 15px;
+            &:hover {
+                color: #fff;
+            }
         }
         @media screen and (max-width: 768px) {
             flex-direction: column;
