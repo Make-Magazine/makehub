@@ -19,8 +19,6 @@
 		echo do_shortcode('[wp_ulike]');
 	} ?>
 
-	<span class="single-blog-time"><?php printf( _x( '%s ago', '%s = human-readable time difference', 'onecommunity' ), human_time_diff( get_the_time( 'U' ), current_time( 'timestamp' ) ) ); ?></span>
-
 	<div class="clear"></div>
 
 	</div>
