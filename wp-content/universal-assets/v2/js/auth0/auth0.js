@@ -418,4 +418,31 @@ jQuery(document).ready(function() {
     }
 
     //end functions
+
+    jQuery('.change_password').click(function () {    
+        jQuery('.change_password').remove();    
+        jQuery('#responseText').html('Sending Request');
+        if(typeof webAuth === 'undefined'){
+            var webAuth = new auth0.WebAuth({
+                domain: AUTH0_CUSTOM_DOMAIN,
+                clientID: AUTH0_CLIENT_ID,
+                redirectUri: AUTH0_CALLBACK_URL,
+                audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
+                responseType: 'token id_token',
+                scope: 'openid profile email user_metadata',
+                //scope of data pulled by auth0
+                leeway: 60
+            });
+        }
+        webAuth.changePassword({
+          connection: 'DB-Make-Community',
+          email:   jQuery('#email').val()
+        }, function (err, resp) {
+          if(err){
+            console.log(err.message);
+          }else{
+            jQuery('#responseText').html(resp);
+          }
+        });
+    });
 }); // end event listener
