@@ -3,6 +3,7 @@ function register_custom_widgets() {
     register_widget('fancy_rss_widget');
     register_widget('upcoming_mfaires_widget');
     register_widget('make_projects_widget');
+    register_widget( 'makeco_widget_user_profile_fields' );
 }
 add_action('widgets_init', 'register_custom_widgets', 99);
 
