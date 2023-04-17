@@ -250,7 +250,7 @@ class GPStripeGateway extends GP_Payment_Gateways_Common
         $sub->response = $customer;
         $sub->status = $feed_settings['sub_status'];
 
-        if ($card = $stripe_obj->get_default_card($customer)) {
+        if (method_exists($stripe_obj,'get_default_card') && $card = $stripe_obj->get_default_card($customer)) {
             $sub->cc_last4 = $card['last4'];
             $sub->cc_exp_month = $card['exp_month'];
             $sub->cc_exp_year = $card['exp_year'];

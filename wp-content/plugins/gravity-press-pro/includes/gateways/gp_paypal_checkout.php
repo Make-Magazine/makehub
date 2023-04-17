@@ -15,7 +15,9 @@ class GPPaypalCheckoutGateway extends GP_Payment_Gateways_Common {
      * Payment gateway name
      * @var public | string 
      */
-    public $gateway_name = 'PayPal Express Checkout';
+//    public $gateway_name = 'PayPal Express Checkout';
+//    public $gateway_name = 'PayPal Standard';
+    public $gateway_name = 'PayPal';
     public $time_delay = 20;
 
     /**
