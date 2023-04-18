@@ -89,3 +89,30 @@ add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // w
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
+
+function add_slug_body_class($classes) {
+    global $post;
+    global $bp;
+    if (isset($post)) {
+        if ($post->post_name) {
+            $classes[] = $post->post_type . '-' . $post->post_name;
+            // any query string becomes a body class too
+            parse_str($_SERVER['QUERY_STRING'], $query_array);
+            foreach($query_array as $key => $value) {
+                $classes[] = $key . "-" . $value;
+            }
+        } else {
+            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
+        }
+
+        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
+        if (bp_is_groups_component()) {
+            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
+            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
+                $classes[] = 'my-group';
+            }
+        }
+        return $classes;
+    }
+}
+add_filter('body_class', 'add_slug_body_class');

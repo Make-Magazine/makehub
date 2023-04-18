@@ -65,6 +65,13 @@
 		background:rgba(0,0,0,.6);
 	}
 }
+.settings.bp-user {
+	#responseText {
+		display: flex;
+		height: 65px;
+		align-items: center;
+	}
+} 
 
 .makeco-profile-fields {
 	.item.bg {

@@ -57,22 +57,23 @@ if ( $query->have_posts() ) {
 		while ($query->have_posts()) {
 			$query->the_post();
 
+
 			$secondary_image = get_the_post_thumbnail_url();
 			$link = get_permalink();
 			if(get_post_type() == "contestants") {
-				$first_name = 		get_field( 'user_first_name', $post->ID, true );
-				$last_name = 		get_field( 'user_last_name', $post->ID, true );
-				$short_desc = 		get_field( 'project_short_description', $post->ID, true );
+				$first_name = 		get_field( 'user_first_name', get_the_ID(), true );
+				$last_name = 		get_field( 'user_last_name', get_the_ID(), true );
+				$short_desc = 		get_field( 'project_short_description', get_the_ID(), true );
 				$vote_count = 		get_post_meta( get_the_ID(), 'votes_count', true );
-				$video_url = 		get_field( 'project_video_link', $post->ID, true );
+				$video_url = 		get_field( 'project_video_link', get_the_ID(), true );
 			} else if(get_post_type() == "gift-guides") {
-				$short_desc = 		get_field( 'product_description', $post->ID, true );
-				$cost = 			get_field( 'cost', $post->ID, true );
-				$images =			get_field( 'product_image_links', $post->ID, true );
+				$short_desc = 		get_field( 'product_description', get_the_ID(), true );
+				$cost = 			get_field( 'cost', get_the_ID(), true );
+				$images =			get_field( 'product_image_links', get_the_ID(), true );
 				if(!empty($images[0]['product_image'])) {
 					$secondary_image = 	$images[0]['product_image'];
 				}
-				$link = 			get_field( 'purchase_url', $post->ID, true );
+				$link = 			get_field( 'purchase_url', get_the_ID(), true );
 			}
 
 			?>
@@ -92,8 +93,8 @@ if ( $query->have_posts() ) {
 				<?php } ?>
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 				<?php /*
-					if(get_field('what_will_you_learn', $post->ID)) {
-						echo "<p>" . first_sentence(get_field('what_will_you_learn', $post->ID)) . "</p>";
+					if(get_field('what_will_you_learn', get_the_ID())) {
+						echo "<p>" . first_sentence(get_field('what_will_you_learn', get_the_ID())) . "</p>";
 					} */
 				?>
 				<div class="results-meta">

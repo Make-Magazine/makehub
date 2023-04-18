@@ -133,3 +133,24 @@
 		img { margin-right: 0px;}
 	}
 }
+
+// learndash pages
+.single-sfwd-courses{
+	.wrapper {
+		width: auto !important;
+		padding-left: 30px;
+		h1 {
+			margin-top: 30px;
+		}
+		.ld-lesson-section-heading { 
+			display: none;
+		}
+	}
+}
+.single-sfwd-lessons h1 { display: none; }
+.learndash-wrapper.learndash-wrap {
+	padding: 30px;
+}
+.ld-tabs {
+	padding: 0px 30px;
+}

@@ -22,9 +22,10 @@ li.gform_validation_container, li.gform_hidden {
 
 .gform_wrapper .gform_validation_errors {
 	background: #bf0421 !important;
+	position: absolute !important;
     &> h2, &.gform_validation_errors > ol a {
         color: #fff !important;
-        font-size: 18px;
+        font-size: 18px !important;
     }
 }
 

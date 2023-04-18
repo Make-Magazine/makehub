@@ -14,9 +14,12 @@ $cost = 			get_field( 'cost' );
 $images =			get_field( 'product_image_links' );
 $video_url =		get_field( 'product_video_url' );
 $link = 			get_field( 'purchase_url' );
-$referrer_url = 	$_SERVER['HTTP_REFERER'];
-$referrer_parts = 	parse_url($referrer_url);
-parse_str($referrer_parts['query'], $parameters);
+$referrer_url = 	isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "";
+$parameters = 		array();
+if(!empty($referrer_url)) {
+	$referrer_parts = parse_url($referrer_url);
+	parse_str($referrer_parts['query'], $parameters);
+}
 $gallery[] = 		get_the_post_thumbnail_url();
 foreach($images as $image) {
 	$gallery[] = $image['product_image'];

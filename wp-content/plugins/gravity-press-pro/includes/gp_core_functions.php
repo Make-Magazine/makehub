@@ -76,7 +76,7 @@ class GravityPressAddMembership {
     public function pre_enroll_new_user ( $user_id, $feed, $entry, $user_pass ) {
         ////---------------//
         $message = 'entryFROMCOREFUNCTION=' . print_r($entry,true);
-        file_put_contents('pressklog.txt', PHP_EOL . $message, FILE_APPEND);
+        //file_put_contents('pressklog.txt', PHP_EOL . $message, FILE_APPEND); //debug file
         //---------------//
         $form_id = $entry['form_id'];
         $gp_feed_active = $this->are_GP_feeds_active($form_id);
