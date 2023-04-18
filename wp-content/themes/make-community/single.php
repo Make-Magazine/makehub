@@ -2,7 +2,7 @@
 
 <section class="wrapper">
 
-<main id="content" class="<?php if( !is_active_sidebar('sidebar-single') ) { ?>no-sidebar<?php } ?>">
+<main id="content" class="<?php if( !is_active_sidebar('sidebar-single') && is_buddypress() ) { ?>no-sidebar<?php } ?>">
 
 	<?php
 	while ( have_posts() ) : the_post(); ?>
@@ -90,7 +90,7 @@
 
 </main><!-- content -->
 
-<?php if( is_active_sidebar('sidebar-single') ) { ?>
+<?php if( is_active_sidebar('sidebar-single')  && is_buddypress()) { ?>
 
 <div id="sidebar-spacer"></div>
 
@@ -123,15 +123,15 @@
 
 
 <script type="text/javascript">
-if(document.querySelector(".single-achievement")){
-var el = document.getElementsByTagName('body')[0];
-el.classList.add('achievement-single-page');
-var breadcrumbs = document.querySelectorAll('.breadcrumbs a')[1];
-breadcrumbs.remove();
-var breadcrumbs_container = document.querySelector('.breadcrumbs');
-var result = breadcrumbs_container.innerHTML.replace("/    /    ", "");
-breadcrumbs_container.innerHTML = result;
-}
+	if(document.querySelector(".single-achievement")){
+		var el = document.getElementsByTagName('body')[0];
+		el.classList.add('achievement-single-page');
+		var breadcrumbs = document.querySelectorAll('.breadcrumbs a')[1];
+		breadcrumbs.remove();
+		var breadcrumbs_container = document.querySelector('.breadcrumbs');
+		var result = breadcrumbs_container.innerHTML.replace("/    /    ", "");
+		breadcrumbs_container.innerHTML = result;
+	}
 </script>
 
 <?php get_footer(); ?>
