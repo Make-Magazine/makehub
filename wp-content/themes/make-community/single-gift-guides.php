@@ -46,7 +46,7 @@ get_header();
 	</nav>
     <main id="content" class="no-sidebar">
         <article>
-        			<div class="gg-gallery">
+        <div class="gg-gallery">
 			<div class="gg-gallery-viewer">
 				<img id="gg-gallery-viewer-img" onmousemove="galleryZoomIn(event)" onmouseout="galleryZoomOut()" src="<?php the_post_thumbnail_url(); ?>" />
 				<div id="gg-gallery-overlay"></div>

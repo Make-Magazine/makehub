@@ -15,8 +15,11 @@ figure {
 }
 // should above be universal?
 
-h1.page-title {
+h1.page-title, h1.single-post-title {
 	margin-top: 30px;
+}
+#sidebar {
+	padding-top: 15px;
 }
 
 .wrapper .breadcrumbs { display:none; } //hide breadcrumbs
@@ -42,6 +45,54 @@ h1.page-title {
 		max-width: 100%;
 		.elementor-row > .elementor-column > .elementor-column-wrap {
 			padding: 0px;
+		}
+	}
+}
+
+// Easy Social Share
+.essb_links.essb_fullwidth_20_100_100 {
+	margin: 0px;
+	margin-bottom: 15px;
+	li {
+		width: 20% !important;
+		text-align: center;
+		a {
+			min-height: 45px;
+			width: 100%;
+			.essb_icon {
+				position: relative;
+				top: 5px;
+			}
+		}
+	}
+}
+.essb_links {
+	a:hover {
+		background: linear-gradient(to bottom,rgba(255,255,255,.35) 0,rgba(255,255,255,0) 100%);
+	}
+	.essb_link_twitter {
+		a, a:focus, a:hover {
+			background-color: #00abf0 !important;
+		}
+	}
+	.essb_link_facebook {
+		a, a:focus, a:hover {
+			background-color: #3a579a !important;
+		}
+	}
+	.essb_link_reddit {
+		a, a:focus, a:hover {
+			background-color: #333 !important;
+		}
+	}
+	.essb_link_pinterest {
+		a, a:focus, a:hover {
+			background-color: #cd1c1f !important;
+		}
+	}
+	.essb_link_love {
+		a, a:focus, a:hover {
+			background-color: #ed1c24 !important;
 		}
 	}
 }
