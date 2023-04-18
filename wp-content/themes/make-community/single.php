@@ -2,7 +2,7 @@
 
 <section class="wrapper">
 
-<main id="content" class="<?php if( !is_active_sidebar('sidebar-single') && is_buddypress() ) { ?>no-sidebar<?php } ?>">
+<main id="content" class="<?php if( !is_active_sidebar('sidebar-single') && !is_buddypress() ) { ?>no-sidebar<?php } ?>">
 
 	<?php
 	while ( have_posts() ) : the_post(); ?>
