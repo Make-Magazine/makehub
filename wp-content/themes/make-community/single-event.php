@@ -16,7 +16,7 @@
 	<div class="single-post-details">
 	<span class="single-post-category"><?php the_category(', ') ?></span>
 
-	<span class="single-blog-comments"><?php comments_number('0', '1', '%'); ?></span>
+<!--	<span class="single-blog-comments"><?php comments_number('0', '1', '%'); ?></span>-->
 
 	<?php
 	if ( shortcode_exists( 'wp_ulike' ) ) {
@@ -133,7 +133,7 @@
 		<?php
 			// If comments are open or we have at least one comment, load up the comment template.
 			if ( comments_open() || get_comments_number() ) {
-				comments_template();
+				//comments_template();
 			}
 		?>
 
