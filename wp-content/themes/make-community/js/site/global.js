@@ -45,9 +45,11 @@ jQuery(document).ready(function () {
 		});
 	}
 	// refresh page if buddypress cover image is changed
-	bp.CoverImage.Attachment.on( 'change:url', function( data ) {
-		location.reload();
-	} );
+	if(typeof bp.CoverImage !== 'undefined') {
+		bp.CoverImage.Attachment.on( 'change:url', function( data ) {
+			location.reload();
+		} );
+	}
 });
 
 
