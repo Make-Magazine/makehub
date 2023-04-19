@@ -72,6 +72,20 @@
 		align-items: center;
 	}
 } 
+// styling for memberpress account shortcode
+.bpptc-member-content {
+	.mp_wrapper_nav { display: none; }
+	&> h1:first-of-type {
+		visibility: hidden;
+		max-height: 30px;
+		&:after {
+			content: "Memberships";
+			display: block;
+			visibility: visible;
+			margin-top: -20px;
+		}
+	}
+}
 
 .makeco-profile-fields {
 	.item.bg {
