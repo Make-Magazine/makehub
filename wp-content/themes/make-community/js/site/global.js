@@ -36,15 +36,30 @@ jQuery(document).ready(function () {
 	   jQuery("label[for='mpgft-signup-gift-checkbox1']").remove();
 	}
 	// if the update credit card button occurs on any mp-membership page other than the mp-subscriptions page, the link has to be updated to point to mp-subscriptions
-	if (window.location.href.indexOf('mp-membership') > -1) {
+	if (getLastPath(window.location.href) === "membership") {
 		jQuery(".mepr-account-update").each(function(){
 			var updateLink = jQuery(this).attr("href");
 			var insertPoint = updateLink.lastIndexOf("?");
-			updateLink = updateLink.substring(0,insertPoint) + 'mp-subscriptions/' + updateLink.substring(insertPoint);
+			updateLink = updateLink.substring(0,insertPoint) + 'subscriptions/' + updateLink.substring(insertPoint);
 			jQuery(this).attr("href", updateLink);
 		});
 	}
+	// refresh page if buddypress cover image or avatar is changed
+	bp.CoverImage.Attachment.on( 'change:url', function( data ) {
+		location.reload();
+	} );
+	bp.Avatar.Attachment.on( 'change:url', function( data ) {
+		location.reload();
+	} );
 });
+
+
+function getLastPath(url) {
+    var parts = url.split("/");
+    return (url.lastIndexOf('/') !== url.length - 1 
+       ? parts[parts.length - 1]
+       : parts[parts.length - 2]);
+}
 
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
