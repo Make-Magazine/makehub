@@ -23,6 +23,18 @@ function parent_overrides() {
     unregister_sidebar('sidebar-groups-cached');
 }
 
+function bpfr_hide_tabs() {
+    global $bp;
+    
+        if( bp_is_active ( 'xprofile' ) ) :
+            
+            if ( bp_is_user() ) { // if we're on a profile page
+                bp_core_remove_nav_item( 'courses' );
+            }
+            endif;
+    }
+    add_action( 'bp_setup_nav', 'bpfr_hide_tabs', 150 );
+
 // Social Media Icons based on the profile user info
 function member_social_extend(){
     global $bp;
