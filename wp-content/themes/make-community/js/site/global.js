@@ -44,11 +44,8 @@ jQuery(document).ready(function () {
 			jQuery(this).attr("href", updateLink);
 		});
 	}
-	// refresh page if buddypress cover image or avatar is changed
+	// refresh page if buddypress cover image is changed
 	bp.CoverImage.Attachment.on( 'change:url', function( data ) {
-		location.reload();
-	} );
-	bp.Avatar.Attachment.on( 'change:url', function( data ) {
 		location.reload();
 	} );
 });

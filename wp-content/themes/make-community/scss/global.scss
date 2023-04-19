@@ -33,7 +33,7 @@ h1.page-title, h1.single-post-title {
 	color: #333;
 }
 
-// Full width hacks
+// Full width hacks - sure sounds like a universal thing
 .full-width-div {
 	width: 100vw !important;
 	position: relative;
@@ -49,7 +49,7 @@ h1.page-title, h1.single-post-title {
 	}
 }
 
-// Easy Social Share
+// Easy Social Share - if we maintain the same styling for essb on makezine and mf, couldn't this be universal
 .essb_links.essb_fullwidth_20_100_100 {
 	margin: 0px;
 	margin-bottom: 15px;
@@ -97,39 +97,12 @@ h1.page-title, h1.single-post-title {
 	}
 }
 
-// Podcast widget
-.wp-block-jetpack-podcast-player {
-	.jetpack-podcast-player__current-track-info, .jetpack-podcast-player__track-description {
-		padding: 0px !important;
-	}
-	.jetpack-podcast-player__podcast-title {
-		display: none;
-	}
-	.jetpack-podcast-player__tracks {
-		margin-top: 5px !important;
-		.jetpack-podcast-player__track.is-active {
-			font-family: "Roboto Bold";
-			font-weight: 500;
-			a {
-				color: inherit !important;
-			}
-		}
-		.jetpack-podcast-player__track-link {
-			padding-left: 0px !important;
-			padding-top: 3px;
-		}
-	}
-	
+// Membership rules for hiding content
+.member-level-premium-member, .member-level-school-maker-faire, .member-level-amazing-maker-awards, .member-level-premium-member---digital-only, .member-level-magazine-member, .member-level-multi-seat-membership, .member-level-global-producers {
+	.hide-if-premium { display: none; }
 }
-.mejs-controls {
-	display: inline-flex;
-	padding: 0px !important;
-	button { 
-		border: 0px;
-		padding: 0px;
-		width: 20px;
-		font-size: 0px;
-	 }
+.member-level-premium-member, .member-level-school-maker-faire, .member-level-amazing-maker-awards, .member-level-premium-member---digital-only, .member-level-magazine-member, .member-level-multi-seat-membership, .member-level-global-producers, .member-level-community, .member-level-maker-camp {
+	.hide-if-member{ display: none; }
 }
 
 .truncated { // this is the basic style for read more... should it be universal?
