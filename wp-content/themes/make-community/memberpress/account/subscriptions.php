@@ -234,13 +234,19 @@ if(!empty($subscriptions)) {
       <?php if($next_page): ?>
         <a href="<?php echo "{$account_url}{$delim}currpage={$next_page}"; ?>" style="float:right;"><?php _ex('Next Page', 'ui', 'buddyboss-theme'); ?> &gt;&gt;</a>
       <?php endif; ?>
-    </div>
+  </div>
   <?php
+  if(CAN_UPGRADE == true) { ?>
+	  <a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="universal-btn membership-btn upgrade">Upgrade to Premium Member</a>
+  <?php
+  }
 }
 else {
 	?><div class="mp-no-subs"><?php
     _ex('You have no active subscriptions to display.', 'ui', 'buddyboss-theme');
-  ?></div><?php
+  ?>
+		<br /><br /><a href="/join" class="btn universal-btn">Join Make: Community Now</a>
+	</div><?php
 }
 
 MeprHooks::do_action('mepr_account_subscriptions', $mepr_current_user);

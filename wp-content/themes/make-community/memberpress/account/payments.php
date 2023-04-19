@@ -61,7 +61,8 @@ if(!empty($payments)) {
 else {
   ?><div class="mp_wrapper mp-no-subs"><?php
     _ex('You have no completed payments to display.', 'ui', 'buddyboss-theme');
-  ?></div><?php
+  ?>
+	</div><?php
 }
 
 MeprHooks::do_action('mepr_account_payments', $mepr_current_user);
