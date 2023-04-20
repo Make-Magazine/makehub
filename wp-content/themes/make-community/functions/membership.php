@@ -1,4 +1,6 @@
 <?php
+// This function can be called to give a user a free membership. The membership type is passed in $membership
+// This function is currently unused.
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
 	$user = get_user_by('email', $email);
 	$url = network_home_url() . '/wp-json/mp/v1/transactions';
@@ -24,6 +26,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	postCurl($url, $headers, $datastring);
 }
 
+//TBD - we should add stuff to body class in one place
 // add the users membership levels to the body class so specific pages can be styled differently based on membership
 function add_membership_class_profile($classes) {
 	foreach (CURRENT_MEMBERSHIPS as $membership) {
@@ -33,14 +36,7 @@ function add_membership_class_profile($classes) {
 }
 add_filter('body_class', 'add_membership_class_profile', 12);
 
-// Rename the Info subnav tab for
-function change_profile_submenu_tabs(){
-	global $bp;
-	$bp->bp_options_nav['mp-membership']['mp-info']['name'] = 'Membership Details';
-}
-add_action('bp_setup_nav', 'change_profile_submenu_tabs', 999);
-
-// Take all the membership fields for a new member and add them to the xprofile buddyboss fields
+// Take all the membership fields for a new member and add them to the xprofile buddypress fields
 function mepr_capture_new_member_added($event) {
 	$user = $event->get_data();
 	$userInfo = $user->rec;
@@ -78,7 +74,7 @@ function bp_exclude_users( $qs = '', $object = '' ) {
     $qs = build_query( $args );
     return $qs;
 }
-add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 );
+add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 ); //buddypress
 
 /* 
  * Set Membership Constants
@@ -122,8 +118,7 @@ function checkMembershipLevels(){
           if(stripos($membership->post_title, 'premium') !== false ||
              stripos($membership->post_title, 'multi-seat')  !== false ||
              stripos($membership->post_title, 'global') !== false ||
-             stripos($membership->post_title, 'school') !== false ||
-					 	 stripos($membership->post_title, 'magazine') !== false)  {
+             stripos($membership->post_title, 'school') !== false)  {
             $type = 'premium';
           }
         }
@@ -138,3 +133,15 @@ function checkMembershipLevels(){
   }
   return array('levels'=>$currentMemberships,'type'=>$type);
 }
+
+function make_add_disclaimer($productID){
+	// 10732 = premium membership
+	// 10735 = multi seat membership
+	if($productID==10732 || $productID==10735){
+		echo '<span class="disclaimer"><i><b>Make:</b> Continuous Service Details: For your convenience, you will receive uninterrupted service as your subscription will be automatically renewed at the end of each term at the rates then in effect. You will receive a reminder notice before your credit card is charged or your bill is mailed. You may cancel at any time and receive a refund on all unmailed issues. <b>Make:</b> is published quarterly.</i></span>';	
+	}
+	
+	return;
+
+}
+add_action('mepr-above-checkout-form', 'make_add_disclaimer', 10, 1);
