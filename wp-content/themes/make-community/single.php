@@ -7,12 +7,7 @@
 	<?php
 	while ( have_posts() ) : the_post(); ?>
 
-	<div class="breadcrumbs">
-	<?php esc_attr_e('You are here:', 'onecommunity'); ?> <a href="<?php echo home_url(); ?>"><?php esc_attr_e('Home', 'onecommunity'); ?></a>  /  <a href="<?php echo home_url(); ?>/<?php echo get_theme_mod( "onecommunity_blog_slug", "news" ); ?>"><?php echo get_theme_mod( "onecommunity_blog_breadcrumb_title", "News" ); ?>  /  <?php the_category(', ') ?>  /  <span class="current"><?php the_title(); ?></span>
-	</div>
-
 	<h1 class="single-post-title"><?php the_title(); ?></h1>
-
 
 	<?php
 	if ( shortcode_exists( 'wp_ulike' ) ) {
@@ -89,7 +84,7 @@
 
 </main><!-- content -->
 
-<?php if( is_active_sidebar('sidebar-single')  && is_buddypress()) { ?>
+<?php if( is_active_sidebar('sidebar-single') && is_buddypress()) { ?>
 
 <div id="sidebar-spacer"></div>
 
