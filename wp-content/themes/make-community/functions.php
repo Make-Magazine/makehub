@@ -112,7 +112,11 @@ function add_slug_body_class($classes) {
                 $classes[] = 'my-group';
             }
         }
+        // add the users membership levels to the body class so specific pages can be styled differently based on membership
+        foreach (CURRENT_MEMBERSHIPS as $membership) {
+            $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
+        }
         return $classes;
     }
 }
-add_filter('body_class', 'add_slug_body_class');
+add_filter('body_class', 'add_slug_body_class', 12);
