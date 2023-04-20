@@ -289,7 +289,7 @@ jQuery(document).ready(function () {
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
-                        '<a href="https://make.co/members/me/mp-membership/">' +
+                        '<a href="https://make.co/members/me/membership/">' +
                             '<span>My Membership</span>' +
                         '</a>' +
                     '</li>' +

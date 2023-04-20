@@ -1,5 +1,5 @@
 // Theme and buddypress overrides
-.directory.groups .wrapper {
+.directory .wrapper {
 	padding-top: 45px;
 }
 #groups-dir-list {
@@ -25,6 +25,12 @@
 	height: 40px;
 }
 
+// Activity Page
+#activity-filter-by {
+	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated]{
+		display: none;
+	}
+}
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
@@ -72,6 +78,21 @@
 		align-items: center;
 	}
 } 
+// styling for memberpress account shortcode
+.bpptc-member-content {
+	.mp_wrapper_nav { display: none; }
+	&> h1:first-of-type {
+		visibility: hidden;
+		max-height: 30px;
+		&:after {
+			content: "Memberships";
+			display: block;
+			visibility: visible;
+			margin-top: -20px;
+		}
+	}
+}
+#my-account-personal-li { display: none; }
 
 .makeco-profile-fields {
 	.item.bg {

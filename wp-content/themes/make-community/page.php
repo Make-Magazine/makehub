@@ -25,7 +25,9 @@ get_header();
 						<div class="thumbnail">
 							<?php
 							the_post_thumbnail('post-thumbnail-2');
-							dd_the_post_thumbnail_caption();
+							dd_the_post_thumbnail_caption(); ?>
+						</div>
+					<?php
 					} else {
 						// no thumbnail
 					}

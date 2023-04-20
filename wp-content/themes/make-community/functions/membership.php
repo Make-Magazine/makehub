@@ -36,7 +36,7 @@ function add_membership_class_profile($classes) {
 }
 add_filter('body_class', 'add_membership_class_profile', 12);
 
-// Take all the membership fields for a new member and add them to the xprofile buddypress fields
+// Take all the membership fields for a new member and add them to the xprofile buddyboss fields
 function mepr_capture_new_member_added($event) {
 	$user = $event->get_data();
 	$userInfo = $user->rec;
@@ -75,6 +75,26 @@ function bp_exclude_users( $qs = '', $object = '' ) {
     return $qs;
 }
 add_action( 'bp_ajax_querystring', 'bp_exclude_users', 20, 2 ); //buddypress
+
+/**
+* Filtering only users with an active membership
+* @param $sql array
+* @param $query BP_User_Query
+* @return array
+*/
+function filtering_memberpress( $sql, $query ) {
+    // MemberPress is Active
+    if( class_exists( 'MeprDb' ) ) {
+        // Get the MemberPress members database object
+        $mepr_db = new MeprDb();
+        // Add a JOIN to the select
+        $sql['select'] .= ' LEFT JOIN ' . $mepr_db->members . ' as members on members.user_id = u.' . $query->uid_name . ' ';
+        // Add a WHERE clause
+        $sql['where'][] = " members.memberships != ''";
+    }
+    return $sql;
+}
+add_filter( 'bp_user_query_uid_clauses', 'filtering_memberpress', 10, 2 );
 
 /* 
  * Set Membership Constants

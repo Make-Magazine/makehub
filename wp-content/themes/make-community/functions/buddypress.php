@@ -23,6 +23,7 @@ function parent_overrides() {
     unregister_sidebar('sidebar-groups-cached');
 }
 
+
 // Social Media Icons based on the profile user info
 function member_social_extend(){
     global $bp;

@@ -50,6 +50,7 @@ class GravityPressAddMembership {
         }
 
         //Ensure Gravity Press feeds are active and user logged in
+        //if ( $gp_feed_active == 1 &&  $user_logged_in == 1 && !$has_registration_feed_type_create) {
         if ( $gp_feed_active == 1 &&  $user_logged_in == 1) {
 
             //Ensure payment is either not collected or Paid but not in processing status

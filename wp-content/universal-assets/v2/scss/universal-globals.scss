@@ -135,6 +135,8 @@ body {
 }
 .row { clear: both; }
 
+.logged-in .hide-if-logged-in { display: none; }
+
 hr {
     height: 1px;
     margin: 10px 0;

@@ -21,7 +21,8 @@
 	<?php
 	if ( shortcode_exists( 'wp_ulike' ) ) {
 		echo do_shortcode('[wp_ulike]');
-	} ?>
+	} 
+	?>
 
 	<span class="single-blog-time"><?php echo do_shortcode( '[event post_id="<?php $EM_Event->post_id; ?>"]#_EVENTDATES[/event]' ); ?></span>
 
@@ -29,62 +30,14 @@
 
 	</div>
 
+	<?php
+		if (class_exists('ESSB_Plugin_Options')) {
+			$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			echo do_shortcode('[easy-social-share buttons="facebook,twitter,reddit,pinterest,love" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="4" postid="' . get_the_ID() . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
+		}
+	?>
+
 	<div class="clear"></div>
-
-	<aside id="left">
-
-		<div class="author-bio">
-		<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>" rel="author">
-		<?php
-		echo get_avatar( get_the_author_meta( 'user_email' ), 100 );
-		?>
-		</a>
-
-		<h6 class="author-bio-name"><?php echo get_the_author(); ?>
-
-		<?php $last_name = get_the_author_meta('last_name');
-		if($last_name != '') { echo '<br>' . $last_name; } ?>
-
-		</h6>
-
-		<div class="author-bio-content">
-    	<?php echo get_the_author_meta('description') ?>
-    	</div>
-
-		</div>
-
-
-		<div class="single-blog-post-tags">			
-		<?php
-		/* @var $EM_Event EM_Event */
-		$tags = get_the_terms($EM_Event->post_id, EM_TAXONOMY_TAG);
-		if( is_array($tags) && count($tags) > 0 ){
-			echo '<h6>'. esc_attr_e('Tags:', 'onecommunity').'</h6>';
-			$tags_list = array();
-			foreach($tags as $tag){
-				$link = get_term_link($tag->slug, EM_TAXONOMY_TAG);
-				if ( is_wp_error($link) ) $link = '';
-					$tags_list[] = '<a href="'. $link .'">'. $tag->name .'</a>';
-			}
-			echo implode('', $tags_list);
-		} ?>
-
-		</div>
-
-	<div class="aside-share">
-
-		<h6><?php esc_attr_e('Share:', 'onecommunity'); ?></h6>
-
-   			<a href="https://twitter.com/share?text=<?php the_title(); ?>&url=<?php the_permalink(); ?>" rel="nofollow" class="twitter" target="_blank"><img class="social" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/img/icon-twitter.svg" alt="Twitter"></a>
-
-			<a href="https://www.facebook.com/sharer.php?u=<?php global $wp; echo home_url( $wp->request ); ?>&amp;t=<?php wp_title( '|', true, 'right' ); bloginfo( 'name' ); ?>" class="facebook" target="_blank"><img class="social" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/img/icon-facebook.svg" alt="Facebook"></a>
-
-   			<a href="https://www.reddit.com/submit?url=<?php the_permalink() ?>&title=<?php the_title(); ?>" rel="nofollow" class="reddit" target="_blank"><img class="social" src="<?php echo esc_attr( get_bloginfo( 'stylesheet_directory', 'display' ) ); ?>/img/icon-reddit.svg" alt="Reddit"></a>
-   			
-
-	</div>
-
-	</aside>
 
 	<article>
 
@@ -127,15 +80,54 @@
 		?>
 
     <div class="clear"></div>
+	
+	<footer>
+		<div class="author-bio">
+			<a href="<?php echo esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ); ?>" rel="author">
+			<?php
+			echo get_avatar( get_the_author_meta( 'user_email' ), 100 );
+			?>
+			</a>
 
-		</article>
+			<h6 class="author-bio-name"><?php echo get_the_author(); ?>
 
+			<?php $last_name = get_the_author_meta('last_name');
+			if($last_name != '') { echo '<br>' . $last_name; } ?>
+
+			</h6>
+
+			<div class="author-bio-content">
+			<?php echo get_the_author_meta('description') ?>
+			</div>
+		</div>
+
+		<div class="single-blog-post-tags">			
 		<?php
-			// If comments are open or we have at least one comment, load up the comment template.
-			if ( comments_open() || get_comments_number() ) {
-				//comments_template();
+		/* @var $EM_Event EM_Event */
+		$tags = get_the_terms($EM_Event->post_id, EM_TAXONOMY_TAG);
+		if( is_array($tags) && count($tags) > 0 ){
+			echo '<h6>'. esc_attr_e('Tags:', 'onecommunity').'</h6>';
+			$tags_list = array();
+			foreach($tags as $tag){
+				$link = get_term_link($tag->slug, EM_TAXONOMY_TAG);
+				if ( is_wp_error($link) ) $link = '';
+					$tags_list[] = '<a href="'. $link .'">'. $tag->name .'</a>';
 			}
-		?>
+			echo implode('', $tags_list);
+		} ?>
+
+		</div>
+
+	</footer>
+
+	</article>
+
+	<?php
+		// If comments are open or we have at least one comment, load up the comment template.
+		if ( comments_open() || get_comments_number() ) {
+			//comments_template();
+		}
+	?>
 
 </main><!-- content -->
 
