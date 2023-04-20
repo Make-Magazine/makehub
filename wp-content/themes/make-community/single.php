@@ -21,7 +21,6 @@
 
 	<div class="clear"></div>
 
-	</div>
 
 
 	<?php
