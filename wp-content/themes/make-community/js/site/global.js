@@ -17,8 +17,10 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
+	// remove mp avatar dropdown from mp registration pages
 	if(jQuery(".single-memberpressproduct").length){
 		jQuery(".profile-menu__arrow_down").remove();
+		jQuery(".profile-menu__dropdown").remove();
 		jQuery("#user-menu-button").on("click", function(event){
 			event.preventDefault();
 			window.location.href = window.location.protocol + "//" + window.location.host + "/dashboard/";

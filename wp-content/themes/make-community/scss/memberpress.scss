@@ -31,10 +31,14 @@ body.single-memberpressproduct {
 	.mepr-signup-form #mepr-activecampaign-privacy, .pswp {
 			display: none !important;
 	}
-	.login-msg { 
-		font-size: 22px;
+	.mepr-before-signup-form { 
 		text-align: center;
+		font-size: 22px;
+		padding-bottom: 15px;
 	}	
+	input[type="submit"].mepr-submit {
+		background: $color-blue;
+	}
 	.mp-form-submit {
 		text-align: center;
 		.mepr-loading-gif {
