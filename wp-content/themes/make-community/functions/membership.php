@@ -26,16 +26,6 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	postCurl($url, $headers, $datastring);
 }
 
-//TBD - we should add stuff to body class in one place
-// add the users membership levels to the body class so specific pages can be styled differently based on membership
-function add_membership_class_profile($classes) {
-	foreach (CURRENT_MEMBERSHIPS as $membership) {
-	    $classes[] = "member-level-" . str_replace(' ', '-',strtolower($membership));
-	}
-    return $classes;
-}
-add_filter('body_class', 'add_membership_class_profile', 12);
-
 // Take all the membership fields for a new member and add them to the xprofile buddyboss fields
 function mepr_capture_new_member_added($event) {
 	$user = $event->get_data();
@@ -154,14 +144,31 @@ function checkMembershipLevels(){
   return array('levels'=>$currentMemberships,'type'=>$type);
 }
 
-function make_add_disclaimer($productID){
-	// 10732 = premium membership
-	// 10735 = multi seat membership
-	if($productID==10732 || $productID==10735){
-		echo '<span class="disclaimer"><i><b>Make:</b> Continuous Service Details: For your convenience, you will receive uninterrupted service as your subscription will be automatically renewed at the end of each term at the rates then in effect. You will receive a reminder notice before your credit card is charged or your bill is mailed. You may cancel at any time and receive a refund on all unmailed issues. <b>Make:</b> is published quarterly.</i></span>';	
-	}
-	
+function make_add_disclaimer($productID){	
+	echo '<p class="login-msg">If you are already a member, please <a href="https://make.co/wp-login.php?redirect_to=https://make.co/register/contest">login</a> before continuing.</p>
+	<p class="check-fields-msg">Please take a moment to verify the information below is correct and up to date. Thank you!</p>';		
 	return;
 
 }
 add_action('mepr-above-checkout-form', 'make_add_disclaimer', 10, 1);
+
+function make_enqueue_scripts($is_product_page, $is_group_page, $is_account_page) {
+	//The register pages do not pull in our header/footer. Because of that we need to add site styles to the checkout form
+  if($is_product_page){  	  	
+	  $my_theme = wp_get_theme();
+	  $my_version = $my_theme->get('Version');
+	  ?>
+	  <link rel='stylesheet' id='make-co-style-css' href='<?php echo get_stylesheet_directory_uri();?>/css/style.min.css?ver=<?php echo $my_version;?>' type='text/css' media='all' />
+	
+		<!-- Is this still needed??
+		<script>
+			jQuery(document).ready(function(){
+				if(jQuery("#profile-view .avatar").attr('src') != 'https://make.co/wp-content/universal-assets/v1/images/default-makey.png' ) {
+					jQuery(".login-msg").remove();
+				}
+			});
+		</script>-->
+	<?php
+  }
+}
+add_action('mepr_enqueue_scripts', 'make_enqueue_scripts', 10, 3);

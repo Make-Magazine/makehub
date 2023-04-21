@@ -1,0 +1,44 @@
+//Styles for Premium membership(10732) and multi-seat membership(10735)
+body.postid-10732, body.postid-10735 {
+	.mepr_custom_field.mepr_mepr-address-one::before {
+		content: "Address fields are required to receive your print Make: Magazine subscription (limited to US residents only)";
+		padding: 10px 0px;
+		display: block;
+		font-style: italic;
+	}
+	form::after{
+		content: "Make: Continuous Service Details: For your convenience, you will receive uninterrupted service as your subscription will be automatically renewed at the end of each term at the rates then in effect. You will receive a reminder notice before your credit card is charged or your bill is mailed. You may cancel at any time and receive a refund on all unmailed issues. Make: is published quarterly.";
+	}
+}
+
+// Styles for Contest membership(11592)
+body.postid-11592 {
+	.mepr-signup-form {
+		.mp-address-group, #mpgft-signup-gift-checkbox1 {
+			display: none;
+		}
+	}
+}
+
+//Generic styles for register page
+body.single-memberpressproduct {	
+	//hide active campaign privacy link
+	.mepr-signup-form {
+		#mepr-activecampaign-privacy {
+			display: none !important;
+		}
+	}
+	.login-msg { font-size: 22px !important;}	
+}
+
+body.logged-in {
+	.login-msg { 
+		display: none; 
+	}	
+}
+
+body:not(.logged-in){
+	.check-fields-msg {
+		display: none;
+	}
+}
