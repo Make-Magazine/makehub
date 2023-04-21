@@ -66,7 +66,7 @@ function spaces_map_loop() {
          </div>
 			<div class="makerspace-bottom-nav">
 				<h4>Join Make: Community</h4>
-				<a class="btn universal-btn" href="https://community.make.co">Learn More</a>
+				<a class="btn universal-btn" href="https://make.co">Learn More</a>
 			</div>
    </div>
 </div>

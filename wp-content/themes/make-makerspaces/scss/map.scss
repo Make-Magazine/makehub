@@ -56,7 +56,7 @@
    }
    .map-filters-wrp {
       background-color: #005E9A;
-      padding: 12px 15px;
+      padding: 12px 0px;
       z-index: 100;
       width: 100%;
       text-align: center;
@@ -126,59 +126,28 @@
 .container-fluid.light-blue {
     background: #e2f2fd;
     text-align: center;
-    padding: 20px 0px 30px;
+    .wrapper {
+        display: flex;
+        padding: 10px 0;
+        justify-content: space-between;
+        flex-wrap: flex;
+        @media all and (max-width: 767px) {
+            flex-direction: column;
+        }
+    }
     .makerspace-bottom-nav {
         padding: 0 10px;
         height: 100%;
-        &::after {
-            content: "";
-            background-image: url('/wp-content/themes/make-makerspaces/images/grey-pixel.gif');
-            width: 1px;
-            height: 100px;
-            display: inline-block;
-            position: absolute;
-            top: 25px;
-            right: 0px;
-        }
+        width: 33.3333%;
         h4 {
-            height: 40px;
+            height: 50px;
             font-weight: 300;
             margin-bottom: 30px;
             padding: 0 15px;
         }
 		.btn { margin-bottom: 10px; }
-        @media all and (max-width: 991px) {
-            padding: 0 20px;
-            margin-bottom: 32px;
-        }
         @media all and (max-width: 767px) {
-            padding: 0px;
-            h4 {
-                height: auto;
-                margin-bottom: 12px;
-            }
-        }
-        &:first-of-type {
-            @media all and (min-width: 991px) {
-                padding-left: 0px;
-            }
-        }
-        &:last-of-type {
-            @media all and (min-width: 988px) {
-                padding-right: 0px;
-            }
-            &::after {
-                background-image: none;
-            }
-        }
-    }
-}
-.makerspace-news {
-    margin-top: 50px;
-    h2 {
-        img.logo {
-            margin-bottom: 10px;
-            width: 100px;
+            width: 100%;
         }
     }
 }
@@ -186,7 +155,8 @@
 .table {
     width:100%;
     max-width:100%;
-    margin-bottom:20px
+    margin-bottom:20px;
+    border-collapse: collapse;
 }
 .table>tbody>tr>td,
 .table>tbody>tr>th,
