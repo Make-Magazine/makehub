@@ -43,6 +43,9 @@ jQuery(document).ready(function () {
 			updateLink = updateLink.substring(0,insertPoint) + 'subscriptions/' + updateLink.substring(insertPoint);
 			jQuery(this).attr("href", updateLink);
 		});
+		var oldUrl = jQuery(".mepr-account-row-action").attr("href");
+        var newUrl = oldUrl.replace("mp-membership", "membership"); 
+		jQuery(".mepr-account-row-action").attr("href", newUrl);
 	}
 	// refresh page if buddypress cover image is changed
 	if(typeof bp.CoverImage !== 'undefined') {
