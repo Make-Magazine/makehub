@@ -2,6 +2,8 @@
 .directory .wrapper {
 	padding-top: 45px;
 }
+
+// Groups
 #groups-dir-list {
 	.item-block {
 		min-height: 100px;
@@ -23,6 +25,17 @@
 } 
 .shortcode-bp-groups-tabs-container h6.group-box-title {
 	height: 40px;
+}
+.single-item.groups {
+	.group-description a { text-decoration: underline !important; }
+	.events-groups-li { display: none; }
+	.subnav-filters .invite-button {
+		padding: 8px 10px;
+		background: $color-blue;
+		color: #fff;
+		border: 0px;
+		border-radius: 2px;
+	}
 }
 
 // Activity Page

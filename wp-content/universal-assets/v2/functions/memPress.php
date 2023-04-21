@@ -18,6 +18,7 @@ function checkMakeCoMems($user) {
     return;
   }
   
+  $membershipType = "";
   //This needs to stay here instead of being moved to a function for max efficiency
   if(class_exists('MeprUtils')) {       
     $member = new MeprUser(); // initiate the class
