@@ -41,6 +41,13 @@
 	}
 }
 
+// Members Directory
+.directory.members {
+	#members-group_leader, #members-student {
+		display: none;
+	}
+}
+
 // Activity Page
 #activity-filter-by {
 	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated]{

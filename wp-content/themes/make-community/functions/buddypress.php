@@ -23,6 +23,16 @@ function parent_overrides() {
     unregister_sidebar('sidebar-groups-cached');
 }
 
+/**
+ * Remove courses and course settings from group creation.
+ */
+add_filter( 'get_header', function ( ) {
+	$bp = buddypress();
+	unset( $bp->groups->group_creation_steps['courses'] );
+	unset( $bp->groups->group_creation_steps['group-course-settings'] );
+	return $steps;
+}, 9999 );
+
 
 // Social Media Icons based on the profile user info
 function member_social_extend(){
