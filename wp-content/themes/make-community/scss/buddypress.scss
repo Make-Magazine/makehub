@@ -28,7 +28,7 @@
 }
 .single-item.groups {
 	.group-description a { text-decoration: underline !important; }
-	.events-groups-li { display: none; }
+	#events-groups-li { display: none !important; }
 	.subnav-filters .invite-button {
 		padding: 8px 10px;
 		background: $color-blue;
