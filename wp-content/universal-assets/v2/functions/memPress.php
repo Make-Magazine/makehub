@@ -27,7 +27,6 @@ function checkMakeCoMems($user) {
     if($memLevel==''){
       $membershipType = 'none';
     }elseif(stripos($memLevel, 'premium') !== false ||
-        stripos($memLevel, 'multi-seat') !== false || 
         stripos($memLevel, 'school maker faire') !== false ||
         stripos($memLevel, 'multi-seat') !== false) {
         //Premium Membership

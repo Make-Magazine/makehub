@@ -1,5 +1,5 @@
-//Styles for Premium membership(10732) and multi-seat membership(10735)
-body.postid-10732, body.postid-10735 {
+//Styles for Premium memberships
+body.premium-membership {
 	.mepr_custom_field.mepr_mepr-address-one::before {
 		content: "Address fields are required to receive your print Make: Magazine subscription (limited to US residents only)";
 		padding: 10px 0px;
@@ -11,8 +11,9 @@ body.postid-10732, body.postid-10735 {
 	}
 }
 
-// Styles for Contest membership(11592)
-body.postid-11592 {
+
+// Styles for free memberships
+body.free-membership {
 	.mepr-signup-form {
 		.mp-address-group, #mpgft-signup-gift-checkbox1 {
 			display: none;
@@ -21,12 +22,14 @@ body.postid-11592 {
 }
 
 //Generic styles for register page
-body.single-memberpressproduct {	
-	//hide active campaign privacy link
-	.mepr-signup-form {
-		#mepr-activecampaign-privacy {
+body.single-memberpressproduct {
+	#masthead {
+		border-bottom: #f1f1f1 solid 1px;
+    	margin-bottom: 40px;
+	}
+	//hide active campaign privacy link and photoswipe
+	.mepr-signup-form #mepr-activecampaign-privacy, .pswp {
 			display: none !important;
-		}
 	}
 	.login-msg { font-size: 22px !important;}	
 }
