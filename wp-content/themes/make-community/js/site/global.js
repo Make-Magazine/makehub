@@ -17,6 +17,13 @@ jQuery(document).ready(function () {
 			}
 		}
 	});
+	if(jQuery(".single-memberpressproduct").length){
+		jQuery(".profile-menu__arrow_down").remove();
+		jQuery("#user-menu-button").on("click", function(event){
+			event.preventDefault();
+			window.location.href = window.location.protocol + "//" + window.location.host + "/dashboard/";
+		});
+	}
 	if(window.location.pathname == '/register/premium-subscriber/') {
 		if(GetURLParameter('upgrade')) {
 			jQuery('.have-coupon-link').css('display', 'none');
