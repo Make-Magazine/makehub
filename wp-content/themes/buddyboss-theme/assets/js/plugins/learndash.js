@@ -1003,6 +1003,13 @@
 				}
 			);
 
+			$(window).on('scroll', function () {
+				if ( $( '#learndash-payment-button-dropdown' ).length ) {
+					$( '#learndash-payment-button-dropdown' ).fadeOut( 'fast' );
+					$( '.learndash_checkout_buttons .learndash_checkout_button' ).removeClass( 'jq-dropdown-open' ).blur();
+				}
+			});
+
 			/* Learndash single lesson/topic/quiz pages - header always sticky */
 			/*$(window).on('scroll', function () {
 				if( !$('body').hasClass( 'sticky-header' ) ) {

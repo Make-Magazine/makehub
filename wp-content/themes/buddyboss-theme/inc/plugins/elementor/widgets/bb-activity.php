@@ -750,7 +750,7 @@ class BBP_Activity extends Widget_Base {
 				<div class="bb-no-data bb-no-data--activity">
 					<img class="bb-no-data__image" src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/dfy-no-data-icon01.svg" alt="Activity" />
 					<?php bp_nouveau_user_feedback( 'activity-loop-none' ); ?>
-					<a href="<?php echo esc_url( bp_get_activity_root_slug() ); ?>" class="bb-no-data__link"><?php _e( 'Post an Update', 'buddyboss-theme' ); ?></a>
+					<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>" class="bb-no-data__link"><?php _e( 'Post an Update', 'buddyboss-theme' ); ?></a>
 				</div>
 
 			<?php endif; ?>

@@ -223,6 +223,17 @@
             }
             checkIfImgNodeAvailableFl();
 
+            function saveDefaultThemeOption(){
+                // Assign default color if any color field is set to empty
+                $( 'form.redux-form-wrapper' ).find( 'input.color-picker[type=text][name*="buddyboss_theme_options"]' ).on( 'change', function () {
+                    if( $( this ).val() === '' && $( this ).data( 'default-color' ) !== undefined ) {
+                        $( this ).val( $( this ).data( 'default-color' ) );
+                    }
+                });
+            }
+
+            saveDefaultThemeOption();
+
         }
     };
 

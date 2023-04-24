@@ -119,7 +119,8 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 <div class="bb-mobile-panel-wrapper left light closed">
 	<div class="bb-mobile-panel-inner">
 		<div class="bb-mobile-panel-header">
-			<?php if ( is_user_logged_in() ) {
+			<?php
+			if ( is_user_logged_in() ) {
 				$current_user = wp_get_current_user();
 				$user_link    = function_exists( 'bp_core_get_user_domain' ) ? bp_core_get_user_domain( $current_user->ID ) : get_author_posts_url( $current_user->ID );
 				$display_name = function_exists( 'bp_core_get_user_displayname' ) ? bp_core_get_user_displayname( $current_user->ID ) : $current_user->display_name;
@@ -153,6 +154,12 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 		<nav class="main-navigation" data-menu-space="120">
 			<?php
 
+			/**
+			 * If "Mobile Menu" is set then show mobile menu else when only “Header Menu” is selected then show the same header menu in the responsive view.
+			 * When only “BuddyPanel Menu” is selected then show the same buddypanel menu in the responsive view.
+			 * But when “Header Menu” and “BuddyPanel Menu” are both selected then show fall back to “Header Menu“ here instead of showing both menus.
+			 */
+
 			if ( is_user_logged_in() ) {
 
 				if ( has_nav_menu( 'mobile-menu-logged-in' ) ) {
@@ -167,7 +174,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 						)
 					);
 
-				} else {
+				} elseif ( has_nav_menu( 'header-menu' ) ) {
 
 					wp_nav_menu(
 						array(
@@ -178,10 +185,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 							'menu_class'     => 'bb-primary-menu mobile-menu buddypanel-menu side-panel-menu',
 						)
 					);
-
-					if ( has_nav_menu( 'buddypanel-loggedin') &&  has_nav_menu( 'header-menu' ) ) {
-						echo '<hr />';
-					}
+				} elseif ( has_nav_menu( 'buddypanel-loggedin' ) ) {
 
 					wp_nav_menu(
 						array(
@@ -195,7 +199,6 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 					);
 
 				}
-
 			} else {
 
 				if ( has_nav_menu( 'mobile-menu-logged-out' ) ) {
@@ -211,7 +214,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 						)
 					);
 
-				} else {
+				} elseif ( has_nav_menu( 'header-menu-logout' ) ) {
 
 					wp_nav_menu(
 						array(
@@ -222,10 +225,7 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 							'menu_class'     => 'bb-primary-menu mobile-menu buddypanel-menu side-panel-menu',
 						)
 					);
-
-					if ( has_nav_menu( 'buddypanel-loggedout') &&  has_nav_menu( 'header-menu-logout' ) ) {
-						echo '<hr />';
-					}
+				} elseif ( has_nav_menu( 'buddypanel-loggedout' ) ) {
 
 					wp_nav_menu(
 						array(
@@ -239,7 +239,6 @@ $logo_class         = ( $logo_align <= 1 && ( ! buddyboss_is_learndash_inner() &
 					);
 
 				}
-
 			}
 			?>
 		</nav>

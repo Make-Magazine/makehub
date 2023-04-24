@@ -719,6 +719,7 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 				];
 			}
 
+			$args = apply_filters( THEME_HOOK_PREFIX . 'llms_ajax_get_courses_args', $args );
 			$pagination_url = '';
 			if ( isset( $_GET['request_url'] ) && ! empty( $_GET['request_url'] ) ) {
 				// Decode the requested URL.
@@ -846,6 +847,8 @@ if ( ! class_exists( '\BuddyBossTheme\LifterLMSHelper' ) ) {
 			$view            = get_option( 'bb_theme_lifter_membership_grid_list', 'grid' );
 			$class_grid_show = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';
 			$class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
+
+			$args = apply_filters( THEME_HOOK_PREFIX . 'llms_ajax_get_memberships', $args );
 
 			$c_q = new WP_Query( $args );
 

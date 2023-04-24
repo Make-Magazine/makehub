@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $post;
 
-if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'learndash-course-grid/learndash_course_grid.php' ) && isset( $shortcode_atts['course_grid'] ) && '' !== $shortcode_atts['course_grid'] ) {
+if ( defined( 'LEARNDASH_COURSE_GRID_FILE' ) && isset( $shortcode_atts['course_grid'] ) && '' !== $shortcode_atts['course_grid'] ) {
 
 	include get_template_directory(). '/learndash/ld30/shortcodes/course_list_grid_template.php';
 

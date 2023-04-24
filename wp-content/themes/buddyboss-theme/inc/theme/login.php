@@ -190,7 +190,7 @@ function buddyboss_login_scripts() {
 			jQuery( '#resetpassform #bs-pass2' ).attr( 'placeholder', jQuery( '<div/>' ).html( resetpassform_pass2 ).text() );
 
             jQuery( '.login.bb-login p.message.reset-pass' ).text( "<?php esc_html_e( 'Reset Password', 'buddyboss-theme' ); ?>" );
-            jQuery( '.login.login-action-lostpassword.bb-login #login > p.message' ).html( '<?php _e( '<div>Forgot your password?</div><p class="message">Please enter your email address. You will receive an email with instructions on how to reset your password.</p>', 'buddyboss-theme' ); ?>' );
+            jQuery( '.login.login-action-lostpassword.bb-login #login > p.message' ).html( '<?php echo sprintf( '<div>%1$s</div><p class="message">%2$s</p>', esc_html__( 'Forgot your password?', 'buddyboss-theme' ), esc_html__( 'Please enter your email address. You will receive an email with instructions on how to reset your password.', 'buddyboss-theme' ) ); ?>' );
 
             jQuery( '.login.login-action-lostpassword.bb-login #lostpasswordform input#wp-submit' ).attr( 'value', '<?php esc_html_e( 'Request reset link', 'buddyboss-theme' ); ?>' );
             jQuery( '.login.login-action-rp.bb-login #resetpassform input#wp-submit' ).attr( 'value', '<?php esc_html_e( 'Save', 'buddyboss-theme' ); ?>' );
@@ -198,7 +198,7 @@ function buddyboss_login_scripts() {
                 jQuery( '.login.login-action-resetpass.bb-login p#backtoblog' ).prepend( "<span class='bs-pass-update-msg'><?php esc_html_e( 'Password has been updated', 'buddyboss-theme' ); ?></span>" );
             }
 
-            var $signIn = jQuery( '.login.login-action-lostpassword.bb-login #login > p#nav > a' ).first().addClass('bs-sign-in').text('<?php esc_html_e( 'Back to sign in', 'buddyboss-theme' ); ?>');
+            var $signIn = jQuery( '.login.login-action-lostpassword.bb-login #login > p#nav > a' ).first().addClass( 'bs-sign-in' ).text( `<?php _e( 'Back to sign in', 'buddyboss-theme' ); ?>` );
             jQuery( 'form#lostpasswordform' ).append( $signIn );
 
 			jQuery( '.login #loginform label#pass_label' ).append( "<span class='label-switch'></span>" );

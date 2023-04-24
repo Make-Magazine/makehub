@@ -35,6 +35,7 @@
 			this.unReadNotifications()
 			this.ajaxComplete();
 			this.bpNavDropDown();
+			this.scrollToAnchor();
 		},
 
 		ajaxComplete: function () {
@@ -1231,7 +1232,7 @@
 
 			var currentMenu = $( '.bb-mobile-panel-inner .menu-item-has-children.current-menu-ancestor, .bb-mobile-panel-inner .menu-item-has-children.current_page_item, .bb-mobile-panel-inner .menu-item-has-children.current-menu-item, .bb-mobile-panel-inner .menu-item-has-children.current-menu-parent' );
 			currentMenu.children( 'ul.sub-menu' ).addClass( 'bb-open' );
-			currentMenu.find( '.bs-submenu-toggle' ).addClass( 'bs-submenu-open' );
+			currentMenu.children( 'ul.sub-menu' ).prev().children( '.bs-submenu-toggle' ).addClass( 'bs-submenu-open' );
 		},
 
 		fileUpload: function () {
@@ -2027,6 +2028,34 @@
 			} );
 		},
 
+		scrollToAnchor: function () {
+			if ( $( 'body' ).hasClass( 'sticky-header' ) && $( 'body' ).hasClass( 'single-post' ) ) {
+				var headerHeight = $( '#masthead' ).height();
+				var headerHeightExt = headerHeight + 55;
+				$( document ).on( 'click', '.widget_recent_comments .recentcomments > a, .widget_recent_comments .wp-block-latest-comments__comment-link, .widget.new_blog_comment.bp-latest-activities .activity-time-since', function ( e ) {	
+					var anchor = $( this ).attr( 'href' );
+					var anachorName = anchor.substr( anchor.indexOf( '#' ) + 1);
+					var anachorElem = $( '#' + anachorName );
+					if (anachorElem.length) {
+						e.preventDefault();
+						$( 'html,body' ).animate( { scrollTop: anachorElem.offset().top + (-headerHeightExt) }, 'slow' );
+						window.history.pushState({}, '', '#' + anachorName);
+					}
+				} );
+
+				if ( window.location.href.indexOf("#comment-") > -1 ) {
+					var url = window.location.href;
+					var commentNum = url.substr( url.indexOf( '#' ) + 1);
+					var commentElem = $( '#' + commentNum );
+					setTimeout( function(){
+						if (commentElem.length) {
+							$( 'html,body' ).animate( { scrollTop: commentElem.offset().top + (-headerHeightExt) }, 100 );
+						}
+					}, 100);
+				}
+			}
+		},
+
 		/**
 		 * [heartbeatSend description]
 		 *
@@ -2076,7 +2105,7 @@
 				if ( notif_icons.length > 0 ) {
 					$( notif_icons ).text( data.total_notifications );
 				} else {
-					$( notifs ).parent().append( '<span class="count"> ' + data.total_notifications + ' </span>' );
+					$( notifs ).parent(':not(.group-subscription)').append( '<span class="count"> ' + data.total_notifications + ' </span>' );
 				}
 			} else {
 				var notifs = $( '.bb-icon-bell' );
