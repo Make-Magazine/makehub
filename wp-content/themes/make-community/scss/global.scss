@@ -22,6 +22,9 @@ h1.page-title, h1.single-post-title {
 	padding-top: 15px;
 }
 
+ //hide breadcrumbs for certain pages
+body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { display:none; }
+
 .sidebar .sidebar-box .sidebar-title {
 	font-size: 30px;
 	font-weight: inherit;

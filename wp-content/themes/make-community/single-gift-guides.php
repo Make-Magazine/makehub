@@ -19,6 +19,7 @@ $parameters = 		array();
 if(!empty($referrer_url)) {
 	$referrer_parts = parse_url($referrer_url);
 	parse_str($referrer_parts['query'], $parameters);
+
 }
 $gallery[] = 		get_the_post_thumbnail_url();
 foreach($images as $image) {
@@ -38,7 +39,7 @@ get_header();
 			if($key == "_sft_gift_guide_categories" || $key == "_sft_audiences") {
 				$parameter_arr = explode(",", $value);
 				foreach($parameter_arr as $parameter) {
-					echo("<a href='" . $referrer_parts['domain'] . $referrer_parts['path'] . "?" . $key . "=" . $parameter . "'>" . ucwords(str_replace("-", " / ", $parameter)) . "</a>");
+					echo("<a href='" . $referrer_parts['scheme'] . $referrer_parts['host'] . $referrer_parts['path'] . "?" . $key . "=" . $parameter . "'>" . ucwords(str_replace("-", " / ", $parameter)) . "</a>");
 				}
 			}
 		}

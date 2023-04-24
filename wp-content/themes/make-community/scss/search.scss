@@ -1,13 +1,6 @@
 .page-template-page-search {
-	.site-content {
-		padding: 0px;
-		&> .container {
-			width: 100%;
-			padding: 0px;
-		}
-	}
-	.entry-header {
-		display: none;
+	&> container {
+		padding: 30px;
 	}
 	.results-info {
 		display: flex;

@@ -16,7 +16,7 @@ body.memberpressproduct-community, body.memberpressproduct-contest {
 	.mpgft_notice { display: none; }
 	.mepr-signup-form {
 		.mp-address-group, #mpgft-signup-gift-checkbox1, label[for=mpgft-signup-gift-checkbox1] {
-			display: none;
+			display: none !important;
 		}
 	}
 }
