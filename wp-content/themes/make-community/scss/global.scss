@@ -25,9 +25,17 @@ h1.page-title, h1.single-post-title {
  //hide breadcrumbs for certain pages
 body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { display:none; }
 
-.sidebar .sidebar-box .sidebar-title {
-	font-size: 30px;
-	font-weight: inherit;
+.sidebar .sidebar-box {
+	.sidebar-title {
+		font-size: 30px;
+		font-weight: inherit;
+	}
+	.em.em-list-widget .em-item {
+		padding-top: 10px;
+		&:first-child {
+			margin-top: 0px;
+		}
+	}
 }
 
 // overwrite the jquery styling, should this be universal?
