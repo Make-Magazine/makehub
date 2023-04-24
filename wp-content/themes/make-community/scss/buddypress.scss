@@ -41,7 +41,40 @@
 	}
 }
 
+// Let's make all the member directories the same
+.makeco.buddypress #item-body #members-list li.item-entry, .makeco.buddypress #friend-list li.item-entry {
+	width: 15%;
+	margin-right: 2%;
+	margin-bottom: 2.8%;
+	float: left;
+	&:nth-child(6n) {
+		margin-right: 0px;
+	}
+	@media screen and (max-width: 1024px) {
+		width: 30%;
+		margin-right: 5%;
+		margin-bottom: 5%;
+		&:nth-child(3n) {
+			margin-right: 0%;
+		}
+	}
+	@media screen and (max-width: 760px) {
+		width: 46%;
+		margin-right: 8%;
+		margin-bottom: 8%;
+		&:nth-child(3n) {
+			margin-right: 8%;
+		}
+		&:nth-child(2n) {
+			margin-right: 0%;
+		}
+	}
+}
+
 // Members Directory
+.members-type-navs #members-all {
+	display: none;
+}
 .directory.members {
 	#members-group_leader, #members-student {
 		display: none;
