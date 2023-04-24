@@ -134,6 +134,16 @@
 		align-items: center;
 	}
 } 
+
+// messages
+.thread-participants {
+	.participants-list {
+		@extend .truncated;
+		-webkit-box-orient: horizontal;
+		text-overflow: ellipsis;
+	}
+}
+
 // styling for memberpress account shortcode
 .bpptc-member-content {
 	.mp_wrapper_nav { display: none; }

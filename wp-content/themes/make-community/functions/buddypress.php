@@ -30,7 +30,6 @@ add_filter( 'get_header', function ( ) {
 	$bp = buddypress();
 	unset( $bp->groups->group_creation_steps['courses'] );
 	unset( $bp->groups->group_creation_steps['group-course-settings'] );
-	return $steps;
 }, 9999 );
 
 
