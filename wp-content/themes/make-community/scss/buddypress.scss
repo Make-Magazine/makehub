@@ -1,4 +1,6 @@
 // Theme and buddypress overrides
+body.buddypress .wrapper .breadcrumbs { display:none; } //hide breadcrumbs for buddypress pages only
+
 .directory .wrapper {
 	padding-top: 45px;
 }

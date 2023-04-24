@@ -1,5 +1,5 @@
 //Styles for Premium memberships
-body.premium-membership {
+body.memberpressproduct-premium-subscriber, body.memberpressproduct-multi-seat-membership{
 	.mepr_custom_field.mepr_mepr-address-one::before {
 		content: "Address fields are required to receive your print Make: Magazine subscription (limited to US residents only)";
 		padding: 10px 0px;
@@ -11,9 +11,9 @@ body.premium-membership {
 	}
 }
 
-
 // Styles for free memberships
-body.free-membership {
+body.memberpressproduct-community, body.memberpressproduct-contest {
+	.mpgft_notice { display: none; }
 	.mepr-signup-form {
 		.mp-address-group, #mpgft-signup-gift-checkbox1 {
 			display: none;
