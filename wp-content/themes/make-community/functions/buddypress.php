@@ -76,3 +76,31 @@ function member_social_extend(){
 }
 
 add_filter( 'bp_before_member_header_meta', 'member_social_extend' );
+
+/* Add resource tab on makercamp group */
+function setup_group_nav(){
+    global $bp; 
+    
+    $user_access = false;    
+    if( bp_is_active('groups') && !empty($bp->groups->current_group) ){
+        $group_link = $bp->root_domain . '/' . bp_get_groups_root_slug() . '/' . $bp->groups->current_group->slug . '/';
+        $user_access = $bp->groups->current_group->user_has_access;
+        bp_core_new_subnav_item( array( 
+            'name' => __( 'Resources', 'resources'),
+            'slug' => 'resources', 
+            'parent_url' => $group_link, 
+            'parent_slug' => 'maker-camp',
+            'screen_function' => 'bp_group_resources', 
+            'position' => 999, 
+            'user_has_access' => $user_access, 
+            'item_css_id' => 'resources',
+            'link' => 'https://makercamp.make.co/maker-camp-resources/'
+        ));
+    }
+}
+add_action( 'bp_init', 'setup_group_nav' );
+
+//not needed as we are directing to a specific url instead of adding content
+function bp_group_resources() {
+	return;
+}
