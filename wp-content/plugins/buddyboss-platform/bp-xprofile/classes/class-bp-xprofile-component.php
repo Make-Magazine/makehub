@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-#[\AllowDynamicProperties]
 class BP_XProfile_Component extends BP_Component {
 
 	/**

@@ -273,11 +273,7 @@ class BP_Button {
 	 */
 	public function __construct( $args = '' ) {
 
-		$r = bp_parse_args(
-			$args,
-			get_class_vars( __CLASS__ ),
-			'bb_parse_button_args'
-		);
+		$r = bp_parse_args( $args, get_class_vars( __CLASS__ ) );
 
 		// Backward compatibility with deprecated parameters.
 		$r = $this->backward_compatibility_args( $r );

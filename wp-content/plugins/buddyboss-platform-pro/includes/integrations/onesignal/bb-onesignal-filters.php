@@ -25,8 +25,6 @@ add_filter( 'bb_web_notification_enabled', 'bb_onesignal_web_push_enabled', 10, 
 
 add_filter( 'bp_core_do_avatar_handle_crop', 'bb_onesignal_custom_image_handle_crop_remove', 10, 2 );
 
-add_filter( 'bb_pro_onesignal_notification_fire', 'bb_onesignal_manage_web_push_notification', 99, 2 );
-
 /**
  * Added Web Push notification settings.
  *
@@ -56,12 +54,6 @@ function bb_onesignal_admin_settings_web_push( $fields ) {
 		'title'    => esc_html__( 'Default Notification Icon', 'buddyboss-pro' ),
 		'callback' => 'bb_onesignal_admin_setting_callback_default_notification_icon_fields',
 		'args'     => array( 'class' => 'bb-onesignal-default-notification-icon bp-hide' ),
-	);
-
-	$fields['bb_web_push_skip_active_members'] = array(
-		'title'    => esc_html__( 'Skip Active Members', 'buddyboss-pro' ),
-		'callback' => 'bb_onesignal_admin_setting_callback_web_push_skip_active_members',
-		'args'     => array( 'class' => 'bb-onesignal-web-push-skip-active-members bp-hide' ),
 	);
 
 	$fields['bb-onesignal-request-permission'] = array(
@@ -151,14 +143,14 @@ function bb_onesignal_web_push_setting_fields_save( $current_tab ) {
 		return;
 	}
 
-	$bb_onesignal_permission_validate = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-permission-validate' );
+	$bb_onesignal_permission_validate = filter_input( INPUT_POST, 'bb-onesignal-permission-validate', FILTER_SANITIZE_STRING );
 	$bb_onesignal_request_permission  = filter_input( INPUT_POST, 'bb-onesignal-request-permission', FILTER_VALIDATE_BOOLEAN );
 	if ( $bb_onesignal_request_permission ) {
 		bp_update_option( 'bb-onesignal-permission-validate', $bb_onesignal_permission_validate );
 	}
 
-	$bb_onesignal_allow_button  = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-enable-soft-prompt-allow-button' );
-	$bb_onesignal_cancel_button = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-enable-soft-prompt-cancel-button' );
+	$bb_onesignal_allow_button  = filter_input( INPUT_POST, 'bb-onesignal-enable-soft-prompt-allow-button', FILTER_SANITIZE_STRING );
+	$bb_onesignal_cancel_button = filter_input( INPUT_POST, 'bb-onesignal-enable-soft-prompt-cancel-button', FILTER_SANITIZE_STRING );
 
 	bp_update_option( 'bb-onesignal-enable-soft-prompt-allow-button', $bb_onesignal_allow_button );
 	bp_update_option( 'bb-onesignal-enable-soft-prompt-cancel-button', $bb_onesignal_cancel_button );
@@ -402,38 +394,4 @@ function bb_onesignal_custom_image_handle_crop_remove( $value, $r ) {
 		return false;
 	}
 	return $value;
-}
-
-/**
- * Needs to check the web push needs to fired or not.
- *
- * @since 2.2.3
- *
- * @param bool                          $retval       Return value.
- * @param BP_Notifications_Notification $notification Notification object.
- *
- * @return mixed
- */
-function bb_onesignal_manage_web_push_notification( $retval, $notification ) {
-	if (
-		! empty( $notification->id ) &&
-		! empty( $notification->component_action ) &&
-		in_array(
-			$notification->component_action,
-			array(
-				'bb_activity_following_post',
-				'bb_groups_subscribed_activity',
-				'bb_groups_subscribed_discussion',
-				'bb_forums_subscribed_reply',
-				'bb_forums_subscribed_discussion',
-				'bbp_new_reply',
-			),
-			true
-		) &&
-		true === (bool) bp_notifications_get_meta( $notification->id, 'not_send_web', true )
-	) {
-		return false;
-	}
-
-	return $retval;
 }

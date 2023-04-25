@@ -14,3 +14,6 @@ bp_get_template_part( 'document/doc-preview' );
 
 // Audio extension files preview.
 bp_get_template_part( 'document/audio-preview' );
+
+// Code extension files preview.
+bp_get_template_part( 'document/code-preview' );

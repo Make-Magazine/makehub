@@ -71,8 +71,8 @@ class BB_OneSignal_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function settings_save() {
 		parent::settings_save();
 
-		$bb_onesignal_auth_key = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-auth-key' );
-		$bb_onesignal_app_name = bb_pro_filter_input_string( INPUT_POST, 'bb-onesignal-connected-app-name' );
+		$bb_onesignal_auth_key = filter_input( INPUT_POST, 'bb-onesignal-auth-key', FILTER_SANITIZE_STRING );
+		$bb_onesignal_app_name = filter_input( INPUT_POST, 'bb-onesignal-connected-app-name', FILTER_SANITIZE_STRING );
 		$bb_onesignal_new_app  = filter_input( INPUT_POST, 'bb-onesignal-new-app', FILTER_VALIDATE_INT );
 
 		bp_update_option( 'bb-onesignal-connected-app-name', $bb_onesignal_app_name );

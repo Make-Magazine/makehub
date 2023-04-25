@@ -19,16 +19,13 @@
 				<?php do_action( 'bbp_theme_before_forum_subscription_action' ); ?>
 
 				<?php
-				// Remove subscription link if forum assigned to the group.
-				if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
-					bbp_forum_subscription_link(
-						array(
-							'before'      => '',
-							'subscribe'   => '+',
-							'unsubscribe' => '&times;',
-						)
-					);
-				}
+				bbp_forum_subscription_link(
+					array(
+						'before'      => '',
+						'subscribe'   => '+',
+						'unsubscribe' => '&times;',
+					)
+				);
 				?>
 
 				<?php do_action( 'bbp_theme_after_forum_subscription_action' ); ?>

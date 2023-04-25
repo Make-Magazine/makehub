@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-#[\AllowDynamicProperties]
 class BP_Nouveau_Blogs {
 	/**
 	 * Constructor

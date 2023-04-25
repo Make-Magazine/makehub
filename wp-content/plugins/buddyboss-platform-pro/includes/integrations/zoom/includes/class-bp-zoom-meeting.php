@@ -79,6 +79,14 @@ class BP_Zoom_Meeting {
 	public $host_id;
 
 	/**
+	 * Start date of the meeting item.
+	 *
+	 * @since 1.0.0
+	 * @var string
+	 */
+	public $start_date;
+
+	/**
 	 * Timezone of the meeting item.
 	 *
 	 * @since 1.0.0
@@ -325,6 +333,7 @@ class BP_Zoom_Meeting {
 		$this->title                  = $row->title;
 		$this->description            = $row->description;
 		$this->host_id                = $row->host_id;
+		$this->start_date             = $row->start_date;
 		$this->timezone               = $row->timezone;
 		$this->password               = $row->password;
 		$this->duration               = $row->duration;
@@ -405,6 +414,13 @@ class BP_Zoom_Meeting {
 			'bp_zoom_meeting_host_id_before_save',
 			array(
 				$this->host_id,
+				&$this,
+			)
+		);
+		$this->start_date             = apply_filters_ref_array(
+			'bp_zoom_meeting_start_date_before_save',
+			array(
+				$this->start_date,
 				&$this,
 			)
 		);
@@ -542,7 +558,8 @@ class BP_Zoom_Meeting {
 			)
 		);
 
-		$this->start_date_utc = mysql_to_rfc3339( $this->start_date_utc ); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_to_rfc3339, PHPCompatibility.Extensions.RemovedExtensions.mysql_DeprecatedRemoved
+		$this->start_date     = mysql_to_rfc3339( $this->start_date );
+		$this->start_date_utc = mysql_to_rfc3339( $this->start_date_utc );
 
 		/**
 		 * Fires before the current meeting item gets saved.
@@ -571,9 +588,9 @@ class BP_Zoom_Meeting {
 
 		// If we have an existing ID, update the meeting item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, activity_id = %d, user_id = %d, host_id = %s, title = %s, description = %s, timezone = %s, password = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, waiting_room = %d, meeting_authentication = %d, recurring = %d, auto_recording = %s, alternative_host_ids = %s, meeting_id = %s, start_date_utc = %s, hide_sitewide = %d, parent = %s, type = %d, zoom_type = %s, alert = %d WHERE id = %d", $this->group_id, $this->activity_id, $this->user_id, $this->host_id, $this->title, $this->description, $this->timezone, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->meeting_authentication, $this->recurring, $this->auto_recording, $this->alternative_host_ids, $this->meeting_id, $this->start_date_utc, $this->hide_sitewide, $this->parent, $this->type, $this->zoom_type, $this->alert, $this->id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$q = $wpdb->prepare( "UPDATE {$bp->table_prefix}bp_zoom_meetings SET group_id = %d, activity_id = %d, user_id = %d, host_id = %s, title = %s, description = %s, start_date = %s, timezone = %s, password = %s, duration = %d, join_before_host = %d, host_video = %d, participants_video = %d, mute_participants = %d, waiting_room = %d, meeting_authentication = %d, recurring = %d, auto_recording = %s, alternative_host_ids = %s, meeting_id = %s, start_date_utc = %s, hide_sitewide = %d, parent = %s, type = %d, zoom_type = %s, alert = %d WHERE id = %d", $this->group_id, $this->activity_id, $this->user_id, $this->host_id, $this->title, $this->description, $this->start_date, $this->timezone, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->meeting_authentication, $this->recurring, $this->auto_recording, $this->alternative_host_ids, $this->meeting_id, $this->start_date_utc, $this->hide_sitewide, $this->parent, $this->type, $this->zoom_type, $this->alert, $this->id ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_zoom_meetings (group_id, activity_id, user_id, host_id, title, description, timezone, password, duration, join_before_host, host_video, participants_video, mute_participants, waiting_room, meeting_authentication, recurring, auto_recording, alternative_host_ids, meeting_id, start_date_utc, hide_sitewide, parent, type, zoom_type, alert ) VALUES (%d, %d, %d, %s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s, %d, %s, %d, %s, %d )", $this->group_id, $this->activity_id, $this->user_id, $this->host_id, $this->title, $this->description, $this->timezone, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->meeting_authentication, $this->recurring, $this->auto_recording, $this->alternative_host_ids, $this->meeting_id, $this->start_date_utc, $this->hide_sitewide, $this->parent, $this->type, $this->zoom_type, $this->alert ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$q = $wpdb->prepare( "INSERT INTO {$bp->table_prefix}bp_zoom_meetings (group_id, activity_id, user_id, host_id, title, description, start_date, timezone, password, duration, join_before_host, host_video, participants_video, mute_participants, waiting_room, meeting_authentication, recurring, auto_recording, alternative_host_ids, meeting_id, start_date_utc, hide_sitewide, parent, type, zoom_type, alert ) VALUES (%d, %d, %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s, %d, %s, %d, %s, %d )", $this->group_id, $this->activity_id, $this->user_id, $this->host_id, $this->title, $this->description, $this->start_date, $this->timezone, $this->password, $this->duration, $this->join_before_host, $this->host_video, $this->participants_video, $this->mute_participants, $this->waiting_room, $this->meeting_authentication, $this->recurring, $this->auto_recording, $this->alternative_host_ids, $this->meeting_id, $this->start_date_utc, $this->hide_sitewide, $this->parent, $this->type, $this->zoom_type, $this->alert ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		if ( false === $wpdb->query( $q ) ) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared

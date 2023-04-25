@@ -24,13 +24,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public static $moderation_type = 'user';
 
 	/**
-	 * Item type for report member.
-	 *
-	 * @var string
-	 */
-	public static $moderation_type_report = 'user_report';
-
-	/**
 	 * BP_Moderation_Members constructor.
 	 *
 	 * @since BuddyBoss 1.5.6
@@ -52,7 +45,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		/**
 		 * If moderation setting enabled for this content then it'll filter hidden content.
 		 */
-		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 3 );
+		add_filter( 'bp_suspend_member_get_where_conditions', array( $this, 'update_where_sql' ), 10, 2 );
 
 		// Code after below condition should not execute if moderation setting for this content disabled.
 		if ( ! bp_is_moderation_member_blocking_enable( 0 ) ) {
@@ -64,7 +57,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		add_filter( 'bp_init', array( $this, 'restrict_member_profile' ), 4 );
 
 		add_filter( 'bp_core_get_user_domain', array( $this, 'bp_core_get_user_domain' ), 9999, 2 );
-		add_filter( 'bp_core_get_userlink', array( $this, 'bp_core_get_userlink' ), 9999, 2 );
 		add_filter( 'get_the_author_user_nicename', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_login', array( $this, 'get_the_author_name' ), 9999, 2 );
 		add_filter( 'get_the_author_user_email', array( $this, 'get_the_author_name' ), 9999, 2 );
@@ -116,10 +108,6 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	public function add_content_types( $content_types ) {
 		$content_types[ self::$moderation_type ] = __( 'User', 'buddyboss' );
 
-		if ( bb_is_moderation_member_reporting_enable() ) {
-			$content_types[ self::$moderation_type_report ] = __( 'Report Member', 'buddyboss' );
-		}
-
 		return $content_types;
 	}
 
@@ -128,37 +116,17 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 *
 	 * @since BuddyBoss 1.5.6
 	 *
-	 * @param array  $where       blocked users Where sql.
-	 * @param object $suspend     suspend object.
-	 * @param string $column_name Table column name.
+	 * @param string $where   blocked users Where sql.
+	 * @param object $suspend suspend object.
 	 *
 	 * @return array
 	 */
-	public function update_where_sql( $where, $suspend, $column_name ) {
+	public function update_where_sql( $where, $suspend ) {
 		$this->alias = $suspend->alias;
 
-		$blocked_user_query = true;
-
-		if (
-			(
-				function_exists( 'bp_is_group_members' ) &&
-				bp_is_group_members()
-			) ||
-			(
-				! empty( $GLOBALS['wp']->query_vars['rest_route'] ) &&
-				preg_match( '/buddyboss\/v+(\d+)\/groups\/+(\d+)\/members/', $GLOBALS['wp']->query_vars['rest_route'], $matches )
-			)
-		) {
-			$blocked_user_query = false;
-		}
-
-		$sql = $this->exclude_where_query( $blocked_user_query );
+		$sql = $this->exclude_where_query();
 		if ( ! empty( $sql ) ) {
 			$where['moderation_where'] = $sql;
-		}
-
-		if ( true === $blocked_user_query ) {
-			$where['moderation_blocked_by_where'] = "( u.{$column_name} NOT IN (" . bb_moderation_get_blocked_by_sql() . ') )';
 		}
 
 		return $where;
@@ -191,7 +159,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function restrict_member_profile() {
 		$user_id = bp_displayed_user_id();
-		if ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) {
+		if ( bp_moderation_is_user_blocked( $user_id ) ) {
 			buddypress()->displayed_user->id = 0;
 			bp_do_404();
 
@@ -210,40 +178,13 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function bp_core_get_user_domain( $domain, $user_id ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 
-		if ( empty( $username_visible ) &&
-			! bp_moderation_is_user_suspended( $user_id ) &&
-			(
-				bp_moderation_is_user_blocked( $user_id ) ||
-				bb_moderation_is_user_blocked_by( $user_id )
-			)
-		) {
-			return ''; // To allow to make this function working bp_core_get_userlink() which update using below function.
+		if ( empty( $username_visible ) && bp_moderation_is_user_blocked( $user_id ) ) {
+			return '';
 		}
 
 		return $domain;
-	}
-
-	/**
-	 * Filters the link text for the passed in user.
-	 *
-	 * @since BuddyBoss 2.2.5
-	 *
-	 * @param string $value   Link text based on passed parameters.
-	 * @param int    $user_id ID of the user to check.
-	 *
-	 * @return string
-	 */
-	public function bp_core_get_userlink( $value, $user_id ) {
-		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
-
-		if ( empty( $username_visible ) && ( bp_moderation_is_user_blocked( $user_id ) || bb_moderation_is_user_blocked_by( $user_id ) ) ) {
-			return '<a>' . bp_core_get_user_displayname( $user_id ) . '</a>';
-		}
-
-		return $value;
 	}
 
 	/**
@@ -275,22 +216,14 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_the_author_name( $value, $user_id ) {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 		$username_visible = isset( $_GET['username_visible'] ) ? sanitize_text_field( wp_unslash( $_GET['username_visible'] ) ) : false;
 		if ( ! empty( $username_visible ) || ( bp_is_my_profile() && 'blocked-members' === bp_current_action() ) ) {
 			return $value;
 		}
 
-		if ( bp_is_user_inactive( $user_id ) ) {
-			return bb_moderation_is_deleted_label();
-		}
-
-		if ( ! bp_moderation_is_user_suspended( $user_id ) ) {
-			if ( bp_moderation_is_user_blocked( $user_id ) ) {
-				return bb_moderation_has_blocked_label( $value, $user_id );
-			} elseif ( bb_moderation_is_user_blocked_by( $user_id ) ) {
-				return bb_moderation_is_blocked_label( $value, $user_id );
-			}
+		if ( ! bp_moderation_is_user_suspended( $user_id ) && bp_moderation_is_user_blocked( $user_id ) ) {
+			return esc_html__( 'Blocked Member', 'buddyboss' );
 		}
 
 		return $value;
@@ -308,8 +241,7 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 * @return string
 	 */
 	public function get_avatar_url( $retval, $id_or_email, $args ) {
-		$user       = false;
-		$old_retval = $retval;
+		$user = false;
 
 		// Ugh, hate duplicating code; process the user identifier.
 		if ( is_numeric( $id_or_email ) ) {
@@ -334,21 +266,10 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 		}
 
 		if ( bp_moderation_is_user_blocked( $user->ID ) ) {
-			$retval = bb_moderation_has_blocked_avatar( $retval, $user->ID, $args );
-		} elseif ( bb_moderation_is_user_blocked_by( $user->ID ) ) {
-			$retval = bb_moderation_is_blocked_avatar( $user->ID, $args );
+			return buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 		}
 
-		/**
-		 * Filter to update blocked avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $retval         The URL of the avatar.
-		 * @param string $old_avatar_url URL for a originally uploaded avatar.
-		 * @param array  $args           Arguments passed to get_avatar_data(), after processing.
-		 */
-		return apply_filters( 'bb_get_blocked_avatar_url', $retval, $old_retval, $args );
+		return $retval;
 	}
 
 	/**
@@ -363,31 +284,18 @@ class BP_Moderation_Members extends BP_Moderation_Abstract {
 	 */
 	public function bp_fetch_avatar_url( $avatar_url, $params ) {
 
-		$item_id        = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
-		$old_avatar_url = $avatar_url;
-
+		$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
 		if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 			// check for user avatar.
 			if ( 'avatars' === $params['avatar_dir'] ) {
 				if ( bp_moderation_is_user_blocked( $item_id ) ) {
-					$avatar_url = bb_moderation_has_blocked_avatar( $avatar_url, $item_id, $params );
-				} elseif ( bb_moderation_is_user_blocked_by( $item_id ) ) {
-					$avatar_url = bb_moderation_is_blocked_avatar( $item_id, $params );
+					$avatar_url = buddypress()->plugin_url . 'bp-core/images/suspended-mystery-man.jpg';
 				}
 			}
 		}
 
-		/**
-		 * Filter to update blocked avatar url.
-		 *
-		 * @since BuddyBoss 2.1.4
-		 *
-		 * @param string $avatar_url     URL for a locally uploaded avatar.
-		 * @param string $old_avatar_url URL for a originally uploaded avatar.
-		 * @param array  $params         Array of parameters for the request.
-		 */
-		return apply_filters( 'bb_get_blocked_avatar_url', $avatar_url, $old_avatar_url, $params );
+		return $avatar_url;
 	}
 
 	/**

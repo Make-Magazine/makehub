@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.3.0
  */
-#[\AllowDynamicProperties]
 class BP_Attachment_Avatar extends BP_Attachment {
 
 	/**

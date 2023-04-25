@@ -22,12 +22,7 @@
 
 	<?php bbp_breadcrumb(); ?>
 
-	<?php
-	// Remove subscription link if forum assigned to the group.
-	if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
-		bbp_forum_subscription_link();
-	}
-	?>
+	<?php bbp_forum_subscription_link(); ?>
 
 	<?php do_action( 'bbp_template_before_forums_index' ); ?>
 

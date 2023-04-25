@@ -250,7 +250,6 @@ if ( ! class_exists( 'BuddyBoss_Updater_Admin' ) ) :
 		}
 
 		public function admin_menu() {
-			$this->settings_page    = function_exists( 'buddypress' ) && isset( buddypress()->buddyboss ) ? 'buddyboss-platform' : $this->settings_page;
 			$this->page_hook_suffix = add_submenu_page(
 				$this->settings_page,
 				__( 'BuddyBoss License Keys', 'buddyboss-pro' ),

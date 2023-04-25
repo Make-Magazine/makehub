@@ -83,10 +83,11 @@ class BP_Members_Suggestions extends BP_Suggestions {
 	 */
 	public function get_suggestions() {
 		$user_query = array(
-			'count_total'     => isset( $this->args['count_total'] ) ? $this->args['count_total'] : '',  // Prevents total count.
+			'count_total'     => '',  // Prevents total count.
 			'populate_extras' => false,
 			'type'            => 'alphabetical',
-			'page'            => isset( $this->args['page'] ) ? $this->args['page'] : 1,
+
+			'page'            => 1,
 			'per_page'        => $this->args['limit'],
 			'search_terms'    => $this->args['term'],
 			'search_wildcard' => 'right',
@@ -98,9 +99,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 		}
 
 		// Exclude current user from mention list.
-		if ( is_user_logged_in() && ! empty( $this->args['exclude'] ) ) {
-			$user_query['exclude'] = array_merge( $this->args['exclude'], array( get_current_user_id() ) );
-		} elseif ( is_user_logged_in() ) {
+		if ( is_user_logged_in() ) {
 			$user_query['exclude'] = get_current_user_id();
 		}
 
@@ -133,15 +132,7 @@ class BP_Members_Suggestions extends BP_Suggestions {
 			$result->name          = bp_core_get_user_displayname( $user->ID );
 			$result->user_id       = $user->ID;
 
-			if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
-				$results['members'][] = $result;
-			} else {
-				$results[] = $result;
-			}
-		}
-
-		if ( isset( $this->args['count_total'] ) && $this->args['count_total'] ) {
-			$results['total'] = $user_query->total_users;
+			$results[] = $result;
 		}
 
 		/**

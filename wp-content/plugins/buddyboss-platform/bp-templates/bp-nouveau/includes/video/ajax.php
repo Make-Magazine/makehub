@@ -162,7 +162,7 @@ function bp_nouveau_ajax_video_albums_loader() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -216,7 +216,7 @@ function bp_nouveau_ajax_video_upload() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -251,7 +251,7 @@ function bp_nouveau_ajax_video_thumbnail_upload() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -284,7 +284,7 @@ function bp_nouveau_ajax_video_thumbnail_delete_attachment() {
 	);
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -332,7 +332,7 @@ function bp_nouveau_ajax_video_save() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -360,8 +360,8 @@ function bp_nouveau_ajax_video_save() {
 		wp_send_json_error( $response );
 	}
 
-	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
-	$content = bb_filter_input_string( INPUT_POST, 'content' );
+	$privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
+	$content = filter_input( INPUT_POST, 'content', FILTER_SANITIZE_STRING );
 
 	// handle video uploaded.
 	$video_ids = bp_video_add_handler( $videos, $privacy, $content );
@@ -441,7 +441,7 @@ function bp_nouveau_ajax_video_delete() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -451,7 +451,7 @@ function bp_nouveau_ajax_video_delete() {
 
 	$video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 	$activity_id = filter_input( INPUT_POST, 'activity_id', FILTER_SANITIZE_NUMBER_INT );
-	$from_where  = bb_filter_input_string( INPUT_POST, 'from_where' );
+	$from_where  = filter_input( INPUT_POST, 'from_where', FILTER_SANITIZE_STRING );
 
 	if ( empty( $video ) ) {
 		$response['feedback'] = sprintf(
@@ -568,7 +568,7 @@ function bp_nouveau_ajax_video_move_to_album() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -666,7 +666,7 @@ function bp_nouveau_ajax_video_album_save() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -674,7 +674,7 @@ function bp_nouveau_ajax_video_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$title = bb_filter_input_string( INPUT_POST, 'title' );
+	$title = filter_input( INPUT_POST, 'title', FILTER_SANITIZE_STRING );
 
 	if ( empty( $title ) ) {
 		$response['feedback'] = sprintf(
@@ -688,7 +688,7 @@ function bp_nouveau_ajax_video_album_save() {
 	// save video.
 	$id       = filter_input( INPUT_POST, 'album_id', FILTER_VALIDATE_INT );
 	$group_id = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
-	$privacy  = bb_filter_input_string( INPUT_POST, 'privacy' );
+	$privacy  = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 
 	$id       = ! empty( $id ) ? $id : false;
 	$group_id = ! empty( $group_id ) ? $group_id : false;
@@ -771,7 +771,7 @@ function bp_nouveau_ajax_video_album_delete() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -835,7 +835,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	);
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -846,7 +846,7 @@ function bp_nouveau_ajax_video_get_activity() {
 	$post_id       = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
 	$group_id      = filter_input( INPUT_POST, 'group_id', FILTER_VALIDATE_INT );
 	$video_id      = filter_input( INPUT_POST, 'video_id', FILTER_VALIDATE_INT );
-	$reset_comment = bb_filter_input_string( INPUT_POST, 'reset_comment' );
+	$reset_comment = filter_input( INPUT_POST, 'reset_comment', FILTER_SANITIZE_STRING );
 
 	// check activity is video or not.
 	$video_activity = bp_activity_get_meta( $post_id, 'bp_video_activity', true );
@@ -944,7 +944,7 @@ function bp_nouveau_ajax_video_delete_attachment() {
 	);
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -987,7 +987,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 	);
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -1006,7 +1006,7 @@ function bp_nouveau_ajax_video_update_privacy() {
 		wp_send_json_error( $response );
 	}
 
-	$privacy = bb_filter_input_string( INPUT_POST, 'privacy' );
+	$privacy = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 
 	if ( empty( $privacy ) ) {
 		$response['feedback'] = sprintf(
@@ -1046,7 +1046,7 @@ function bp_nouveau_ajax_video_description_save() {
 		),
 	);
 
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 
 	// Nonce check!
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_video' ) ) {
@@ -1054,7 +1054,7 @@ function bp_nouveau_ajax_video_description_save() {
 	}
 
 	$attachment_id = filter_input( INPUT_POST, 'attachment_id', FILTER_VALIDATE_INT );
-	$description   = bb_filter_input_string( INPUT_POST, 'description' );
+	$description   = filter_input( INPUT_POST, 'description', FILTER_SANITIZE_STRING );
 
 	// check description empty.
 	if ( empty( $description ) ) {
@@ -1136,7 +1136,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
 function bp_nouveau_object_template_results_albums_existing_video_query( $querystring ) {
 	$querystring = bp_parse_args( $querystring );
 
-	$caller = bb_filter_input_string( INPUT_POST, 'caller' );
+	$caller = filter_input( INPUT_POST, 'caller', FILTER_SANITIZE_STRING );
 
 	if ( ! empty( $caller ) && 'bp-existing-video' === $caller ) {
 		$querystring['album_id'] = 0;
@@ -1163,7 +1163,7 @@ function bp_nouveau_ajax_video_get_video_description() {
 	);
 
 	// Nonce check!
-	$nonce = bb_filter_input_string( INPUT_POST, 'nonce' );
+	$nonce = filter_input( INPUT_POST, 'nonce', FILTER_SANITIZE_STRING );
 	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, 'bp_nouveau_video' ) ) {
 		wp_send_json_error( $response );
 	}
@@ -1286,8 +1286,8 @@ function bp_nouveau_ajax_video_get_video_description() {
  */
 function bp_nouveau_ajax_video_get_album_view() {
 
-	$type = bb_filter_input_string( INPUT_POST, 'type' );
-	$id   = bb_filter_input_string( INPUT_POST, 'id' );
+	$type = filter_input( INPUT_POST, 'type', FILTER_SANITIZE_STRING );
+	$id   = filter_input( INPUT_POST, 'id', FILTER_SANITIZE_STRING );
 
 	if ( 'profile' === $type ) {
 		$ul = bp_video_user_video_album_tree_view_li_html( $id, 0 );
@@ -1335,7 +1335,7 @@ function bp_nouveau_ajax_video_move() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -1409,7 +1409,7 @@ function bp_nouveau_ajax_video_get_edit_thumbnail_data() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -1508,7 +1508,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -1554,7 +1554,7 @@ function bp_nouveau_ajax_video_thumbnail_save() {
 		array(
 			'thumbnail'           => $thumbnail_url,
 			'video_attachment_id' => $video_attachment_id,
-			'video_attachments'   => wp_json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) ),
+			'video_attachments'   => json_encode( bb_video_get_attachments_symlinks( $video_attachment_id, $video_id ) ),
 		)
 	);
 }
@@ -1578,7 +1578,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 	}
 
 	// Use default nonce.
-	$nonce = bb_filter_input_string( INPUT_POST, '_wpnonce' );
+	$nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 	$check = 'bp_nouveau_video';
 
 	// Nonce check!
@@ -1624,7 +1624,7 @@ function bp_nouveau_ajax_video_thumbnail_delete() {
 		array(
 			'thumbnail'         => $thumbnail_url,
 			'thumbnail_id'      => $thumbnail_id,
-			'video_attachments' => wp_json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) ),
+			'video_attachments' => json_encode( bb_video_get_attachments_symlinks( $attachment_id, $video_id ) ),
 		)
 	);
 }

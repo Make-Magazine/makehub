@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.4.0
  */
-#[\AllowDynamicProperties]
 class BP_Attachment_Cover_Image extends BP_Attachment {
 	/**
 	 * The constuctor.

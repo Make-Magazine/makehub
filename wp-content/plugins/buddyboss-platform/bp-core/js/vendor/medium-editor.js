@@ -6853,12 +6853,6 @@ MediumEditor.extensions = {};
     }
 
     function handleKeyup(event) {
-        
-        // Ignore composing keyUp event, prevent from duplicated first char with CJK IME.
-        if ( event.isComposing || event.keyCode === 229 ) {
-            return;
-        }
-
         var node = MediumEditor.selection.getSelectionStart(this.options.ownerDocument),
             tagName;
 

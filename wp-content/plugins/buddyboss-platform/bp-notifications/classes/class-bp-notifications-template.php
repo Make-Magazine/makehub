@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.9.0
  */
-#[\AllowDynamicProperties]
 class BP_Notifications_Template {
 
 	/**

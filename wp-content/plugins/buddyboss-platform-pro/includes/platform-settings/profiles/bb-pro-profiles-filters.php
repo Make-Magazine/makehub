@@ -21,8 +21,6 @@ add_action( 'update_option__bp_enable_activity_follow', 'bb_reset_primary_action
 // Reset primary action in member directories if deactivate components 'Activity Feeds', 'Member Connections', 'Private Messaging'.
 add_action( 'bp_core_install', 'bb_reset_primary_action_on_change_component', 10, 1 );
 
-add_filter( 'bp_rest_platform_settings', 'bb_rest_profiles_platform_settings', 10, 1 );
-
 /**
  * Add new pro fields value insert into database.
  *
@@ -128,24 +126,3 @@ function bb_reset_primary_action_on_change_component( $active_components = array
 	bp_update_option( 'bb-pro-member-profile-primary-action', $primary_action );
 }
 
-/**
- * Adding the profile settings into api.
- *
- * @since 2.2.6
- *
- * @param array $settings Array settings.
- *
- * @return mixed
- */
-function bb_rest_profiles_platform_settings( $settings ) {
-	if ( ! function_exists( 'bp_is_active' ) || ! bp_is_active( 'xprofile' ) ) {
-		return $settings;
-	}
-
-	$settings['profile_cover_width']     = bb_get_profile_cover_image_width();
-	$settings['profile_cover_height']    = bb_get_profile_cover_image_height();
-	$settings['profile_header_style']    = bb_platform_pro_profile_headers_style();
-	$settings['profile_header_elements'] = bp_get_option( 'bb-pro-profile-headers-layout-elements', array( 'online-status', 'profile-type', 'member-handle', 'joined-date', 'last-active', 'followers', 'following', 'social-networks' ) );
-
-	return $settings;
-}
