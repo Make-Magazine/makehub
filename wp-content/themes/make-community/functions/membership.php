@@ -159,15 +159,6 @@ function make_enqueue_scripts($is_product_page, $is_group_page, $is_account_page
 	  $my_version = $my_theme->get('Version');
 	  ?>
 	  <link rel='stylesheet' id='make-co-style-css' href='<?php echo get_stylesheet_directory_uri();?>/css/style.min.css?ver=<?php echo $my_version;?>' type='text/css' media='all' />
-	
-		<!-- Is this still needed??
-		<script>
-			jQuery(document).ready(function(){
-				if(jQuery("#profile-view .avatar").attr('src') != 'https://make.co/wp-content/universal-assets/v1/images/default-makey.png' ) {
-					jQuery(".login-msg").remove();
-				}
-			});
-		</script>-->
 	<?php
   }
 }
