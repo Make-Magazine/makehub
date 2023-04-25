@@ -172,4 +172,15 @@
 		}
 	}
 }
-#activity-rss-feed { display: none; }
+
+.sidebar .bp-profile-fields {
+	.item.bg {
+		.content {
+			font-weight: normal;
+		} 
+	}   
+}
+
+#activity-rss-feed { 
+	display: none; 
+}
