@@ -32,38 +32,6 @@ window.bp = window.bp || {};
             this.bp_zoom_ajax = false;
             this.bp_zoom_meeting_container_elem = '#bp-zoom-meeting-container';
             this.bp_zoom_webinar_container_elem = '#bp-zoom-webinar-container';
-			this.select2_laguage_text = 'en';
-			if ( typeof bp_select2 !== 'undefined' && typeof bp_select2.i18n !== 'undefined' ) {
-				this.select2_laguage_text = {
-					errorLoading: function () {
-						return bp_select2.i18n.errorLoading;
-					},
-					inputTooLong: function ( e ) {
-						var n = e.input.length - e.maximum;
-						return bp_select2.i18n.inputTooLong.replace( '%%', n );
-					},
-					inputTooShort: function ( e ) {
-						return bp_select2.i18n.inputTooShort.replace( '%%', (e.minimum - e.input.length) );
-					},
-					loadingMore: function () {
-						return bp_select2.i18n.loadingMore;
-					},
-					maximumSelected: function ( e ) {
-						return bp_select2.i18n.maximumSelected.replace( '%%', e.maximum );
-					},
-					noResults: function () {
-						return bp_select2.i18n.noResults;
-					},
-					searching: function () {
-						return bp_select2.i18n.searching;
-					},
-					removeAllItems: function () {
-						return bp_select2.i18n.removeAllItems;
-					}
-				};
-			} else if ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) {
-				this.select2_laguage_text = bp_select2.lang;
-			}
 		},
 
 		/**
@@ -511,7 +479,7 @@ window.bp = window.bp || {};
 				meeting_wrapper.find('#bp-zoom-meeting-timezone').select2({
 					minimumInputLength: 0,
 					closeOnSelect: true,
-					language: this.select2_laguage_text,
+					language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
 				});
@@ -589,7 +557,7 @@ window.bp = window.bp || {};
 				webinar_wrapper.find('#bp-zoom-webinar-timezone').select2({
 					minimumInputLength: 0,
 					closeOnSelect: true,
-					language: this.select2_laguage_text,
+					language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
 					dropdownCssClass: 'bb-select-dropdown',
 					containerCssClass: 'bb-select-container',
 				});
@@ -914,13 +882,10 @@ window.bp = window.bp || {};
                         $('#bp-zoom-single-meeting-wrapper').find('#bp-zoom-meeting-timezone').select2({
                             minimumInputLength: 0,
                             closeOnSelect: true,
-                            language: this.select2_laguage_text,
+                            language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
                             dropdownCssClass: 'bb-select-dropdown',
                             containerCssClass: 'bb-select-container',
                         });
-
-						$( '.bp-zoom-meeting-left-inner .bp-zoom-meeting-members-listing #meetings-list' ).animate({scrollTop: $(document).height()*50 });
-						$( '.bp-zoom-meeting-left-inner .bp-zoom-meeting-members-listing #meetings-list' ).css( 'max-height', Number( $( '#bp_zoom_meeting_form .bp-zoom-meeting-right-top' ).height() ) + 'px' );
 
                         if ( bp_zoom_vars.group_meetings_url !== '') {
                             var create_meeting_url = bp_zoom_vars.group_meetings_url + 'create-meeting';
@@ -1085,12 +1050,10 @@ window.bp = window.bp || {};
 						$('#bp-zoom-single-meeting-wrapper').find('#bp-zoom-meeting-timezone').select2({
 							minimumInputLength: 0,
 							closeOnSelect: true,
-							language: this.select2_laguage_text,
+							language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
 							dropdownCssClass: 'bb-select-dropdown',
 							containerCssClass: 'bb-select-container',
 						});
-
-						$( '.bp-zoom-meeting-left-inner .bp-zoom-meeting-members-listing #meetings-list' ).css( 'max-height', Number( $( '#bp_zoom_meeting_form .bp-zoom-meeting-right-top' ).height() ) + 'px' );
 					}
 				}
 			});
@@ -1179,8 +1142,6 @@ window.bp = window.bp || {};
 
                     self.mask_meeting_id();
                     self.triggerCountdowns();
-
-					$( '.bp-zoom-meeting-left-inner .bp-zoom-meeting-members-listing #meetings-list' ).css( 'max-height', Number( $( '#bp_zoom_meeting_form .bp-zoom-meeting-right-top' ).height() ) + 'px' );
 				}
 			});
 		},
@@ -1231,7 +1192,6 @@ window.bp = window.bp || {};
 					_this.removeClass('loading');
 					$('#meetings-list').removeClass('loading');
                     self.mask_meeting_id();
-					$( '.bp-zoom-meeting-left-inner .bp-zoom-meeting-members-listing #meetings-list' ).css( 'max-height', Number( $( '#bp_zoom_meeting_form' ).height() ) - 140 + 'px' );
 				}
 			});
 		},
@@ -1945,12 +1905,10 @@ window.bp = window.bp || {};
 						$('#bp-zoom-single-webinar-wrapper').find('#bp-zoom-webinar-timezone').select2({
 							minimumInputLength: 0,
 							closeOnSelect: true,
-							language: this.select2_laguage_text,
+							language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
 							dropdownCssClass: 'bb-select-dropdown',
 							containerCssClass: 'bb-select-container',
 						});
-
-						$( '.bp-zoom-webinar-left-inner .bp-zoom-webinar-members-listing #webinars-list' ).css( 'max-height', Number( $( '#bp_zoom_webinar_form .bp-zoom-webinar-right-top' ).height() ) + 'px' );
 
 						if ( bp_zoom_vars.group_webinars_url !== '') {
 							var create_webinar_url = bp_zoom_vars.group_webinars_url + 'create-webinar';
@@ -2185,12 +2143,10 @@ window.bp = window.bp || {};
 						$('#bp-zoom-single-webinar-wrapper').find('#bp-zoom-webinar-timezone').select2({
 							minimumInputLength: 0,
 							closeOnSelect: true,
-							language: this.select2_laguage_text,
+							language: (typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined') ? bp_select2.lang : 'en',
 							dropdownCssClass: 'bb-select-dropdown',
 							containerCssClass: 'bb-select-container',
 						});
-
-						$( '.bp-zoom-webinar-left-inner .bp-zoom-webinar-members-listing #webinars-list' ).css( 'max-height', Number( $( '#bp_zoom_webinar_form .bp-zoom-webinar-right-top' ).height() ) + 'px' );
 					}
 				}
 			});

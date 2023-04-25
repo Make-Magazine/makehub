@@ -253,8 +253,6 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				$bp_zoom_meeting_block = json_decode( $meeting_info );
 			}
 
-			$bp_zoom_meeting_block->block_class_name = isset( $attributes['className'] ) ? $attributes['className'] : '';
-
 			ob_start();
 			bp_get_template_part( 'zoom/blocks/meeting-block' );
 			$content = ob_get_clean();
@@ -330,8 +328,8 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$meeting_id    = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-zoom-id' );
-			$occurrence_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-occurrence-id' );
+			$meeting_id    = filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id', FILTER_SANITIZE_STRING );
+			$occurrence_id = filter_input( INPUT_POST, 'bp-zoom-meeting-occurrence-id', FILTER_SANITIZE_STRING );
 
 			$meeting_deleted = bp_zoom_conference()->delete_meeting( $meeting_id, $occurrence_id );
 
@@ -383,7 +381,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$meeting_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-zoom-id' );
+			$meeting_id = filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id', FILTER_SANITIZE_STRING );
 
 			$meeting_deleted = bp_zoom_conference()->delete_meeting( $meeting_id );
 
@@ -435,13 +433,13 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$meeting_id           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-zoom-id' );
-			$occurrence_id        = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-occurrence-id' );
-			$start_time           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-start-time' );
-			$timezone             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-timezone' );
+			$meeting_id           = filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id', FILTER_SANITIZE_STRING );
+			$occurrence_id        = filter_input( INPUT_POST, 'bp-zoom-meeting-occurrence-id', FILTER_SANITIZE_STRING );
+			$start_time           = filter_input( INPUT_POST, 'bp-zoom-meeting-start-time', FILTER_SANITIZE_STRING );
+			$timezone             = filter_input( INPUT_POST, 'bp-zoom-meeting-timezone', FILTER_SANITIZE_STRING );
 			$duration             = filter_input( INPUT_POST, 'bp-zoom-meeting-duration', FILTER_VALIDATE_INT );
-			$auto_recording       = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-recording' );
-			$alternative_host_ids = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-alt-host-ids' );
+			$auto_recording       = filter_input( INPUT_POST, 'bp-zoom-meeting-recording', FILTER_SANITIZE_STRING );
+			$alternative_host_ids = filter_input( INPUT_POST, 'bp-zoom-meeting-alt-host-ids', FILTER_SANITIZE_STRING );
 			$join_before_host     = filter_input( INPUT_POST, 'bp-zoom-meeting-join-before-host', FILTER_VALIDATE_BOOLEAN );
 			$host_video           = filter_input( INPUT_POST, 'bp-zoom-meeting-host-video', FILTER_VALIDATE_BOOLEAN );
 			$participants_video   = filter_input( INPUT_POST, 'bp-zoom-meeting-participants-video', FILTER_VALIDATE_BOOLEAN );
@@ -518,15 +516,15 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$auto_recording       = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-recording' );
-			$alternative_host_ids = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-alt-host-ids' );
-			$title                = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-title' );
-			$description          = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-description' );
-			$meeting_id           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-zoom-id' );
-			$start_date           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-start-date' );
+			$auto_recording       = filter_input( INPUT_POST, 'bp-zoom-meeting-recording', FILTER_SANITIZE_STRING );
+			$alternative_host_ids = filter_input( INPUT_POST, 'bp-zoom-meeting-alt-host-ids', FILTER_SANITIZE_STRING );
+			$title                = filter_input( INPUT_POST, 'bp-zoom-meeting-title', FILTER_SANITIZE_STRING );
+			$description          = filter_input( INPUT_POST, 'bp-zoom-meeting-description', FILTER_SANITIZE_STRING );
+			$meeting_id           = filter_input( INPUT_POST, 'bp-zoom-meeting-zoom-id', FILTER_SANITIZE_STRING );
+			$start_date           = filter_input( INPUT_POST, 'bp-zoom-meeting-start-date', FILTER_SANITIZE_STRING );
 			$duration             = filter_input( INPUT_POST, 'bp-zoom-meeting-duration', FILTER_VALIDATE_INT );
-			$timezone             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-timezone' );
-			$password             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-password' );
+			$timezone             = filter_input( INPUT_POST, 'bp-zoom-meeting-timezone', FILTER_SANITIZE_STRING );
+			$password             = filter_input( INPUT_POST, 'bp-zoom-meeting-password', FILTER_SANITIZE_STRING );
 			$approval_type        = filter_input( INPUT_POST, 'bp-zoom-meeting-registration', FILTER_VALIDATE_BOOLEAN );
 			$registration_type    = filter_input( INPUT_POST, 'bp-zoom-meeting-registration-type', FILTER_VALIDATE_INT );
 			$join_before_host     = filter_input( INPUT_POST, 'bp-zoom-meeting-join-before-host', FILTER_VALIDATE_BOOLEAN );
@@ -537,7 +535,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 			$enforce_login        = filter_input( INPUT_POST, 'bp-zoom-meeting-authentication', FILTER_VALIDATE_BOOLEAN );
 			$type                 = filter_input( INPUT_POST, 'bp-zoom-meeting-type', FILTER_VALIDATE_INT );
 			$recurrence           = filter_input( INPUT_POST, 'bp-zoom-meeting-recurrence', FILTER_VALIDATE_INT );
-			$end_time_select      = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-end-time-select' );
+			$end_time_select      = filter_input( INPUT_POST, 'bp-zoom-meeting-end-time-select', FILTER_SANITIZE_STRING );
 
 			$alternative_host_ids = str_replace( ', ', ',', $alternative_host_ids );
 			$alternative_host_ids = explode( ',', $alternative_host_ids );
@@ -552,7 +550,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date_utc'         => $start_date,
+				'start_date'             => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -589,7 +587,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 					if ( 3 < $repeat_interval ) {
 						$repeat_interval = 3;
 					}
-					$monthly_occurs_on = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-monthly-occurs-on' );
+					$monthly_occurs_on = filter_input( INPUT_POST, 'bp-zoom-meeting-monthly-occurs-on', FILTER_SANITIZE_STRING );
 
 					if ( 'day' === $monthly_occurs_on ) {
 						$monthly_day                   = filter_input( INPUT_POST, 'bp-zoom-meeting-monthly-day', FILTER_VALIDATE_INT );
@@ -603,7 +601,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				}
 
 				if ( 'date' === $end_time_select ) {
-					$end_date_time = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-end-date-time' );
+					$end_date_time = filter_input( INPUT_POST, 'bp-zoom-meeting-end-date-time', FILTER_SANITIZE_STRING );
 					$end_date_time = new DateTime( $end_date_time, new DateTimeZone( $timezone ) );
 					$end_date_time = $end_date_time->format( 'Y-m-d' );
 					$end_date_time = new DateTime( $end_date_time . ' ' . $start_meeting_time, new DateTimeZone( $timezone ) );
@@ -707,14 +705,14 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Something went wrong. If passcode is entered then please make sure it matches Zoom Passcode requirements and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$wp_nonce = bb_pro_filter_input_string( INPUT_POST, '_wpnonce' );
+			$wp_nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 
 			// Nonce check!
 			if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'bp_zoom_meeting' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Something went wrong. If passcode is entered then please make sure it matches Zoom Passcode requirements and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$meeting_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-meeting-id' );
+			$meeting_id = filter_input( INPUT_POST, 'bp-zoom-meeting-id', FILTER_SANITIZE_STRING );
 
 			if ( empty( $meeting_id ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please provide Meeting ID.', 'buddyboss-pro' ) ) );
@@ -818,8 +816,6 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				$bp_zoom_webinar_block = json_decode( $webinar_info );
 			}
 
-			$bp_zoom_webinar_block->block_class_name = isset( $attributes['className'] ) ? $attributes['className'] : '';
-
 			ob_start();
 			bp_get_template_part( 'zoom/blocks/webinar-block' );
 			$content = ob_get_clean();
@@ -895,8 +891,8 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$webinar_id    = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-zoom-id' );
-			$occurrence_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-occurrence-id' );
+			$webinar_id    = filter_input( INPUT_POST, 'bp-zoom-webinar-zoom-id', FILTER_SANITIZE_STRING );
+			$occurrence_id = filter_input( INPUT_POST, 'bp-zoom-webinar-occurrence-id', FILTER_SANITIZE_STRING );
 
 			$webinar_deleted = bp_zoom_conference()->delete_webinar( $webinar_id, $occurrence_id );
 
@@ -947,7 +943,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$webinar_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-zoom-id' );
+			$webinar_id = filter_input( INPUT_POST, 'bp-zoom-webinar-zoom-id', FILTER_SANITIZE_STRING );
 
 			$webinar_deleted = bp_zoom_conference()->delete_webinar( $webinar_id );
 
@@ -998,13 +994,13 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$webinar_id           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-zoom-id' );
-			$occurrence_id        = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-occurrence-id' );
-			$start_time           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-start-time' );
-			$timezone             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-timezone' );
+			$webinar_id           = filter_input( INPUT_POST, 'bp-zoom-webinar-zoom-id', FILTER_SANITIZE_STRING );
+			$occurrence_id        = filter_input( INPUT_POST, 'bp-zoom-webinar-occurrence-id', FILTER_SANITIZE_STRING );
+			$start_time           = filter_input( INPUT_POST, 'bp-zoom-webinar-start-time', FILTER_SANITIZE_STRING );
+			$timezone             = filter_input( INPUT_POST, 'bp-zoom-webinar-timezone', FILTER_SANITIZE_STRING );
 			$duration             = filter_input( INPUT_POST, 'bp-zoom-webinar-duration', FILTER_VALIDATE_INT );
-			$auto_recording       = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-recording' );
-			$alternative_host_ids = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-alt-host-ids' );
+			$auto_recording       = filter_input( INPUT_POST, 'bp-zoom-webinar-recording', FILTER_SANITIZE_STRING );
+			$alternative_host_ids = filter_input( INPUT_POST, 'bp-zoom-webinar-alt-host-ids', FILTER_SANITIZE_STRING );
 			$host_video           = filter_input( INPUT_POST, 'bp-zoom-webinar-host-video', FILTER_VALIDATE_BOOLEAN );
 			$panelists_video      = filter_input( INPUT_POST, 'bp-zoom-webinar-panelists-video', FILTER_VALIDATE_BOOLEAN );
 			$practice_session     = filter_input( INPUT_POST, 'bp-zoom-webinar-practice-session', FILTER_VALIDATE_BOOLEAN );
@@ -1078,15 +1074,15 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please choose API Host Email in the settings and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$auto_recording       = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-recording' );
-			$alternative_host_ids = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-alt-host-ids' );
-			$title                = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-title' );
-			$description          = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-description' );
-			$webinar_id           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-zoom-id' );
-			$start_date           = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-start-date' );
+			$auto_recording       = filter_input( INPUT_POST, 'bp-zoom-webinar-recording', FILTER_SANITIZE_STRING );
+			$alternative_host_ids = filter_input( INPUT_POST, 'bp-zoom-webinar-alt-host-ids', FILTER_SANITIZE_STRING );
+			$title                = filter_input( INPUT_POST, 'bp-zoom-webinar-title', FILTER_SANITIZE_STRING );
+			$description          = filter_input( INPUT_POST, 'bp-zoom-webinar-description', FILTER_SANITIZE_STRING );
+			$webinar_id           = filter_input( INPUT_POST, 'bp-zoom-webinar-zoom-id', FILTER_SANITIZE_STRING );
+			$start_date           = filter_input( INPUT_POST, 'bp-zoom-webinar-start-date', FILTER_SANITIZE_STRING );
 			$duration             = filter_input( INPUT_POST, 'bp-zoom-webinar-duration', FILTER_VALIDATE_INT );
-			$timezone             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-timezone' );
-			$password             = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-password' );
+			$timezone             = filter_input( INPUT_POST, 'bp-zoom-webinar-timezone', FILTER_SANITIZE_STRING );
+			$password             = filter_input( INPUT_POST, 'bp-zoom-webinar-password', FILTER_SANITIZE_STRING );
 			$approval_type        = filter_input( INPUT_POST, 'bp-zoom-webinar-registration', FILTER_VALIDATE_BOOLEAN );
 			$registration_type    = filter_input( INPUT_POST, 'bp-zoom-webinar-registration-type', FILTER_VALIDATE_INT );
 			$host_video           = filter_input( INPUT_POST, 'bp-zoom-webinar-host-video', FILTER_VALIDATE_BOOLEAN );
@@ -1096,7 +1092,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 			$enforce_login        = filter_input( INPUT_POST, 'bp-zoom-webinar-authentication', FILTER_VALIDATE_BOOLEAN );
 			$type                 = filter_input( INPUT_POST, 'bp-zoom-webinar-type', FILTER_VALIDATE_INT );
 			$recurrence           = filter_input( INPUT_POST, 'bp-zoom-webinar-recurrence', FILTER_VALIDATE_INT );
-			$end_time_select      = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-end-time-select' );
+			$end_time_select      = filter_input( INPUT_POST, 'bp-zoom-webinar-end-time-select', FILTER_SANITIZE_STRING );
 
 			$alternative_host_ids = str_replace( ', ', ',', $alternative_host_ids );
 			$alternative_host_ids = explode( ',', $alternative_host_ids );
@@ -1111,7 +1107,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 
 			$data = array(
 				'host_id'                => $host_id,
-				'start_date_utc'         => $start_date,
+				'start_date'             => $start_date,
 				'timezone'               => $timezone,
 				'duration'               => $duration,
 				'password'               => $password,
@@ -1148,7 +1144,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 					if ( 3 < $repeat_interval ) {
 						$repeat_interval = 3;
 					}
-					$monthly_occurs_on = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-monthly-occurs-on' );
+					$monthly_occurs_on = filter_input( INPUT_POST, 'bp-zoom-webinar-monthly-occurs-on', FILTER_SANITIZE_STRING );
 
 					if ( 'day' === $monthly_occurs_on ) {
 						$monthly_day                   = filter_input( INPUT_POST, 'bp-zoom-webinar-monthly-day', FILTER_VALIDATE_INT );
@@ -1162,7 +1158,7 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				}
 
 				if ( 'date' === $end_time_select ) {
-					$end_date_time = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-end-date-time' );
+					$end_date_time = filter_input( INPUT_POST, 'bp-zoom-webinar-end-date-time', FILTER_SANITIZE_STRING );
 					$end_date_time = new DateTime( $end_date_time, new DateTimeZone( $timezone ) );
 					$end_date_time = $end_date_time->format( 'Y-m-d' );
 					$end_date_time = new DateTime( $end_date_time . ' ' . $start_webinar_time, new DateTimeZone( $timezone ) );
@@ -1258,14 +1254,14 @@ if ( ! class_exists( 'BP_Zoom_Blocks' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Something went wrong. If passcode is entered then please make sure it matches Zoom Passcode requirements and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$wp_nonce = bb_pro_filter_input_string( INPUT_POST, '_wpnonce' );
+			$wp_nonce = filter_input( INPUT_POST, '_wpnonce', FILTER_SANITIZE_STRING );
 
 			// Nonce check!
 			if ( empty( $wp_nonce ) || ! wp_verify_nonce( $wp_nonce, 'bp_zoom_webinar' ) ) {
 				wp_send_json_error( array( 'error' => __( 'Something went wrong. If passcode is entered then please make sure it matches Zoom Passcode requirements and try again.', 'buddyboss-pro' ) ) );
 			}
 
-			$webinar_id = bb_pro_filter_input_string( INPUT_POST, 'bp-zoom-webinar-id' );
+			$webinar_id = filter_input( INPUT_POST, 'bp-zoom-webinar-id', FILTER_SANITIZE_STRING );
 
 			if ( empty( $webinar_id ) ) {
 				wp_send_json_error( array( 'error' => __( 'Please provide Webinar ID.', 'buddyboss-pro' ) ) );

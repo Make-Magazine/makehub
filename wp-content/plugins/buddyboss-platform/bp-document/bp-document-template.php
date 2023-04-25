@@ -2450,6 +2450,7 @@ function bp_get_document_parent_activity_id() {
  * @since BuddyBoss 1.4.0
  */
 function bp_get_document_preview_music_extensions() {
+
 	return apply_filters( 'bp_get_document_preview_music_extensions', array( 'mp3', 'wav', 'ogg' ) );
 }
 
@@ -2467,7 +2468,7 @@ function bp_get_document_preview_video_extensions() {
 	 *
 	 * @since BuddyBoss 1.7.0
 	 */
-	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4', 'webm', 'ogg', 'mov' ) );
+	return apply_filters( 'bp_get_document_preview_video_extensions', array( 'mp4' ) );
 }
 
 /**

@@ -115,20 +115,6 @@ window.bp = window.bp || {};
 		 */
 		enableBulkSubmit: function( event ) {
 			$( '#notification-bulk-manage' ).prop( 'disabled', $( event.currentTarget ).val().length <= 0 );
-			
-			if ( true === $( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked' ) ) {
-				$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-					if ( 'unread' === $( event.currentTarget ).val() || '' === $( event.currentTarget ).val() ) {
-						if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
-							$( checkbox ).prop( 'checked', true );
-						} else {
-							$( checkbox ).prop( 'checked', false );
-						}
-					} else {
-						$( checkbox ).prop( 'checked', true );
-					}
-				} );
-			}
 		},
 
 		/**
@@ -137,15 +123,8 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		selectAll: function( event ) {
-			var selectedNotificationValue = $( '#notification-select' ).val();
-			$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-				if ( 'unread' === selectedNotificationValue || '' === selectedNotificationValue ) {
-					if ( '' === $( checkbox ).attr( 'data-readonly' ) ) {
-						$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-					}
-				} else {
-					$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-				}
+			$.each( $( '.notification-check' ), function( cb, checkbox ) {
+				$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
 			} );
 		},
 
@@ -154,16 +133,12 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		checkSelectAllOrNot: function( e ) {
+		checkSelectAllOrNot: function() {
 			var unChecked 	= 0;
-			if ( '1' === $( this ).attr( 'data-readonly' ) ) {
-				$( this ).blur();
-				e.preventDefault();
-			}
-			$.each( $( '.notification-check' ), function ( cb, checkbox ) {
-				if ( $( checkbox ).prop( 'checked' ) == false ) {
-					unChecked = parseInt( unChecked ) + 1;
-				}
+			$.each( $( '.notification-check' ), function( cb, checkbox ) {
+				if($( checkbox ).prop('checked') == false ){
+	            	unChecked = parseInt( unChecked ) +1;
+	            }
 			} );
 
 			if ( unChecked == 0 ) {

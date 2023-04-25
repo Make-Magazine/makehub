@@ -207,12 +207,7 @@ function bp_video_activity_append_video( $content, $activity ) {
 				$args['album_id'] = 'existing-video';
 			}
 		} else {
-			$args['privacy'] = bp_video_query_privacy( $activity->user_id, $group_id, $activity->component );
-
-			if ( 'activity_comment' === $activity->type ) {
-				$args['privacy'][] = 'comment';
-			}
-
+			$args['privacy'] = bp_video_query_privacy( $activity->user_id, 0, $activity->component );
 			if ( ! bp_is_profile_video_support_enabled() ) {
 				$args['user_id'] = 'null';
 			}
@@ -353,15 +348,10 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 	global $bp_activity_post_update, $bp_activity_post_update_id, $bp_activity_edit;
 
 	$post_video       = filter_input( INPUT_POST, 'video', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
-	$post_edit        = bb_filter_input_string( INPUT_POST, 'edit' );
-	$post_action      = bb_filter_input_string( INPUT_POST, 'action' );
-	$post_privacy     = bb_filter_input_string( INPUT_POST, 'privacy' );
+	$post_edit        = filter_input( INPUT_POST, 'edit', FILTER_SANITIZE_STRING );
+	$post_action      = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+	$post_privacy     = filter_input( INPUT_POST, 'privacy', FILTER_SANITIZE_STRING );
 	$moderated_videos = bp_activity_get_meta( $activity_id, 'bp_video_ids', true );
-
-	if ( ! empty( $post_video ) ) {
-		$video_order = array_column( $post_video, 'menu_order' );
-		array_multisort( $video_order, SORT_ASC, $post_video );
-	}
 
 	if ( bp_is_active( 'moderation' ) && ! empty( $moderated_videos ) ) {
 		$moderated_videos = explode( ',', $moderated_videos );
@@ -436,7 +426,7 @@ function bp_video_update_activity_video_meta( $content, $user_id, $activity_id )
 						$video_ids[] = $video_id;
 					}
 				    if ( ! in_array( $video_id, $video_ids ) ) { // phpcs:ignore
-						bp_video_delete( array( 'id' => $video_id ), 'activity' );
+						bp_video_delete( array( 'id' => $video_id ) );
 					}
 				}
 
@@ -570,11 +560,6 @@ function bp_video_forums_new_post_video_save( $post_id ) {
 
 		// save video.
 		$videos = json_decode( stripslashes( $_POST['bbp_video'] ), true ); // phpcs:ignore
-
-		if ( ! empty( $videos ) ) {
-			$video_order = array_column( $videos, 'menu_order' );
-			array_multisort( $video_order, SORT_ASC, $videos );
-		}
 
 		// fetch currently uploaded video ids.
 		$existing_video                = array();
@@ -1758,7 +1743,7 @@ function bb_video_safari_popup_video_play( $is_ios ) {
 	$browser = bb_core_get_browser();
 	if ( false === $is_ios && isset( $browser ) ) {
 		$is_safari = stripos( $browser['name'], 'Safari' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized,WordPress.Security.ValidatedSanitizedInput.MissingUnslash
-		$action    = bb_filter_input_string( INPUT_POST, 'action' );
+		$action    = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 
 		if ( $is_safari && 'video_get_activity' === $action ) {
 			$is_ios = true;
@@ -1841,7 +1826,6 @@ function bb_setup_template_for_video_preview( $template ) {
  */
 function bb_setup_attachment_video_preview() {
 	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]', 'top' );
-	add_rewrite_rule( 'bb-attachment-video-preview/([^/]+)/([^/]+)/?$', 'index.php?video-attachment-id=$matches[1]&video-thread-id=$matches[2]', 'top' );
 }
 
 /**
@@ -1855,10 +1839,6 @@ function bb_setup_attachment_video_preview() {
  */
 function bb_setup_attachment_video_preview_query( $query_vars ) {
 	$query_vars[] = 'video-attachment-id';
-
-	if ( bp_is_active( 'messages' ) ) {
-		$query_vars[] = 'video-thread-id';
-	}
 
 	return $query_vars;
 }
@@ -1888,4 +1868,3 @@ function bb_setup_attachment_video_preview_template( $template ) {
 
 	return $template;
 }
-

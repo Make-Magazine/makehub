@@ -1,57 +1,65 @@
 <?php
+
 /**
  * User Subscriptions
  *
  * @package BuddyBoss\Theme
  */
 
-do_action( 'bbp_template_before_user_subscriptions' );
+?>
 
-if ( bbp_is_user_home() || current_user_can( 'edit_users' ) ) : ?>
+	<?php do_action( 'bbp_template_before_user_subscriptions' ); ?>
 
-	<div id="bbp-user-subscriptions" class="bbp-user-subscriptions">
-		<h2 class="screen-heading subscribed-forums-screen"><?php esc_html_e( 'Subscribed Forums', 'buddyboss' ); ?></h2>
-		<div class="bbp-user-section">
+	<?php if ( bbp_is_subscriptions_active() ) : ?>
 
-			<?php if ( bb_is_enabled_subscription( 'forum' ) && bbp_get_user_forum_subscriptions() ) : ?>
+		<?php if ( bbp_is_user_home() || current_user_can( 'edit_users' ) ) : ?>
 
-				<?php bbp_get_template_part( 'loop', 'forums' ); ?>
+			<div id="bbp-user-subscriptions" class="bbp-user-subscriptions">
+				<h2 class="screen-heading subscribed-forums-screen"><?php _e( 'Subscribed Forums', 'buddyboss' ); ?></h2>
+				<div class="bbp-user-section">
 
-			<?php else : ?>
+					<?php if ( bbp_get_user_forum_subscriptions() ) : ?>
 
-				<aside class="bp-feedback bp-messages info">
-					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? esc_html_e( 'You are not currently subscribed to any forums.', 'buddyboss' ) : esc_html_e( 'This user is not currently subscribed to any forums.', 'buddyboss' ); ?></p>
-				</aside>
+						<?php bbp_get_template_part( 'loop', 'forums' ); ?>
 
-				<br />
+					<?php else : ?>
 
-			<?php endif; ?>
+						<aside class="bp-feedback bp-messages info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any forums.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any forums.', 'buddyboss' ); ?></p>
+						</aside>
 
-		</div>
+						<br />
 
-		<h2 class="screen-heading subscribed-topics-screen"><?php esc_html_e( 'Subscribed Discussions', 'buddyboss' ); ?></h2>
-		<div class="bbp-user-section">
+					<?php endif; ?>
 
-			<?php if ( bb_is_enabled_subscription( 'topic' ) && bbp_get_user_topic_subscriptions() ) : ?>
+				</div>
 
-				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+				<h2 class="screen-heading subscribed-topics-screen"><?php _e( 'Subscribed Discussions', 'buddyboss' ); ?></h2>
+				<div class="bbp-user-section">
 
-				<?php bbp_get_template_part( 'loop', 'topics' ); ?>
+					<?php if ( bbp_get_user_topic_subscriptions() ) : ?>
 
-				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
+						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-			<?php else : ?>
+						<?php bbp_get_template_part( 'loop', 'topics' ); ?>
 
-				<aside class="bp-feedback bp-messages info">
-					<span class="bp-icon" aria-hidden="true"></span>
-					<p><?php bbp_is_user_home() ? esc_html_e( 'You are not currently subscribed to any discussions.', 'buddyboss' ) : esc_html_e( 'This user is not currently subscribed to any discussions.', 'buddyboss' ); ?></p>
-				</aside>
+						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-			<?php endif; ?>
+					<?php else : ?>
 
-		</div>
-	</div><!-- #bbp-user-subscriptions -->
+						<aside class="bp-feedback bp-messages info">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p><?php bbp_is_user_home() ? _e( 'You are not currently subscribed to any discussions.', 'buddyboss' ) : _e( 'This user is not currently subscribed to any discussions.', 'buddyboss' ); ?></p>
+						</aside>
 
-<?php endif;
-do_action( 'bbp_template_after_user_subscriptions' ); ?>
+					<?php endif; ?>
+
+				</div>
+			</div><!-- #bbp-user-subscriptions -->
+
+		<?php endif; ?>
+
+	<?php endif; ?>
+
+	<?php do_action( 'bbp_template_after_user_subscriptions' ); ?>

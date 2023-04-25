@@ -93,15 +93,6 @@ class BP_Notifications_Notification {
 	public $inserted = false;
 
 	/**
-	 * Is notification read only or linkable?
-	 *
-	 * @since BuddyBoss 2.2.7
-	 *
-	 * @var bool
-	 */
-	public $readonly;
-
-	/**
 	 * Columns in the notifications table.
 	 */
 	public static $columns = array(
@@ -234,7 +225,6 @@ class BP_Notifications_Notification {
 			$this->component_action  = $notification->component_action;
 			$this->date_notified     = $notification->date_notified;
 			$this->is_new            = (int) $notification->is_new;
-			$this->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $notification ) : false;
 		}
 	}
 
@@ -678,7 +668,7 @@ class BP_Notifications_Notification {
 				'secondary_item_id' => false,
 				'component_name'    => bp_notifications_get_registered_components(),
 				'component_action'  => false,
-				'excluded_action'   => bb_notification_excluded_component_actions(),
+				'excluded_action'   => false,
 				'is_new'            => true,
 				'search_terms'      => '',
 				'order_by'          => false,
@@ -735,10 +725,6 @@ class BP_Notifications_Notification {
 	 */
 	public static function get( $args = array() ) {
 		global $wpdb;
-
-		if ( isset( $args['excluded_action'] ) && empty( $args['excluded_action'] ) ) {
-			unset( $args['excluded_action'] );
-		}
 
 		// Parse the arguments.
 		$r = self::parse_args( $args );
@@ -818,7 +804,6 @@ class BP_Notifications_Notification {
 			$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
 			$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
 			$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
-			$results[ $key ]->readonly          = function_exists( 'bb_notification_is_read_only' ) ? bb_notification_is_read_only( $results[ $key ] ) : false;
 		}
 
 		// Update meta cache.
@@ -880,17 +865,6 @@ class BP_Notifications_Notification {
 			$meta_query_sql
 		);
 
-		/**
-		 * Filters the Where SQL statement.
-		 *
-		 * @since BuddyBoss 2.0.3
-		 *
-		 * @param string $where_sql Where SQL statement.
-		 * @param string $tbl_alias Table alias.
-		 * @param array  $r         Array of parsed arguments for the get method.
-		 */
-		$where_sql = apply_filters( 'bb_notifications_get_where_conditions', $where_sql, 'n', $r );
-		
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
 

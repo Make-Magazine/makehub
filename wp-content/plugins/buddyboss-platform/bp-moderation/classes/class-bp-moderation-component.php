@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.5.6
  */
-#[\AllowDynamicProperties]
 class BP_Moderation_Component extends BP_Component {
 
 	/**
@@ -173,7 +172,6 @@ class BP_Moderation_Component extends BP_Component {
 			'bp_moderation',
 			array(
 				'label'              => __( 'Reporting Category', 'buddyboss' ),
-				'description'        => __( 'Create reporting categories for members to select when reporting content and members on the front-end. An additional "Other" category will also be available for members to specify their own reason for reporting.', 'buddyboss' ),
 				'labels'             => array(
 					'name'                       => _x( 'Reporting Categories', 'taxonomy general name', 'buddyboss' ),
 					'singular_name'              => _x( 'Reporting Category', 'taxonomy singular name', 'buddyboss' ),
@@ -228,14 +226,7 @@ class BP_Moderation_Component extends BP_Component {
 			foreach ( $moderation_terms as $moderation_term ) {
 				$term = term_exists( $moderation_term['name'], 'bpm_category' );
 				if ( empty( $term ) ) {
-					$term = wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
-					if ( isset( $term['term_id'] ) && ! empty( $term['term_id'] ) ) {
-						update_term_meta(
-							$term['term_id'],
-							'bb_category_show_when_reporting',
-							'content_members'
-						);
-					}
+					wp_insert_term( $moderation_term['name'], 'bpm_category', array( 'description' => $moderation_term['description'] ) );
 				}
 			}
 

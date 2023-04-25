@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.5.0
  */
-#[\AllowDynamicProperties]
 class BP_Friends_Component extends BP_Component {
 
 	/**

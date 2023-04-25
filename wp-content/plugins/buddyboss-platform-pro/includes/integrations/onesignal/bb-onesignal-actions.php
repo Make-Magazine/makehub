@@ -422,7 +422,7 @@ function bb_pro_onesignal_update_device_info() {
 	}
 
 	$user_id         = filter_input( INPUT_POST, 'user_id', FILTER_SANITIZE_NUMBER_INT );
-	$player_id       = bb_pro_filter_input_string( INPUT_POST, 'player_id' );
+	$player_id       = filter_input( INPUT_POST, 'player_id', FILTER_SANITIZE_STRING );
 	$active          = filter_input( INPUT_POST, 'active', FILTER_VALIDATE_BOOLEAN );
 	$update_via_curl = filter_input( INPUT_POST, 'update_via_curl', FILTER_VALIDATE_BOOLEAN );
 	$auth_key        = bb_onesignal_auth_key();
@@ -537,16 +537,7 @@ function bb_pro_onesignal_notification_after_save( $notification ) {
 		return;
 	}
 
-	if (
-		isset( $notification->inserted ) &&
-		true === $notification->inserted &&
-		bp_can_send_notification( $notification->user_id, $notification->component_name, $notification->component_action, 'web' )
-	) {
-
-		if ( true !== (bool) apply_filters( 'bb_pro_onesignal_notification_fire', bb_pro_onesignal_user_presence_check( true, $notification ), $notification ) ) {
-			return;
-		}
-
+	if ( isset( $notification->inserted ) && true === $notification->inserted && bp_can_send_notification( $notification->user_id, $notification->component_name, $notification->component_action, 'web' ) ) {
 		if ( function_exists( 'bb_notification_get_renderable_notifications' ) ) {
 			$content = array(
 				'title'   => '',
@@ -588,7 +579,6 @@ function bb_pro_onesignal_notification_after_save( $notification ) {
 				'image'   => $notification_content['image'],
 			)
 		);
-
 	}
 }
 

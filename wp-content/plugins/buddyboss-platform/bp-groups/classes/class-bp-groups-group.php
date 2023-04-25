@@ -14,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-#[\AllowDynamicProperties]
 class BP_Groups_Group {
 
 	/**

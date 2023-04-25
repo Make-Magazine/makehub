@@ -32,21 +32,9 @@ $total = bp_search_get_total_topics_count( get_the_ID() ) ?>
 			<div class="item-desc">
 				<?php
 				if ( get_the_excerpt( get_the_ID() ) ) {
-					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_excerpt( get_the_ID() ) ),
-						100,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					);
+					echo mb_strimwidth( get_the_excerpt( get_the_ID() ), 0, 100 ) . '...';
 				} elseif ( get_the_content( get_the_ID() ) ) {
-					echo bp_create_excerpt(
-						wp_strip_all_tags( get_the_content( get_the_ID() ) ),
-						100,
-						array(
-							'ending' => __( '&hellip;', 'buddyboss' ),
-						)
-					);
+					echo mb_strimwidth( get_the_content( get_the_ID() ), 0, 100 ) . '...';
 				}
 				?>
 			</div>

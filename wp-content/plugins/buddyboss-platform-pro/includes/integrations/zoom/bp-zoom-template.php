@@ -124,7 +124,7 @@ function bp_has_zoom_meetings( $args = '' ) {
 	 */
 
 	// Search terms.
-	$s = bb_pro_filter_input_string( INPUT_GET, 's' );
+	$s = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
 	if ( ! empty( $s ) && empty( $r['search_terms'] ) ) {
 		$r['search_terms'] = $s;
 	}
@@ -586,8 +586,6 @@ function bp_zoom_meeting_start_date() {
 function bp_get_zoom_meeting_start_date() {
 	global $zoom_meeting_template;
 
-	$start_date = wp_date( 'Y-m-d H:i:s', strtotime( $zoom_meeting_template->meeting->start_date_utc ), new DateTimeZone( $zoom_meeting_template->meeting->timezone ) );
-
 	/**
 	 * Filters the meeting start date being displayed.
 	 *
@@ -595,7 +593,7 @@ function bp_get_zoom_meeting_start_date() {
 	 *
 	 * @param string $start_date The meeting start date.
 	 */
-	return apply_filters( 'bp_get_zoom_meeting_start_date', $start_date );
+	return apply_filters( 'bp_get_zoom_meeting_start_date', $zoom_meeting_template->meeting->start_date );
 }
 
 /**
@@ -1348,13 +1346,6 @@ function bp_get_zoom_meeting_zoom_join_url( $meeting_id = 0 ) {
 	}
 
 	if ( empty( $zoom_join_url ) && ! empty( $meeting_id ) ) {
-		$meeting = new BP_Zoom_Meeting( $meeting_id );
-		if ( ! empty( $meeting->parent ) ) {
-			$meeting = BP_Zoom_Meeting::get_meeting_by_meeting_id( $meeting->parent );
-			if ( ! empty( $meeting ) ) {
-				$meeting_id = $meeting->id;
-			}
-		}
 		$zoom_join_url = bp_zoom_meeting_get_meta( $meeting_id, 'zoom_join_url', true );
 	}
 
@@ -1744,7 +1735,7 @@ function bp_has_zoom_webinars( $args = '' ) {
 	 */
 
 	// Search terms.
-	$s = bb_pro_filter_input_string( INPUT_GET, 's' );
+	$s = filter_input( INPUT_GET, 's', FILTER_SANITIZE_STRING );
 	if ( ! empty( $s ) && empty( $r['search_terms'] ) ) {
 		$r['search_terms'] = $s;
 	}
@@ -2206,7 +2197,6 @@ function bp_zoom_webinar_start_date() {
 function bp_get_zoom_webinar_start_date() {
 	global $zoom_webinar_template;
 
-	$start_date = wp_date( 'Y-m-d H:i:s', strtotime( $zoom_webinar_template->webinar->start_date_utc ), new DateTimeZone( $zoom_webinar_template->webinar->timezone ) );
 	/**
 	 * Filters the webinar start date being displayed.
 	 *
@@ -2214,7 +2204,7 @@ function bp_get_zoom_webinar_start_date() {
 	 *
 	 * @param string $start_date The webinar start date.
 	 */
-	return apply_filters( 'bp_get_zoom_webinar_start_date', $start_date );
+	return apply_filters( 'bp_get_zoom_webinar_start_date', $zoom_webinar_template->webinar->start_date );
 }
 
 /**
@@ -2945,13 +2935,6 @@ function bp_get_zoom_webinar_zoom_join_url( $webinar_id = 0 ) {
 	}
 
 	if ( empty( $zoom_join_url ) && ! empty( $webinar_id ) ) {
-		$webinar = new BP_Zoom_Webinar( $webinar_id );
-		if ( ! empty( $webinar->parent ) ) {
-			$webinar = BP_Zoom_Webinar::get_webinar_by_webinar_id( $webinar->parent );
-			if ( ! empty( $webinar ) ) {
-				$webinar_id = $webinar->id;
-			}
-		}
 		$zoom_join_url = bp_zoom_webinar_get_meta( $webinar_id, 'zoom_join_url', true );
 	}
 

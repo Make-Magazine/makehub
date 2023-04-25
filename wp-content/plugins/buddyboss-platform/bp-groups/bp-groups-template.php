@@ -692,10 +692,6 @@ function bp_get_group_name( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( empty( $group->id ) || empty( $group->name ) ) {
-		return '';
-	}
-
 	/**
 	 * Filters the name of the current group in the loop.
 	 *
@@ -1985,7 +1981,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(

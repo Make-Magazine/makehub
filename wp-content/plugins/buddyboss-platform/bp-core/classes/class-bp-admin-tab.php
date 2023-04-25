@@ -11,7 +11,6 @@ defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 
-	#[\AllowDynamicProperties]
 	abstract class BP_Admin_Tab {
 
 		/**
@@ -90,7 +89,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 		 * @since BuddyBoss 1.0.0
 		 */
 		public function register_tab() {
-			$GLOBALS[$this->global_tabs_var][ $this->tab_name ] = $this;
+			global ${$this->global_tabs_var};
+
+			${$this->global_tabs_var}[ $this->tab_name ] = $this;
 		}
 
 		public function register_hook() {
