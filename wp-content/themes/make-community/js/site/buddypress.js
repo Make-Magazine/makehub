@@ -5,4 +5,14 @@ jQuery(document).ready(function () {
 			jQuery(this).closest('h2').next(".item-options").toggle();
 		});
 	}
+	if(jQuery(".wp-block-categories-list").length) {
+		jQuery('.wp-block-categories-list .cat-item').each(function() {
+			if (jQuery(this).find('.children').length !== 0) {
+				jQuery(this).prepend("<i class='fa fa-plus see-children'></i>");
+			}
+		});
+	}
+	jQuery(document).on('click', ".see-children" , function() {
+		jQuery(this).parent().toggleClass("show-children");
+   });
 });

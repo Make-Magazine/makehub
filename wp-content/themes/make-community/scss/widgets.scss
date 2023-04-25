@@ -15,6 +15,8 @@
                 border: 1px solid #efefef;
                 width: 100%;
                 height: auto;
+                aspect-ratio: 1;
+                object-fit: cover;
             }            
             .title {
                 font-size: 16px;
@@ -140,9 +142,15 @@
         padding-bottom: 4px;
         font-size: 16px;
         border-bottom: 0px;
+        .see-children {
+            color: #147ec2;
+            margin-right: 5px;
+            transition: transform .4s;
+        }
         .children { 
-            visibility: hidden;
             max-height: 0px;
+            transition: max-height .4s;
+            overflow: hidden;
             li { 
                 padding-top: 4px;
                 padding-bottom: 4px; 
@@ -151,17 +159,13 @@
                 }
             }
         }
-        &:has(.children) {
-            &:before {
-                content: "+ ";
-                color: $color-blue;
-                font-weight: bold;
+        &.show-children {
+            .see-children {
+                transform: rotate(45deg);
             }
-            &:hover .children { 
-                visibility: visible;
+            .children {
                 max-height: 500px;
-                transition: max-height .4s ease-out;
-             }
+            }
         }
     }
 }
