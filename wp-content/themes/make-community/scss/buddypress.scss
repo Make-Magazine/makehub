@@ -83,6 +83,98 @@
 }
 
 // Activity Page
+#bp-nouveau-activity-form {
+	border: solid 1px $border-color !important;
+	border-radius: 5px;
+    background: #f9f9f9f9;
+	margin-bottom: 30px;
+	#whats-new-form {
+		display: flex;
+		flex-direction: column;
+		#whats-new-avatar {
+			left: 5px;
+			top: 5px;
+			border: 0px;
+			width: 50px;
+			img {
+				border-radius: 50px;
+			}
+		}
+		#whats-new-content {
+			margin: 10px 15px;
+			padding-left: 60px;
+			padding-bottom: 5px;
+		}
+		#whats-new-textarea {
+			textarea { 
+				background: #fff;
+			}
+		}
+		#mpp-activity-upload-buttons {
+			width: 100%;
+			border-top: solid 1px $border-color;
+			padding: 15px;
+			margin-top: 0px;
+			background: #f0f0f0;
+		}
+		#mpp-notice-message {
+			padding: 5px;
+			order: 2;
+			margin-bottom: 0px;
+			p { margin-bottom: 0px; }
+		}
+		#mpp-activity-media-upload-container {
+			padding: 15px;
+			.mpp-upload-container-close {
+				background: none;
+				text-indent: 0px;
+				top: -40px;
+				span {display: none;}
+				&:before {
+					font-family: "FontAwesome";
+					content: "\f00d";
+					color: #333;
+				}
+			}
+			#mpp-upload-dropzone-activity {
+				background: #fff;
+			}
+			#mpp-add-remote-media {
+				padding: 8px;
+				border-radius: 3px;
+			}
+			#mpp-remote-media-url {
+				border-color: $border-color;
+				background: #fff;
+				padding: 5px;
+			}
+		}
+		#whats-new-options {
+			display: flex;
+			order: 3;
+			width: 100%;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 5px;
+			#whats-new-post-in-box {
+				margin-bottom: 0px;
+				order: 9;
+			}
+			#whats-new-submit {
+				margin-bottom: 0px;
+				input[type=submit] {
+					background: $color-blue;
+					border: solid 1px $color-blue;
+					color: #fff;
+					&:hover {
+						background: #fff;
+						color: $color-blue;
+					}
+				}
+			}
+		}
+	}
+}
 #activity-filter-by {
 	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated]{
 		display: none;

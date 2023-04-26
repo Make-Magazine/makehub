@@ -25,6 +25,10 @@ h1.page-title, h1.single-post-title {
  //hide breadcrumbs for certain pages
 body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { display:none; }
 
+// create pages were not taking into account the sidebar from the default template
+.create.page-template-default #content {
+	width: 68%;
+}
 .sidebar .sidebar-box {
 	.sidebar-title {
 		font-size: 30px;
