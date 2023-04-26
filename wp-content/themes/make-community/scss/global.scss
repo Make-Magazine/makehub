@@ -127,20 +127,20 @@ body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { dis
 	overflow: hidden;
 }
 
-input[type="submit"] {
-	color: #fff;
-	border: thin solid $color-blue;
+input[type=submit], input[type=button], button[type=submit] {
+	color: #fff !important;
+	border: thin solid $color-blue !important;
 	padding: 10px 30px;
-	background-color: $color-blue;
+	background-color: $color-blue !important;
 	border-radius: 2px !important;
 	font-size: 16px;
 	&:hover, &:active, &:focus {
-		background-color: #fff;
-		color: $color-blue;
+		background-color: #fff !important;
+		color: $color-blue !important;
 		box-shadow: none;
 	}
 }
-input[type="submit"].disabled { color: #fff !important; }
+input[type=submit].disabled { color: #fff !important; }
 
 .feedback-btn {
 	position: fixed;

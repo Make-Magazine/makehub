@@ -162,15 +162,6 @@
 			}
 			#whats-new-submit {
 				margin-bottom: 0px;
-				input[type=submit] {
-					background: $color-blue;
-					border: solid 1px $color-blue;
-					color: #fff;
-					&:hover {
-						background: #fff;
-						color: $color-blue;
-					}
-				}
 			}
 		}
 	}
@@ -275,4 +266,55 @@
 
 #activity-rss-feed { 
 	display: none; 
+}
+
+// subnavs
+.buddypress #subnav ul {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 15px; 
+	li a {
+		padding: 3px 8px;
+		border-radius: 2px;
+	}
+}
+
+
+// mediapress comments
+.mpp-activity {
+	form#mpp-whats-new-form {
+   		padding: 10px !important;
+		p.activity-greeting {
+			margin-left: 120px;
+			margin-top: 15px;
+		}
+		#mpp-whats-new-avatar {
+			img { border-radius: 50px; }
+		}
+		#mpp-whats-new-content {
+			margin-left: 0px;
+			float: left;
+			textaread#mpp-whats-new {
+				height: 40px !important;
+			}
+		}
+	}
+}
+.mpp-lightbox-content form#mpp-whats-new-form {
+	#mpp-whats-new-avatar {
+		width: 50px;
+	}
+	#mpp-whats-new-content {
+		width: calc(100% - 60px);
+	}
+}
+#mpp-activity-stream {
+	.activity-item { margin-top: 15px; }
+	.mpp-activity-avatar img {
+		border-radius: 100px;
+	}
+	.mpp-activity-content {
+		float: left;
+		margin-left: 15px;
+	}
 }
