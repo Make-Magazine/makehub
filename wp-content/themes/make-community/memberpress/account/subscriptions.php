@@ -13,7 +13,7 @@ if(!empty($subscriptions)) {
 		  <thead>
 			<tr>
 			  <th><?php _ex('Membership', 'ui', 'buddyboss-theme'); ?></th>
-			  <th><?php _ex('Subscription', 'ui', 'buddyboss-theme'); ?></th>
+			  <th><?php _ex('Length', 'ui', 'buddyboss-theme'); ?></th>
 			  <th><?php _ex('Active', 'ui', 'buddyboss-theme'); ?></th>
 			  <th><?php _ex('Created', 'ui', 'buddyboss-theme'); ?></th>
 			  <th><?php _ex('Expires', 'ui', 'buddyboss-theme'); ?></th>

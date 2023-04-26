@@ -330,8 +330,8 @@ jQuery(document).ready(function () {
                         '</a>' +
                     '</li>' +      
                     '<li class="menu-item">' +
-                        '<a href="https://make.co/digital/library">' +
-                            '<span title="Premium Member Benefit">Digital Make</span>' +
+                        '<a href="https://make.co/digital-library">' +
+                            '<span title="Premium Member Benefit">Digital Make:</span>' +
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item">' +
