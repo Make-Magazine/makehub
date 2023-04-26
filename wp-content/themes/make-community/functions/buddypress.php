@@ -104,3 +104,6 @@ add_action( 'bp_init', 'setup_group_nav' );
 function bp_group_resources() {
 	return;
 }
+
+// change mediapress slug
+define( 'MPP_GALLERY_SLUG', 'galleries');//rename mediapress to album

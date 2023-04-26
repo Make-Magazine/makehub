@@ -10,15 +10,6 @@ get_header();
 			<?php 
 			$body_classes = get_body_class();
 			while ( have_posts() ) : the_post(); 
-				if(!in_array('learnpress-page', $body_classes)) { ?>
-				    <h1 class="page-title"><?php
-						$thetitle = get_the_title();
-						$getlength = strlen($thetitle);
-						$thelength = 35;
-						echo substr($thetitle, 0, $thelength);
-						if ($getlength > $thelength) echo "...";
-				?>	</h1> <?php
-				}
 
 				if(!in_array('learnpress-page', $body_classes)) {
 					if ( has_post_thumbnail() ) { ?>

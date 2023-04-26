@@ -31,6 +31,70 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
+body.buddyboss-theme {
+    .site-header-custom {
+        width: 100% !important;
+        left: 0px;
+    }
+    .buddypanel {
+        margin-top: 121px;
+        z-index: 9;
+		margin-left:-230px;
+		font-weight: 400;
+		top: 0px;
+		.bb-toggle-panel {
+			.bb-icon-sidebar:before {
+				content: "\e859";
+			}
+		}
+		li a i { opacity: 1 !important; }
+    }
+	#page.site {
+		margin-left: 0px;
+	}
+	&.buddypanel-open.bb-page-loaded, &.buddypanel-open.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px }
+		#page.site {
+			margin-left: 230px;
+		}
+		@media screen and (max-width: 805px) {
+			#page.site { margin-left: 0px; }
+		}
+		@media screen and (min-width: 805px) {
+			#makey-sign {
+				margin-left: 180px;
+				&:hover {
+					margin-left: 200px;
+				}
+			}
+		}
+        
+	}
+	&.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px; }
+        &:not(.sfwd-sidebar) {
+            #page.site {
+                margin-left: 68px;
+                @media screen and (max-width: 805px) {
+                    margin-left: 0px;
+                }
+            }
+        }
+		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
+		&.single-sfwd-lessons #page.site {
+			margin-left: 0px;
+		}
+	}
+}
+// Buddypanel Nav
+body.buddypanel-open {
+    #buddypanel-menu {
+        .bb-menu-item {
+            span { white-space: break-spaces !important; }
+        }
+    }
+}
+
 a {
 	color: $link-color;
 	&:hover {

@@ -1,3 +1,0 @@
-#: admin/partials/activecampaign-for-woocommerce-admin-display.php:17
-msgid "Hello world!"
-msgstr "Hello world!"

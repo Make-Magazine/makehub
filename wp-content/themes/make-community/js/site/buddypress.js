@@ -5,6 +5,7 @@ jQuery(document).ready(function () {
 			jQuery(this).closest('h2').next(".item-options").toggle();
 		});
 	}
+	// toggle for the category list widget
 	if(jQuery(".wp-block-categories-list").length) {
 		jQuery('.wp-block-categories-list .cat-item').each(function() {
 			if (jQuery(this).find('.children').length !== 0) {
@@ -14,5 +15,11 @@ jQuery(document).ready(function () {
 	}
 	jQuery(document).on('click', ".see-children" , function() {
 		jQuery(this).parent().toggleClass("show-children");
-   });
+    });
+	// activity form
+	if(jQuery("#mpp-activity-upload-buttons").length) {
+		jQuery("#whats-new-form").append(jQuery("#mpp-activity-upload-buttons"));
+		jQuery("#whats-new-form").append(jQuery("#mpp-notice-message"));
+		jQuery("#whats-new-form").append(jQuery("#mpp-activity-media-upload-container"));
+	}
 });
