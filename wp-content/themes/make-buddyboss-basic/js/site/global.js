@@ -3,6 +3,20 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
+jQuery(document).ready(function () {
+	// buddyboss Buddypanel
+	jQuery("body").addClass("buddypanel-closed");
+	jQuery("a.bb-toggle-panel").on("click", function(){
+		if(jQuery("body").hasClass("buddypanel-closed")) {
+			jQuery("body").removeClass("buddypanel-closed");
+			jQuery("body").addClass("buddypanel-open");
+		} else {
+			jQuery("body").addClass("buddypanel-closed");
+			jQuery("body").removeClass("buddypanel-open");
+		}
+	});
+});
+
 function GetURLParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),
