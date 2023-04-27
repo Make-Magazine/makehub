@@ -11,7 +11,7 @@ function make_rss_func( $atts ) {
         
 ?>
 <div class="wrapper makerspace-news">
-   <h2><?php echo $a['title']?> News from <img class="logo" src="https://make.co/wp-content/universal-assets/v1/images/make_logo.svg" /> magazine</h2>
+   <h2><?php echo $a['title']?> News from <img class="logo" src="https://make.co/wp-content/universal-assets/v2/images/make_logo.svg" /> magazine</h2>
    <div class="posts-feeds-wrapper">
       
       <?php

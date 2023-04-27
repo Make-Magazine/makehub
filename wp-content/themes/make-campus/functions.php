@@ -79,7 +79,7 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
     require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 add_action('wp_enqueue_scripts', 'make_campus_enqueue_scripts', 0);
 
@@ -163,7 +163,7 @@ function make_campus_admin_scripts() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
-    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/owl.carousel.js', array(), $my_version, true);
+    wp_enqueue_script('universal', content_url() . '/universal-assets/v2/js/owl.carousel.js', array(), $my_version, true);
 }
 
 add_action('admin_enqueue_scripts', 'make_campus_admin_scripts');
@@ -326,7 +326,7 @@ add_filter('retrieve_password_title', 'makeco_password_subject_filter', 10, 1);
 
 function custom_login_stylesheets() {
     wp_enqueue_style('custom-login', '/wp-content/themes/make-campus/css/style-login.css');
-    wp_enqueue_style('custom-login', '/wp-content/universal-assets/v1/css/universal.css');
+    wp_enqueue_style('custom-login', '/wp-content/universal-assets/v2/css/universal.css');
 }
 
 // style the login page and give it the universal header and footer
