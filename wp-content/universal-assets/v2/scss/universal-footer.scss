@@ -13,6 +13,7 @@
     a {
         color: #fff;
         font-family: Roboto Light;
+        text-decoration: none;
         &:hover {
             text-decoration: underline;
             color: #f1f1f1;
@@ -136,9 +137,12 @@
             }
             .footer-branding {
                 min-width: 300px;
+                .footer-branding-item {
+                    display: flex;
+                    align-items: center;
+                }
                 img {
-                    max-width: 100px;
-                    margin-bottom: 10px;
+                    max-width: 100px; 
                     margin-bottom: 7px;
                     margin-right: 8px;
                 }
@@ -146,8 +150,12 @@
                     font-size: 20px;
                     color: #f1f1f1;
                     margin-right: 8px;
+                    font-family: 'Roboto';
                 }
-                a { cursor: pointer; }
+                a { 
+                    cursor: pointer;
+                    display: flex;
+                 }
                 a:nth-of-type(2) {
                     img {
                         margin-top: 4px;
@@ -167,10 +175,15 @@
 				}
                 .footer-social-section {
                     max-height: 100px;
-                    .footer-label { color: #9B9B9B; }
+                    .footer-label { 
+                        color: #9B9B9B;
+                        min-height: 20px;
+                        display: block;
+                     }
                     a:hover { text-decoration: none; ;}
                     ul {
                         margin: 0 auto 10px;
+                        min-height: 40px;
                         li {
                             float: left;
                             font-size: 34px;
