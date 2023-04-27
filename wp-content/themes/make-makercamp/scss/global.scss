@@ -34,7 +34,12 @@ body {
 	#masthead.site-header { width: 100%; }
 	#page.site { margin-left: 0px; }
 }
-
+body.buddypanel-closed.learndash-cpt-sfwd-lessons #page.site {
+	margin-left: 0px;
+	.container-fluid {
+		margin-left: 0px;
+	}
+}
 body.buddyboss-theme:not(.learndash-cpt-sfwd-lessons) {
     .site-header-custom {
         width: 100% !important;
@@ -90,7 +95,7 @@ body.buddyboss-theme:not(.learndash-cpt-sfwd-lessons) {
 	}
 }
 // Buddypanel Nav
-body.buddypanel-open {
+body.buddypanel-open:not(.learndash-cpt-sfwd-lessons)  {
     #buddypanel-menu {
         .bb-menu-item {
             span { white-space: break-spaces !important; }
