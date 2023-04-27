@@ -56,6 +56,9 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
         line-height: 1;
         display: inline-block;
     }
+    a {
+        text-decoration: none;
+    }
 	// hide campus menu items unless you are on campus
 	.campus-subnav-item { display: none; }
 	.top-menu.menu-item-has-children > a {
@@ -211,8 +214,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             font-size: 16px;
                             font-weight: 500;
                             color: $color-grey;
-                            font-family: "Roboto Bold";
-                            text-decoration: none;
+                            font-family: "Roboto Bold";                            
                             p { margin: 0px; }
                         }
                         &> li.menu-item {
