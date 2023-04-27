@@ -212,6 +212,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
                             font-weight: 500;
                             color: $color-grey;
                             font-family: "Roboto Bold";
+                            text-decoration: none;
                             p { margin: 0px; }
                         }
                         &> li.menu-item {
