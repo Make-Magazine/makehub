@@ -304,6 +304,11 @@ jQuery(document).ready(function () {
                         '</a>' +
                     '</li>' +
                     '<li class="menu-item icon-added">' +
+                        '<a href="https://make.co/members/me/messages/">' +
+                            '<span>My Messages</span>' +
+                        '</a>' +
+                    '</li>' +
+                    '<li class="menu-item icon-added">' +
                         '<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_account_status&r=">' +
                             '<span>My Magazine Subscription</span>' +
                         '</a>' +
