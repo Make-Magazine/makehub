@@ -35,7 +35,7 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
-body.buddyboss-theme {
+body.buddyboss-theme:not(.learndash-cpt-sfwd-lessons) {
     .site-header-custom {
         width: 100% !important;
         left: 0px;
