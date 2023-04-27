@@ -7,6 +7,9 @@
         font-size: 40px;
     }
 }
+.lms-topic-sidebar-wrapper .lms-topic-sidebar-data {
+	z-index: 8 !important;
+}
 
 //hide pagination and participants
 #learndash-course-header, .lms-course-members-list {
