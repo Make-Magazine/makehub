@@ -35,7 +35,8 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
-body.buddypanel-closed.learndash-cpt-sfwd-lessons #page.site {
+body.buddypanel-closed.learndash-cpt-sfwd-lessons #page.site {\
+	.site-header-custom, .universal-footer { left: 0px; }
 	#primary { margin-top: 0px; }
 }
 body.buddyboss-theme:not(.learndash-cpt-sfwd-lessons) {
