@@ -5,6 +5,10 @@ jQuery(document).ready(function () {
 			jQuery(this).closest('h2').next(".item-options").toggle();
 		});
 	}
+	// remove group events subnav
+	if(jQuery("#events-groups-li").length) {
+		jQuery("#events-groups-li").remove();
+	}
 	// toggle for the category list widget
 	if(jQuery(".wp-block-categories-list").length) {
 		jQuery('.wp-block-categories-list .cat-item').each(function() {
