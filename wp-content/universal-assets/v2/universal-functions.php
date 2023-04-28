@@ -74,3 +74,8 @@ $function_files = glob(dirname(__FILE__) .'/functions/*.php');
 foreach ($function_files as $file) {
 	include_once $file;
 }
+
+// prevent logs from filling up with PSR0 notices
+if ( ! defined( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS' ) ) {
+    define( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS', true );
+}
