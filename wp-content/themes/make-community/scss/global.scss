@@ -5,6 +5,25 @@ a {
 	}
 }
 
+// one community wants font sizes to go below 16px... we can't let them get away with it
+@media screen and (max-width: 760px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
+@media screen and (max-width: 1300px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
 b, strong {
 	font-family: "Roboto Bold";
 	font-weight: 300;

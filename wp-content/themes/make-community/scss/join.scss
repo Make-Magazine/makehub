@@ -1,10 +1,10 @@
 /////////// JOIN PAGE //////////////////
 .page-template-page-join {
     section.wrapper {
-        width: 100%;
+        width: 100% !important;
     }
     article { margin-bottom: 0% !important; }
-    p { font-size: 18px; }
+    p { font-size: 18px !important; }
     .entry-header {
         background: url('../images/join-heros/5.png');
         background-size: cover;
@@ -16,6 +16,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        text-align: center;;
         .header-text {
             margin: 15px;
             background: rgba(21, 23, 51,0.8);
@@ -139,6 +140,7 @@
         .membership-btn {
             width: 50%;
             margin: 0 15px;
+            text-align: center;;
             &:hover {
                 color: #fff;
             }
@@ -147,7 +149,9 @@
             flex-direction: column;
            .membership-btn {
                width: 95%;
+               margin: 0px;
                margin-top: 10px;
+               height: 70px;
            }
         }
     }
