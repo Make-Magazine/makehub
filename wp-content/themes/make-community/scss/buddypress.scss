@@ -40,6 +40,17 @@
 			margin-top: 3px;
 		}
 	}
+	@media screen and (max-width: 760px) {
+		.single-headers.groups-header {
+			#item-header-wrappper {
+				position: relative;
+				top: 15px; 
+			}
+			#cover {
+				height: auto;
+			}
+		}
+	}
 }
 
 // Let's make all the member directories the same
@@ -171,6 +182,11 @@
 		display: none;
 	}
 }
+// hide lefthand sidebar as the pages gets smaller
+@media screen and (max-width: 1024px) {
+	#left-sidebar-trigger, #left-sidebar-close, #left-sidebar { display: none; }
+}
+	
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
