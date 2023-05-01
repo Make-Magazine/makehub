@@ -130,6 +130,13 @@ body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { dis
 		}
 	}
 }
+.single-post-category {
+	border: solid 1px $color-blue;
+	&:hover a {
+		color: $color-blue;
+		background: #fff;
+	}
+} 
 
 // Membership rules for hiding content - these classes are added to the body in universal functions/body-classes.php
 .premium-member {

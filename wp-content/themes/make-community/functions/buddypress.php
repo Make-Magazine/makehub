@@ -107,3 +107,25 @@ function bp_group_resources() {
 
 // change mediapress slug
 define( 'MPP_GALLERY_SLUG', 'galleries');//rename mediapress to album
+
+
+function hide_minor_activities($a, $activities) {
+    
+    $nothanks = array("joined_group", "new_member", "new_avatar", "friendship_created", "activity_liked", "updated_profile");
+    
+    foreach ($activities->activities as $key => $activity) {
+        if (in_array($activity->type, $nothanks, true)) {
+            unset($activities->activities[$key]);
+            $activities->activity_count = $activities->activity_count-1;
+            $activities->total_activity_count = $activities->total_activity_count-1;
+            $activities->pag_num = $activities->pag_num -1;
+        }
+    }
+    
+    // Renumber the array keys to account for missing items.
+    $activities_new = array_values( $activities->activities );
+    $activities->activities = $activities_new;
+    
+    return $activities;
+}
+add_action('bp_has_activities', 'hide_minor_activities', 10, 2 );
