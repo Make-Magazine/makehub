@@ -217,7 +217,12 @@
 		height: 65px;
 		align-items: center;
 	}
-} 
+	// hide the change email form stuff until we revisit
+	h2.general-settings-screen, p.email-pwd-info, form#your-profile {
+		display: none;
+	}
+	input.change_password { float: left; }
+}
 
 // messages
 .thread-participants {
@@ -279,6 +284,10 @@
 	}
 }
 
+// media press buttons
+#mpp-activity-upload-buttons a img {
+	width: 25px;
+}
 
 // mediapress comments
 .mpp-activity {
