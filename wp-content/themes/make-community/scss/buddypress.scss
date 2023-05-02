@@ -5,8 +5,45 @@
 }
 
 // force font sizes to at least 16px
-.buddypress .main-navs.bp-navs ul li, .activity-list .activity-item .activity-inner p, .activity-meta.action .button span, .activity-meta.action .button span, .activity-list .activity-item .activity-header .activity-time-since, .activity-list .activity-header p, .activity-list .activity-header p a, .activity-permalink .activity-list .activity-item .activity-header .time-since, .activity-list .activity-item .activity-header a, .sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, .sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, .buddypress .subnav-filters div select, .buddypress .subnav-filters div input[type="search"], .buddypress form.bp-dir-search-form button[type="submit"] {
+.buddypress .main-navs.bp-navs ul li, 
+.buddypress-wrap .bp-subnavs ul.subnav li a,
+.activity-list .activity-item .activity-inner p, 
+.activity-meta.action .button span, 
+.activity-meta.action .button span, 
+.activity-list .activity-item .activity-header .activity-time-since, 
+.activity-list .activity-header p, 
+.activity-list .activity-header p a, 
+.activity-permalink .activity-list .activity-item .activity-header .time-since, 
+.activity-list .activity-item .activity-header a, 
+.sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, 
+.sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, 
+.sidebar .bp-profile-fields .item, 
+.buddypress .subnav-filters div select, 
+.buddypress .subnav-filters div input[type="search"], 
+.buddypress form.bp-dir-search-form button[type="submit"], 
+.buddypress button, .buddypress a.button, .buddypress input[type="submit"], 
+.buddypress input[type="button"], 
+.buddypress input[type="reset"], 
+.buddypress ul.button-nav:not(.button-tabs) li a, 
+.buddypress .generic-button a, 
+.buddypress .comment-reply-link, 
+.buddypress a.bp-title-button, 
+.buddypress-wrap #members-list li .user-update, 
+#buddypress #item-header-content .generic-button a, 
+#buddypress #item-header-content .generic-button button.friendship-button, 
+#buddypress.buddypress-wrap #item-header-content .generic-button button.friendship-button, 
+#buddypress #item-header-content .generic-button a 
+.single-headers #item-header-details, 
+.single-headers #item-header-details .user-nicename, 
+.single-headers #item-header-details .activity, 
+.single-headers #item-header-details .profile-balance,
+.single-headers #latest-update, 
+.single-headers .group-description,
+.activity-update-form #whats-new-textarea textarea {
 	font-size: max(1em, 16px) !important;
+}
+.buddypress-wrap .bp-feedback p { 
+	font-size: 15px;
 }
 .buddypress .subnav-search {
     width: 180px;
@@ -14,11 +51,11 @@
 		padding: 5px 0px 5px 12px !important;
 	}
 }
-.buddypress .subnav-filters .component-filters {
-    width: 160px;
+.buddypress .subnav-filters .component-filters, .buddypress-wrap .item-body .subnav-filters .component-filters {
+    width: 165px;
 }
 .buddypress .main-navs.bp-navs li.object-nav-menu-button a.object-nav-menu-button-a {
-	height: 22px;
+	height: 16px;
 }
 
 // Groups
@@ -231,6 +268,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
+	@media screen and (max-width: 760px) {
+		justify-content: space-evenly;
+	}
 }
 .single-item .wrapper, .archive .wrapper #content {
 	margin-top: 30px !important;
@@ -311,7 +351,8 @@
 // subnavs
 .buddypress #subnav ul {
 	display: flex;
-	gap: 10px;
+	flex-wrap: wrap;
+	gap: 1px;
 	margin-bottom: 15px; 
 	li a {
 		padding: 3px 8px;
