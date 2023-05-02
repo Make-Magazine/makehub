@@ -1,7 +1,24 @@
 // Theme and buddypress overrides
 
-.directory .wrapper {
+.directory section.wrapper {
 	padding-top: 45px;
+}
+
+// force font sizes to at least 16px
+.buddypress .main-navs.bp-navs ul li, .activity-list .activity-item .activity-inner p, .activity-meta.action .button span, .activity-meta.action .button span, .activity-list .activity-item .activity-header .activity-time-since, .activity-list .activity-header p, .activity-list .activity-header p a, .activity-permalink .activity-list .activity-item .activity-header .time-since, .activity-list .activity-item .activity-header a, .sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, .sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, .buddypress .subnav-filters div select, .buddypress .subnav-filters div input[type="search"], .buddypress form.bp-dir-search-form button[type="submit"] {
+	font-size: max(1em, 16px) !important;
+}
+.buddypress .subnav-search {
+    width: 180px;
+	input[type=search] {
+		padding: 5px 0px 5px 12px !important;
+	}
+}
+.buddypress .subnav-filters .component-filters {
+    width: 160px;
+}
+.buddypress .main-navs.bp-navs li.object-nav-menu-button a.object-nav-menu-button-a {
+	height: 22px;
 }
 
 // Groups
@@ -107,7 +124,7 @@
 			left: 5px;
 			top: 5px;
 			border: 0px;
-			width: 50px;
+			width: 58px;
 			img {
 				border-radius: 50px;
 			}
@@ -178,6 +195,7 @@
 		}
 	}
 }
+.activity-list .activity-item div.item-avatar { width: 45px; }
 #activity-filter-by {
 	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated], option[value=updated_profile], option[value=new_member]{
 		display: none;
