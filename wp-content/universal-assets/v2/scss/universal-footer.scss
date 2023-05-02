@@ -69,6 +69,11 @@
                 flex-direction: column;
                 width: fit-content !important;
                 text-align: center;
+                max-width: calc(100vw - 20px);
+                img { 
+                    width: 100%;
+                    height: auto;
+                }
              }
             .btn.universal-btn-red {
                 width: 100%;

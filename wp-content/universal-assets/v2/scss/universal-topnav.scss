@@ -1,7 +1,12 @@
 // site nav logos
 body.makeco #site-logo {
 	min-width: 100px;
-	h2.site-title a.makeco-logo { display: block !important; }
+	h2.site-title a.makeco-logo { 
+        display: block !important;
+        @media screen and (max-width: 400px) {
+            margin-right: 25px;
+        }
+     }
 }
 body.makershed #site-logo {
 	min-width: 100px;

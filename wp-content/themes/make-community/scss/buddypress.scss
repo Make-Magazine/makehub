@@ -39,7 +39,12 @@
 .single-headers #item-header-details .profile-balance,
 .single-headers #latest-update, 
 .single-headers .group-description,
-.activity-update-form #whats-new-textarea textarea {
+.activity-update-form #whats-new-textarea textarea,
+.single-headers #item-header-details, 
+.single-headers #item-header-details .user-nicename, 
+.single-headers #item-header-details .activity, 
+.single-headers #item-header-details .profile-balance,
+.activity-list .activity-header .time-since {
 	font-size: max(1em, 16px) !important;
 }
 .buddypress-wrap .bp-feedback p { 
