@@ -1,7 +1,61 @@
 // Theme and buddypress overrides
 
-.directory .wrapper {
+.directory section.wrapper {
 	padding-top: 45px;
+}
+
+// force font sizes to at least 16px
+.buddypress .main-navs.bp-navs ul li, 
+.buddypress-wrap .bp-subnavs ul.subnav li a,
+.activity-list .activity-item .activity-inner p, 
+.activity-meta.action .button span, 
+.activity-meta.action .button span, 
+.activity-list .activity-item .activity-header .activity-time-since, 
+.activity-list .activity-header p, 
+.activity-list .activity-header p a, 
+.activity-permalink .activity-list .activity-item .activity-header .time-since, 
+.activity-list .activity-item .activity-header a, 
+.sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, 
+.sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, 
+.sidebar .bp-profile-fields .item, 
+.buddypress .subnav-filters div select, 
+.buddypress .subnav-filters div input[type="search"], 
+.buddypress form.bp-dir-search-form button[type="submit"], 
+.buddypress button, .buddypress a.button, .buddypress input[type="submit"], 
+.buddypress input[type="button"], 
+.buddypress input[type="reset"], 
+.buddypress ul.button-nav:not(.button-tabs) li a, 
+.buddypress .generic-button a, 
+.buddypress .comment-reply-link, 
+.buddypress a.bp-title-button, 
+.buddypress-wrap #members-list li .user-update, 
+#buddypress #item-header-content .generic-button a, 
+#buddypress #item-header-content .generic-button button.friendship-button, 
+#buddypress.buddypress-wrap #item-header-content .generic-button button.friendship-button, 
+#buddypress #item-header-content .generic-button a 
+.single-headers #item-header-details, 
+.single-headers #item-header-details .user-nicename, 
+.single-headers #item-header-details .activity, 
+.single-headers #item-header-details .profile-balance,
+.single-headers #latest-update, 
+.single-headers .group-description,
+.activity-update-form #whats-new-textarea textarea {
+	font-size: max(1em, 16px) !important;
+}
+.buddypress-wrap .bp-feedback p { 
+	font-size: 15px;
+}
+.buddypress .subnav-search {
+    width: 180px;
+	input[type=search] {
+		padding: 5px 0px 5px 12px !important;
+	}
+}
+.buddypress .subnav-filters .component-filters, .buddypress-wrap .item-body .subnav-filters .component-filters {
+    width: 165px;
+}
+.buddypress .main-navs.bp-navs li.object-nav-menu-button a.object-nav-menu-button-a {
+	height: 16px;
 }
 
 // Groups
@@ -38,6 +92,18 @@
 		border-radius: 2px;
 		.dashicons {
 			margin-top: 3px;
+		}
+	}
+	@media screen and (max-width: 760px) {
+		.single-headers.groups-header {
+			#item-header-wrappper {
+				position: relative;
+				top: 15px; 
+				margin-bottom: 24px;
+			}
+			#cover {
+				height: auto;
+			}
 		}
 	}
 }
@@ -95,7 +161,7 @@
 			left: 5px;
 			top: 5px;
 			border: 0px;
-			width: 50px;
+			width: 58px;
 			img {
 				border-radius: 50px;
 			}
@@ -166,11 +232,17 @@
 		}
 	}
 }
+.activity-list .activity-item div.item-avatar { width: 45px; }
 #activity-filter-by {
-	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated]{
+	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated], option[value=updated_profile], option[value=new_member]{
 		display: none;
 	}
 }
+// hide lefthand sidebar as the pages gets smaller
+@media screen and (max-width: 1024px) {
+	#left-sidebar-trigger, #left-sidebar-close, #left-sidebar { display: none; }
+}
+	
 
 // Dynamic groups widget
 .bp-dynamic-block-container {
@@ -196,6 +268,9 @@
 	display: flex;
 	flex-wrap: wrap;
 	gap: 10px;
+	@media screen and (max-width: 760px) {
+		justify-content: space-evenly;
+	}
 }
 .single-item .wrapper, .archive .wrapper #content {
 	margin-top: 30px !important;
@@ -276,7 +351,8 @@
 // subnavs
 .buddypress #subnav ul {
 	display: flex;
-	gap: 10px;
+	flex-wrap: wrap;
+	gap: 1px;
 	margin-bottom: 15px; 
 	li a {
 		padding: 3px 8px;
@@ -286,7 +362,7 @@
 
 // media press buttons
 #mpp-activity-upload-buttons a img {
-	width: 25px;
+	width: 20px;
 }
 
 // mediapress comments
