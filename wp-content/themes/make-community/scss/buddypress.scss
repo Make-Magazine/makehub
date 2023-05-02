@@ -1,7 +1,9 @@
 // Theme and buddypress overrides
 
 .directory section.wrapper {
-	padding-top: 45px;
+	@media screen and (min-width: 765px) {
+		padding-top: 45px;
+	}
 }
 
 // force font sizes to at least 16px
@@ -241,6 +243,10 @@
 #activity-filter-by {
 	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated], option[value=updated_profile], option[value=new_member]{
 		display: none;
+		opacity: 0;
+		height: 0;
+		width: 0;
+		overflow: hidden;
 	}
 }
 // hide lefthand sidebar as the pages gets smaller
