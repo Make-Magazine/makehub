@@ -91,7 +91,7 @@ function setup_group_nav(){
             'parent_url' => $group_link, 
             'parent_slug' => 'maker-camp',
             'screen_function' => 'bp_group_resources', 
-            'position' => 999, 
+            'position' => 10, 
             'user_has_access' => $user_access, 
             'item_css_id' => 'resources',
             'link' => 'https://makercamp.make.co/maker-camp-resources/'
