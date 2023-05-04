@@ -7,6 +7,8 @@
 }
 
 // force font sizes to at least 16px
+.breadcrumbs,
+div.pagination,
 .buddypress .main-navs.bp-navs ul li, 
 .buddypress-wrap .bp-subnavs ul.subnav li a,
 .activity-list .activity-item .activity-inner p, 
@@ -17,6 +19,8 @@
 .activity-list .activity-header p a, 
 .activity-permalink .activity-list .activity-item .activity-header .time-since, 
 .activity-list .activity-item .activity-header a, 
+.buddypress .activity-comments .acomment-meta,
+.buddypress .activity-comments .acomment-content p,
 .sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, 
 .sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, 
 .sidebar .bp-profile-fields .item, 
@@ -239,6 +243,7 @@
 		}
 	}
 }
+.activity-inner ul { margin-top: 10px; }
 .activity-list .activity-item div.item-avatar { width: 45px; }
 #activity-filter-by {
 	option[value=joined_group], option[value=started_course], option[value=created_lesson], option[value=created_topic], option[value=completed_lesson], option[value=completed_topic], option[value=completed_course], option[value=lesson_comment], option[value=course_comment], option[value=completed_quiz], option[value=new_booking], option[value=group_details_updated], option[value=updated_profile], option[value=new_member]{

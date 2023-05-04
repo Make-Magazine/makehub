@@ -12,4 +12,13 @@ jQuery(document).ready(function () {
 		}
 	}
 	jQuery(".wpvc-vote").prepend('<a class="back-btn" data-toggle="tooltip" data-placement="right" href="/amazing-maker-awards/" title="Take me back to the project gallery or click the right arrow to see another project entry."><svg class="wpvc_gallery_btn" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path></svg></a>');
+	// set the max-height to what it actually needs
+	if(jQuery(".wpvc-main-wrapper").length) {
+		var maxHeight = (jQuery(".wpvc-profile").outerHeight() > 900) ? jQuery(".wpvc-profile").outerHeight() : 900;
+		jQuery('.wpvc-main-wrapper').css("max-height", maxHeight);
+		jQuery(".collapsed").on("click", function(){
+			alert("test");
+			jQuery('.wpvc-main-wrapper').css("max-height", 1500);
+		});
+	}
 });
