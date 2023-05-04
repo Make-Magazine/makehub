@@ -54,6 +54,11 @@ body:not(.logged-in) {
 		color: #999;
 	}
 	#wpvc-singlecustom {
+		@media screen and (max-width: 765px) {
+			.wpvc-title {
+				margin: 0px 10px 15px;
+			}
+		}
 		.wpvc-main-wrapper {
 			display: flex;
 			flex-flow: wrap;
@@ -126,6 +131,7 @@ body:not(.logged-in) {
 			.wpvc-details {
 				padding: 10px 15px;
 				flex-grow: 1;
+				word-wrap: break-word;
 			}
 			.wpvc-profile {
 				div {

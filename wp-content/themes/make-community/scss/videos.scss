@@ -1,7 +1,4 @@
 .page-template-page-videogallery {
-    .bb-grid {
-        display: block;
-    }
     .vimeography-header {
         background: #2c4754;
         margin: 0px auto 40px;
@@ -25,6 +22,9 @@
             display: inline-block;
             margin-bottom: 15px;
             width: 25%;
+            @media screen and (max-width: 768px) {
+                width: 100%;
+            }
             select {
                 display: none; /*hide original SELECT element:*/
             }
@@ -89,6 +89,7 @@
     }
 }
 .vimeography-gallery {
+    h2.vimeography-title { font-size: 16px; }
     .vimeography-player > div {
         .fluid-width-video-wrapper {
             position: absolute;

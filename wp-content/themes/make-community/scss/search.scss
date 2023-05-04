@@ -1,6 +1,9 @@
 .page-template-page-search {
 	#primary {
 		padding: 30px;
+		@media screen and (max-width: 767px) {
+			padding: 30px 15px;
+		}
 	}
 	.results-info {
 		display: flex;
@@ -64,7 +67,7 @@
 			}
 			@media screen and (max-width: 500px) {
 				width: 100%;
-				margin-right: 0px;
+				margin-right: 0px !important;
 			}
 			h2 {
 				margin: 10px 0px 5px;
@@ -374,6 +377,7 @@
 			background: $color-red;
 			border: solid 1px $color-red;
 			color: #fff;
+			height: 50px;
 			&:hover{
 				background: #fff;
 				color: $color-red;
@@ -423,7 +427,7 @@
 			position: relative;
 			right: 0px;
 			margin-bottom: 10px;
-			width: calc(100vw - 70px);
+			width: calc(100vw - 50px);
 		}
 		.sf-field-submit {
 			left: 0px;
