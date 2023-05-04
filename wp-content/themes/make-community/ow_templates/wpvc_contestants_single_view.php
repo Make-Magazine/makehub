@@ -159,7 +159,7 @@
 								}
 			    			?>
 							</div>
-			                <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal_wrap figure:first-of-type span img').click())"><i class="fas fa-search"></i></a>
+			                <!--<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal_wrap figure:first-of-type span img').click())"><i class="fas fa-search"></i></a>-->
 			            </div>
 			        <?php } ?>
 
