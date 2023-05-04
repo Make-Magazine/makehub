@@ -62,6 +62,11 @@ foreach (glob(dirname(__FILE__) . '/widgets/classes/*.php') as $file) {
 
 function remove_unnecessary_scripts() {
     wp_dequeue_style( 'font-awesome' );
+    // unless user is admin user, they don't need the dashicons
+    if (!current_user_can( 'update_core' )) {
+        wp_deregister_style('dashicons');
+    }
+    
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {
         if( !is_singular( array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment' ) ) ) {
