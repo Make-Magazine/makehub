@@ -46,6 +46,7 @@ function make_widget_rss_output($rss, $args = array()) {
     $show_summary = (int) $args['show_summary'];
     $show_author = (int) $args['show_author'];
     $show_date = (int) $args['show_date'];
+    $class = $args['class'];
 
     if (!$rss->get_item_quantity()) {
         echo '<ul><li>' . __('An error has occurred, which probably means the feed is down. Try again later.') . '</li></ul>';
@@ -100,6 +101,9 @@ function make_widget_rss_output($rss, $args = array()) {
             $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 140, 100) . '" alt="' . $item->get_title() . '" width="140" height="100" />';
         } else {
             $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 140, 100) . '" alt="' . $item->get_title() . '" width="140" height="100" />';
+        }
+        if($class == "make-ad") {
+            $image = '<img src="' . get_first_image_url($item->get_content()) . '" alt="' . $item->get_title() . '" />';
         }
 
         //set description
