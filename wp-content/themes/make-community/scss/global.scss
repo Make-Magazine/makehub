@@ -155,7 +155,7 @@ body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { dis
 	overflow: hidden;
 }
 
-input[type=submit], input[type=button], button[type=submit]:not(.nouveau-search-submit) {
+input[type=submit], input[type=button], button[type=submit]:not(.nouveau-search-submit):not(#user_messages_search_submit) {
 	color: #fff !important;
 	border: thin solid $color-blue !important;
 	padding: 10px 30px;
@@ -173,6 +173,11 @@ input[type=submit].disabled { color: #fff !important; }
 textarea {
 	background: #fafafa;
 	border: 1px solid #ededed;
+}
+
+// user facing wywiwyg
+.mce-tinymce {
+	.mce-widget[aria-label="LearnDash Shortcodes"], .mce-widget[aria-label="Add Vimeography Gallery"] { display: none; }
 }
 
 .feedback-btn {

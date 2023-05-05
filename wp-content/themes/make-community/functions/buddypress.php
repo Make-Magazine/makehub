@@ -129,3 +129,13 @@ function hide_minor_activities($a, $activities) {
     return $activities;
 }
 add_action('bp_has_activities', 'hide_minor_activities', 10, 2 );
+
+/*function remove_message_count( $count, $nav_item, $displayed_nav ) {
+    if ( $displayed_nav == 'personal' ) {
+        if ( $nav_item->slug == 'messages' ) {
+            $count = false;
+        }
+    }
+    return $count;
+}
+add_filter( 'bp_nouveau_nav_has_count', 'remove_message_count', 99, 3 );*/

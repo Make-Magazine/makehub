@@ -317,6 +317,9 @@ div.pagination,
 }
 
 // messages
+#message-threads {
+	.thread-count { display: none; }
+}
 .thread-participants {
 	.participants-list {
 		@extend .truncated;
