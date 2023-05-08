@@ -22,6 +22,10 @@ function make_community_scripts_styles() {
     
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
+    //buddypress pages not always getting their css correctly
+    if ( bp_current_component() ) {
+        wp_enqueue_style( 'bp-nouveau-css', get_template_directory() . "/buddypress/css/buddypress.min.css", array(), $my_version);
+    }
     
     // lib src packages
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);

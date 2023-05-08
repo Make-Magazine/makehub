@@ -84,7 +84,7 @@ function extend_login_session( $expire ) {
   return  2592000; // seconds for 30 day time period
 }
 
-// Include all function files in the make-experiences/functions directory:
+// Include all function files in the universal /functions directory:
 $function_files = glob(dirname(__FILE__) .'/functions/*.php');
 
 $count=0;
