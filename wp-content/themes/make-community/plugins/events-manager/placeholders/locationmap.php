@@ -48,7 +48,7 @@
 			</div>
 			<div class='em-location-map-info' id='em-location-map-info-<?php echo $rand ?>' style="display:none; visibility:hidden;">
 				<div class="em-map-balloon" style="font-size:12px;">
-					<div class="em-map-balloon-content" ><?php echo $EM_Location->output("<strong>#_LOCATIONNAME</strong><br/>#_LOCATIONADDRESS - #_LOCATIONTOWN<br/>#_LOCATIONSTATE, #_LOCATIONCOUNTRY"); ?></div>
+					<div class="em-map-balloon-content" ><?php echo $EM_Location->output("<strong>#_LOCATIONNAME</strong><br/>#_LOCATIONADDRESS - #_LOCATIONTOWN<br/>#_LOCATIONSTATE, #_LOCATIONCOUNTRY #_LOCATIONPOSTCODE"); ?></div>
 				</div>
 			</div>
 			<div class='em-location-map-coords' id='em-location-map-coords-<?php echo $rand ?>' style="display:none; visibility:hidden;">

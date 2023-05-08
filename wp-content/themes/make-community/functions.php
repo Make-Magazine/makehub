@@ -24,7 +24,7 @@ function make_community_scripts_styles() {
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
     //buddypress pages not always getting their css correctly
     if ( bp_current_component() ) {
-        wp_enqueue_style( 'bp-nouveau-css', get_template_directory() . "/buddypress/css/buddypress.min.css", array(), $my_version);
+        wp_enqueue_style( 'bp-nouveau', get_template_directory_uri() . "/buddypress/css/buddypress.min.css", array(), $my_version);
     }
     
     // lib src packages
