@@ -334,13 +334,15 @@ button, input[type="submit"] {
 .feedback-btn {
 	position: fixed;
 	z-index: 9999;
-    bottom: 20px;
-    background: #eb002a;
+	bottom: 20px;
+	background: #ea002a;
 	color: #fff;
-	border: solid 1px #eb002a;
-    width: 120px;
-    right: -15px;
-	transition: 0.3s;
+	border: solid 1px #ea002a;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 120px;
+	right: -15px;
+	transition: .3s;
 	&:hover {
 		background: #fff;
 		color: #eb002a;
