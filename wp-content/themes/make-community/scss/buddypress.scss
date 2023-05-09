@@ -6,6 +6,10 @@
 	}
 }
 
+.buddypress .bp-feedback {
+	align-items: center !important;
+}
+
 // force font sizes to at least 16px
 .breadcrumbs,
 div.pagination,
@@ -118,6 +122,9 @@ div.pagination,
 			}
 		}
 	}
+}
+.buddypress .bp-invites-content ul#members-list li {
+	width: auto !important;
 }
 
 // Let's make all the member directories the same

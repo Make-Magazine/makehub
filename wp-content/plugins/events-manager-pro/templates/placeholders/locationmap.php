@@ -53,7 +53,7 @@ if ( get_option('dbem_gmap_is_active') && ( is_object($EM_Location) && $EM_Locat
 	//output map if not relative, otherwise we pass on the right JS
 	$alt = sprintf(esc_attr__('Map of %s', 'events-manager'), $EM_Location->location_name);
 	?>
-	<div class="em-location-map-container!<?php echo $map_class ?>"  style='position:relative; background: #CDCDCD; width: <?php echo $width ?>; height: <?php echo $height ?>;' <?php echo $embed_data; ?>>
+	<div class="em-location-map-container<?php echo $map_class ?>"  style='position:relative; background: #CDCDCD; width: <?php echo $width ?>; height: <?php echo $height ?>;' <?php echo $embed_data; ?>>
 		<?php if( !empty($map_link) ): ?><a href="<?php echo esc_url($map_link); ?>" target="_blank"><?php endif; ?>
 		<?php if( $relative_dims ): ?>
 			<div class='em-location-map-static em-map-static-relative' id='em-location-map-<?php echo $rand ?>' style="width: 100%; height: 100%;" data-gmap-url="<?php echo esc_url($map_url); ?>" data-gmap-title="<?php echo esc_attr($alt); ?>">

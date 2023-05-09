@@ -25,7 +25,10 @@
 			.result-image a {
 				display: flex;
 				aspect-ratio: 1.35 / 1;
-				img { object-fit: cover; }
+				img { 
+					object-fit: cover;
+					object-position: left bottom;
+				 }
 			}
 			&:nth-of-type(3n) {
 				margin-right: 0px;
@@ -139,17 +142,25 @@
 				display: flex;
 				.select2-container {
 					flex-grow: 1;
+					ul.select2-selection__rendered {
+						min-height: 50px;
+						align-items: center;
+						display: flex;
+						flex-wrap: wrap;
+					}
 				}
 			}
 			.select2-search--inline{
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 				&::after {
 					content: "\f0da";
-					position: absolute;
-					right: 10px;
-					top: 30%;
 					font-family: FontAwesome;
 					color: #666;
 				}
+				input { margin-top: 0px; }
 				input::placeholder {
 					color: #000;
 				}
