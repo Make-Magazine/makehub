@@ -63,6 +63,23 @@ function load_admin_styles() {
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
+// fight back against buddyboss ruining our accessibility
+if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
+    add_action( 'init', 'remove_bb_actions');
+    function remove_bb_actions() {
+        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    /**
+     * Add a viewport meta.
+     */
+    function buddyboss_theme_viewport_meta_custom() {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1" />';
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
+}
+
+
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
 
