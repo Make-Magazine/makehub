@@ -327,6 +327,9 @@ div.pagination,
 #message-threads {
 	.thread-count { display: none; }
 }
+
+li:has(.message-content:empty), li:has(.message-content > p:empty) { display: none !important; }
+
 .thread-participants {
 	.participants-list {
 		@extend .truncated;
