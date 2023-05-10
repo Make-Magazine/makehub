@@ -18,8 +18,9 @@ $referrer_url = 	isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ""
 $parameters = 		array();
 if(!empty($referrer_url)) {
 	$referrer_parts = parse_url($referrer_url);
-	parse_str($referrer_parts['query'], $parameters);
-
+	if(!empty($referrer_parts['query'])) {
+		parse_str($referrer_parts['query'], $parameters);
+	}
 }
 $gallery[] = 		get_the_post_thumbnail_url();
 foreach($images as $image) {
