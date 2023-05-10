@@ -130,15 +130,12 @@ function hide_minor_activities($a, $activities) {
 }
 add_action('bp_has_activities', 'hide_minor_activities', 10, 2 );
 
-/* 
 function redirect_after_join_group( $group_id, $user_id ) {
-    error_log("IS THIS HAPPENING");
     $group = groups_get_group( array( 'group_id' => $group_id ) );
     bp_core_redirect( bp_get_groups_directory_permalink() . $group->slug );
 }
 add_action( 'groups_join_group', 'redirect_after_join_group', 9999, 2 );
 add_action( 'groups_membership_accepted', 'redirect_after_join_group', 9999, 2 );
-*/
 
 /*function remove_message_count( $count, $nav_item, $displayed_nav ) {
     if ( $displayed_nav == 'personal' ) {
