@@ -309,16 +309,15 @@ div.pagination,
 	#latest-update, .group-description {
 		background:rgba(0,0,0,.6);
 	}
-	#item-header-wrappper {
-		@media screen and (max-width: 770px) {
-			#latest-update { display: none; }
+	@media screen and (max-width: 770px) {
+		#latest-update { display: none; }
+		#item-header-wrappper {
 			#item-header-avatar, #item-header-content {
 				position: relative;
 				left: 0%;
 			}
 			#item-header-content { width: 100%; }
 		}
-	}
 }
 .settings.bp-user {
 	#responseText {
