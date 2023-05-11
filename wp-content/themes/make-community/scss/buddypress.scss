@@ -309,6 +309,15 @@ div.pagination,
 	#latest-update, .group-description {
 		background:rgba(0,0,0,.6);
 	}
+	#item-header-wrappper {
+		@media screen and (max-width: 760px) {
+			#item-header-avatar, #item-header-content {
+				position: relative;
+				left: 0%;
+			}
+			#item-header-content { width: 100%; }
+		}
+	}
 }
 .settings.bp-user {
 	#responseText {
