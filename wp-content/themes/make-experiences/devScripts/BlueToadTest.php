@@ -5,6 +5,7 @@
     error_reporting(E_ALL);
 
     $email  = (isset($_POST['email']) ? $_POST['email'] : '');
+    $pass   = (isset($_POST['pass'])  ? $_POST['pass'] : '');
 
 ?>
 <!DOCTYPE html>
@@ -15,32 +16,40 @@
     <body>
       <h1> BlueToad login test:</h1>      
         <form method="post" enctype="multipart/form-data">
-          Enter in the email address you would like to test<br/>   
-          <input type="text" name="email" value="" size="50" /><br/><br/>       
+          Email:<br/>   
+          <input type="text" name="email" value="" size="50" /><br/>
+          Password:<br/>   
+          <input type="text" name="pass" value="" size="50" /><br/><br/>       
           <input type="submit" value="Go" name="BTverify">
         </form>
         <br/><br/>
         <?php
         if (isset($_POST['BTverify'])) {
-          if($email==''){
-            echo 'Please enter in an email to verify';
+          if($email=='' || $pass==''){
+            echo 'Please enter in an email and password to verify';
           }else{
-                /*
-                  Required fields:
-                  $brand = $_GET['brand']; MK
-                  $productID = $_GET['productID']; 7
-                  $appID = $_GET['appID'];x-omeda-appid
-                  $namespace = $_GET['namespace'];  AUTHMAKE
-                  $pass = $_POST['pass']; 
-                  $email = $_POST['email'];                                  
-                  */
-
-            $url="https://makezine.com/BlueToad_omedaMake.php?brand=MK&productID=7&namespace=AUTHMAKE&appID=0387143E-E0DB-4D2F-8441-8DAB0AF47954";
-
-            //echo 'calling '.$url.'<br/>';
-            $data = array('pass'      => $email, 'email'     => $email);
+            //echo 'NETWORK_HOME_URL='.NETWORK_HOME_URL.'<br/>';
+            //change the makezine url based on where we are
+            $url="https://makezine.com/";      
+            $test_output = FALSE;
+            if (strpos(NETWORK_HOME_URL, '.local') > -1 || strpos(NETWORK_HOME_URL, '.test') > -1 ) { // wpengine local environments
+              $url="https://makezine.local/";
+              $test_output = TRUE;
+            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  > -1){
+              $url="https://mzinestage.wpengine.com/";            
+              $test_output = TRUE;
+            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  > -1){  
+              $url="https://mzinedev.wpengine.com/";
+              $test_output = TRUE;
+            }    
+            if($test_output)  echo 'Calling '.$url.' with username = '.$email.' and password '.$pass.'<br/>';
+            
+            $url .= "BlueToad_omedaMake.php?brand=MK&productID=7&namespace=AUTHMAKE&appID=0387143E-E0DB-4D2F-8441-8DAB0AF47954";
+            
+            $data = array('pass'      => $pass, 'email'     => $email);
             
             $ch = curl_init();            
+
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, true);          
@@ -48,7 +57,7 @@
 
             $output = curl_exec($ch);
             $info   = curl_getinfo($ch);
-
+            if($test_output) echo 'Return code = ' . $info['http_code'].'<br/>';
             curl_close($ch);  
 
             echo '<h2>Result: ';
