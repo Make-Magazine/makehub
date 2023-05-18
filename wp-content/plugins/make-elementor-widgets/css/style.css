@@ -55,21 +55,21 @@
 }
 
 /* Elementor Widget Custom RSS */
-.elementor-widget-makecustomrss .elementor-widget-container h4, .elementor-widget-upcomingmakerfaires .elementor-widget-container h4 {
+.elementor-widget-makecustomrss .elementor-widget-container h4, .elementor-widget-makeinterestsrss .elementor-widget-container h4, .elementor-widget-upcomingmakerfaires .elementor-widget-container h4 {
 	margin: 0px;
 	padding: 15px 25px;
 	text-transform: uppercase;
 	color: #fff;
 	background: #005e9a;
 }
-.elementor-widget-makecustomrss .elementor-widget-container h4 a {
+.elementor-widget-container h4 a {
 	color: #fff;
 }
 
-.elementor-widget-makecustomrss ul.custom-rss-elementor {
+ul.custom-rss-element {
 	margin: 0px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor li {
+ul.custom-rss-element li {
 	border: 1px solid #e3e3e3;
 	box-shadow: 3px 3px 13px -5px rgba(0,0,0,.75);
 	padding: 15px 20px;
@@ -78,24 +78,24 @@
 	flex-direction: column;
 }
 @media screen and (max-width: 600px) {
-	.elementor-widget-makecustomrss ul.custom-rss-elementor li {
+	ul.custom-rss-element li {
 		border: none;
 		box-shadow: none;
 	}
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor li a {
+ul.custom-rss-element li a {
 	color: #333;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper {
+ul.custom-rss-element li .rss-image-wrapper {
 	overflow: hidden;
 	margin-bottom: 10px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor li .rss-image-wrapper img {
+ul.custom-rss-element li .rss-image-wrapper img {
 	width: 100%;
 	object-fit: cover;
 	aspect-ratio: 2 / 1.25;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor li .rssTitle {
+ul.custom-rss-element li .rssTitle {
 	font-size: 20px;
 	line-height: 22px;
 	text-align: center;
@@ -108,95 +108,95 @@
 	overflow: hidden;
 }
 
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal {
+ul.custom-rss-element.horizontal {
 	display: flex;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li {
+ul.custom-rss-element.horizontal li {
 	width: 31.5%;
 	margin-bottom: 0px;
 	min-width: 320px;
 	flex-grow: 1;
 	margin: 20px 10px 0px
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li .rss-image-wrapper {
+ul.custom-rss-element.horizontal li .rss-image-wrapper {
 	min-width: 100px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li img {
+ul.custom-rss-element.horizontal li img {
 	aspect-ratio: 1 / 1.4;
 	max-width: 150px;
 	max-height: 140px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper {
+ul.custom-rss-element.horizontal .rss-content-wrapper {
 	display: flex;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rss-text-wrapper {
+ul.custom-rss-element.horizontal .rss-content-wrapper .rss-text-wrapper {
 	margin-left: 10px;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	overflow: hidden;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary {
+ul.custom-rss-element.horizontal .rss-content-wrapper .rssSummary {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 4;
 	overflow: hidden;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary p {
+ul.custom-rss-element.horizontal .rss-content-wrapper .rssSummary p {
 	margin: 0px;
 	padding-bottom: 5px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary .universal-btn {
+ul.custom-rss-element.horizontal .rss-content-wrapper .rssSummary .universal-btn {
 	color: #fff;
 	height: 30px;
 	margin-top: auto;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-content-wrapper .rssSummary .universal-btn:hover {
+ul.custom-rss-element.horizontal .rss-content-wrapper .rssSummary .universal-btn:hover {
 	color: #005e9a;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssTitle { display: none; }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rssSummary {
+ul.custom-rss-element.horizontal .rssTitle { display: none; }
+ul.custom-rss-element.horizontal .rssSummary {
 	display: flex;
 	align-items:  center;
 	margin-bottom: auto;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal .rss-text-wrapper .rssTitle {
+ul.custom-rss-element.horizontal .rss-text-wrapper .rssTitle {
 	display: block;
 	text-align: left;
 	min-height: auto;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.summary .rss-text-wrapper .rssTitle {
+ul.custom-rss-element.horizontal.summary .rss-text-wrapper .rssTitle {
 	display: -webkit-box;
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
 	overflow: hidden;
 }
 
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.makershed .rss-content-wrapper {
+ul.custom-rss-element.horizontal.makershed .rss-content-wrapper {
 	align-items: center;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.makershed .rss-content-wrapper .rssTitle {
+ul.custom-rss-element.horizontal.makershed .rss-content-wrapper .rssTitle {
 	-webkit-line-clamp: 3;
 }
 
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li date {
+ul.custom-rss-element.horizontal li date {
 	float: right;
 }
 
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-stage {
+ul.custom-rss-element.horizontal.carousel .owl-stage {
 	display: flex;
 	margin: 0 -10px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel li {
+ul.custom-rss-element.horizontal.carousel li {
 	width: auto;
 	position: relative;
 	left: 0px;
 	transition: left 1s ease-out;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-item {
+ul.custom-rss-element.horizontal.carousel .owl-item {
 	display: flex;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal li.rss-carousel-read-more a {
+ul.custom-rss-element.horizontal li.rss-carousel-read-more a {
 	height: 100%;
 	display: flex;
 	text-align: center;
@@ -204,16 +204,16 @@
 	font-size: 42px;
 	font-weight: bold;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal:not(.carousel) {
+ul.custom-rss-element.horizontal:not(.carousel) {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	margin: 0 -10px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel {
+ul.custom-rss-element.horizontal.carousel {
 	overflow-x: hidden;
 	padding-bottom: 12px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-nav button{
+ul.custom-rss-element.horizontal.carousel .owl-nav button{
 	position: absolute;
 	top: 40%;
 	right: 5px;
@@ -221,12 +221,12 @@
 	border: none;
 	padding: 0px;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel button.owl-prev {
+ul.custom-rss-element.horizontal.carousel button.owl-prev {
 	left: 5px;
 	right: auto;
 	z-index: 999;
 }
-.elementor-widget-makecustomrss ul.custom-rss-elementor.horizontal.carousel .owl-nav button i {
+ul.custom-rss-element.horizontal.carousel .owl-nav button i {
 	font-size: 42px;
 	height: 42px;
 	width: 42px;

@@ -244,6 +244,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		$num_display = $settings['num_display'];
 		$disp_order = $settings['disp_order'];
 		$title = $settings['title'];
+		$link = $settings['link'];
 
 		$url = 'https://makezine.com/feed';
 
@@ -251,17 +252,24 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		    'field'   => 'Topics',
 		    'user_id' => bp_loggedin_user_id()
 		);
+		
 		$interests = bp_get_profile_field_data($args);
-		var_dump(bp_get_profile_field_data('Topics'));
+		
 		array_walk($interests, function (&$value) {
 			$value = str_replace("&amp;", "", $value);
 			$value = preg_replace("/\W+/","-",$value);
 		    $value = strtolower(trim($value,"-"));
 		});
-		$url = 'https://makezine.com/tag/' . implode(",", $interests) . '/feed';
+		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests
+		$url = !empty($interests) ? 'https://makezine.com/category/' . implode(",", $interests) . '/feed' : "https://makezine.com/feed";
 
 		$rss = fetch_feed($url);
 		$desc = '';
+
+		if ($link) {
+			$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
+		}
+		echo '<h4>'.$title.'</h4>';
 
 		if (!is_wp_error($rss)) {
 			$desc = esc_attr(strip_tags(@html_entity_decode($rss->get_description(), ENT_QUOTES, get_option('blog_charset'))));
@@ -274,18 +282,12 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 					$link = substr($link, 1);
 				}
 			}
+			makewidget_rss_output($rss, $settings);
+		} else {
+			makewidget_rss_output('https://makezine.com/feed/', $settings);
 		}
 
-		if (empty($title)) {
-			$title = !empty($desc) ? $desc : __('Unknown Feed');
-		}
-
-		if ($link) {
-			$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
-		}
-		echo '<h4>'.$title.'</h4>';
-
-		makewidget_rss_output($rss, $settings);
+		
 
 		if (!is_wp_error($rss)) {
 			$rss->__destruct();

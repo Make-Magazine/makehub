@@ -9,7 +9,7 @@ jQuery(document).ready(function(){
 		if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 			slideBy = 1;
 		}
-		jQuery('.custom-rss-elementor.carousel').owlCarousel({
+		jQuery('.custom-rss-element.carousel').owlCarousel({
 			loop: true,
 			slideBy: slideBy,
 			//autoWidth:true,
