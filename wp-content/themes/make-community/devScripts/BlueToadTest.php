@@ -17,9 +17,9 @@
       <h1> BlueToad login test:</h1>      
         <form method="post" enctype="multipart/form-data">
           Email:<br/>   
-          <input type="text" name="email" value="" size="50" /><br/>
+          <input type="text" name="email" value="<?php echo  $email;?>" size="50" /><br/>
           Password:<br/>   
-          <input type="text" name="pass" value="" size="50" /><br/><br/>       
+          <input type="text" name="pass" value="<?php echo  $pass;?>" size="50" /><br/><br/>       
           <input type="submit" value="Go" name="BTverify">
         </form>
         <br/><br/>
@@ -28,25 +28,29 @@
           if($email=='' || $pass==''){
             echo 'Please enter in an email and password to verify';
           }else{
-            //echo 'NETWORK_HOME_URL='.NETWORK_HOME_URL.'<br/>';
+            
+            $host = $_SERVER['HTTP_HOST'];
+            //echo 'Host='.$host.'<br/>';
+            
             //change the makezine url based on where we are
             $url="https://makezine.com/";      
             $test_output = FALSE;
-            if (strpos(NETWORK_HOME_URL, '.local') !== false || strpos(NETWORK_HOME_URL, '.test') !== false ) { // wpengine local environments
-              $url="https://makezine.local/";
-              $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  !== false){
-              $url="https://mzinestage.wpengine.com/";            
-              $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  !== false){  
-              $url="https://mzinedev.wpengine.com/";
-              $test_output = TRUE;
-            }    
 
-            if($test_output)  echo 'Calling '.$url.' with username = '.$email.' and password '.$pass.'<br/>';
+            if (strpos($host, '.local') !== false || strpos($host, '.test') !== false ) { // wpengine local environments
+              //$url="https://makezine.local/";
+              $test_output = TRUE;
+            }elseif(strpos($host, 'stagemakehub')  !== false){
+              //$url="https://mzinestage.wpengine.com/";            
+              $test_output = TRUE;
+            }elseif(strpos($host, 'devmakehub')  !== false){  
+              //$url="https://mzinedev.wpengine.com/";
+              $test_output = TRUE;
+            }                
             
             $url .= "BlueToad_omedaMake.php?brand=MK&productID=7&namespace=AUTHMAKE&appID=0387143E-E0DB-4D2F-8441-8DAB0AF47954";
             
+            if($test_output)  echo 'Calling '.$url.' with username = '.$email.' and password '.$pass.'<br/>';
+
             $data = array('pass'      => $pass, 'email'     => $email);
             
             $ch = curl_init();            
@@ -73,8 +77,7 @@
             }else{
               $auth_array = explode(':',$output);
               if(is_array($auth_array)){
-                if($auth_array[0]){
-                //TBD - put code here to check for approved, not to just assume
+                if($auth_array[0] != 'false'){                
                   echo 'Approved<br/>';
                   if(isset($auth_array[1])){
                     echo 'Expiration Date - '.$auth_array[1].'<br/>';
@@ -83,8 +86,8 @@
                     echo 'Start Date - '.$auth_array[1];
                   }                  
                 }else{
-                  echo 'Error in BT response. Please send this to Alicia<br/>';
-                  var_dump($output);  
+                  echo 'User is not authorized<br/>';
+                  if($test_output) var_dump($output);  
                 }
               }else{                
                 echo 'New output detected. Please send this to Alicia<br/>';
