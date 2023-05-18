@@ -35,10 +35,10 @@
             if (strpos(NETWORK_HOME_URL, '.local') !== false || strpos(NETWORK_HOME_URL, '.test') !== fals ) { // wpengine local environments
               $url="https://makezine.local/";
               $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  !== fals){
+            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  !== false){
               $url="https://mzinestage.wpengine.com/";            
               $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  !== fals){  
+            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  !== false){  
               $url="https://mzinedev.wpengine.com/";
               $test_output = TRUE;
             }    
