@@ -32,7 +32,7 @@
             //change the makezine url based on where we are
             $url="https://makezine.com/";      
             $test_output = FALSE;
-            if (strpos(NETWORK_HOME_URL, '.local') !== false || strpos(NETWORK_HOME_URL, '.test') !== fals ) { // wpengine local environments
+            if (strpos(NETWORK_HOME_URL, '.local') !== false || strpos(NETWORK_HOME_URL, '.test') !== false ) { // wpengine local environments
               $url="https://makezine.local/";
               $test_output = TRUE;
             }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  !== false){
