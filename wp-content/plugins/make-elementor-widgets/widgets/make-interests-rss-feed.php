@@ -258,12 +258,8 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		array_walk($interests, function (&$value) {
 			$term = get_term_by('name', $value, "category");
 			$value = $term->slug;
-			/*$value = str_replace("&amp;", "", $value);
-			$value = preg_replace("/\W+/","-",$value);
-		    $value = strtolower(trim($value,"-"));*/
+			// does it make sense to hard code some matches here? e.g. if 3d printing or 3d imaging, add the 3d printing and imaging category to feed?
 		});
-		
-		var_dump($interests);
 
 		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests
 		$url = !empty($interests) ? 'https://makezine.com/category/' . implode(",", $interests) . '/feed' : "https://makezine.com/feed";
@@ -291,8 +287,6 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		} else {
 			makewidget_rss_output('https://makezine.com/feed/', $settings);
 		}
-
-		
 
 		if (!is_wp_error($rss)) {
 			$rss->__destruct();

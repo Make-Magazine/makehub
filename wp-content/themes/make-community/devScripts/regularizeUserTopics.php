@@ -91,6 +91,7 @@ foreach ( $users as $user) {
 	            array_push($new_interests, "Hacks"); // doesn't exist on MZ
 	            break;
 	        case "Health":
+	        case "Health &amp; Biohacking":
                 array_push($new_interests, "Health &amp; Biohacking");
 	            break;
 	        case "Home":
@@ -133,7 +134,7 @@ foreach ( $users as $user) {
                 array_push($new_interests, "Space");
 	            break;
 	        case "Sustainability &amp; Nature":
-	            array_push($new_interests, "Sustainability &amp; Nature");  // can't rename more than on interest to "Energy & Sustainability"
+	            array_push($new_interests, "Sustainability &amp; Nature");  // can't rename more than one interest to "Energy & Sustainability"
 	            break;
 	        case "Vehicles":
 	            array_push($new_interests, "Vehicles"); // the analagous category on MZ is "Drones & Vehicles" which would look redundant when we already have "Drones" as an interest
