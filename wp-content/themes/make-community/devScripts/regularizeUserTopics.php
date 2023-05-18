@@ -21,23 +21,23 @@ foreach ( $users as $user) {
 	$new_interests = array();
 	foreach($interests as $interest) {
 	    switch($interest) {
-	        case "3D Imaging":
-	            array_push($new_interests, "3D Imaging");
-	            break; 
 	        case "3D Printing":
-	            array_push($new_interests, "3D Printing");
+			case "3D Imaging":
+			case "3D Printing &amp; Imaging":
+	            array_push($new_interests, "3D Printing &amp; Imaging");
 	            break; 
 	        case "Alternative Energy":
+	        case "Energy &amp; Sustainability":
                 array_push($new_interests, "Energy &amp; Sustainability");
 	            break; 
 	        case "Arduino":
                 array_push($new_interests, "Arduino");
 	            break;
 	        case "Art &amp; Design":
-                array_push($new_interests, "Craft &amp; Design");
+				array_push($new_interests, "Art &amp; Sculpture");
 	            break;
 	        case "Artificial Intelligence":
-                array_push($new_interests, "Artificial Intelligence"); // there was a note that the MZ match was "not the same"
+                array_push($new_interests, "Artificial Intelligence");
 	            break;
 	        case "Augmented Reality":
 	            array_push($new_interests, "Augmented Reality"); // doesn't exist on MZ
@@ -46,17 +46,34 @@ foreach ( $users as $user) {
                 array_push($new_interests, "Bikes");
 	            break;
 	        case "Biology":
-                array_push($new_interests, "Biotech");
+	        case "Biotech":
+                array_push($new_interests, "Biohacking");
 	            break;
+			case "Business":
+				array_push($new_interests, "Business");
+				break;
+			case "CAD":
+				array_push($new_interests, "CAD");
+				break;
 	        case "Climate Protection":
-	            array_push($new_interests, "Climate Protection");  // can't rename more than one interest to "Energy & Sustainability"
+			case "Sustainability &amp; Nature":
+			case "Environment":
+	            array_push($new_interests, "Environment");
 	            break;
 	        case "Computers &amp; Mobile Devices":
+	        case "Computers &amp; Mobile":
                 array_push($new_interests, "Computers &amp; Mobile");
 	            break;
+			case "Connected Home":
+				array_push($new_interests, "Connected Home");
+				break;
 	        case "Costumes &amp; Cosplay":
-                array_push($new_interests, "Makeup &amp; Costumes");
+            case "Makeup &amp; Costumes":
+                array_push($new_interests, "Costumes, Cosplay, and Props");
 	            break;
+			case "Craft &amp; Design":
+				array_push($new_interests, "Craft &amp; Design");
+					break;
 	        case "Drones":
                 array_push($new_interests, "Drones");
 	            break;
@@ -69,30 +86,39 @@ foreach ( $users as $user) {
 	        case "Engineering":
 	            array_push($new_interests, "Engineering"); // doesn't exist on MZ
 	            break;
+			case "Entrepreneurship":
+				array_push($new_interests, "Entrepreneurship");
+				break;
 	        case "Fabrication":
+	        case "Digital Fabrication":
                 array_push($new_interests, "Digital Fabrication");
 	            break;
 	        case "Fashion":
-	            array_push($new_interests, "Fashion");  // can't rename more than one interest to "Wearables"
+	            array_push($new_interests, "Fashion");  // doesn't exist on MZ
 	            break;
 	        case "Flying &amp; Aeronatics":
-                array_push($new_interests, "Planes");
+	        case "Planes":
+                array_push($new_interests, "Airplanes");
 	            break;
 	        case "Food &amp; Beverages":
+	        case "Food &amp; Beverage":
                 array_push($new_interests, "Food &amp; Beverage");
 	            break;
 	        case "Fun &amp; Games":
                 array_push($new_interests, "Fun &amp; Games");
 	            break;
+			case "Furniture &amp; Lighting":
+				array_push($new_interests, "Furniture &amp; Lighting");
+				break;
 	        case "Gaming":
-	            array_push($new_interests, "Gaming");  // can't rename more than one interest to "Fun & Games"
+	            array_push($new_interests, "Gaming");  // doesn't exist on MZ
 	            break;
 	        case "Hacks":
 	            array_push($new_interests, "Hacks"); // doesn't exist on MZ
 	            break;
 	        case "Health":
 	        case "Health &amp; Biohacking":
-                array_push($new_interests, "Health &amp; Biohacking");
+                array_push($new_interests, "Health");
 	            break;
 	        case "Home":
                 array_push($new_interests, "Home");
@@ -106,11 +132,24 @@ foreach ( $users as $user) {
 	        case "Kids Under 5 yo":
                 array_push($new_interests, "Kids Under 5 yo"); // doesn't exist on MZ
 	            break;
+			case "Laser Cutting":
+				array_push($new_interests, "Laser Cutting");
+				break;
+			case "Machine Learning":
+				array_push($new_interests, "Machine Learning");
+				break;
+			case "Maker Faire":
+				array_push($new_interests, "Maker Faire");
+				break;
 	        case "Makerspaces":
+	        case "Makerspace":
                 array_push($new_interests, "Makerspace");
 	            break;
+			case "Metalworking":
+				array_push($new_interests, "Metalworking");
+				break;
 	        case "Microcontrollers":
-                array_push($new_interests, "Microcontrollers");
+                array_push($new_interests, "Microcontrollers"); // doesn't exist on MZ
 	            break;
 	        case "Music":
                 array_push($new_interests, "Music");
@@ -118,6 +157,9 @@ foreach ( $users as $user) {
 	        case "Open Source":
 	            array_push($new_interests, "Open Source");  // doesn't exist on MZ
 	            break;
+			case "Paper Crafts":
+				array_push($new_interests, "Paper Crafts");
+				break;
 	        case "Photography &amp; Video":
                 array_push($new_interests, "Photography &amp; Video");
 	            break;
@@ -133,14 +175,15 @@ foreach ( $users as $user) {
 	        case "Space":
                 array_push($new_interests, "Space");
 	            break;
-	        case "Sustainability &amp; Nature":
-	            array_push($new_interests, "Sustainability &amp; Nature");  // can't rename more than one interest to "Energy & Sustainability"
-	            break;
+			case "Technology":
+				array_push($new_interests, "Technology");
+				break;
 	        case "Vehicles":
-	            array_push($new_interests, "Vehicles"); // the analagous category on MZ is "Drones & Vehicles" which would look redundant when we already have "Drones" as an interest
+	        case "Cars":
+	            array_push($new_interests, "Cars");
 	            break;
 	        case "Virtual Reality":
-                array_push($new_interests, "Virtual Reality");
+                array_push($new_interests, "Virtual Reality"); // doesn't exist on MZ
 	            break;
 	        case "Wearables":
                 array_push($new_interests, "Wearables");
@@ -148,6 +191,9 @@ foreach ( $users as $user) {
 	        case "Woodworking":
                 array_push($new_interests, "Woodworking");
 	            break;
+			case "Yarncraft":
+				array_push($new_interests, "Yarncraft");
+				break;
 	        case "Young Makers":
                 array_push($new_interests, "Young Makers"); // doesn't exist on MZ
 	            break;
