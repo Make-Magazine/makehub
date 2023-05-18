@@ -37,7 +37,7 @@ foreach ( $users as $user) {
 				array_push($new_interests, "Art &amp; Sculpture");
 	            break;
 	        case "Artificial Intelligence":
-                array_push($new_interests, "Artificial Intelligence");
+                array_push($new_interests, "Artificial Intelligence"); // doesn't exist on MZ
 	            break;
 	        case "Augmented Reality":
 	            array_push($new_interests, "Augmented Reality"); // doesn't exist on MZ
@@ -83,18 +83,12 @@ foreach ( $users as $user) {
 	        case "Electronics":
                 array_push($new_interests, "Electronics");
 	            break;
-	        case "Engineering":
-	            array_push($new_interests, "Engineering"); // doesn't exist on MZ
-	            break;
 			case "Entrepreneurship":
 				array_push($new_interests, "Entrepreneurship");
 				break;
 	        case "Fabrication":
 	        case "Digital Fabrication":
                 array_push($new_interests, "Digital Fabrication");
-	            break;
-	        case "Fashion":
-	            array_push($new_interests, "Fashion");  // doesn't exist on MZ
 	            break;
 	        case "Flying &amp; Aeronatics":
 	        case "Planes":
@@ -105,17 +99,12 @@ foreach ( $users as $user) {
                 array_push($new_interests, "Food &amp; Beverage");
 	            break;
 	        case "Fun &amp; Games":
+			case "Gaming":
                 array_push($new_interests, "Fun &amp; Games");
 	            break;
 			case "Furniture &amp; Lighting":
 				array_push($new_interests, "Furniture &amp; Lighting");
 				break;
-	        case "Gaming":
-	            array_push($new_interests, "Gaming");  // doesn't exist on MZ
-	            break;
-	        case "Hacks":
-	            array_push($new_interests, "Hacks"); // doesn't exist on MZ
-	            break;
 	        case "Health":
 	        case "Health &amp; Biohacking":
                 array_push($new_interests, "Health");
@@ -125,12 +114,6 @@ foreach ( $users as $user) {
 	            break;
 	        case "Internet of Things":
                 array_push($new_interests, "Internet of Things");
-	            break;
-	        case "Kids &amp; Family":
-                array_push($new_interests, "Kids &amp; Family"); // doesn't exist on MZ
-	            break;
-	        case "Kids Under 5 yo":
-                array_push($new_interests, "Kids Under 5 yo"); // doesn't exist on MZ
 	            break;
 			case "Laser Cutting":
 				array_push($new_interests, "Laser Cutting");
@@ -149,7 +132,7 @@ foreach ( $users as $user) {
 				array_push($new_interests, "Metalworking");
 				break;
 	        case "Microcontrollers":
-                array_push($new_interests, "Microcontrollers"); // doesn't exist on MZ
+                array_push($new_interests, "Other Boards");
 	            break;
 	        case "Music":
                 array_push($new_interests, "Music");
@@ -186,6 +169,7 @@ foreach ( $users as $user) {
                 array_push($new_interests, "Virtual Reality"); // doesn't exist on MZ
 	            break;
 	        case "Wearables":
+			case "Fashion":
                 array_push($new_interests, "Wearables");
 	            break;
 	        case "Woodworking":
@@ -195,6 +179,8 @@ foreach ( $users as $user) {
 				array_push($new_interests, "Yarncraft");
 				break;
 	        case "Young Makers":
+			case "Kids &amp; Family":
+			case "Kids Under 5 yo":
                 array_push($new_interests, "Young Makers"); // doesn't exist on MZ
 	            break;
 	    }
