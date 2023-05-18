@@ -32,16 +32,17 @@
             //change the makezine url based on where we are
             $url="https://makezine.com/";      
             $test_output = FALSE;
-            if (strpos(NETWORK_HOME_URL, '.local') > -1 || strpos(NETWORK_HOME_URL, '.test') > -1 ) { // wpengine local environments
+            if (strpos(NETWORK_HOME_URL, '.local') !== false || strpos(NETWORK_HOME_URL, '.test') !== fals ) { // wpengine local environments
               $url="https://makezine.local/";
               $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  > -1){
+            }elseif(strpos(NETWORK_HOME_URL, 'stagemakehub')  !== fals){
               $url="https://mzinestage.wpengine.com/";            
               $test_output = TRUE;
-            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  > -1){  
+            }elseif(strpos(NETWORK_HOME_URL, 'devmakehub')  !== fals){  
               $url="https://mzinedev.wpengine.com/";
               $test_output = TRUE;
             }    
+
             if($test_output)  echo 'Calling '.$url.' with username = '.$email.' and password '.$pass.'<br/>';
             
             $url .= "BlueToad_omedaMake.php?brand=MK&productID=7&namespace=AUTHMAKE&appID=0387143E-E0DB-4D2F-8441-8DAB0AF47954";
@@ -54,10 +55,16 @@
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_POST, true);          
             curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
             $output = curl_exec($ch);
             $info   = curl_getinfo($ch);
-            if($test_output) echo 'Return code = ' . $info['http_code'].'<br/>';
+            if($test_output) {
+              echo 'Return code = ' . $info['http_code'].'<br/>';
+              var_dump($output);
+              echo '<br/>';
+            }
             curl_close($ch);  
 
             echo '<h2>Result: ';
@@ -67,6 +74,7 @@
               $auth_array = explode(':',$output);
               if(is_array($auth_array)){
                 if($auth_array[0]){
+                //TBD - put code here to check for approved, not to just assume
                   echo 'Approved<br/>';
                   if(isset($auth_array[1])){
                     echo 'Expiration Date - '.$auth_array[1].'<br/>';
