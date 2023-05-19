@@ -76,8 +76,10 @@ add_action( 'wp_print_scripts', 'remove_unnecessary_scripts_universal', PHP_INT_
 
 function remove_unnecessary_styles_universal() {
     if (is_admin()) {
-		wp_deregister_style( 'elementor-ai' );
-		wp_dequeue_style( 'elementor-ai' );
+		if (is_plugin_active( 'elementor/elementor.php' )) {
+			wp_deregister_style( 'elementor-ai' );
+			wp_dequeue_style( 'elementor-ai' );
+		}
 	}
 }
 add_action( 'wp_print_styles', 'remove_unnecessary_styles_universal', PHP_INT_MAX ); // we want this to happen absolutely last
