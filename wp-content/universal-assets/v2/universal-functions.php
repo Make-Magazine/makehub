@@ -64,6 +64,24 @@ add_action('wp_enqueue_scripts', 'set_ajax_params', 9999);
 //extend wp login to 30 days
 add_filter( 'auth_cookie_expiration', 'extend_login_session' );
 
+function remove_unnecessary_scripts_universal() {
+    if (is_admin()) {
+		if (is_plugin_active( 'elementor/elementor.php' )) {
+            wp_deregister_script( 'elementor-ai' );
+			wp_dequeue_script( 'elementor-ai' );
+		}
+    } 
+}
+add_action( 'wp_print_scripts', 'remove_unnecessary_scripts_universal', PHP_INT_MAX ); // we want this to happen absolutely last
+
+function remove_unnecessary_styles_universal() {
+    if (is_admin()) {
+		wp_deregister_style( 'elementor-ai' );
+		wp_dequeue_style( 'elementor-ai' );
+	}
+}
+add_action( 'wp_print_styles', 'remove_unnecessary_styles_universal', PHP_INT_MAX ); // we want this to happen absolutely last
+
 function extend_login_session( $expire ) {
   return  2592000; // seconds for 30 day time period
 }
