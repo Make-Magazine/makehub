@@ -64,7 +64,7 @@ foreach (glob(dirname(__FILE__) . '/widgets/classes/*.php') as $file) {
     include_once $file;
 }
 
-function remove_unnecessary_scripts() {
+function remove_unnecessary_styles() {
     wp_dequeue_style( 'font-awesome' );
     // unless user is admin user, they don't need the dashicons
     if (!current_user_can( 'update_core' )) {
@@ -81,10 +81,23 @@ function remove_unnecessary_scripts() {
             wp_dequeue_style( 'learndash-front' );
             wp_deregister_style( 'learndash-front' );
             wp_dequeue_style( 'learndash-front' ); 
+        }
+    }
+}
+add_action( 'wp_print_styles', 'remove_unnecessary_styles', PHP_INT_MAX ); // we want this to happen absolutely last
+
+function remove_unnecessary_scripts() {
+    if (is_admin()) {
+        if (is_plugin_active( 'elementor/elementor.php' )) {
+            wp_deregister_script( 'elementor-ai' );
+            wp_dequeue_script( 'elementor-ai' );
+        }
+    } 
+    // Check if LearnDash exists to prevent fatal errors.
+    if ( class_exists( 'SFWD_LMS' ) ) {
+        if( !is_singular( array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment' ) ) ) {
             wp_deregister_script( 'learndash-front' );
             wp_dequeue_script( 'learndash-front' );
-            wp_dequeue_script( 'buddyboss-theme-learndash-js' );
-            wp_dequeue_style( 'buddyboss-theme-learndash' );
         }
     }
     if ( ! is_admin() && isset( $scripts->registered['jquery'] ) ) {
@@ -94,7 +107,7 @@ function remove_unnecessary_scripts() {
 		}
 	}	
 }
-add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
+add_action( 'wp_print_scripts', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
