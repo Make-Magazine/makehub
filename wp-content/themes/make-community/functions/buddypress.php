@@ -108,27 +108,15 @@ function bp_group_resources() {
 // change mediapress slug
 define( 'MPP_GALLERY_SLUG', 'galleries');//rename mediapress to album
 
-
-function hide_minor_activities($a, $activities) {
-    
-    $nothanks = array("joined_group", "new_member", "new_avatar", "friendship_created", "activity_liked", "updated_profile");
-    
-    foreach ($activities->activities as $key => $activity) {
-        if (in_array($activity->type, $nothanks, true)) {
-            unset($activities->activities[$key]);
-            $activities->activity_count = $activities->activity_count-1;
-            $activities->total_activity_count = $activities->total_activity_count-1;
-            $activities->pag_num = $activities->pag_num -1;
-        }
-    }
-    
-    // Renumber the array keys to account for missing items.
-    $activities_new = array_values( $activities->activities );
-    $activities->activities = $activities_new;
-    
-    return $activities;
+function filtering_activity_default( $query ) {
+    $query = $query . '&action=activity_update,created_group,new_event';
+    return $query;
 }
-add_action('bp_has_activities', 'hide_minor_activities', 10, 2 );
+  
+add_filter( 'bp_ajax_querystring', 'filtering_activity_default', 999 );
+add_filter( 'bp_get_activity_show_filters_options', function ( $filters ) {
+	return false;
+} );
 
 function redirect_after_join_group( $group_id, $user_id ) {
     $group = groups_get_group( array( 'group_id' => $group_id ) );
