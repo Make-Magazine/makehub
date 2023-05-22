@@ -66,8 +66,9 @@ foreach (glob(dirname(__FILE__) . '/widgets/classes/*.php') as $file) {
 
 function remove_unnecessary_styles() {
     wp_dequeue_style( 'font-awesome' );
+    
     // unless user is admin user, they don't need the dashicons
-    if (!current_user_can( 'update_core' )) {
+    if (!current_user_can( 'manage_options' )) {
         wp_deregister_style('dashicons');
     }
     
