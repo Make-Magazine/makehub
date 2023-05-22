@@ -70,8 +70,11 @@ div.pagination,
 .buddypress .subnav-filters .component-filters, .buddypress-wrap .item-body .subnav-filters .component-filters {
     width: 165px;
 }
-.buddypress .main-navs.bp-navs li.object-nav-menu-button a.object-nav-menu-button-a {
-	height: 16px;
+.buddypress .main-navs.bp-navs {
+	li { padding: 11px; }
+	li.object-nav-menu-button a.object-nav-menu-button-a {
+		height: 16px;
+	}
 }
 
 // Groups
@@ -259,6 +262,17 @@ div.pagination,
 // hide lefthand sidebar as the pages gets smaller
 @media screen and (max-width: 1024px) {
 	#left-sidebar-trigger, #left-sidebar-close, #left-sidebar { display: none; }
+}
+
+// podcast widget
+.jetpack-audio-player .mejs-button > button {
+	width: inherit;
+	border: 0px;
+	padding: 0px 12px 0px 0px;
+	visibility: hidden;
+	&::before {
+		visibility: visible;
+	}
 }
 	
 
