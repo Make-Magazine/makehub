@@ -263,6 +263,20 @@ ul.custom-rss-element.horizontal.carousel .owl-nav button i {
 		width: 100%;
 	}
 }
+.cat-links a::before {
+	content: ', '; 
+}
+.cat-links a:first-of-type::before {
+	content: ''; 
+}
+.cat-links a:empty { display: none;}
+.edit-interests {
+	margin-top: 5px;
+	border: solid 1px #ccc;
+	padding: 5px 10px;
+	border-radius: 3px;
+	background-color: #f9f9f9;
+}
 
 /* makercamp widget shouldn't get bunched up if it's already in a narrow column */
 .elementor-col-33 .elementor-widget-makercampprojects .ld-course-list-items .col-md-4{

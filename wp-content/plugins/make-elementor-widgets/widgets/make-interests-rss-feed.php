@@ -142,6 +142,17 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
+			'show_categories',
+			[
+				'label' => esc_html__( 'Show Categories', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'Hide', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			],
+		);
+		$this->add_control(
 			'horizontal_display',
 			[
 				'label' => esc_html__( 'Horizontal Display', 'elementor-make-widget' ),
@@ -245,6 +256,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		$disp_order = $settings['disp_order'];
 		$title = !empty($settings['title']) ? $settings['title'] : "Your Personalized Makezine Feed";
 		$link = $settings['link'];
+		$show_categories = $settings['show_categories'];
 
 		$url = 'https://makezine.com/feed';
 
@@ -253,16 +265,15 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		    'user_id' => bp_loggedin_user_id()
 		);
 		
-		$interests = bp_get_profile_field_data($args);
+		$interests = $interest_slugs = bp_get_profile_field_data($args);
 		
-		array_walk($interests, function (&$value) {
+		array_walk($interest_slugs, function (&$value) {
 			$term = get_term_by('name', $value, "category");
 			$value = $term->slug;
-			// does it make sense to hard code some matches here? e.g. if 3d printing or 3d imaging, add the 3d printing and imaging category to feed?
 		});
 
 		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests
-		$url = !empty($interests) ? 'https://makezine.com/category/' . implode(",", $interests) . '/feed' : "https://makezine.com/feed";
+		$url = !empty($interests) ? 'https://makezine.com/category/' . implode(",", $interest_slugs) . '/feed' : "https://makezine.com/feed";
 
 		$rss = fetch_feed($url);
 		$desc = '';
@@ -287,7 +298,14 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		} else {
 			makewidget_rss_output('https://makezine.com/feed/', $settings);
 		}
-		echo("<div style='margin-top:5px;'><a href='/members/me/profile/edit/group/4/'>Edit your interests</a> to personalize your feed.</div>");
+		if ($show_categories == "yes") {
+			echo("<h5>Read more on Makezine.com related to your interests!</h5><div class='cat-links'>");
+			for($i = 0; $i <= count($interests); $i++) {
+				echo("<a href='https://makezine.com/category/".$interest_slugs[$i]."'>".$interests[$i]."</a>");
+			}
+			echo("</div>");
+		}
+		echo("<div class='edit-interests'><a href='/members/me/profile/edit/group/4/'>Edit your interests</a> to personalize your feed.</div>");
 
 		if (!is_wp_error($rss)) {
 			$rss->__destruct();

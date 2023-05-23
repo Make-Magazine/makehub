@@ -95,7 +95,7 @@ class makeco_widget_user_profile_fields extends WP_Widget {
                 <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } else if(bp_is_my_profile()) { ?>
-            You don't have any Interests set! Set them <a href="/members/me/profile/edit/group/4/" style="text-decoration:underline;">here</a> for a personalized feed of Makezine articles.
+            <div class="item bg">You don't have any Interests set! Set them <a href="/members/me/profile/edit/group/4/" style="text-decoration:underline;">here</a> for a personalized feed of Makezine articles.</div>
         <?php } ?>
 
         </div>
