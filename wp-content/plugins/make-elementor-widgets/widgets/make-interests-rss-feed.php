@@ -287,7 +287,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		} else {
 			makewidget_rss_output('https://makezine.com/feed/', $settings);
 		}
-		echo("<a href='/members/me/profile/edit/group/4/'>Edit your interests</a> to personalize your feed.");
+		echo("<div style='margin-top:5px;'><a href='/members/me/profile/edit/group/4/'>Edit your interests</a> to personalize your feed.</div>");
 
 		if (!is_wp_error($rss)) {
 			$rss->__destruct();

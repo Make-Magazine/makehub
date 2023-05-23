@@ -56,9 +56,9 @@ foreach ( $users as $user) {
 				array_push($new_interests, "CAD");
 				break;
 	        case "Climate Protection":
-			case "Sustainability &amp; Nature":
 			case "Environment":
-	            array_push($new_interests, "Environment");
+			case "Sustainability &amp; Nature":
+				array_push($new_interests, "Energy &amp; Sustainability");
 	            break;
 	        case "Computers &amp; Mobile Devices":
 	        case "Computers &amp; Mobile":

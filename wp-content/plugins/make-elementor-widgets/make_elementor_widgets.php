@@ -235,16 +235,16 @@ function makewidget_rss_output($rss, $settings) {
 		if ($show_summary == "yes") {
             echo "{$summary}";
         }
-		if ($horizontal == 'yes') {
-			echo "</div>";
-			echo "</div>";
-		}
 		if ($item['show_date'] == 'yes') {
             echo '<date>' . $item['date'] . '</date>';
         }
 		if ($show_author == "yes") {
             echo "{$author}";
         }
+        if ($horizontal == 'yes') {
+			echo "</div>";
+			echo "</div>";
+		}
 		if ($link != '') {
             echo "</a>";
 		}
