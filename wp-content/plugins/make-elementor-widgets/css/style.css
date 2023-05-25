@@ -124,6 +124,9 @@ ul.custom-rss-element.horizontal li {
 ul.custom-rss-element.horizontal li .rss-image-wrapper {
 	min-width: 100px;
 }
+ul.custom-rss-element.horizontal:not(.description):not(.carousel) .rss-image-wrapper {
+	max-height: 100px;
+}
 ul.custom-rss-element.horizontal li img {
 	aspect-ratio: 1 / 1.4;
 	max-width: 150px;

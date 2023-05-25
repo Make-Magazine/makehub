@@ -199,6 +199,9 @@ function makewidget_rss_output($rss, $settings) {
 	if ($carousel == 'yes') {
 		$wrapper_classes .= " carousel";
 	}
+    if ($show_summary == 'yes') {
+		$wrapper_classes .= " description";
+	}
 	if ($summary != '') {
 		$wrapper_classes .= " summary";
 	}
@@ -261,7 +264,7 @@ function makewidget_rss_output($rss, $settings) {
 
 add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
 function make_elementor_enqueue_scripts() {
-	$myVersion = '2.57';
+	$myVersion = '2.58';
 	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
 	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }
