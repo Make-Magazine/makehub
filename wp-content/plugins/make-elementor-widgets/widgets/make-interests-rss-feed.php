@@ -301,7 +301,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		if ($show_categories == "yes") {
 			echo("<h5>Read more on Makezine.com related to your interests!</h5><div class='cat-links'>");
 			for($i = 0; $i <= count($interests); $i++) {
-				echo("<a href='https://makezine.com/category/".$interest_slugs[$i]."'>".$interests[$i]."</a>");
+				echo("<a href='https://makezine.com/category/".$interest_slugs[$i]."' target='_blank'>".$interests[$i]."</a>");
 			}
 			echo("</div>");
 		}
