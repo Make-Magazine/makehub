@@ -379,18 +379,13 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		flex-wrap: wrap;
 		justify-content: space-between;
 		word-break: break-word;
-		a {
-			text-decoration: underline !important;
-		}
-	}
-}
-
-.sidebar .bp-profile-fields {
-	.item.bg {
 		.content {
 			font-weight: normal;
 		} 
-	}   
+		a {
+			color: $color-blue !important;
+		}
+	}
 }
 
 #activity-rss-feed { 

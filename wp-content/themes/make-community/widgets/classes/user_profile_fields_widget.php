@@ -90,12 +90,12 @@ class makeco_widget_user_profile_fields extends WP_Widget {
         <?php
         $profile_field = bp_get_member_profile_data( 'field=Interests' );
         if( $profile_field ) { ?>
-            <div class="item bg">
+            <div class="item bg interests">
                 <div class="label">Interests:</div>
                 <div class="content"><?php echo esc_attr( $profile_field ) ?></div>
             </div>
         <?php } else if(bp_is_my_profile()) { ?>
-            <div class="item bg">You don't have any Interests set! Set them <a href="/members/me/profile/edit/group/4/" style="text-decoration:underline;">here</a> for a personalized feed of Makezine articles.</div>
+            <div class="item bg interests"><div class="content">You don't have any Interests set! Set them <a href="/members/me/profile/edit/group/4/" style="text-decoration:underline;">here</a> for a personalized feed of Makezine articles.</div></div>
         <?php } ?>
 
         </div>
