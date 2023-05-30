@@ -142,6 +142,17 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 			]
 		);
 		$this->add_control(
+			'show_categories',
+			[
+				'label' => esc_html__( 'Show Categories', 'elementor-make-widget' ),
+				'type' => \Elementor\Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'Show', 'elementor-make-widget' ),
+				'label_off' => esc_html__( 'Hide', 'elementor-make-widget' ),
+				'return_value' => 'yes',
+				'default' => 'no',
+			],
+		);
+		$this->add_control(
 			'horizontal_display',
 			[
 				'label' => esc_html__( 'Horizontal Display', 'elementor-make-widget' ),
@@ -243,25 +254,34 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
     	$settings = $this->get_settings_for_display();
 		$num_display = $settings['num_display'];
 		$disp_order = $settings['disp_order'];
-		$title = $settings['title'];
+		$title = !empty($settings['title']) ? $settings['title'] : "Your Personalized Makezine Feed";
+		$link = $settings['link'];
+		$show_categories = $settings['show_categories'];
 
 		$url = 'https://makezine.com/feed';
 
 		$args = array(
-		    'field'   => 'Topics',
+		    'field'   => 'Interests',
 		    'user_id' => bp_loggedin_user_id()
 		);
-		$interests = bp_get_profile_field_data($args);
-		var_dump(bp_get_profile_field_data('Topics'));
-		array_walk($interests, function (&$value) {
-			$value = str_replace("&amp;", "", $value);
-			$value = preg_replace("/\W+/","-",$value);
-		    $value = strtolower(trim($value,"-"));
+		
+		$interests = $interest_slugs = bp_get_profile_field_data($args);
+		
+		array_walk($interest_slugs, function (&$value) {
+			$term = get_term_by('name', $value, "category");
+			$value = $term->slug;
 		});
-		$url = 'https://makezine.com/tag/' . implode(",", $interests) . '/feed';
+
+		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests
+		$url = !empty($interests) ? 'https://makezine.com/category/' . implode(",", $interest_slugs) . '/feed' : "https://makezine.com/feed";
 
 		$rss = fetch_feed($url);
 		$desc = '';
+
+		if ($link) {
+			$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
+		}
+		echo '<h4>'.$title.'</h4>';
 
 		if (!is_wp_error($rss)) {
 			$desc = esc_attr(strip_tags(@html_entity_decode($rss->get_description(), ENT_QUOTES, get_option('blog_charset'))));
@@ -274,18 +294,18 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 					$link = substr($link, 1);
 				}
 			}
+			makewidget_rss_output($rss, $settings);
+		} else {
+			makewidget_rss_output('https://makezine.com/feed/', $settings);
 		}
-
-		if (empty($title)) {
-			$title = !empty($desc) ? $desc : __('Unknown Feed');
+		if ($show_categories == "yes") {
+			echo("<h5>Read more on Makezine.com related to your interests!</h5><div class='cat-links'>");
+			for($i = 0; $i <= count($interests); $i++) {
+				echo("<a href='https://makezine.com/category/".$interest_slugs[$i]."' target='_blank'>".$interests[$i]."</a>");
+			}
+			echo("</div>");
 		}
-
-		if ($link) {
-			$title = '<a target="_blank" class="rsswidget" href="' . esc_url($link) . '">' . $title . '</a>';
-		}
-		echo '<h4>'.$title.'</h4>';
-
-		makewidget_rss_output($rss, $settings);
+		echo("<div class='edit-interests'><a href='/members/me/profile/edit/group/4/'>Edit your interests</a> to personalize your feed.</div>");
 
 		if (!is_wp_error($rss)) {
 			$rss->__destruct();

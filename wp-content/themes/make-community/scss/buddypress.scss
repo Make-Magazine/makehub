@@ -340,6 +340,7 @@ div.pagination,
 	}
 	input.change_password { float: left; }
 }
+.bp-widget.interests h3 { display: none; }
 
 // messages
 #message-threads {
@@ -370,7 +371,7 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		}
 	}
 }
-#my-account-personal-li { display: none; }
+#my-account-personal-li, #my-feed-personal-li { display: none; }
 
 .makeco-profile-fields {
 	.item.bg {
