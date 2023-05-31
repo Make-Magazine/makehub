@@ -12,7 +12,7 @@ $export_csv  = (isset($_GET['export_csv'])?TRUE:FALSE);
 
 //sql query to retrieve transactions
 $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, status, created_at, 
-            (select meta_value from wp_mepr_transaction_meta where meta_key="_gift_status" and transaction_id=wp_mepr_transactions.ID limit 1) as gift_status,
+            
             (select post_title from wp_posts where wp_posts.ID=coupon_id) as coupon_name,
             expires_at,
             (select post_title from wp_posts where wp_posts.ID=product_id) as product_name,
@@ -39,18 +39,22 @@ $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, 
 
 $mysqli->query("SET NAMES 'utf8'");
 $result = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
-/*$rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+$rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 $data = array();
 foreach($rows as $row){
     $data[$row['product_id']][] = $row;
 }
-var_dump($data);
 
 $arr_keys = array_keys($data);
 foreach($arr_keys as $key){
     echo $key.' = ' .count($data[$key]).'<br/>';
-}*/
+    foreach($data[$key] as $trx){
+        echo (implode(", ", $trx));
+        echo '<br/><br/>';
+    }    
+}
+
 if($export_csv){
     // output headers so that the file is downloaded rather than displayed
     header('Content-type: text/csv');
