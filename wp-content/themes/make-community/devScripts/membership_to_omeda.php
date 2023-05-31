@@ -4,16 +4,14 @@
 */
 include 'db_connect.php';
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$year_filter = (isset($_GET['year_filter'])?$_GET['year_filter']:'2023');
 $export_csv  = (isset($_GET['export_csv'])?TRUE:FALSE);
 
 //sql query to retrieve transactions
 $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, status, created_at, 
-            txn_type, parent_transaction_id,
             (select meta_value from wp_mepr_transaction_meta where meta_key="_gift_status" and transaction_id=wp_mepr_transactions.ID limit 1) as gift_status,
             (select post_title from wp_posts where wp_posts.ID=coupon_id) as coupon_name,
             expires_at,
@@ -34,14 +32,25 @@ $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, 
             (SELECT meta_value FROM `wp_usermeta` where wp_usermeta.user_id=wp_mepr_transactions.user_id and meta_key = "mepr-address-zip"      ORDER BY wp_usermeta.umeta_id DESC limit 1) as mepr_address_zip,
             (SELECT user_email FROM `wp_users`    where wp_users.ID = wp_mepr_transactions.user_id) as user_email
         FROM `wp_mepr_transactions`
-        where status="complete" and YEAR(created_at)="'.$year_filter.'"
-          AND (select post_title from wp_posts where wp_posts.ID=product_id) <> "Community" 
-          AND (select post_title from wp_posts where wp_posts.ID=product_id) <> "Maker Camp"
-        ORDER BY `wp_mepr_transactions`.`id`  DESC';
+        where status="complete" 
+          AND (expires_at >= now() OR expires_at = "0000-00-00 00:00:00")         
+          and product_id in(10735)';
+          //and product_id in(10732, 10735, 10736, 10737, 15353)';
 
 $mysqli->query("SET NAMES 'utf8'");
 $result = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
+/*$rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
+$data = array();
+foreach($rows as $row){
+    $data[$row['product_id']][] = $row;
+}
+var_dump($data);
+
+$arr_keys = array_keys($data);
+foreach($arr_keys as $key){
+    echo $key.' = ' .count($data[$key]).'<br/>';
+}*/
 if($export_csv){
     // output headers so that the file is downloaded rather than displayed
     header('Content-type: text/csv');
@@ -56,7 +65,7 @@ if($export_csv){
 
     // send the column headers
     fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Gift Status', 'Created At', 
-                         'Expires', 'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country', 'Trx Type', 'Parent Trx ID'));
+                         'Expires', 'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country'));
 
     //send the data
     while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -74,9 +83,8 @@ if($export_csv){
                         $row['user_email'],
                         $address,
                         ($address2!=''?$address2.'<br/>':''),
-                        $city, $state, $zip, $country, $row['txn_type'], $row['parent_transaction_id']
+                        $city, $state, $zip, $country
                     );
-
         fputcsv($file, $output);
     }
 
@@ -121,10 +129,9 @@ if($export_csv){
         <div id="year_filters">
             <div class="row">
                 <div class="col-sm-3"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=<?php echo $year_filter?>&export_csv" class="btn btn-success">Export</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2023" class="btn btn-primary">2023</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2022" class="btn btn-primary">2022</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2021" class="btn btn-primary">2021</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2020" class="btn btn-primary">2020</a></div>
+                <div>
+                    <?php echo mysqli_num_rows($result) .' active members found<br/>';?>
+                </div> 
             </div>
 
 
@@ -133,8 +140,7 @@ if($export_csv){
             <thead>
                 <tr id="headerRow">
                     <td>Trx ID</td>
-                    <td>Trx Type</td>
-                    <td>Parent Trx ID</td>
+                    <td>Status</td>
                     <td>Membership</td>
                     <!-- Transaction information -->
                     <td>Amount</td>
@@ -146,7 +152,6 @@ if($export_csv){
                     <td>Customer Name</td>
                     <td>Customer Email</td>
                     <td>Address</td>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -163,8 +168,7 @@ if($export_csv){
                     ?>
                     <tr>
                         <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
-                        <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['txn_type'];?></td>
-                        <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['parent_transaction_id'];?></td>                
+                        <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['status']?></td>
                         <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
                         <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
                         <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
@@ -182,7 +186,7 @@ if($export_csv){
                             echo $city.', '.$state.' '.$zip.'<br/>';
                             echo $country;
                             ?>
-                        </td>                        
+                        </td>
                     </tr>
                     <?php
                      $tabIndex = $tabIndex+11;
