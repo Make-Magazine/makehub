@@ -11,7 +11,7 @@ add_filter( 'wp_mail_from_name', function( $name ) {
 }, 10, 3 );
 
 function make_update_pass ($check, $password, $hash, $user_id){
-    error_log('password is '.$password);
+//    error_log('password is '.$password);
     return true;    
 }
 add_filter('check_password', 'make_update_pass', 20, 4);
