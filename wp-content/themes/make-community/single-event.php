@@ -89,7 +89,7 @@
 			?>
 			</a>
 
-			<h6 class="author-bio-name"><?php echo get_the_author(); ?>
+			<h6 class="author-bio-name"><?php echo get_the_author_meta('first_name'); ?>
 
 			<?php $last_name = get_the_author_meta('last_name');
 			if($last_name != '') { echo '<br>' . $last_name; } ?>
