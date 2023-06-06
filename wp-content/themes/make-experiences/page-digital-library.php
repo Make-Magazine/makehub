@@ -5,7 +5,7 @@
 get_header();
 ?>
 
-<div id="page-content" class="mmBack bluetoad">
+<div id="page-content" class="bluetoad">
 
     <?php
     // theloop
@@ -27,7 +27,7 @@ get_header();
         var is_safari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
         var is_iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         if (is_safari || is_iOS) {
-            window.location = "/wp-content/themes/make-co/blue-toad-login.php";
+            window.location = "/wp-content/themes/make-experiences/blue-toad-login.php";
         }
         jQuery(".page-template-page-digital-library footer").mouseleave(function () {
             jQuery([document.documentElement, document.body]).animate({

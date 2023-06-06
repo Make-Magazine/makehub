@@ -93,7 +93,7 @@ class GravityPressFeedAddOn extends GFFeedAddOn
      * @return bool|void
     */
 
-    public function process_feed_enroll_user($feed = null, $entry, $form, $user_id)
+    public function process_feed_enroll_user($feed, $entry, $form, $user_id)
     {
         $payment_settings = null;
         $feeds = GFAPI::get_feeds($feed_ids = '', $form["id"], $addon_slug = 'gravitypress', $is_active = true);
@@ -394,7 +394,7 @@ class GravityPressFeedAddOn extends GFFeedAddOn
          // Set price field to use for populating MemberPress transactions and subscriptions
         $gp_priceField  = rgar($feed_meta, 'gp_selectpricefield');
         $mp_level_price = isset($entry['payment_amount']) ? $entry['payment_amount'] : 0;
-
+        $gp_priceFieldPrice = 0;
         if(!empty($gp_priceField)){
             //If product field inputType is singleproduct
             if ( strpos($gp_priceField,".") !== false ) {
@@ -419,7 +419,7 @@ class GravityPressFeedAddOn extends GFFeedAddOn
         }
 
         //If Pricefield is set in advanced settings, use logic above, otherwise use form payment amount (default)
-        if ( $gp_priceField != 0 ) {
+        if ( $gp_priceField != 0 && $gp_priceFieldPrice) {
             $mp_level_price = number_format($gp_priceFieldPrice, 2);
         }
         // handle for notifications, send notification from GF or MP

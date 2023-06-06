@@ -1,0 +1,29 @@
+{
+    "name": "trustedlogin/client",
+    "type": "library",
+    "description": "Easily and securely log in to your customers sites when providing support.",
+    "keywords": [
+        "login",
+        "security",
+        "support"
+    ],
+    "homepage": "https://www.trustedlogin.com",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "TrustedLogin",
+            "email": "support@trustedlogin.com",
+            "homepage": "https://www.trustedlogin.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "TrustedLogin\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    }
+}

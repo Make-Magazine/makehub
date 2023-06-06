@@ -35,7 +35,7 @@ class GravityPressAddMembership {
     }
 
     /*-------[ Add User to MemberPress for Existing Users - All Payment Addons except PayPal Standard ]-------*/
-    public function pre_enroll_existing_user ( $confirmation, $form, $entry, $ajax ){
+    public function pre_enroll_existing_user ( $confirmation, $form, $entry, $ajax ){     
         $form_id = $form['id'];
         $gp_feed_active = $this->are_GP_feeds_active($form_id);
         $payment_status = $entry['payment_status'];
@@ -50,7 +50,8 @@ class GravityPressAddMembership {
         }
 
         //Ensure Gravity Press feeds are active and user logged in
-        if ( $gp_feed_active == 1 &&  $user_logged_in == 1 && !$has_registration_feed_type_create) {
+        //if ( $gp_feed_active == 1 &&  $user_logged_in == 1 && !$has_registration_feed_type_create) {
+        if ( $gp_feed_active == 1 &&  $user_logged_in == 1) {
 
             //Ensure payment is either not collected or Paid but not in processing status
             if ( $payment_status != 'Processing' ) {
@@ -76,7 +77,7 @@ class GravityPressAddMembership {
     public function pre_enroll_new_user ( $user_id, $feed, $entry, $user_pass ) {
         ////---------------//
         $message = 'entryFROMCOREFUNCTION=' . print_r($entry,true);
-        file_put_contents('pressklog.txt', PHP_EOL . $message, FILE_APPEND);
+        //file_put_contents('pressklog.txt', PHP_EOL . $message, FILE_APPEND); //debug file
         //---------------//
         $form_id = $entry['form_id'];
         $gp_feed_active = $this->are_GP_feeds_active($form_id);

@@ -1,11 +1,15 @@
 # Copyright (C) 2018 GravityView
 # This file is distributed under the GPLv2 or later.
+# Translators:
+# Süha Karalar <suhakaralar@gmail.com>, 2022
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: GravityView - DIY Layout 2.0\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
 "POT-Creation-Date: 2018-05-03 20:55:07+00:00\n"
 "PO-Revision-Date: 2018-04-27 23:07+0000\n"
+"Last-Translator: Süha Karalar <suhakaralar@gmail.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/katzwebservices/teams/18775/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,77 +27,79 @@ msgstr ""
 
 #: class-gravityview-diy-template.php:23
 msgid "A flexible, powerful layout for designers & developers."
-msgstr ""
+msgstr "Tasarımcılar ve yazılımcılar için esnek ve güçlü bir arayüz."
 
 #: class-gravityview-diy-template.php:33
 msgid "Link to single entry"
-msgstr ""
+msgstr "Tekil kayıda bağlantı ver"
 
 #: class-gravityview-diy-template.php:39
 msgid "Wrapper"
-msgstr ""
+msgstr "Sarıcı"
 
 #: class-gravityview-diy-template.php:49
 msgid "Fields to Display"
-msgstr ""
+msgstr "Görüntülenecek Alanlar"
 
 #: class-gravityview-diy-template.php:50
 msgid "The field values will need to be styled using CSS."
-msgstr ""
+msgstr "Alan değerleri CSS ile biçimlendirilecektir."
 
 #: class-gravityview-diy-template.php:100
 msgid "Custom Label"
-msgstr ""
+msgstr "Özel Etiket"
 
 #: class-gravityview-diy-template.php:101
 msgid ""
 "This label is to make it easier to organize your fields. It is not visible "
 "on the front-end."
 msgstr ""
+"Bu etiket alanlarınızı yapılandırmanızı kolaylaştırmak içindir. Önyüzde "
+"görünmeyecektir."
 
 #: class-gravityview-diy-template.php:109
 msgid "Before Output"
-msgstr ""
+msgstr "Çıktıdan Önce"
 
 #: class-gravityview-diy-template.php:110
 msgid "before"
-msgstr ""
+msgstr "önce"
 
 #: class-gravityview-diy-template.php:120
 msgid "Container Tag"
-msgstr ""
+msgstr "Kapsayıcı Etiketi"
 
 #: class-gravityview-diy-template.php:121
 msgid "This HTML tag will be used to wrap the field value."
-msgstr ""
+msgstr "Bu HTML etiketi alan değerini sarmak için kullanılacaktır."
 
 #: class-gravityview-diy-template.php:133
 msgid "After Output"
-msgstr ""
+msgstr "Çıktıdan Sonra"
 
 #: class-gravityview-diy-template.php:134
 msgid "after"
-msgstr ""
+msgstr "sonra"
 
 #: class-gravityview-diy-template.php:164
 msgid "None"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: class-gravityview-diy-template.php:22
 msgctxt "DIY means \"Do It Yourself\""
 msgid "DIY"
-msgstr ""
+msgstr "Kendin Yap"
 
 #: class-gravityview-diy-template.php:90
 msgctxt ""
 "Same description for before and after areas. %s replaced by \"before\" and "
 "\"after\""
 msgid "Display HTML %s the field output. Supports Merge Tags."
-msgstr ""
+msgstr "HTML %s alan çıktısını göster. Kaynaşma Etiketlerini destekler."
 
 #: gravityview-diy.php:44
 msgctxt ""
 "First placeholder: Name of the Extension. Second: Version of GravityView not"
 " found"
 msgid "%s was not loaded: GravityView %s was not found!"
-msgstr ""
+msgstr "%s yüklenmedi: GravityView %s bulunamadı!"

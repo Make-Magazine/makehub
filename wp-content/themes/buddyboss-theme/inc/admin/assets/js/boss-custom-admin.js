@@ -16,7 +16,8 @@
             $( '.boss-support-area' ).parents( '.form-table' ).find( 'th' ).css( { 'padding': '0', 'width': '0' } );
         },
         importExportInfo: function () {
-            $( '#redux-import-code-button' ).parent().before( '<p class="bb-description">Please click "Reset All" at the top, before doing an import in order for your changes to take effect.</p>' );
+            var $ieInfo = BOSS_CUSTOM_ADMIN.ieInfo;
+            $( '#redux-import-code-button' ).parent().before( '<p class="bb-description">' + $ieInfo + '</p>' );
         },
         thumbScale: function () {
 
@@ -221,6 +222,17 @@
                 observerFl.observe(target, { attributes : true, attributeFilter : ['style'] });
             }
             checkIfImgNodeAvailableFl();
+
+            function saveDefaultThemeOption(){
+                // Assign default color if any color field is set to empty
+                $( 'form.redux-form-wrapper' ).find( 'input.color-picker[type=text][name*="buddyboss_theme_options"]' ).on( 'change', function () {
+                    if( $( this ).val() === '' && $( this ).data( 'default-color' ) !== undefined ) {
+                        $( this ).val( $( this ).data( 'default-color' ) );
+                    }
+                });
+            }
+
+            saveDefaultThemeOption();
 
         }
     };

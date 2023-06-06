@@ -3,6 +3,9 @@
 namespace AcfBetterSearch\Admin;
 
 use AcfBetterSearch\HookableInterface;
+use AcfBetterSearch\Notice\ConverterPluginNotice;
+use AcfBetterSearch\Notice\NoticeIntegration;
+use AcfBetterSearch\Notice\ThanksNotice;
 use AcfBetterSearch\PluginInfo;
 
 /**
@@ -30,8 +33,7 @@ class Install implements HookableInterface {
 	 * @return void
 	 */
 	public function add_default_options() {
-		if ( get_option( 'acfbs_notice_hidden', false ) === false ) {
-			add_option( 'acfbs_notice_hidden', strtotime( '+ 1 week' ) );
-		}
+		NoticeIntegration::set_default_value( ConverterPluginNotice::NOTICE_OPTION, ConverterPluginNotice::get_default_value() );
+		NoticeIntegration::set_default_value( ThanksNotice::NOTICE_OPTION, ThanksNotice::get_default_value() );
 	}
 }

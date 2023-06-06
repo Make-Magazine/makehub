@@ -80,11 +80,15 @@ class Embed {
 			return;
 		}
 
-		if ( ! empty( $attributes['webinar'] ) && $attributes['webinar'] == "yes" ) {
-			$meeting = json_decode( zoom_conference()->getWebinarInfo( $meeting_id ) );
+		$meetingInfo = ! empty( $attributes['webinar'] ) && $attributes['webinar'] == "yes" ? zoom_conference()->getWebinarInfo( $meeting_id ) : zoom_conference()->getMeetingInfo( $meeting_id );
+
+		if ( is_wp_error( $meetingInfo ) ) {
+			echo $meetingInfo->get_error_message();
+			return;
 		} else {
-			$meeting = json_decode( zoom_conference()->getMeetingInfo( $meeting_id ) );
+			$meeting = json_decode( $meetingInfo );
 		}
+
 		$meeting = apply_filters( 'vczapi_join_via_browser_shortcode_meetings', $meeting );
 
 		$zoom_states = get_option( 'zoom_api_meeting_options' );
@@ -103,7 +107,8 @@ class Embed {
 			$occurrences  = ( isset( $meeting->occurrences ) && is_array( $meeting->occurrences ) ) ? $meeting->occurrences : '';
 			$meeting_time = is_array( $occurrences ) ? $occurrences[0]->start_time : date( 'Y-m-d h:i a', time() );
 		} else {
-			$meeting_time = date( 'Y-m-d h:i a', strtotime( $meeting->start_time ) );
+			$start_time   = ! empty( $meeting->start_time ) ? $meeting->start_time : 'now';
+			$meeting_time = date( 'Y-m-d h:i a', strtotime( $start_time ) );
 		}
 
 		$meeting->meeting_timezone_time = vczapi_dateConverter( 'now', $meeting->timezone, false );

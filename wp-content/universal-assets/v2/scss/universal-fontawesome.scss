@@ -1,0 +1,91 @@
+@font-face {
+	font-family: "FontAwesome";
+	src: url("https://make.co/wp-content/universal-assets/v2/fonts/fa-solid-900.ttf");
+	font-display: swap;
+}
+@font-face {
+	font-family: "FontAwesomeBrands";
+	src: url("https://make.co/wp-content/universal-assets/v2/fonts/fa-brands-400.ttf");
+	font-display: swap;
+}
+
+.fas, .fa {
+	font-family: "FontAwesome";
+	font-style: normal;
+	&.fa-ellipsis-h:before { content: "\f141"; }
+	&.fa-check:before { content: "\f00c"; }
+	&.fa-bars:before { content: "\f0c9"; }
+	&.fa-times:before { content: "\f00d"; }
+	&.fa-th-list:before { content: "\f03a"; }
+	&.fa-id-card-o:before { content: "\f2c2"; }
+	&.fa-calendar:before, &.fa-calendar-days:before { content: "\f073"; }
+	&.fa-users:before { content: "\f0c0"; }
+	&.fa-user:before { content: "\f007"; }
+	&.fa-chevron-up:before { content: "\f077"; }
+	&.fa-chevron-down:before { content: "\f078"; }
+	&.fa-chevron-left:before { content: "\f053"; }
+	&.fa-chevron-right:before { content: "\f054"; }
+	&.fa-sort:before { content: "\f0dc"; }
+	&.fa-wrench:before { content: "\f0ad"; }
+	&.fa-clock:before { content: "\f017"; }
+	&.fa-spinner:before { content: "\f110"; }
+	&.fa-tags:before { content: "\f02c"; }
+	&.fa-caret-right:before { content: "\f0da"; }
+	&.fa-caret-left:before { content: "\f0d9"; }
+	&.fa-caret-down:before { content: "\f0d7"; }
+	&.fa-caret-up:before { content: "\f0d8"; }
+	&.fa-circle:before { content: "\f111"; }
+	&.fa-minus-circle:before, &.fa-circle-minus:before { content: "\f056"; }
+	&.fa-times-circle:before, &.fa-circle-times:before { content: "\f057"; }
+	&.fa-plus:before { content: "\2b"; }
+	&.fa-star:before { content: "\f005"; }
+	&.fa-edit:before { content: "\f044"; }
+	&.fa-circle:before { content: "\f111"; }
+	&.fa-globe:before { content: "\f0ac"; }
+	&.fa-images:before { content: "\f302"; }
+	&.fa-envelope:before { content: "\f0e0"; }
+	&.fa-table-list:before { content: "\f00b"; }
+	&.sign-out-alt:before { content: "\f2f5"; }
+	&.fa-table-cells-large:before, &.fa-th-large:before { content: "\f009"; }
+	&.fa-angle-double-right:before { content: "\f101"; }
+	&.fa-angle-double-left:before { content: "\f100"; }
+	&.fa-book-open:before { content: "\F518"; }
+	&.fa-book:before { content: "\f02d"; }
+	&.fa-book-reader:before { content: "\f5da"; }
+	&.fa-compress-alt:before { content: "\f422"; }
+	&.fa-envelope-open-text:before { content: "\F658"; }
+	&.fa-photo-video:before { content: "\f87c"; }
+}
+.glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
+.glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
+.glyphicon.glyphicon-sort:before { font-family: "FontAwesome"; content: "\f0dc"; }
+.fab, .nv-social-icons-wrapper .fa {
+	font-family: "FontAwesomeBrands";
+	&.fa-facebook-f:before, &.fa-facebook:before { content: "\f09a"; }
+	&.fa-facebook-square:before { content: "\f082"; }
+	&.fa-twitter:before { content: "\f099"; }
+	&.fa-twitter-square:before { content: "\f081"; }
+	&.fa-youtube:before { content: "\f167"; }
+	&.fa-instagram:before { content: "\f16d"; }
+	&.fa-tiktok:before { content: "\e07b"; }
+	&.fa-linkedin:before { content: "\f08c"; }
+	&.fa-snapchat:before { content: "\f2ab"; }
+	&.fa-discord:before { content: "\f392"; }
+	&.fa-mastodon:before { content: "\f4f6"; }
+}
+
+i.fab, i.far, i.fas, i.fa {
+	font-style: normal;
+}
+
+@keyframes spin {
+	0% {
+	    transform: rotate(0deg);
+	}
+	100% {
+	    transform: rotate(359deg);
+	}
+}
+.fa-spin {
+    animation: 2s linear 0s normal none infinite spin;
+}

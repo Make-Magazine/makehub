@@ -95,14 +95,16 @@ abstract class Request {
 	 *
 	 * @api
 	 * @since 2.0
-	 * @todo tests
+	 * @since 2.16 Added $return_view parameter.
 	 *
-	 * @return \GV\View|false The view requested or false
+	 * @param bool $return_view Whether to return a View object or boolean.
+	 *
+	 * @return \GV\View|bool If the global $post is a View, returns the View or true, depending on $return_view. If not a View, returns false.
 	 */
-	public function is_view() {
+	public function is_view( $return_view = true ) {
 		global $post;
-		if ( $post && get_post_type( $post ) == 'gravityview' ) {
-			return \GV\View::from_post( $post );
+		if ( $post && 'gravityview' === get_post_type( $post ) ) {
+			return ( $return_view ) ? \GV\View::from_post( $post ) : true;
 		}
 		return false;
 	}
@@ -146,10 +148,16 @@ abstract class Request {
 			$view = gravityview()->views->get();
 		}
 
+		// If there are multiple Views on a page, the permalink _should_ include `gvid` to specify which View to use.
+		if( $view instanceof \GV\View_Collection ) {
+			$gvid  = \GV\Utils::_GET( 'gvid' );
+			$view  = $view->get( $gvid );
+		}
+
 		/**
 		 * A joined request.
 		 */
-		if ( $view && ( $joins = $view->joins ) ) {
+		if ( $view instanceof \GV\View && ( $joins = $view->joins ) ) {
 			$forms = array_merge( wp_list_pluck( $joins, 'join' ), wp_list_pluck( $joins, 'join_on' ) );
 			$valid_forms = array_unique( wp_list_pluck( $forms, 'ID' ) );
 
@@ -240,7 +248,7 @@ abstract class Request {
 
 		$get = array_filter( $get, 'gravityview_is_not_empty_string' );
 
-		if( $has_field_key = $this->_has_field_key( $get ) ) {
+		if( $this->_has_field_key( $get ) ) {
 			return true;
 		}
 

@@ -131,6 +131,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gppa_process_template', array( $this, 'replace_template_object_merge_tags' ), 10, 6 );
 		add_filter( 'gppa_process_template', array( $this, 'replace_template_count_merge_tags' ), 10, 7 );
 		add_filter( 'gppa_process_template', array( $this, 'maybe_add_currency_to_price' ), 10, 7 );
+		add_filter( 'gppa_process_template', array( $this, 'maybe_convert_multiselect_text_to_array' ), 16, 8 );
 
 		add_filter( 'gppa_no_results_value', array( $this, 'replace_no_results_template_count_merge_tags' ), 10, 4 );
 
@@ -229,7 +230,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * Hydrate fields any time the nested form is fetched. One key example of this is ensuring that the label of
 		 * a choice-based field is reflected in the merge value rather than the value of the option itself.
 		 */
-		add_action( 'gpnf_get_nested_form', array( $this, 'hydrate_fields' ) );
+		add_action( 'gpnf_get_nested_form', array( $this, 'hydrate_fields' ), 10, 2 );
 
 		/**
 		 * Easy Passthrough
@@ -534,6 +535,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				'populateChoices'                   => esc_html__( 'Populate choices dynamically', 'gp-populate-anything' ),
 				'populateValues'                    => esc_html__( 'Populate value dynamically', 'gp-populate-anything' ),
 				'addFilter'                         => esc_html__( 'Add Filter', 'gp-populate-anything' ),
+				'removeFilter'                      => esc_html__( 'Remove Filter', 'gp-populate-anything' ),
 				'label'                             => esc_html__( 'Label', 'gp-populate-anything' ),
 				'value'                             => esc_html__( 'Value', 'gp-populate-anything' ),
 				'price'                             => esc_html__( 'Price', 'gp-populate-anything' ),
@@ -609,7 +611,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	public function get_primary_property( $field, $populate ) {
 		static $primary_property_cache = array();
 
-		$cache_key = rgar( $field, 'formId' ) . '_' . rgar( $field, 'id' );
+		$cache_key = rgar( $field, 'formId' ) . '_' . rgar( $field, 'id' ) . '_' . $populate;
 
 		if ( isset( $primary_property_cache[ $cache_key ] ) ) {
 			return $primary_property_cache[ $cache_key ];
@@ -680,12 +682,12 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			foreach ( $filter_groups as $filter_group ) {
 				foreach ( $filter_group as $filter ) {
-					$filter_value_exploded = explode( ':', $filter['value'] );
+					$filter_value_exploded = explode( ':', rgar( $filter, 'value' ) );
 					$dependent_fields      = array();
 
 					if ( $filter_value_exploded[0] === 'gf_field' ) {
 						$dependent_fields[] = $filter_value_exploded[1];
-					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $filter['value'], $field_matches ) ) {
+					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', rgar( $filter, 'value' ), $field_matches ) ) {
 						if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
 							$dependent_fields = $field_matches[1];
 						}
@@ -831,7 +833,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 *
 		 * @since 1.2.14
 		 */
-		$args = gf_apply_filters( array( 'gppa_field_objects_query_args', $field->formId, $field->id ), array(
+		$args = gf_apply_filters( array( 'gppa_field_objects_query_args', rgar( $field, 'formId' ), rgar( $field, 'id' ) ), array(
 			'filter_groups'          => rgar( $field, $gppa_prefix . 'filter-groups' ),
 			'ordering'               => array(
 				'orderby' => rgar( $field, $gppa_prefix . 'ordering-property' ),
@@ -1093,6 +1095,43 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		return $template_value;
 
+	}
+
+	/**
+	 * If we're populating a value for a multiselect field, utilize GF_Field_MultiSelect::to_array() which has its
+	 * own logic for splitting a string into an array.
+	 *
+	 * Throughout Populate Anything, we will convert comma+space delimited lists to arrays, but not just a comma. We do
+	 * this to protect against splitting numbers.
+	 *
+	 * However, GF_Field_MultiSelect::to_array() is a little less picky so let's use it if the field is a multi-select
+	 * to stay consistent with how the field works.
+	 *
+	 * @return mixed
+	 */
+	public function maybe_convert_multiselect_text_to_array( $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template ) {
+		if ( $populate !== 'values' ) {
+			return $template_value;
+		}
+
+		// Do not continue with empty array as an empty array can cause some memory issues at this point.
+		if ( rgblank( $template_value ) || ( is_array( $template_value ) && empty( $template_value ) ) ) {
+			return '';
+		}
+
+		if ( ! is_a( $field, 'GF_Field_MultiSelect' ) || ! method_exists( $field, 'to_array' ) ) {
+			return $template_value;
+		}
+
+		if ( ! is_string( $template_value ) ) {
+			return $template_value;
+		}
+
+		if ( self::is_json( $template_value ) ) {
+			return $template_value;
+		}
+
+		return $field->to_array( $template_value );
 	}
 
 	/**
@@ -1675,8 +1714,12 @@ class GP_Populate_Anything extends GP_Plugin {
 		$object_type          = rgar( $field_settings, $gppa_prefix . 'object-type' );
 		$object_type_instance = rgar( $this->_object_types, $object_type );
 
+		if ( ! is_subclass_of( $object_type_instance, 'GPPA_Object_Type' ) ) {
+			wp_die( - 1 );
+		}
+
 		if ( $object_type_instance->is_restricted() && ! is_super_admin() ) {
-			wp_die( -1 );
+			wp_die( - 1 );
 		}
 
 		$objects = $this->get_field_objects( $field_settings, null, $populate );
@@ -1697,7 +1740,13 @@ class GP_Populate_Anything extends GP_Plugin {
 					continue;
 				}
 
-				$row[ $template_label ] = esc_html( $this->process_template( $field_settings, $template, $object, $populate, $objects ) );
+				$value = $this->process_template( $field_settings, $template, $object, $populate, $objects );
+
+				if ( is_array( $value ) ) {
+					$row[ $template_label ] = '<code>' . esc_html( json_encode( $value ) ) . '</code>';
+				} else {
+					$row[ $template_label ] = esc_html( $value );
+				}
 			}
 
 			$preview_results['results'][] = $row;
@@ -1756,6 +1805,10 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * which has a pipe delimiter to also include the price (which we don't want for value comparison).
 			 */
 			$current_field_value = $this->maybe_extract_value_from_product( $current_field_value, $field_value_object_field );
+
+			if ( is_null( $field_value_object_choices ) ) {
+				return null;
+			}
 
 			foreach ( $field_value_object_choices as $field_value_object_choice ) {
 				if ( $field_value_object_choice['value'] == $current_field_value ) {
@@ -1848,7 +1901,14 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		if ( count( $objects ) === 0 ) {
 			if ( $lead ) {
-				return RGFormsModel::get_lead_field_value( $lead, $field );
+				$value = RGFormsModel::get_lead_field_value( $lead, $field );
+
+				// If the value template is for an input, we need to get that from $value if it's an array.
+				if ( is_array( $value ) && strpos( $template, '.' ) !== false && is_numeric( $template ) ) {
+					return rgar( $value, $template );
+				}
+
+				return $value;
 			}
 		}
 
@@ -1950,7 +2010,9 @@ class GP_Populate_Anything extends GP_Plugin {
 	 */
 	public function hydrate_field( $field, $form, $field_values, $entry = null, $force_use_field_value = false, $include_html = false, $run_pre_render = false ) {
 
-		$field                    = GF_Fields::create( $field );
+		// Re-use $field reference if it's present. Breaking the reference can cause issues with validation.
+		$field = is_subclass_of( $field, 'GF_Field' ) ? $field : GF_Fields::create( $field );
+
 		$preselected_choice_value = null;
 
 		if ( $field->choices !== '' && isset( $field->choices ) ) {
@@ -1991,7 +2053,9 @@ class GP_Populate_Anything extends GP_Plugin {
 					continue;
 				}
 
-				if ( ! rgblank( $choice['value'] ) ) {
+				$choice_value = $this->get_preselected_choice_value( $choice, $field );
+
+				if ( ! rgblank( $choice_value ) ) {
 					// Choice-based fields with inputs (e.g. checkboxes) use individual input values rather than
 					// an array for the checked values.
 					if ( $field->inputs ) {
@@ -1999,14 +2063,14 @@ class GP_Populate_Anything extends GP_Plugin {
 							$preselected_choice_value = array();
 						}
 
-						$preselected_choice_value[ $field->inputs[ $choice_index ]['id'] ] = $choice['value'];
+						$preselected_choice_value[ $field->inputs[ $choice_index ]['id'] ] = $choice_value;
 						// If there are multiple pre-selections, make sure we capture them all in an array
 					} else {
 						if ( $preselected_choice_value ) {
 							$preselected_choice_value   = ( is_array( $preselected_choice_value ) ) ? $preselected_choice_value : array( $preselected_choice_value );
-							$preselected_choice_value[] = $choice['value'];
+							$preselected_choice_value[] = $choice_value;
 						} else {
-							$preselected_choice_value = $choice['value'];
+							$preselected_choice_value = $choice_value;
 						}
 					}
 				}
@@ -2017,7 +2081,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * choice above.
 			 */
 			if ( ! $preselected_choice_value && $field->get_input_type() === 'select' && count( $field->choices ) && ! rgblank( $field->choices[0]['value'] ) && ! $field->placeholder ) {
-				$preselected_choice_value = $field->choices[0]['value'];
+				$preselected_choice_value = $this->get_preselected_choice_value( $field->choices[0], $field );
 			}
 		}
 
@@ -2112,8 +2176,12 @@ class GP_Populate_Anything extends GP_Plugin {
 		if ( ! empty( $field->choices ) && is_array( $field->choices ) && rgar( $field, 'gppa-choices-enabled' ) && $require_value_to_be_in_dynamic_choices ) {
 			$choice_values = wp_list_pluck( $field->choices, 'value' );
 
+			$choice_values_with_price_removed = array_map( function( $value ) use ( $field ) {
+				return $this->maybe_extract_value_from_product( $value, $field );
+			}, $choice_values );
+
 			if ( is_array( $field_value ) || ( rgar( $field, 'storageType' ) === 'json' && self::is_json( $field_value ) ) ) {
-				$was_json    = self::is_json( $field_value );
+				$was_json = self::is_json( $field_value );
 
 				/*
 				 * We need to JSON decode multi-selects for this check. Additionally, we need to keep it JSON decoded
@@ -2122,12 +2190,12 @@ class GP_Populate_Anything extends GP_Plugin {
 				$field_value = self::maybe_decode_json( $field_value );
 
 				foreach ( $field_value as $field_value_index => $individual_field_value ) {
-					if ( ! in_array( $individual_field_value, $choice_values ) ) {
+					if ( ! in_array( $this->maybe_extract_value_from_product( $individual_field_value, $field ), $choice_values ) ) {
 						unset( $field_value[ $field_value_index ] );
 					}
 				}
 			} else {
-				if ( ! rgblank( $field_value ) && ! in_array( $field_value, $choice_values ) ) {
+				if ( ! rgblank( $field_value ) && ! in_array( $this->maybe_extract_value_from_product( $field_value, $field ), $choice_values ) ) {
 					$field_value = null;
 				}
 			}
@@ -2186,7 +2254,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * Added trim here to improve reliability of LMTs being in textareas. There were situations where the number of
 		 * line breaks would not equal and cause LMTs to stop populating.
 		 */
-		if ( is_string( $field_value ) ) {
+		if ( is_string( $field_value ) && $this->live_merge_tags ) {
 			if ( $this->live_merge_tags->prepare_for_lmt_comparison( $field_value ) == $this->live_merge_tags->prepare_for_lmt_comparison( $request_val ) ) {
 				$field_value = $default_value;
 			}
@@ -2295,10 +2363,38 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
-	public function hydrate_fields( $form ) {
+	/**
+	 * Handles getting the choice value from a choice and concatenating the price on if it's a choice-based
+	 * product or option field.
+	 *
+	 * @param array $choice
+	 * @param GF_Field $field
+	 *
+	 * @return string | null
+	 */
+	public function get_preselected_choice_value( $choice, $field ) {
+		if ( ! rgar( $choice, 'value' ) ) {
+			return null;
+		}
+
+		$choice_value = $choice['value'];
+
+		if ( GFCommon::is_product_field( $field->type ) && rgar( $field, 'enablePrice' ) ) {
+			$price         = rgempty( 'price', $choice ) ? 0 : GFCommon::to_number( rgar( $choice, 'price' ) );
+			$choice_value .= '|' . $price;
+		}
+
+		return $choice_value;
+	}
+
+	public function hydrate_fields( $form, $entry = null ) {
 
 		if ( empty( $form['fields'] ) ) {
 			return $form;
+		}
+
+		if ( ! $entry ) {
+			$entry = $this->get_posted_field_values( $form );
 		}
 
 		foreach ( $form['fields'] as &$field ) {
@@ -2307,7 +2403,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				continue;
 			}
 
-			$_field = $this->hydrate_field( $field, $form, $this->get_posted_field_values( $form ) );
+			$_field = $this->hydrate_field( $field, $form, $entry );
 			$field  = $_field['field'];
 
 		}
@@ -2389,16 +2485,12 @@ class GP_Populate_Anything extends GP_Plugin {
 				}
 
 				/**
-				 * Strip price from pricing fields as it cannot be used when filtering.
-				 */
-				$field_value = $this->maybe_extract_value_from_product( $field_value, $field );
-
-				/**
 				 * Ideally we'd like to use $field->get_value_submission() but it requires the submit $_POST value to be
 				 * present. Setting that will likely cause unintended side-effects.
 				 */
 				if ( $field_value == 'gf_other_choice' ) {
-					$other       = $field->id . '_other';
+					$other = $field->id . '_other';
+
 					$field_value = isset( $field_values[ $other ] ) ? $field_values[ $other ] : rgpost( 'input_' . $other );
 				}
 
@@ -2600,7 +2692,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			$entry_value    = RGFormsModel::get_lead_field_value( $entry, $field );
 			list( $value, ) = explode( '|', $entry_value );
 
-			$product['name'] = $this->get_submitted_choice_label( $value, $field, $entry['id'] );
+			$product['name'] = $this->get_submitted_choice_label( $value, $field, rgar( $entry, 'id' ) );
 		}
 
 		return $product_info;
@@ -2616,6 +2708,12 @@ class GP_Populate_Anything extends GP_Plugin {
 	public function maybe_save_choice_label( $value, $entry, $field, $form ) {
 
 		if ( ! rgar( $field, 'gppa-choices-enabled' ) ) {
+			return $value;
+		}
+
+		// In some cases gform_save_field_value may be called without an $entry ID present. We need the entry ID to save
+		// the meta.
+		if ( ! rgar( $entry, 'id' ) ) {
 			return $value;
 		}
 
@@ -2963,6 +3061,22 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 
 			/**
+			 * Filter whether a field's value should be skipped during hydration. This can be useful in situations
+			 * such as excluding hidden fields from being displayed in the @{order_summary} merge tag output when
+			 * populated using a Live Merge Tag.
+			 *
+			 * @param bool $skip Whether to skip the field value during hydration.
+			 * @param array $form The form currently being processed.
+			 * @param GF_Field $field The field currently being processed.
+			 * @param array $field_values The field values currently being processed.
+			 *
+			 * @since 1.2.46
+			 */
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+				continue;
+			}
+
+			/**
 			 * If hydrated value is an array of input, add individual fields to gppa-field-values instead
 			 */
 			if ( $this->is_field_value_array_of_input_value( $hydrated_value, $field ) ) {
@@ -3274,6 +3388,8 @@ class GP_Populate_Anything extends GP_Plugin {
 			$_POST[ 'input_' . $input ] = $value;
 		}
 
+		$_POST = add_magic_quotes( $_POST );
+
 		/**
 		 * Hydrate form to get more accurate merge tag values.
 		 */
@@ -3286,7 +3402,46 @@ class GP_Populate_Anything extends GP_Plugin {
 			$_POST[ 'input_' . $input ] = $value;
 		}
 
+		$_POST = add_magic_quotes( $_POST );
+
 		$fake_lead = $GLOBALS['gppa-field-values'][ $form['id'] ];
+
+		/**
+		 * Allow throwing out field values during hydration using a filter.
+		 *
+		 * One use-case of this is excluding hidden fields from being displayed in the @{order_summary} merge tag.
+		 */
+		foreach ( $fake_lead as $input => $value ) {
+			$field = GFFormsModel::get_field( $form, $input );
+
+			/**
+			 * Filter whether a field's value should be skipped during hydration. This can be useful in situations
+			 * such as excluding hidden fields from being displayed in the @{order_summary} merge tag output when
+			 * populated using a Live Merge Tag.
+			 *
+			 * @param bool $skip Whether to skip the field value during hydration.
+			 * @param array $form The form currently being processed.
+			 * @param GF_Field $field The field currently being processed.
+			 * @param array $field_values The field values currently being processed.
+			 *
+			 * @since 1.2.46
+			 */
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+				unset( $fake_lead[ $input ] );
+
+				if ( isset( $_POST[ 'input_' . $input ] ) ) {
+					unset( $_POST[ 'input_' . $input ] );
+				}
+
+				if ( isset( $field_values[ $input ] ) ) {
+					unset( $field_values[ $input ] );
+				}
+
+				if ( isset( $GLOBALS['gppa-field-values'][ $form['id'] ][ $input ] ) ) {
+					unset( $GLOBALS['gppa-field-values'][ $form['id'] ][ $input ] );
+				}
+			}
+		}
 
 		/**
 		 * Flush GF cache to prevent issues from the fake lead creation from before.
@@ -3362,8 +3517,6 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		foreach ( $live_merge_tags as $live_merge_tag ) {
-			$live_merge_tag = stripslashes( $live_merge_tag );
-
 			$live_merge_tag_value                            = $this->live_merge_tags->get_live_merge_tag_value( $live_merge_tag, $form, $fake_lead );
 			$response['merge_tag_values'][ $live_merge_tag ] = gf_apply_filters(
 				array(
@@ -3549,7 +3702,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function get_field_values_from_request() {
-		return stripslashes_deep( rgar( $_REQUEST, 'field-values', array() ) );
+		return rgar( $_REQUEST, 'field-values', array() );
 	}
 
 	/**

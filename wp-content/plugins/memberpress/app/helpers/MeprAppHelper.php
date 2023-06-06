@@ -34,10 +34,10 @@ class MeprAppHelper {
 
         if( $rstr < 0 ){
           if(!$mepr_options->currency_symbol_after) {
-            $rstr = '(' . $mepr_options->currency_symbol . abs($rstr) . ')';
+            $rstr = '(' . $mepr_options->currency_symbol . str_replace('-', '', $rstr) . ')';
           }
           else {
-            $rstr = '(' . abs($rstr) . $mepr_options->currency_symbol . ')';
+            $rstr = '(' . str_replace('-', '', $rstr) . $mepr_options->currency_symbol . ')';
           }
         }else{
           if(!$mepr_options->currency_symbol_after) {
@@ -54,7 +54,7 @@ class MeprAppHelper {
       $rstr = __('Free','memberpress');
     }
 
-    return $rstr;
+    return MeprHooks::apply_filters('mepr_format_currency', $rstr, $number, $show_symbol);
   }
 
   public static function auto_add_page($page_name, $content = '') {
@@ -154,6 +154,55 @@ class MeprAppHelper {
           return __('Unknown','memberpress');
       }
     }
+  }
+
+  public static function pro_template_sub_status( $sub ) {
+    $type = $sub->sub_type;
+    if( $type == 'transaction' ) {
+      if(strpos($sub->active, 'mepr-active') !== false){
+        return 'active';
+      } else {
+        return 'canceled';
+      }
+    }
+    elseif( $type == 'subscription' ) {
+      $status = $sub->status;
+
+      if('active' === $status){
+        $subscription = new MeprSubscription( $sub->id );
+        $txns = $subscription->transactions();
+        if( $subscription->latest_txn_failed() || strpos($sub->active, 'No') !== false ){
+          $status = 'lapsed';
+        }
+      }
+
+      switch( $status ) {
+        case MeprSubscription::$pending_str:
+          return 'pending';
+        case MeprSubscription::$active_str:
+          return 'active';
+        case MeprSubscription::$cancelled_str:
+          return 'canceled';
+        case MeprSubscription::$suspended_str:
+          return 'paused';
+        case 'lapsed':
+          return 'lapsed';
+        default:
+          return 'unknown';
+      }
+    }
+  }
+
+  public static function pro_template_txn_status( $txn ) {
+    switch( $txn->status ) {
+      case MeprTransaction::$complete_str:
+        return 'complete';
+      case MeprTransaction::$refunded_str:
+        return 'refunded';
+      default:
+        return 'unknown';
+    }
+
   }
 
   public static function format_price_string($obj, $price = 0.00, $show_symbol = true, $coupon_code = null, $show_prorated = true, &$payment_required = true) {

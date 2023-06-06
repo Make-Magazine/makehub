@@ -11,6 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * All the PHPCS errors are ignored in this file as it is a third party file.
+ * Forked from WP importer v2 - https://github.com/humanmade/WordPress-Importer
+ */
+
+/**
  * Class Astra WXR Importer
  *
  * @since  1.0.0
@@ -52,7 +57,7 @@ class Astra_WXR_Importer {
 		require_once ASTRA_SITES_DIR . 'inc/importers/wxr-importer/class-wxr-importer.php';
 		require_once ASTRA_SITES_DIR . 'inc/importers/wxr-importer/class-wxr-import-info.php';
 
-		add_filter( 'upload_mimes', array( $this, 'custom_upload_mimes' ) );
+		add_filter( 'upload_mimes', array( $this, 'custom_upload_mimes' ) ); //phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.upload_mimes
 		add_action( 'wp_ajax_astra-wxr-import', array( $this, 'sse_import' ) );
 		add_filter( 'wxr_importer.pre_process.user', '__return_null' );
 		add_filter( 'wp_import_post_data_processed', array( $this, 'pre_post_data' ), 10, 2 );
@@ -227,7 +232,7 @@ class Astra_WXR_Importer {
 		}
 
 		// Set EXT and real MIME type only for the file name `wpforms.json` or `wpforms-{page-id}.json`.
-		if ( ( strpos( $filename, 'wpforms' ) !== false ) || ( strpos( $filename, 'cartflows' ) !== false ) ) {
+		if ( ( strpos( $filename, 'wpforms' ) !== false ) || ( strpos( $filename, 'cartflows' ) !== false ) || ( strpos( $filename, 'spectra' ) !== false ) ) {
 			$defaults['ext']  = 'json';
 			$defaults['type'] = 'text/plain';
 		}
@@ -280,14 +285,17 @@ class Astra_WXR_Importer {
 			// Verify Nonce.
 			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
 
-			// @codingStandardsIgnoreStart
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error();
+			}
+
 			// Start the event stream.
 			header( 'Content-Type: text/event-stream, charset=UTF-8' );
 			// Turn off PHP output compression.
-			$previous = error_reporting( error_reporting() ^ E_WARNING );
-			ini_set( 'output_buffering', 'off' );
-			ini_set( 'zlib.output_compression', false );
-			error_reporting( $previous );
+			$previous = error_reporting( error_reporting() ^ E_WARNING ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
+			ini_set( 'output_buffering', 'off' ); //phpcs:ignore WordPress.PHP.IniSet.Risky
+			ini_set( 'zlib.output_compression', false ); //phpcs:ignore WordPress.PHP.IniSet.Risky
+			error_reporting( $previous ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
 
 			if ( $GLOBALS['is_nginx'] ) {
 				// Setting this header instructs Nginx to disable fastcgi_buffering
@@ -295,7 +303,6 @@ class Astra_WXR_Importer {
 				header( 'X-Accel-Buffering: no' );
 				header( 'Content-Encoding: none' );
 			}
-			// @codingStandardsIgnoreEnd
 
 			// 2KB padding for IE.
 			echo esc_html( ':' . str_repeat( ' ', 2048 ) . "\n\n" );

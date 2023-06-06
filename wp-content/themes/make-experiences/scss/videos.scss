@@ -1,7 +1,4 @@
 .page-template-page-videogallery {
-    .bb-grid {
-        display: block;
-    }
     .vimeography-header {
         background: #2c4754;
         margin: -15px auto 40px;
@@ -27,13 +24,6 @@
             width: 25%;
             select {
                 display: none; /*hide original SELECT element:*/
-            }
-        }
-    }
-    .vimeography-gallery {
-        .vimeography-player > div {
-            .fluid-width-video-wrapper {
-                padding-top: 56.25% !important;
             }
         }
     }
@@ -93,6 +83,14 @@
     }
     .select-items div:hover, .same-as-selected {
         background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+.vimeography-gallery {
+    .vimeography-player > div {
+        .fluid-width-video-wrapper {
+            position: absolute;
+		    top: 0;
+        }
     }
 }
 .vimeography-description {

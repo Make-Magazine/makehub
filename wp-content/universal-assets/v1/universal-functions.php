@@ -77,10 +77,19 @@ function nfm_bp_avatar_upload_url_correct($url){
 }
 add_filter('bp_core_avatar_url', 'nfm_bp_avatar_upload_url_correct', 1);
 
-// Include all function files in the make-experiences/functions directory:
+//extend wp login to 30 days
+add_filter( 'auth_cookie_expiration', 'extend_login_session' );
+
+function extend_login_session( $expire ) {
+  return  2592000; // seconds for 30 day time period
+}
+
+// Include all function files in the universal /functions directory:
 $function_files = glob(dirname(__FILE__) .'/functions/*.php');
 
 $count=0;
 foreach ($function_files as $file) {
 	include_once $file;
 }
+
+

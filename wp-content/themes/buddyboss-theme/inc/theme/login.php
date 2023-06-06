@@ -21,6 +21,14 @@ function buddyboss_login_enqueue_scripts() {
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 	}
 
+	// Icons.
+	$mincss = buddyboss_theme_get_option( 'boss_minified_css' ) ? '.min' : '';
+	// don't enqueue icons if BuddyBoss Platform 1.4.0 or higher is activated.
+	if ( ! function_exists( 'buddypress' ) || ( function_exists( 'buddypress' ) && defined( 'BP_PLATFORM_VERSION' ) && version_compare( BP_PLATFORM_VERSION, '1.4.0', '<' ) ) ) {
+		wp_enqueue_style( 'buddyboss-theme-icons-map', get_template_directory_uri() . '/assets/css/icons-map' . $mincss . '.css', '', buddyboss_theme()->version() );
+		wp_enqueue_style( 'buddyboss-theme-icons', get_template_directory_uri() . '/assets/icons/css/bb-icons' . $mincss . '.css', '', buddyboss_theme()->version() );
+	}
+
 	wp_enqueue_style( 'buddyboss-theme-login', get_template_directory_uri() . '/assets/css' . $rtl_css . '/login' . $mincss . '.css', '', buddyboss_theme()->version() );
 
 	wp_enqueue_style( 'buddyboss-theme-fonts', get_template_directory_uri() . '/assets/fonts/fonts.css', '', buddyboss_theme()->version() );
@@ -161,17 +169,28 @@ function buddyboss_login_scripts() {
 			var $label_user_lost = jQuery( 'label#user_label_lost' );
 			$label_user_lost.html( $label_user_lost.find( 'input' ) );
 
+			var loginform_user_login = '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>';
+			var loginform_user_pass = '<?php esc_html_e( 'Password', 'buddyboss-theme' ); ?>';
 
-			jQuery( '#loginform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>' );
-			jQuery( '#loginform #user_pass' ).attr( 'placeholder', '<?php esc_html_e( 'Password', 'buddyboss-theme' ); ?>' );
-			jQuery( '#registerform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Username', 'buddyboss-theme' ); ?>' );
-			jQuery( '#registerform #user_email' ).attr( 'placeholder', '<?php esc_html_e( 'Email', 'buddyboss-theme' ); ?>' );
-			jQuery( '#lostpasswordform #user_login' ).attr( 'placeholder', '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>' );
-            jQuery( '#resetpassform #pass1' ).attr( 'placeholder', '<?php echo apply_filters( THEME_HOOK_PREFIX . 'password_field_text_placeholder', __( 'Add new password', 'buddyboss-theme' ) ); ?>' );
-            jQuery( '#resetpassform #bs-pass2' ).attr( 'placeholder', '<?php echo apply_filters( THEME_HOOK_PREFIX . 're_type_password_field_text_placeholder', __( 'Retype new password', 'buddyboss-theme' ) ); ?>' );
+			jQuery( '#loginform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( loginform_user_login ).text() );
+			jQuery( '#loginform #user_pass' ).attr( 'placeholder', jQuery( '<div/>' ).html( loginform_user_pass ).text() );
+
+			var registerform_user_login = '<?php esc_html_e( 'Username', 'buddyboss-theme' ); ?>';
+			var registerform_user_email = '<?php esc_html_e( 'Email', 'buddyboss-theme' ); ?>';
+
+			jQuery( '#registerform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( registerform_user_login ).text() );
+			jQuery( '#registerform #user_email' ).attr( 'placeholder', jQuery( '<div/>' ).html( registerform_user_email ).text() );
+
+			var lostpasswordform_user_login = '<?php esc_html_e( 'Email Address', 'buddyboss-theme' ); ?>';
+			var resetpassform_pass1 = '<?php echo apply_filters( THEME_HOOK_PREFIX . 'password_field_text_placeholder', __( 'Add new password', 'buddyboss-theme' ) ); ?>';
+			var resetpassform_pass2 = '<?php echo apply_filters( THEME_HOOK_PREFIX . 're_type_password_field_text_placeholder', __( 'Retype new password', 'buddyboss-theme' ) ); ?>';
+
+			jQuery( '#lostpasswordform #user_login' ).attr( 'placeholder', jQuery( '<div/>' ).html( lostpasswordform_user_login ).text() );
+			jQuery( '#resetpassform #pass1' ).attr( 'placeholder', jQuery( '<div/>' ).html( resetpassform_pass1 ).text() );
+			jQuery( '#resetpassform #bs-pass2' ).attr( 'placeholder', jQuery( '<div/>' ).html( resetpassform_pass2 ).text() );
 
             jQuery( '.login.bb-login p.message.reset-pass' ).text( "<?php esc_html_e( 'Reset Password', 'buddyboss-theme' ); ?>" );
-            jQuery( '.login.login-action-lostpassword.bb-login #login > p.message' ).html( '<?php _e( '<div>Forgot your password?</div><p class="message">Please enter your email address. You will receive an email with instructions on how to reset your password.</p>', 'buddyboss-theme' ); ?>' );
+            jQuery( '.login.login-action-lostpassword.bb-login #login > p.message' ).html( '<?php echo sprintf( '<div>%1$s</div><p class="message">%2$s</p>', esc_html__( 'Forgot your password?', 'buddyboss-theme' ), esc_html__( 'Please enter your email address. You will receive an email with instructions on how to reset your password.', 'buddyboss-theme' ) ); ?>' );
 
             jQuery( '.login.login-action-lostpassword.bb-login #lostpasswordform input#wp-submit' ).attr( 'value', '<?php esc_html_e( 'Request reset link', 'buddyboss-theme' ); ?>' );
             jQuery( '.login.login-action-rp.bb-login #resetpassform input#wp-submit' ).attr( 'value', '<?php esc_html_e( 'Save', 'buddyboss-theme' ); ?>' );
@@ -179,7 +198,7 @@ function buddyboss_login_scripts() {
                 jQuery( '.login.login-action-resetpass.bb-login p#backtoblog' ).prepend( "<span class='bs-pass-update-msg'><?php esc_html_e( 'Password has been updated', 'buddyboss-theme' ); ?></span>" );
             }
 
-            var $signIn = jQuery( '.login.login-action-lostpassword.bb-login #login > p#nav > a' ).first().addClass('bs-sign-in').text('<?php esc_html_e( 'Back to sign in', 'buddyboss-theme' ); ?>');
+            var $signIn = jQuery( '.login.login-action-lostpassword.bb-login #login > p#nav > a' ).first().addClass( 'bs-sign-in' ).text( `<?php _e( 'Back to sign in', 'buddyboss-theme' ); ?>` );
             jQuery( 'form#lostpasswordform' ).append( $signIn );
 
 			jQuery( '.login #loginform label#pass_label' ).append( "<span class='label-switch'></span>" );
@@ -730,7 +749,6 @@ function buddyboss_theme_login_load() {
 			}
 			wp_add_inline_script( 'jquery-migrate', 'jQuery(document).ready(function(){ jQuery( "#pass1" ).data( "reveal", 0 ); });' );
 		}, 1 );
-
 	}
 }
 add_action( 'init', 'buddyboss_theme_login_load' );

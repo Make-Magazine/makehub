@@ -83,4 +83,4 @@ function hide_unnecessary_menu_items(){
         remove_menu_page( 'elementor' ); //Elementor Settings
 	}
 }
-add_action( 'admin_init', 'hide_unnecessary_menu_items' );
+add_action( 'admin_menu', 'hide_unnecessary_menu_items', 999 );

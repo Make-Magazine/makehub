@@ -1,0 +1,102 @@
+.page-template-page-videogallery {
+    .vimeography-header {
+        background: #2c4754;
+        margin: 0px auto 40px;
+        text-align: center;
+        padding: 30px 0;
+        h1 {
+            color: #fff;
+            font-size: 38px;
+            line-height: 44px;
+            margin-bottom: 5px;
+        }
+        p {
+            font-family: 'Roboto Light';
+            font-size: 16px;
+            line-height: 19px;
+            padding: 5px 0px;
+            color: #fff;
+        }
+        .select {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+            width: 25%;
+            @media screen and (max-width: 768px) {
+                width: 100%;
+            }
+            select {
+                display: none; /*hide original SELECT element:*/
+            }
+        }
+    }
+    .select-selected {
+        border: 1px solid #fff;
+        color: #fff;
+        &:hover {
+            border-color: #4AC0FB;
+        }
+        &.select-arrow-active {
+            border-color: #4AC0FB;
+            border-bottom: 1px solid #fff;
+        }
+    }
+    /*style the arrow inside the select element:*/
+    .select-selected:after {
+        position: absolute;
+        content: "";
+        top: 12px;
+        right: 10px;
+        width: 12px;
+        height: 12px;
+        right: 23px;
+        border: solid #fff;
+        border-width: 0 1px 1px 0;
+        display: inline-block;
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
+    /*point the arrow upwards when the select box is open (active):*/
+    .select-selected.select-arrow-active:after {
+        top: 19px;
+        transform: rotate(225deg);
+        -webkit-transform: rotate(225deg);
+    }
+    /*style the items (options), including the selected item:*/
+    .select-items div,.select-selected {
+        padding: 8px 16px;
+        cursor: pointer;
+        user-select: none;
+    }
+    /*style items (options):*/
+    .select-items {
+        color: #2c4754;
+        position: absolute;
+        background-color: #fff;
+        border: solid 1px #4AC0FB;
+        border-top: none;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 99;
+    }
+    /*hide the items when the select box is closed:*/
+    .select-hide {
+        display: none;
+    }
+    .select-items div:hover, .same-as-selected {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+.vimeography-gallery {
+    h2.vimeography-title { font-size: 16px; }
+    .vimeography-player > div {
+        .fluid-width-video-wrapper {
+            position: absolute;
+		    top: 0;
+        }
+    }
+}
+.vimeography-description {
+	max-width: 90% !important;
+}

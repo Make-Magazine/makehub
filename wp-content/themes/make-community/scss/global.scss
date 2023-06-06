@@ -1,0 +1,203 @@
+a {
+	color: $link-color;
+	&:hover {
+		color: $link-color-hover;
+	}
+}
+
+// one community wants font sizes to go below 16px... we can't let them get away with it
+@media screen and (max-width: 760px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
+@media screen and (max-width: 1300px) {
+	main#content article p  {
+		font-size: max(1em, 16px);
+	}
+}
+
+b, strong {
+	font-family: "Roboto Bold";
+	font-weight: 300;
+}
+
+figure {
+	margin: 0px;
+}
+// should above be universal?
+
+h1.page-title, h1.single-post-title {
+	margin-top: 30px;
+}
+
+#sidebar {
+	padding-top: 15px;
+}
+
+ //hide breadcrumbs for certain pages
+body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { display:none; }
+
+// create pages were not taking into account the sidebar from the default template
+.create.page-template-default #content {
+	width: 68%;
+}
+.sidebar .sidebar-box {
+	.sidebar-title {
+		font-size: 30px;
+		font-weight: inherit;
+	}
+	.em.em-list-widget .em-item {
+		padding-top: 10px;
+		&:first-child {
+			margin-top: 0px;
+		}
+	}
+}
+
+// overwrite the jquery styling, should this be universal?
+.ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited, .ui-state-focus a, .ui-state-focus a:hover, .ui-state-focus a:link, .ui-state-focus a:visited {
+	color: #333;
+}
+
+// Full width hacks - sure sounds like a universal thing
+.full-width-div {
+	width: 100vw !important;
+	position: relative;
+	left: 50%;
+	right: 50%;
+	margin-left: -50vw !important;
+	margin-right: -50vw !important;
+	&.elementor-section.elementor-section-boxed > .elementor-container {
+		max-width: 100%;
+		.elementor-row > .elementor-column > .elementor-column-wrap {
+			padding: 0px;
+		}
+	}
+}
+
+// Easy Social Share - if we maintain the same styling for essb on makezine and mf, couldn't this be universal
+.essb_links.essb_fullwidth_20_100_100 {
+	margin: 0px;
+	margin-bottom: 15px;
+	li {
+		width: 20% !important;
+		text-align: center;
+		a {
+			min-height: 45px;
+			width: 100%;
+			.essb_icon {
+				position: relative;
+				top: 5px;
+			}
+		}
+	}
+}
+.essb_links {
+	a:hover {
+		background: linear-gradient(to bottom,rgba(255,255,255,.35) 0,rgba(255,255,255,0) 100%);
+	}
+	.essb_link_twitter {
+		a, a:focus, a:hover {
+			background-color: #00abf0 !important;
+		}
+	}
+	.essb_link_facebook {
+		a, a:focus, a:hover {
+			background-color: #3a579a !important;
+		}
+	}
+	.essb_link_reddit {
+		a, a:focus, a:hover {
+			background-color: #333 !important;
+		}
+	}
+	.essb_link_pinterest {
+		a, a:focus, a:hover {
+			background-color: #cd1c1f !important;
+		}
+	}
+	.essb_link_love {
+		a, a:focus, a:hover {
+			background-color: #ed1c24 !important;
+		}
+	}
+}
+.single-post-category {
+	border: solid 1px $color-blue;
+	&:hover {
+		background: #fff !important;
+		a {
+			color: $color-blue;
+		}
+	}
+} 
+
+// Membership rules for hiding content - these classes are added to the body in universal functions/body-classes.php
+.premium-member {
+	.hide-if-premium { display: none !important; }
+}
+.premium-member, .free-member {
+	.hide-if-member{ display: none !important; }
+}
+
+.truncated { // this is the basic style for read more... should it be universal?
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+input[type=submit], input[type=button], button[type=submit]:not(.nouveau-search-submit):not(#user_messages_search_submit) {
+	color: #fff !important;
+	border: thin solid $color-blue !important;
+	padding: 10px 30px;
+	background-color: $color-blue !important;
+	border-radius: 2px !important;
+	font-size: 16px;
+	&:hover, &:active, &:focus {
+		background-color: #fff !important;
+		color: $color-blue !important;
+		box-shadow: none;
+	}
+}
+input[type=submit].disabled { color: #fff !important; }
+
+textarea {
+	background: #fafafa;
+	border: 1px solid #ededed;
+}
+
+// user facing wywiwyg
+.mce-tinymce {
+	.mce-widget[aria-label="LearnDash Shortcodes"], .mce-widget[aria-label="Add Vimeography Gallery"] { display: none; }
+}
+
+.feedback-btn {
+	position: fixed;
+	z-index: 9999;
+    bottom: 20px;
+    background: $color-red;
+	color: #fff;
+	border: solid 1px $color-red;
+	padding: 5px 10px;
+	border-radius: 5px;
+    width: 120px;
+    right: -15px;
+	transition: 0.3s;
+	&:hover {
+		background: #fff;
+		color: $color-red;
+		bottom: 16px;
+		right: -5px;
+		padding: 5px;
+		font-size: 18px;
+	}
+}

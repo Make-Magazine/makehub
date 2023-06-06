@@ -604,6 +604,10 @@ class Utils {
   public static function wp_mail($recipient, $subject, $message, $header) {
     Utils::_include_pluggables('wp_mail');
 
+    add_filter('wp_mail_from_name', 'MeprUtils::set_mail_from_name');
+    add_filter('wp_mail_from',      'MeprUtils::set_mail_from_email');
+    add_action('phpmailer_init',    'MeprUtils::reset_alt_body', 5);
+
     // Parse shortcodes in the message body
     $message = do_shortcode($message);
 
@@ -628,6 +632,10 @@ class Utils {
 
       return \wp_mail($to, $subject, $message, $header);
     }
+
+    remove_action('phpmailer_init',    'MeprUtils::reset_alt_body', 5);
+    remove_filter('wp_mail_from',      'MeprUtils::set_mail_from_name');
+    remove_filter('wp_mail_from_name', 'MeprUtils::set_mail_from_email');
   }
 
   public static function is_user_logged_in() {

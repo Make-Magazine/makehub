@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @see the samples directory to find a usage example
  */
+#[\AllowDynamicProperties]
 abstract class Redux_Extension_Abstract {
 	/**
 	 * The version of the extension (This is a default value you may want to override it)

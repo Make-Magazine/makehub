@@ -277,7 +277,7 @@ class GP_Payment_Gateways_Common {
      * validate payment method
      * check if this gateway is activated on memberpress
      */
-    public function gp_validate_payment_method($entry, $form = null, $gp_feed_setting){
+    public function gp_validate_payment_method($entry, $form, $gp_feed_setting){
 
         global $paypal_customer;
         global $stripe_customer;

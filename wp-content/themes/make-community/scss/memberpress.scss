@@ -1,0 +1,61 @@
+//Styles for Premium memberships
+body.memberpressproduct-premium-subscriber, body.memberpressproduct-multi-seat-membership{
+	.mepr_custom_field.mepr_mepr-address-one::before {
+		content: "Address fields are required to receive your print Make: Magazine subscription (limited to US residents only)";
+		padding: 10px 0px;
+		display: block;
+		font-style: italic;
+	}
+	form::after{
+		content: "Make: Continuous Service Details: For your convenience, you will receive uninterrupted service as your subscription will be automatically renewed at the end of each term at the rates then in effect. You will receive a reminder notice before your credit card is charged or your bill is mailed. You may cancel at any time and receive a refund on all unmailed issues. Make: is published quarterly.";
+	}
+}
+
+// Styles for free memberships
+body.memberpressproduct-community, body.memberpressproduct-contest {
+	.mpgft_notice { display: none; }
+	.mepr-signup-form {
+		.mp-address-group, #mpgft-signup-gift-checkbox1, label[for=mpgft-signup-gift-checkbox1] {
+			display: none !important;
+		}
+	}
+}
+
+//Generic styles for register page
+body.single-memberpressproduct {
+	#masthead {
+		border-bottom: #f1f1f1 solid 1px;
+    	margin-bottom: 40px;
+	}
+	//hide active campaign privacy link and photoswipe
+	.mepr-signup-form #mepr-activecampaign-privacy, .pswp {
+			display: none !important;
+	}
+	.mepr-before-signup-form { 
+		text-align: center;
+		font-size: 22px;
+		padding-bottom: 15px;
+	}	
+	input[type="submit"].mepr-submit {
+		background: $color-blue;
+	}
+	.mp-form-submit {
+		text-align: center;
+		.mepr-loading-gif {
+			margin-top: 20px;
+			width: 25px;
+		}
+	}
+}
+
+body.logged-in {
+	.login-msg { 
+		display: none; 
+	}	
+}
+
+body:not(.logged-in){
+	.check-fields-msg {
+		display: none;
+	}
+}

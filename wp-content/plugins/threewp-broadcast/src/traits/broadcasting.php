@@ -459,6 +459,18 @@ trait broadcasting
 			$this->set_post_status( $bcd->new_post( 'ID' ), $bcd->post->post_status );
 			$bcd->new_post = get_post( $bcd->new_post( 'ID' ) );
 
+			if ( $bcd->link )
+			{
+				$new_post_broadcast_data = $this->get_post_broadcast_data( $bcd->current_child_blog_id, $bcd->new_post( 'ID' ) );
+				$new_post_broadcast_data->set_linked_parent( $bcd->parent_blog_id, $bcd->post->ID );
+				$this->debug( 'Saving broadcast data of child: %s', $new_post_broadcast_data );
+				$this->set_post_broadcast_data( $bcd->current_child_blog_id, $bcd->new_post( 'ID' ), $new_post_broadcast_data );
+
+				// Save the parent also.
+				$this->debug( 'Saving parent broadcast data: %s', $bcd->broadcast_data );
+				$this->set_post_broadcast_data( $bcd->parent_blog_id, $bcd->post->ID, $bcd->broadcast_data );
+			}
+
 			$action = $this->new_action( 'broadcasting_after_update_post' );
 			$action->broadcasting_data = $bcd;
 			$action->execute();
@@ -553,7 +565,6 @@ trait broadcasting
 					{
 						// This relates to the bug mentioned in the method $this->set_term_parent()
 						delete_option( $parent_taxonomy . '_children' );
-						clean_term_cache( '', $parent_taxonomy );
 
 						if ( ! $syncing_parent_blog_taxonomies )
 						{
@@ -673,11 +684,12 @@ trait broadcasting
 
 				// Attached files are custom fields... but special custom fields.
 				if ( $bcd->has_thumbnail )
-				{
-					$new_thumbnail_id = $bcd->copied_attachments()->get( $bcd->thumbnail_id );
-					$this->debug( 'Handling post thumbnail for post %s. Thumbnail ID is now %s', $bcd->new_post( 'ID' ), $new_thumbnail_id );
-					update_post_meta( $bcd->new_post( 'ID' ), '_thumbnail_id', $new_thumbnail_id );
-				}
+					if ( ! $bcd->custom_fields()->protectlist_has( '_thumbnail_id' ) )
+					{
+						$new_thumbnail_id = $bcd->copied_attachments()->get( $bcd->thumbnail_id );
+						$this->debug( 'Handling post thumbnail for post %s. Thumbnail ID is now %s', $bcd->new_post( 'ID' ), $new_thumbnail_id );
+						update_post_meta( $bcd->new_post( 'ID' ), '_thumbnail_id', $new_thumbnail_id );
+					}
 				$this->debug( 'Custom fields: Finished.' );
 			}
 
@@ -693,18 +705,6 @@ trait broadcasting
 			{
 				$this->debug( 'Unsticking post.' );
 				unstick_post( $bcd->new_post( 'ID' ) );
-			}
-
-			if ( $bcd->link )
-			{
-				$new_post_broadcast_data = $this->get_post_broadcast_data( $bcd->current_child_blog_id, $bcd->new_post( 'ID' ) );
-				$new_post_broadcast_data->set_linked_parent( $bcd->parent_blog_id, $bcd->post->ID );
-				$this->debug( 'Saving broadcast data of child: %s', $new_post_broadcast_data );
-				$this->set_post_broadcast_data( $bcd->current_child_blog_id, $bcd->new_post( 'ID' ), $new_post_broadcast_data );
-
-				// Save the parent also.
-				$this->debug( 'Saving parent broadcast data: %s', $bcd->broadcast_data );
-				$this->set_post_broadcast_data( $bcd->parent_blog_id, $bcd->post->ID, $bcd->broadcast_data );
 			}
 
 			$action = $this->new_action( 'broadcasting_before_restore_current_blog' );

@@ -198,7 +198,7 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 					$css .= 'src: ';
 					$arr = array();
 					if ( ! empty( $font_face['woff2']['url'] ) ) {
-						$arr[] = 'url(' . esc_url( $font_face['woff']['url'] ) . ") format('woff2')";
+						$arr[] = 'url(' . esc_url( $font_face['woff2']['url'] ) . ") format('woff2')";
 					}
 					if ( ! empty( $font_face['woff']['url'] ) ) {
 						$arr[] = 'url(' . esc_url( $font_face['woff']['url'] ) . ") format('woff')";
@@ -219,6 +219,8 @@ if ( ! class_exists( '\BuddyBossTheme\BuddyBoss_Custom_Fonts_Render' ) ) :
 					     && in_array( $font_face['font_style'], array( 'normal', 'italic', 'oblique' ) ) ) {
 						$css .= 'font-style: ' . $font_face['font_style'] . '; ';
 					}
+
+                    $css .= 'font-display: swap; ';
 
 					$css .= '} ';
 				endforeach;

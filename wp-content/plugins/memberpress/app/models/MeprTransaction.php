@@ -161,9 +161,8 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
   }
 
   /**
-   * @param $trans_num
-   *
-   * @return this
+   * @param string $trans_num
+   * @return stdClass
    */
   public static function get_one_by_trans_num($trans_num) {
     $mepr_db = new MeprDb();
@@ -658,8 +657,9 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
       'expires_at' => MeprUtils::db_lifetime(),
     ));
 
+    $fallback_txn->store();
     MeprEvent::record('transaction-completed', $fallback_txn, array('txn_type' => MeprTransaction::$fallback_str, 'user_id' => $this->user_id, 'product_id' => $fallback_membership->ID));
-    return $fallback_txn->store();
+    return $fallback_txn->id;
   }
 
   // Where the magic happens when creating a free transaction ... this is
@@ -973,9 +973,6 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
 
     $this->apply_tax($subtotal, 2, $subtotal);
   }
-
-
-
 
   public function load_product_vars($prd, $cpn_code=null, $set_subtotal=false) {
     $mock_cpn = (object)array('post_title' => null, 'ID' => 0, 'trial' => 0);

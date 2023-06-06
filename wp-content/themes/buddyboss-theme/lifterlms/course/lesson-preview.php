@@ -118,7 +118,7 @@ endif;
 
 		<?php
 
-		if ( ( $quiz_id != 0 ) || ( $assignment_id != 0 ) ): ?>
+		if ( ! empty( $quiz_id ) || ! empty( $assignment_id ) ): ?>
 
             <div class="ld-item-details">
                 <div class="ld-expand-button ld-button-alternate <?php if ( ( get_the_ID() == $quiz_id ) || ( get_the_ID() == $assignment_id ) ): ?>ld-expanded <?php endif; ?>">
@@ -207,7 +207,7 @@ endif;
         </div>
 		<?php endif;
 
-		if ( $assignment_id != 0 ): ?>
+		if ( ! empty( $assignment_id ) ): ?>
 		<?php if ( ( get_the_ID() == $quiz_id ) || ( get_the_ID() == $assignment_id ) ) : ?>
         <div class="assignment_section_holder quizzes_section_holder <?php if ( get_the_ID() == $assignment_id ) : ?>current_quizz<?php endif; ?>" style="display:block;">
 			<?php else: ?>

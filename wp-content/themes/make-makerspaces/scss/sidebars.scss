@@ -1,20 +1,18 @@
 .makerspace-news {
-	@media screen and (max-width: 767px) {
-		margin: 30px 0;
-	}
-	h2 {
-		text-align: center;
-		margin-top: 10px;
-		margin-bottom: 20px;
-		img.logo {
-			margin-bottom: 10px;
-			width: 100px;
-		}
-	}
+    margin-top: 50px;
+	text-align: center;;
+    h2 {
+        img.logo {
+            margin-bottom: -2px;
+            width: 100px;
+        }
+    }
 }
-
 .posts-feeds-wrapper {
 	margin: 50px 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 	@media screen and (max-width: 560px) {
 		max-width: 100%;
 	}
@@ -23,21 +21,16 @@
 	}
 	.post-feed {
 		display: flex;
+		width: calc(50% - 60px);
 		border: 1px solid #e3e3e3;
 		-webkit-box-shadow: 3px 3px 13px -5px rgba(0,0,0,0.75);
 		-moz-box-shadow: 3px 3px 13px -5px rgba(0,0,0,0.75);
 		box-shadow: 3px 3px 13px -5px rgba(0,0,0,0.75);
 		padding: 20px;
-		margin: 0px 15px;
 		margin-bottom: 30px;
-		min-height: 200px;
-		@media screen and (min-width: 767px) {
-			&:nth-of-type(odd) {
-				margin-left: 0px;
-			}
-			&:nth-of-type(even) {
-				margin-right: 0px;
-			}
+		min-height: 150px;
+		@media screen and (max-width: 767px) {
+			width: 100%;
 		}
 		a { 
 			color: #333;

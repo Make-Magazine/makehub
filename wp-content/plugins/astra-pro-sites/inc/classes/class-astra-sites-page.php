@@ -92,7 +92,7 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 				?>
 				<div class="notice notice-info is-dismissible astra-sites-notice astra-sites-getting-started-notice">
 					<?php /* translators: %1$s is the admin page URL, %2$s is product name. */ ?>
-					<p><?php printf( __( 'Thank you for choosing %1$s! Check the library of <a class="astra-sites-getting-started-btn" href="%2$s">ready starter templates here »</a>', 'astra-sites' ), esc_html( $product_name ), esc_url( $url ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
+					<p><?php printf( esc_attr__( 'Thank you for choosing %1$s! Check the library of <a class="astra-sites-getting-started-btn" href="%2$s">ready starter templates here »</a>', 'astra-sites' ), esc_html( $product_name ), esc_url( $url ) ); ?></p>
 				</div>
 				<?php
 			}
@@ -102,9 +102,54 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 		/**
 		 * Save Page Builder
 		 *
+		 * @since 1.4.0 The `$page_builder_slug` was added.
+		 *
+		 * @param  string $page_builder_slug Page Builder Slug.
+		 * @return mixed
+		 */
+		public function save_page_builder_on_submit( $page_builder_slug = '' ) {
+
+			// Only admins can save settings.
+			if ( ! defined( 'WP_CLI' ) && ! current_user_can( 'manage_options' ) ) {
+				return;
+			}
+
+			if ( ! defined( 'WP_CLI' ) && ( ! isset( $_REQUEST['astra-sites-page-builder'] ) || ! wp_verify_nonce( sanitize_text_field( $_REQUEST['astra-sites-page-builder'] ), 'astra-sites-welcome-screen' ) ) ) {
+				return;
+			}
+
+			// Stored Settings.
+			$stored_data = $this->get_settings();
+
+			$page_builder = isset( $_REQUEST['page_builder'] ) ? sanitize_key( $_REQUEST['page_builder'] ) : sanitize_key( $page_builder_slug );
+
+			if ( ! empty( $page_builder ) ) {
+				// New settings.
+				$new_data = array(
+					'page_builder' => $page_builder,
+				);
+
+				// Merge settings.
+				$data = wp_parse_args( $new_data, $stored_data );
+
+				// Update settings.
+				update_option( 'astra_sites_settings', $data );
+			}
+
+			if ( ! defined( 'WP_CLI' ) ) {
+				wp_safe_redirect( admin_url( '/themes.php?page=astra-sites' ) );
+				exit;
+			}
+		}
+
+		/**
+		 * Save Page Builder
+		 *
 		 * @return void
 		 */
 		public function save_page_builder_on_ajax() {
+
+			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
 
 			// Only admins can save settings.
 			if ( ! current_user_can( 'manage_options' ) ) {
@@ -116,7 +161,7 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 
 			// New settings.
 			$new_data = array(
-				'page_builder' => ( isset( $_REQUEST['page_builder'] ) ) ? sanitize_key( $_REQUEST['page_builder'] ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				'page_builder' => ( isset( $_REQUEST['page_builder'] ) ) ? sanitize_key( $_REQUEST['page_builder'] ) : '',
 			);
 
 			// Merge settings.
@@ -259,17 +304,13 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 		public function render( $action ) {
 
 			// Settings update message.
-			if ( isset( $_REQUEST['message'] ) && ( 'saved' === $_REQUEST['message'] || 'saved_ext' === $_REQUEST['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_REQUEST['message'] ) && ( 'saved' === $_REQUEST['message'] || 'saved_ext' === $_REQUEST['message'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Fetching GET parameter, no nonce associated with this action.
 				?>
 					<span id="message" class="notice astra-sites-notice notice-success is-dismissive"><p> <?php esc_html_e( 'Settings saved successfully.', 'astra-sites' ); ?> </p></span>
 				<?php
 			}
 
-			$current_slug = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'starter-templates'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-
-			$default_page_builder = $this->get_setting( 'page_builder' );
-
-			if ( isset( $_GET['action'] ) && 'site-import' === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( isset( $_GET['action'] ) && 'site-import' === $_GET['action'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Fetching GET parameter to start the import process, no nonce associated with this action.
 
 				$status        = Astra_Sites_Batch_Site_Import::get_instance()->get_status();
 				$import_status = isset( $status['status'] ) ? $status['status'] : '';
@@ -401,7 +442,7 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 							<?php
 						}
 						?>
-						<input autocomplete="off" placeholder="<?php esc_html_e( 'Search...', 'astra-sites' ); ?>" type="search" aria-describedby="live-search-desc" id="wp-filter-search-input" class="wp-filter-search">
+						<input autocomplete="off" placeholder="<?php esc_attr_e( 'Search...', 'astra-sites' ); ?>" type="search" aria-describedby="live-search-desc" id="wp-filter-search-input" class="wp-filter-search">
 						<span class="ast-icon-search search-icon"></span>
 						<div class="astra-sites-autocomplete-result"></div>
 					</div>
@@ -506,8 +547,8 @@ if ( ! class_exists( 'Astra_Sites_Page' ) ) {
 		 */
 		public function get_page_url( $menu_slug ) {
 
-			$current_slug = isset( $_GET['page'] ) ? esc_attr( $_GET['page'] ) : 'starter-templates'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$parent_page  = 'themes.php';
+			$current_slug = isset( $_GET['page'] ) ? sanitize_text_field( $_GET['page'] ) : 'starter-templates'; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Fetching GET parameter, no nonce associated with this action.
+			$parent_page = 'themes.php';
 
 			if ( strpos( $parent_page, '?' ) !== false ) {
 				$query_var = '&page=' . $current_slug;

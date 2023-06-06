@@ -15,7 +15,8 @@
         ytapi_load: 'light',
         pause_others: false,
         facade_mode: false,
-        not_live_on_channel: false
+        not_live_on_channel: false,
+        maxres_facade: 'eager'
     };
 
     window._EPYT_.touchmoved = false;
@@ -189,7 +190,10 @@
                         {
                             $swapBlock = $(playerIframe).closest('.epyt-video-wrapper');
                         }
-
+                        if (!$swapBlock.length)
+                        {
+                            $swapBlock = $(playerIframe);
+                        }
                         if ($swapBlock.length)
                         {
                             var $liveFallbackBlock = $('#epyt-live-fallback');
@@ -345,7 +349,22 @@
                         }
                         else
                         {
-                            $iframe.attr('src', window._EPADashboard_.cleanSrc(vidSrc));
+                            var cleanSrcValue = window._EPADashboard_.cleanSrc(vidSrc);
+                            if ($iframe.get(0).src && $iframe.get(0).contentWindow && $iframe.get(0).contentWindow.location)
+                            {
+                                try
+                                {
+                                    $iframe.get(0).contentWindow.location.replace(cleanSrcValue);
+                                }
+                                catch (err)
+                                {
+                                    $iframe.attr('src', cleanSrcValue);
+                                }
+                            }
+                            else
+                            {
+                                $iframe.attr('src', cleanSrcValue);
+                            }
                             $iframe.get(0).epytsetupdone = false;
                             window._EPADashboard_.setupevents($iframe.attr('id'));
                         }
@@ -399,6 +418,34 @@
                         if (img.epytFacadeCount > 2)
                         {
                             $(img).off('load.epyt');
+                        }
+                    },
+                    maximizeFacadeQuality: function (img)
+                    {
+                        var facadeOldSrc = $(img).attr("src");
+                        if (facadeOldSrc && facadeOldSrc.indexOf('maxresdefault') < 0)
+                        {
+                            var maxResSrc = facadeOldSrc.replace('hqdefault', 'maxresdefault');
+                            var maxRes = new Image();
+                            maxRes.src = maxResSrc;
+                            $(maxRes).on("load.epyt", function ()
+                            {
+                                $(maxRes).off('load.epyt');
+                                if (maxRes.naturalHeight > 200)
+                                {
+                                    $(img).off('load.epyt');
+                                    $(img).attr("src", maxRes.src);
+                                }
+                            }).on('error', function ()
+                            {
+                                $(maxRes).off('load.epyt');
+                            }).each(function ()
+                            {
+                                if (maxRes.complete)
+                                {
+                                    $(maxRes).trigger('load');
+                                }
+                            });
                         }
                     },
                     pageReady: function ()
@@ -610,19 +657,36 @@
                             }
                         });
 
-                        $('img.epyt-facade-poster').on("load.epyt", function ()
+                        if (window._EPYT_.maxres_facade === 'eager')
                         {
-                            window._EPADashboard_.resolveFacadeQuality(this, false);
-                        }).on('error', function ()
-                        {
-                            window._EPADashboard_.resolveFacadeQuality(this, true);
-                        }).each(function ()
-                        {
-                            if (this.complete)
+                            $('img.epyt-facade-poster').on("load.epyt", function ()
                             {
-                                $(this).trigger('load');
-                            }
-                        });
+                                window._EPADashboard_.resolveFacadeQuality(this, false);
+                            }).on('error', function ()
+                            {
+                                window._EPADashboard_.resolveFacadeQuality(this, true);
+                            }).each(function ()
+                            {
+                                if (this.complete)
+                                {
+                                    $(this).trigger('load');
+                                }
+                            });
+                        }
+                        else if (window._EPYT_.maxres_facade === 'soft')
+                        {
+
+                            $('img.epyt-facade-poster').on("load.epyt", function ()
+                            {
+                                window._EPADashboard_.maximizeFacadeQuality(this);
+                            }).each(function ()
+                            {
+                                if (this.complete)
+                                {
+                                    $(this).trigger('load');
+                                }
+                            });
+                        }
 
                         $('.epyt-facade-play').each(function ()
                         {
@@ -642,7 +706,8 @@
                                 $.get('https://youtube.com/oembed', {url: facadeOembedUrl, format: 'json'},
                                         function (response)
                                         {
-                                            $facadePoster.attr('src', response.thumbnail_url.replace('hqdefault', 'maxresdefault'));
+                                            var newSrc = window._EPYT_.maxres_facade === 'eager' ? response.thumbnail_url.replace('hqdefault', 'maxresdefault') : response.thumbnail_url;
+                                            $facadePoster.attr('src', newSrc);
                                         }, 'json')
                                         .fail(function ()
                                         {
@@ -672,8 +737,7 @@
 
                             window._EPADashboard_.loadYTAPI();
                             $facade.replaceWith(iframe);
-                            $(iframe).attr('src', srcTemp);
-                            window._EPADashboard_.setupevents($(iframe).attr('id'));
+                            window._EPADashboard_.setVidSrc($(iframe), srcTemp);
                             setTimeout(function ()
                             {
                                 if (typeof $.fn.fitVidsEP !== 'undefined')

@@ -422,6 +422,7 @@ var AstraSitesAjaxQueue = (function () {
 												data: {
 													action: 'astra-sites-import-blocks',
 													page_no: i,
+													_ajax_nonce: astraElementorSites._ajax_nonce,
 												},
 												beforeSend: function () {
 													console.groupCollapsed('Importing Blocks - Page ' + i);
@@ -474,6 +475,7 @@ var AstraSitesAjaxQueue = (function () {
 												data: {
 													action: 'astra-sites-import-sites',
 													page_no: i,
+													_ajax_nonce: astraElementorSites._ajax_nonce,
 												},
 												success: function (result) {
 
@@ -595,7 +597,13 @@ var AstraSitesAjaxQueue = (function () {
 				});
 		},
 
-		_createTemplate: function (data) {
+		_createTemplate: function () {
+
+			let url = AstraElementorSitesAdmin.templateData['astra-page-api-url'];
+
+			if( AstraElementorSitesAdmin.type == 'blocks' ) {
+				url = astraElementorSites.ApiURL + 'astra-blocks/' + AstraElementorSitesAdmin.block_id.replace( 'id-', "" );
+			}
 
 			console.groupEnd();
 
@@ -606,7 +614,8 @@ var AstraSitesAjaxQueue = (function () {
 				dataType: 'json',
 				data: {
 					'action': 'astra-sites-create-template',
-					'data': data,
+					'id' : (AstraElementorSitesAdmin.type == 'pages') ? AstraElementorSitesAdmin.page_id : AstraElementorSitesAdmin.block_id,
+					'url' : url,
 					'title': (AstraElementorSitesAdmin.type == 'pages') ? astraElementorSites.default_page_builder_sites[AstraElementorSitesAdmin.site_id]['title'] : '',
 					'type': AstraElementorSitesAdmin.type,
 					'_ajax_nonce': astraElementorSites._ajax_nonce,
@@ -967,7 +976,7 @@ var AstraSitesAjaxQueue = (function () {
 							if ('insert' == AstraElementorSitesAdmin.action) {
 								AstraElementorSitesAdmin._insertDemo(response.data);
 							} else {
-								AstraElementorSitesAdmin._createTemplate(response.data);
+								AstraElementorSitesAdmin._createTemplate();
 							}
 						}
 					});
@@ -982,7 +991,7 @@ var AstraSitesAjaxQueue = (function () {
 					if ('insert' == AstraElementorSitesAdmin.action) {
 						AstraElementorSitesAdmin._insertDemo(AstraElementorSitesAdmin.templateData);
 					} else {
-						AstraElementorSitesAdmin._createTemplate(AstraElementorSitesAdmin.templateData);
+						AstraElementorSitesAdmin._createTemplate();
 					}
 				});
 

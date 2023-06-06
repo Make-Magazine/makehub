@@ -16,8 +16,7 @@ function spaces_map_loop() {
 
    <div class="container-fluid inner-container directory-container" id="directory">
 
-      <div class="row map-header">
-         <div class="col-md-12">
+      <div class="map-header">
             <h1>Makerspace Directory</h1>
             <!--
             <div class="admin-buttons">
@@ -25,7 +24,6 @@ function spaces_map_loop() {
 		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="far fa-edit"></i></a>
             </div>-->
             <p><?php //echo the_content(); ?></p>
-         </div>
       </div>
       <div class="message-container">
          <div class="loading-indicator" ref="loadingIndicator">Loading... <i class="fas fa-spinner"></i></div>
@@ -33,56 +31,43 @@ function spaces_map_loop() {
       </div>
       <div class="map-table-hidden" ref="mapTableWrapper" >
 
-         <div class="row">
-            <div class="col-xs-12">
-               <div id="map" ref="map" style="height: 40px;"></div>
-            </div>
-         </div>
 
-         <div class="row">
-            <div class="col-xs-12">
+         <div id="map" ref="map" style="height: 40px;"></div>
 
-               <div class="map-filters-wrp">
-                  <form action="" class="" @submit="filterOverride">
-                     <div class="">
-                        <label for="filter">Find a Makerspace</label>
-                        <input class="form-control input-sm" type="search" id="filter" name="filter" ref="filterField" v-model="filterVal" @input="doFilter" placeholder="Search by Name">
-                     </div>
-                  </form>
+         <div class="map-filters-wrp">
+            <form action="" class="" @submit="filterOverride">
+               <div class="">
+                  <label for="filter">Find a Makerspace</label>
+                  <input class="form-control input-sm" type="search" id="filter" name="filter" ref="filterField" v-model="filterVal" @input="doFilter" placeholder="Search by Name">
                </div>
-            </div>
+            </form>
          </div>
 
-         <div class="row">
-            <div class="col-xs-12">
-               <v-client-table :data="tableData" :columns="columns" :options="options" @row-click="onRowClick" ref="directoryGrid">
-                  <span slot="mmap_eventname" slot-scope="props">
-                     <a :href="props.row.mmap_url" target="_blank" title="Visit site in new window">{{ props.row.mmap_eventname }}</a>
-                  </span>
-               </v-client-table>
-            </div>
-         </div>
+         <v-client-table :data="tableData" :columns="columns" :options="options" @row-click="onRowClick" ref="directoryGrid">
+            <span slot="mmap_eventname" slot-scope="props">
+               <a :href="props.row.mmap_url" target="_blank" title="Visit site in new window">{{ props.row.mmap_eventname }}</a>
+            </span>
+         </v-client-table>
+
 
       </div>  <!-- end map-table-wrapper -->
 
    </div>
 
 <div class="container-fluid light-blue">
-   <div class="container">
-      <div class="row">
-         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
+   <div class="wrapper">
+         <div class="makerspace-bottom-nav">
             <h4>Join our global network of makerspaces</h4>
             <a class="btn universal-btn" href="/register">Add your makerspace</a>
          </div>
-         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
+         <div class="makerspace-bottom-nav">
             <h4>See an error or need to update your info?</h4>
             <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>
          </div>
-			<div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
+			<div class="makerspace-bottom-nav">
 				<h4>Join Make: Community</h4>
-				<a class="btn universal-btn" href="https://community.make.co">Learn More</a>
+				<a class="btn universal-btn" href="https://make.co">Learn More</a>
 			</div>
-      </div>
    </div>
 </div>
 

@@ -33,7 +33,7 @@
 			);
 			?>
 		</p>
-		<p>
+		<p class="center">
 			<a href="https://wordpress.org/support/plugin/acf-better-search/#new-post" target="_blank"
 				class="acfbsButton acfbsButton--blue">
 				<?php echo esc_html( __( 'Get help', 'acf-better-search' ) ); ?>
@@ -42,14 +42,14 @@
 		<p>
 			<?php
 			echo wp_kses_post(
-				__( 'Do you like our plugin? Could you rate him? Please let us know what you think about our plugin. It is important that we can develop this tool. Thank you for all the ratings, reviews and donates.', 'acf-better-search' )
+				__( 'Do you like our plugin? Could you rate him? Please let us know what you think about our plugin. It is important that we can develop this tool. Thank you for all the reviews.', 'acf-better-search' )
 			);
 			?>
 		</p>
-		<p>
+		<p class="center">
 			<a href="https://wordpress.org/support/plugin/acf-better-search/reviews/#new-post" target="_blank"
 				class="acfbsButton acfbsButton--blue">
-				<?php echo esc_html( __( 'Add review', 'acf-better-search' ) ); ?>
+				<?php echo esc_html( __( 'Add a plugin review', 'acf-better-search' ) ); ?>
 			</a>
 		</p>
 	</div>

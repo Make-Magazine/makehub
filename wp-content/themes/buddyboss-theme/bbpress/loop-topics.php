@@ -46,9 +46,12 @@
 			<div class="bbp-forum-buttons-wrap">
 				<?php
 				if ( ( ! is_active_sidebar( 'forums' ) || bp_is_groups_component() ) && bbp_is_single_forum() && ! bbp_is_forum_category() && ( bbp_current_user_can_access_create_topic_form() || bbp_current_user_can_access_anonymous_user_form() ) ) {
-					?>
-					<?php bbp_forum_subscription_link(); ?>
 
+					// Remove subscription link if forum assigned to the group.
+					if ( ! function_exists( 'bb_is_forum_group_forum' ) || ! bb_is_forum_group_forum( bbp_get_forum_id() ) ) {
+						bbp_forum_subscription_link();
+					}
+					?>
 					<div class="bbp_before_forum_new_post">
 						<a href="#new-post" data-modal-id="bbp-topic-form" class="button full btn-new-topic">
 							<i class="bb-icon-l bb-icon-edit"></i>

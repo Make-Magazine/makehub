@@ -9,7 +9,7 @@
  * Auto Activate: No
  * Module Tags: Photos and Videos, Social, Writing, Appearance
  * Feature: Writing
- * Additional Search Queries: shortcodes, shortcode, embeds, media, bandcamp, dailymotion, facebook, flickr, google calendars, google maps, google+, polldaddy, recipe, recipes, scribd, slideshare, slideshow, slideshows, soundcloud, ted, twitter, vimeo, vine, youtube
+ * Additional Search Queries: shortcodes, shortcode, embeds, media, bandcamp, dailymotion, facebook, flickr, google calendars, google maps, polldaddy, recipe, recipes, scribd, slideshare, slideshow, slideshows, soundcloud, ted, twitter, vimeo, vine, youtube
  *
  * @package automattic/jetpack
  */
@@ -134,7 +134,8 @@ if ( ! function_exists( 'jetpack_shortcode_get_wpvideo_id' ) ) {
 	 * Get VideoPress ID from wpvideo shortcode attributes.
 	 *
 	 * @param array $atts Shortcode attributes.
-	 * @return int  $id   VideoPress ID.
+	 *
+	 * @return string|int $id VideoPress ID.
 	 */
 	function jetpack_shortcode_get_wpvideo_id( $atts ) {
 		if ( isset( $atts[0] ) ) {

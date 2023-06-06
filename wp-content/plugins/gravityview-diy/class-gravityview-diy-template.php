@@ -79,7 +79,7 @@ class GravityView_DIY_Template extends \GravityView_Template {
 
 		$field_options = parent::assign_field_options( $field_options, $template_id, $field_id, $context, $input_type );
 
-		if ( $this->template_id !== $template_id ) {
+		if ( ! in_array( $template_id, array( $this->template_id, 'default_table_edit' ) ) ) {
 			return $field_options;
 		}
 
@@ -103,7 +103,7 @@ class GravityView_DIY_Template extends \GravityView_Template {
 			'merge_tags' => false,
 		);
 
-		if ( 'custom' !== $field_id ) {
+		if ( 'custom' !== $field_id && 'edit' !== $context ) {
 			$diy_options['before_output'] = array(
 				'type'       => 'textarea',
 				'label'      => __( 'Before Output', 'gravityview-diy' ),
@@ -115,19 +115,21 @@ class GravityView_DIY_Template extends \GravityView_Template {
 			);
 		}
 
-		$diy_options['container'] = array(
-			'type' => 'radio',
-			'label' => __( 'Container Tag', 'gravityview-diy' ),
-			'desc' => __( 'This HTML tag will be used to wrap the field value.', 'gravityview-diy' ),
-			'value' => ( ( 'custom' === $field_id ) ? '' : 'div' ),
-			'class' => 'widefat code',
-			'merge_tags' => false,
-			'tooltip' => 'gv_container_tag',
-			'options' => $this->get_container_tags( $input_type, $context ),
-			'requires' => 'default_diy',
-		);
+		if ( ( 'custom' === $field_id && 'edit' === $context ) || 'edit' !== $context ) {
+			$diy_options['container'] = array(
+				'type'       => 'radio',
+				'label'      => __( 'Container Tag', 'gravityview-diy' ),
+				'desc'       => __( 'This HTML tag will be used to wrap the field value.', 'gravityview-diy' ),
+				'value'      => ( ( 'custom' === $field_id ) ? '' : 'div' ),
+				'class'      => 'widefat code',
+				'merge_tags' => false,
+				'tooltip'    => 'gv_container_tag',
+				'options'    => $this->get_container_tags( $input_type, $context ),
+				'requires'   => 'default_diy',
+			);
+		}
 
-		if ( 'custom' !== $field_id ) {
+		if ( 'custom' !== $field_id && 'edit' !== $context ) {
 			$diy_options['after_output'] = array(
 				'type' => 'textarea',
 				'label' => __( 'After Output', 'gravityview-diy' ),
@@ -138,6 +140,25 @@ class GravityView_DIY_Template extends \GravityView_Template {
 				'rows'  => 8
 			);
 		}
+
+		$diy_options['show_label'] = array(
+			'type'     => 'checkbox',
+			'label'    => __( 'Show Label', 'gravityview-diy' ),
+			'value'    => ! empty ( $is_table_layout ),
+			'priority' => 1000,
+			'group'    => 'label',
+		);
+
+		$diy_options['custom_label'] = array(
+			'type'       => 'text',
+			'label'      => __( 'Custom Label:', 'gravityview-diy' ),
+			'value'      => '',
+			'merge_tags' => true,
+			'class'      => 'widefat',
+			'priority'   => 1100,
+			'requires'   => 'show_label',
+			'group'      => 'label',
+		);
 
 		return $diy_options + $field_options;
 	}

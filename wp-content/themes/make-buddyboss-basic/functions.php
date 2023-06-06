@@ -6,7 +6,7 @@
  */
 /* * **************************** THEME SETUP ***************************** */
 
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 // Defines the child theme (do not remove).
 define('CHILD_THEME_NAME', 'Make - Buddyboss Basic');
@@ -62,6 +62,23 @@ function load_admin_styles() {
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
+
+// fight back against buddyboss ruining our accessibility
+if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
+    add_action( 'init', 'remove_bb_actions');
+    function remove_bb_actions() {
+        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    /**
+     * Add a viewport meta.
+     */
+    function buddyboss_theme_viewport_meta_custom() {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1" />';
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
+}
+
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');

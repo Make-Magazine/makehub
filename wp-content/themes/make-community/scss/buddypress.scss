@@ -1,0 +1,449 @@
+// Theme and buddypress overrides
+
+.directory section.wrapper {
+	@media screen and (min-width: 765px) {
+		padding-top: 45px;
+	}
+}
+
+.buddypress .bp-feedback {
+	align-items: center !important;
+}
+
+// force font sizes to at least 16px
+.breadcrumbs,
+div.pagination,
+.shortcode-events-left,
+.buddypress .main-navs.bp-navs ul li, 
+.buddypress-wrap .bp-subnavs ul.subnav li a,
+.activity-list .activity-item .activity-inner p, 
+.activity-meta.action .button span, 
+.activity-meta.action .button span, 
+.activity-list .activity-item .activity-header .activity-time-since, 
+.activity-list .activity-header p, 
+.activity-list .activity-header p a, 
+.activity-permalink .activity-list .activity-item .activity-header .time-since, 
+.activity-list .activity-item .activity-header a, 
+.buddypress .activity-comments .acomment-meta,
+.buddypress .activity-comments .acomment-content p,
+.sidebar-box .em.em-list-widget .em-item .em-item-info .em-item-name a, 
+.sidebar-box .em.em-list-widget .em-item .em-item-meta .em-item-meta-line, 
+.sidebar .bp-profile-fields .item, 
+.buddypress .subnav-filters div select, 
+.buddypress .subnav-filters div input[type="search"], 
+.buddypress form.bp-dir-search-form button[type="submit"], 
+.buddypress button, .buddypress a.button, .buddypress input[type="submit"], 
+.buddypress input[type="button"], 
+.buddypress input[type="reset"], 
+.buddypress ul.button-nav:not(.button-tabs) li a, 
+.buddypress .generic-button a, 
+.buddypress .comment-reply-link, 
+.buddypress a.bp-title-button, 
+.buddypress-wrap #members-list li .user-update, 
+#buddypress #item-header-content .generic-button a, 
+#buddypress #item-header-content .generic-button button.friendship-button, 
+#buddypress.buddypress-wrap #item-header-content .generic-button button.friendship-button, 
+#buddypress #item-header-content .generic-button a 
+.single-headers #item-header-details, 
+.single-headers #item-header-details .user-nicename, 
+.single-headers #item-header-details .activity, 
+.single-headers #item-header-details .profile-balance,
+.single-headers #latest-update, 
+.single-headers .group-description,
+.activity-update-form #whats-new-textarea textarea,
+.single-headers #item-header-details, 
+.single-headers #item-header-details .user-nicename, 
+.single-headers #item-header-details .activity, 
+.single-headers #item-header-details .profile-balance,
+.activity-list .activity-header .time-since {
+	font-size: max(1em, 16px) !important;
+}
+.buddypress-wrap .bp-feedback p { 
+	font-size: 15px;
+}
+.buddypress .subnav-search {
+    width: 180px;
+	input[type=search] {
+		padding: 5px 0px 5px 12px !important;
+	}
+}
+.buddypress .subnav-filters .component-filters, .buddypress-wrap .item-body .subnav-filters .component-filters {
+    width: 165px;
+}
+.buddypress .main-navs.bp-navs {
+	li { padding: 10px !important; }
+	li.object-nav-menu-button a.object-nav-menu-button-a {
+		height: 16px;
+	}
+}
+
+// Groups
+#groups-dir-list {
+	.item-block {
+		min-height: 100px;
+		.groups-title a {
+			@extend .truncated;
+			-webkit-line-clamp: 2;
+			font-family: "Roboto Bold";
+		}
+	}
+	.item-avatar {
+		aspect-ratio: 1 / 1;
+		overflow: hidden;
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+	}
+} 
+.shortcode-bp-groups-tabs-container h6.group-box-title {
+	height: 40px;
+}
+.single-item.groups {
+	.group-description a { text-decoration: underline !important; }
+	#events-groups-li { display: none !important; }
+	.subnav-filters .invite-button {
+		padding: 8px 10px;
+		background: $color-blue;
+		color: #fff;
+		border: 0px;
+		border-radius: 2px;
+		.dashicons {
+			margin-top: 3px;
+		}
+	}
+	@media screen and (max-width: 760px) {
+		.single-headers.groups-header {
+			#item-header-wrappper {
+				position: relative;
+				top: 15px; 
+				margin-bottom: 24px;
+			}
+			#cover {
+				height: auto;
+			}
+		}
+	}
+}
+.buddypress .bp-invites-content ul#members-list li {
+	width: auto !important;
+}
+
+// Let's make all the member directories the same
+.makeco.buddypress #item-body #members-list li.item-entry, .makeco.buddypress #friend-list li.item-entry {
+	width: 15%;
+	margin-right: 2%;
+	margin-bottom: 2.8%;
+	float: left;
+	&:nth-child(6n) {
+		margin-right: 0px;
+	}
+	@media screen and (max-width: 1024px) {
+		width: 30%;
+		margin-right: 5%;
+		margin-bottom: 5%;
+		&:nth-child(3n) {
+			margin-right: 0%;
+		}
+	}
+	@media screen and (max-width: 760px) {
+		width: 46%;
+		margin-right: 8%;
+		margin-bottom: 8%;
+		&:nth-child(3n) {
+			margin-right: 8%;
+		}
+		&:nth-child(2n) {
+			margin-right: 0%;
+		}
+	}
+}
+
+// Members Directory
+.members-type-navs #members-all {
+	display: none;
+}
+.directory.members {
+	#members-group_leader, #members-student {
+		display: none;
+	}
+}
+
+// Activity Page
+#bp-nouveau-activity-form {
+	border: solid 1px $border-color !important;
+	border-radius: 5px;
+    background: #f9f9f9f9;
+	margin-bottom: 30px;
+	#whats-new-form {
+		display: flex;
+		flex-direction: column;
+		#whats-new-avatar {
+			left: 5px;
+			top: 5px;
+			border: 0px;
+			width: 58px;
+			img {
+				border-radius: 50px;
+			}
+		}
+		#whats-new-content {
+			margin: 10px 15px;
+			padding-left: 60px;
+			padding-bottom: 5px;
+		}
+		#whats-new-textarea {
+			textarea { 
+				background: #fff;
+			}
+		}
+		#mpp-activity-upload-buttons {
+			width: 100%;
+			border-top: solid 1px $border-color;
+			padding: 15px;
+			margin-top: 0px;
+			background: #f0f0f0;
+		}
+		#mpp-notice-message {
+			padding: 5px;
+			order: 2;
+			margin-bottom: 0px;
+			p { margin-bottom: 0px; }
+		}
+		#mpp-activity-media-upload-container {
+			padding: 15px;
+			.mpp-upload-container-close {
+				background: none;
+				text-indent: 0px;
+				top: -40px;
+				span {display: none;}
+				&:before {
+					font-family: "FontAwesome";
+					content: "\f00d";
+					color: #333;
+				}
+			}
+			#mpp-upload-dropzone-activity {
+				background: #fff;
+			}
+			#mpp-add-remote-media {
+				padding: 8px;
+				border-radius: 3px;
+			}
+			#mpp-remote-media-url {
+				border-color: $border-color;
+				background: #fff;
+				padding: 5px;
+			}
+		}
+		#whats-new-options {
+			display: flex;
+			order: 3;
+			width: 100%;
+			justify-content: space-between;
+			align-items: center;
+			padding: 10px 5px;
+			#whats-new-post-in-box {
+				margin-bottom: 0px;
+				order: 9;
+			}
+			#whats-new-submit {
+				margin-bottom: 0px;
+			}
+		}
+	}
+}
+.activity-inner ul { margin-top: 10px; }
+.activity-list .activity-item div.item-avatar { width: 45px; }
+#activity-filter-select {
+	display:none;
+}
+// hide lefthand sidebar as the pages gets smaller
+@media screen and (max-width: 1024px) {
+	#left-sidebar-trigger, #left-sidebar-close, #left-sidebar { display: none; }
+}
+
+// podcast widget
+.jetpack-audio-player .mejs-button > button {
+	width: inherit;
+	border: 0px;
+	padding: 0px 12px 0px 0px;
+	visibility: hidden;
+	&::before {
+		visibility: visible;
+	}
+}
+	
+
+// Dynamic groups widget
+.bp-dynamic-block-container {
+	position: relative;
+	h2 .menu-button { margin-top: 15px; }
+	.item-options{ top: 45px; }
+	ul[id^="groups-list"] {
+		display: flex;
+		flex-wrap: wrap;
+		.item {
+			margin-left: 0px !important;
+			margin-top: 30px !important;
+		}
+		.item-avatar .bp-tooltip:after {
+			display: none !important;
+		}
+	}
+}
+
+// Profile pages
+.social-icons {
+	margin-top: 10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	@media screen and (max-width: 760px) {
+		justify-content: space-evenly;
+	}
+}
+.single-item .wrapper, .archive .wrapper #content {
+	margin-top: 30px !important;
+}
+.single-headers #cover {
+	background-repeat: no-repeat;
+	background-size: cover;
+	blockquote {
+		color: #f1f1f1;
+		border: 0 solid $color-blue;
+	}
+	#latest-update, .group-description {
+		background:rgba(0,0,0,.6);
+	}
+	@media screen and (max-width: 770px) {
+		#latest-update { display: none; }
+		#item-header-wrappper {
+			#item-header-avatar, #item-header-content {
+				position: relative;
+				left: 0%;
+			}
+			#item-header-content { width: 100%; }
+		}
+	}
+}
+.settings.bp-user {
+	#responseText {
+		display: flex;
+		height: 65px;
+		align-items: center;
+	}
+	// hide the change email form stuff until we revisit
+	h2.general-settings-screen, p.email-pwd-info, form#your-profile {
+		display: none;
+	}
+	input.change_password { float: left; }
+}
+.bp-widget.interests h3 { display: none; }
+
+// messages
+#message-threads {
+	.thread-count { display: none; }
+}
+// hide empty messages
+li:has(.message-content:empty), li:has(.message-content > p:empty) { display: none !important; }
+
+.thread-participants {
+	.participants-list {
+		@extend .truncated;
+		-webkit-box-orient: horizontal;
+		text-overflow: ellipsis;
+	}
+}
+
+// styling for memberpress account shortcode
+.bpptc-member-content {
+	.mp_wrapper_nav { display: none; }
+	&> h1:first-of-type {
+		visibility: hidden;
+		max-height: 30px;
+		&:after {
+			content: "Memberships";
+			display: block;
+			visibility: visible;
+			margin-top: -20px;
+		}
+	}
+}
+#my-account-personal-li, #my-feed-personal-li { display: none; }
+
+.makeco-profile-fields {
+	.item.bg {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		word-break: break-word;
+		.content {
+			font-weight: normal;
+		} 
+		a {
+			color: $color-blue !important;
+		}
+	}
+}
+
+#activity-rss-feed { 
+	display: none; 
+}
+
+// subnavs
+.buddypress #subnav ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1px;
+	margin-bottom: 15px; 
+	li a {
+		padding: 3px 8px;
+		border-radius: 2px;
+	}
+}
+
+// media press buttons
+#mpp-activity-upload-buttons a img {
+	width: 20px;
+}
+
+// mediapress comments
+.mpp-activity {
+	form#mpp-whats-new-form {
+   		padding: 10px !important;
+		p.activity-greeting {
+			margin-left: 120px;
+			margin-top: 15px;
+		}
+		#mpp-whats-new-avatar {
+			img { border-radius: 50px; }
+		}
+		#mpp-whats-new-content {
+			margin-left: 0px;
+			float: left;
+			textaread#mpp-whats-new {
+				height: 40px !important;
+			}
+		}
+	}
+}
+.mpp-lightbox-content form#mpp-whats-new-form {
+	#mpp-whats-new-avatar {
+		width: 50px;
+	}
+	#mpp-whats-new-content {
+		width: calc(100% - 60px);
+	}
+}
+#mpp-activity-stream {
+	.activity-item { margin-top: 15px; }
+	.mpp-activity-avatar img {
+		border-radius: 100px;
+	}
+	.mpp-activity-content {
+		float: left;
+		margin-left: 15px;
+	}
+}

@@ -1,0 +1,1 @@
+Theme documentation is in the Help folder.

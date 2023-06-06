@@ -1,17 +1,17 @@
-# Copyright (C) 2022 Caseproof, LLC
+# Copyright (C) 2023 Caseproof, LLC
 # This file is distributed under the same license as the MemberPress Developer Tools plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Developer Tools 1.2.14\n"
+"Project-Id-Version: MemberPress Developer Tools 1.2.16\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-developer-tools\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-08-31T16:07:05+00:00\n"
+"POT-Creation-Date: 2023-03-07T19:29:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: memberpress-developer-tools\n"
 
 #. Plugin Name of the plugin
@@ -684,7 +684,7 @@ msgid "Plaintext Password"
 msgstr ""
 
 #: app/docs/update_args/members.php:37
-msgid "A plaintext password which will be hashed and stored with this user. If creating and a password is not provided then a random password will be automatically generated for the member on create. If updating and a password is not provided then it will remain as is."
+msgid "Works only when creating a new Member. A plaintext password which will be hashed and stored with this user. If a password is not provided, then a random password will be automatically generated for the member. If this field is present when updating a member, they will receive an email to set their password."
 msgstr ""
 
 #: app/docs/update_args/members.php:54

@@ -33,13 +33,14 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 			<?php
 			while ( bp_the_notifications() ) :
 				bp_the_notification();
-				$bp      = buddypress();
-				$user_id = $bp->notifications->query_loop->notification->secondary_item_id;
+				$bp       = buddypress();
+				$user_id  = $bp->notifications->query_loop->notification->secondary_item_id;
+				$readonly = isset( $bp->notifications->query_loop->notification->readonly ) ? $bp->notifications->query_loop->notification->readonly : false;
 				?>
 					<li class="bs-item-wrap">
 						<div class="bulk-select-check">
 							<span class="bb-input-wrap">
-								<input id="<?php bp_the_notification_id(); ?>" type="checkbox" name="notifications[]" value="<?php bp_the_notification_id(); ?>" class="notification-check bs-styled-checkbox" />
+								<input id="<?php bp_the_notification_id(); ?>" type="checkbox" name="notifications[]" value="<?php bp_the_notification_id(); ?>" class="notification-check bs-styled-checkbox" data-readonly="<?php echo esc_attr( $readonly ); ?>"/>
 								<label for="<?php bp_the_notification_id(); ?>"></label>
 							</span>
 						</div>

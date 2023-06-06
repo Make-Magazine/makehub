@@ -34,7 +34,7 @@ return array(
     'type' => 'string',
     'default' => '',
     'required' => false,
-    'desc' => __('A plaintext password which will be hashed and stored with this user. If creating and a password is not provided then a random password will be automatically generated for the member on create. If updating and a password is not provided then it will remain as is.', 'memberpress-developer-tools')
+    'desc' => __('Works only when creating a new Member. A plaintext password which will be hashed and stored with this user. If a password is not provided, then a random password will be automatically generated for the member. If this field is present when updating a member, they will receive an email to set their password.', 'memberpress-developer-tools')
   ),
   //'add_to_membership' => array(
   //  'name' => __('Add to Membership', 'memberpress-developer-tools'),

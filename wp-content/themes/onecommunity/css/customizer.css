@@ -1,0 +1,8 @@
+#customize-theme-controls li#accordion-section-bp_nouveau_general_settings, #customize-control-user_nav_display, #customize-control-user_nav_tabs, #customize-control-user_subnav_tabs, #accordion-section-bp_nouveau_loops_layout, #accordion-section-bp_nouveau_dir_layout, #customize-control-group_nav_display, #customize-control-group_nav_tabs, #customize-control-group_subnav_tabs, #customize-control-groups_create_tabs { display: none!important; }
+
+.customize-control-title { line-height: 1.2em; margin-bottom: 4px; }
+
+#sub-accordion-section-onecommunity_transients_section li.customize-control-checkbox { margin-top: 10px; margin-bottom: 0px; }
+#sub-accordion-section-onecommunity_transients_section li.customize-control-number input[type=number] { width: 120px; }
+
+#sub-accordion-section-onecommunity_transients_section .customize-control-title { font-weight: 500; margin-bottom: 7px; }

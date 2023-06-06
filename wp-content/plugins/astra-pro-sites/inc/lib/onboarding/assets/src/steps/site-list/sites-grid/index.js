@@ -53,6 +53,7 @@ const SiteGrid = ( { sites } ) => {
 			formData.append( 'action', 'astra-sites-favorite' );
 			formData.append( 'is_favorite', favoriteStatus );
 			formData.append( 'site_id', siteId );
+			formData.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
 			const resonse = await fetch( ajaxurl, {
 				method: 'post',
 				body: formData,

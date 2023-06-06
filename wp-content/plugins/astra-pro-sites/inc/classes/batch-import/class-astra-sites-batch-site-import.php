@@ -105,6 +105,9 @@ if ( ! class_exists( 'Astra_Sites_Batch_Site_Import' ) ) :
 
 			// Verify Nonce.
 			check_ajax_referer( 'astra-sites-import-status', '_ajax_nonce' );
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error();
+			}
 
 			$schedule = wp_get_scheduled_event( 'wp_astra_sites_site_import_batch_cron' );
 			$time     = '';

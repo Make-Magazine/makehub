@@ -3,7 +3,7 @@
  * Plugin Name:       	GravityView - DIY Layout
  * Plugin URI:        	https://gravityview.co/extensions/diy-layout/
  * Description:       	Designers & developers: build your own GravityView layouts...styles not included!
- * Version:          	2.3
+ * Version:          	2.4
  * Author:            	GravityView
  * Author URI:        	https://gravityview.co
  * Text Domain:       	gravityview-diy
@@ -13,7 +13,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-define( 'GRAVITYVIEW_DIY_VERSION', '2.3' );
+define( 'GRAVITYVIEW_DIY_VERSION', '2.4' );
 
 add_action( 'plugins_loaded', 'gv_extension_diy_load' );
 
@@ -33,6 +33,7 @@ function gv_extension_diy_load() {
 		require dirname( __FILE__ ) . '/class-gravityview-diy-layout-extension.php';
 		require dirname( __FILE__ ) . '/class-gv-template-view-diy.php';
 		require dirname( __FILE__ ) . '/class-gv-template-entry-diy.php';
+		require dirname( __FILE__ ) . '/class-gv-edit-entry-diy.php';
 	}
 }
 

@@ -7,7 +7,8 @@ if (!defined('ABSPATH')) {
 class GPPaypalStandardGateway extends GP_Payment_Gateways_Common
 {
 
-    public $gateway_name = 'PayPal Standard';
+//    public $gateway_name = 'PayPal Standard';
+    public $gateway_name = 'PayPal';
 
     // temp transaction time delay in minutes
     public $time_delay = 20;
@@ -302,7 +303,7 @@ class GPPaypalStandardGateway extends GP_Payment_Gateways_Common
         } else {
             $user_id = 8888;
         }
-
+      
         // Ensure user id is not empty
         if (!empty($user_id)) {
             // if IPN URL is valid, set global parameter of paypal standard to use it in final process

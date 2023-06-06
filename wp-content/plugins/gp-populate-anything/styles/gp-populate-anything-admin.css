@@ -120,14 +120,12 @@
 }
 
 .gppa-select-with-custom-input-container {
-	pointer-events: none;
-	opacity: 0;
+	display: none;
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
 	position: absolute;
-	display: flex;
 	margin-top: 0 !important;
 }
 
@@ -169,13 +167,11 @@ body.gf-legacy-ui .gppa-select-with-custom.gppa-has-merge-tag-selector a.custom-
 }
 
 .gppa-select-with-custom.gppa-show-custom-input .gppa-select-with-custom-input-container {
-	opacity: 1;
-	pointer-events: auto;
+	display: flex;
 }
 
 .gppa-select-with-custom.gppa-show-custom-input select {
-	pointer-events: none;
-	opacity: 0;
+	display: none;
 }
 
 .gppa-show-custom-input button.open-list {

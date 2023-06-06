@@ -1,17 +1,17 @@
-# Copyright (C) 2022 MemberPress
+# Copyright (C) 2023 MemberPress
 # This file is distributed under the same license as the Memberpress Gifting plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Memberpress Gifting 1.1.16\n"
+"Project-Id-Version: Memberpress Gifting 1.1.19\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-gifting\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-03-17T21:23:05+00:00\n"
+"POT-Creation-Date: 2023-03-07T19:28:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.6.0\n"
+"X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: memberpress-gifting\n"
 
 #. Plugin Name of the plugin
@@ -31,16 +31,24 @@ msgstr ""
 msgid "MemberPress"
 msgstr ""
 
-#: app/controllers/Account.php:135
+#: app/controllers/Account.php:102
 msgid "Gifts"
 msgstr ""
 
-#: app/controllers/Account.php:180
+#: app/controllers/Account.php:147
 msgid "Could not send email. Please try again later."
 msgstr ""
 
-#: app/controllers/Account.php:191
+#: app/controllers/Account.php:158
 msgid "Email sent"
+msgstr ""
+
+#: app/controllers/Account.php:249
+msgid "Transaction id is missing."
+msgstr ""
+
+#: app/controllers/Account.php:257
+msgid "Invalid request."
 msgstr ""
 
 #: app/controllers/App.php:112
@@ -55,7 +63,7 @@ msgstr ""
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/Checkout.php:374
+#: app/controllers/Checkout.php:380
 msgctxt "ui"
 msgid "Since you already have an active membership, we are assuming that this is a gift purchase."
 msgstr ""
@@ -143,15 +151,16 @@ msgstr ""
 msgid "When this box is checked, the Membership can be purchased as a gift for another member."
 msgstr ""
 
-#: app/controllers/Reminders.php:192
+#: app/controllers/Reminders.php:196
+#: app/emails/UserGiftExpiresReminderEmail.php:33
 msgid "Gift Membership Expired"
 msgstr ""
 
-#: app/controllers/Reminders.php:193
+#: app/controllers/Reminders.php:197
 msgid "Gift Membership expired %d %s ago"
 msgstr ""
 
-#: app/controllers/Reminders.php:202
+#: app/controllers/Reminders.php:206
 msgctxt "ui"
 msgid "after Gifted Membership Expires"
 msgstr ""
@@ -180,12 +189,8 @@ msgstr ""
 msgid "** Your %1$s"
 msgstr ""
 
-#: app/emails/UserGiftExpiresReminderEmail.php:33
-msgid "Gift Membership Expiring"
-msgstr ""
-
 #: app/emails/UserGiftExpiresReminderEmail.php:34
-msgid "Gift Membership Expiring in 2 days"
+msgid "Your Gift Membership expired 1 Day ago"
 msgstr ""
 
 #: app/helpers/AppHelper.php:11
@@ -359,6 +364,18 @@ msgstr ""
 #: app/views/account/gift-list.php:110
 msgctxt "ui"
 msgid "PDF"
+msgstr ""
+
+#: app/views/account/gift-txn-processing.php:3
+msgid "Processing your transaction.."
+msgstr ""
+
+#: app/views/account/gift-txn-processing.php:4
+msgid "Unable to process your transaction."
+msgstr ""
+
+#: app/views/account/gift-txn-processing.php:5
+msgid "Redirecting.."
 msgstr ""
 
 #: app/views/admin/emails/options.php:8

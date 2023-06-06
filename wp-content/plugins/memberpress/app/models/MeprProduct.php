@@ -355,7 +355,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
     * Coupon code needs to be validated using MeprCoupon::is_valid_coupon_code()
     * before passing a code to this method
     */
-  public function adjusted_price($coupon_code = null) {
+  public function adjusted_price($coupon_code = null, $prorate = true) {
     $current_user = MeprUtils::get_currentuserinfo();
     $product_price = $this->price;
     $mepr_options = MeprOptions::fetch();
@@ -375,7 +375,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
       // Signup is a Corporate Account validated in validate_ca_signup and associate_sub_account.
       $product_price = 0.00;
     }
-    elseif($this->is_one_time_payment() && $this->is_prorated()) {
+    elseif($prorate && $this->is_one_time_payment() && $this->is_prorated()) {
       $grp = $this->group();
 
       //Calculate days in this new period
@@ -402,7 +402,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
         }
       }
       //Don't update this below if the latest payment was for 0.00
-      elseif(($txn = $current_user->lifetime_subscription_in_group($grp->ID)) && MeprUtils::format_float($txn->amount) > 0.00) {
+      elseif($prorate && ($txn = $current_user->lifetime_subscription_in_group($grp->ID)) && MeprUtils::format_float($txn->amount) > 0.00) {
         $r = MeprUtils::calculate_proration(
           $txn->amount,
           $product_price,
@@ -435,7 +435,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
   }
 
   /** Gets the value for 'expires_at' for the given created_at time for this membership. */
-  public function get_expires_at($created_at = null)
+  public function get_expires_at($created_at = null, $check_user = true)
   {
     $mepr_options = MeprOptions::fetch();
 
@@ -461,7 +461,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
           break;
       default: // one-time payment
           if($this->expire_type=='delay') {
-            if(MeprUtils::is_user_logged_in()) {
+            if($check_user && MeprUtils::is_user_logged_in()) {
               //Handle renewals
               if($this->is_renewal() && ($last_txn = $this->get_last_active_txn($user->ID))) {
                 $expires_at = $created_at = strtotime($last_txn->expires_at);
@@ -492,8 +492,16 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
               }
             }
             //Actually handle renewals
-            if($this->is_renewal() && ($last_txn = $this->get_last_active_txn($user->ID))) {
-              $expires_at = strtotime($last_txn->expires_at) + MeprUtils::years(1);
+            if($check_user && $this->is_renewal() && ($last_txn = $this->get_last_active_txn($user->ID))) {
+              $expires_at_date = date_create($last_txn->expires_at, new DateTimeZone('UTC'));
+
+              if($expires_at_date instanceof DateTime) {
+                $expires_at_date->modify('+1 year');
+                $expires_at = $expires_at_date->format('U');
+              }
+              else {
+                $expires_at = strtotime($last_txn->expires_at) + MeprUtils::years(1);
+              }
             }
           }
           else { // lifetime
@@ -570,7 +578,7 @@ class MeprProduct extends MeprCptModel implements MeprProductInterface {
     }
 
     // Do not allow upgrades/downgrades during a pro-rated trial period from a previous upgrade/downgrade
-    if(MeprUtils::is_user_logged_in() && $user && ($group = $this->group()) !== false) {
+    if( MeprUtils::is_user_logged_in() && isset($user) && $user && ($group = $this->group()) !== false) {
       $sub_in_group = $user->subscription_in_group($group->ID);
       if($sub_in_group !== false && $sub_in_group->prorated_trial && $sub_in_group->in_trial()) {
         return MeprHooks::apply_filters('mepr-allow-multiple-upgrades-downgrades', false, $user, $sub_in_group, $this);

@@ -16,18 +16,18 @@ if ( !function_exists( 'buddyboss_theme_redux_register_custom_extension_loader' 
 			}
 
 			$extension_class = 'ReduxFramework_Extension_' . $folder;
-            
-			if ( !class_exists( $extension_class ) ) {
-				// In case you wanted override your override, hah.
-				$class_file	 = $path . $folder . '/extension_' . $folder . '.php';
-				$class_file	 = apply_filters( 'redux/extension/' . $ReduxFramework->args[ 'opt_name' ] . '/' . $folder, $class_file );
-				if ( $class_file ) {
-					require_once( $class_file );
-				}
-			}
 
-			if ( !isset( $ReduxFramework->extensions[ $folder ] ) ) {
-				$ReduxFramework->extensions[ $folder ] = new $extension_class( $ReduxFramework );
+			if ( ! class_exists( $extension_class ) ) {
+				// In case you wanted override your override, hah.
+				$class_file = $path . $folder . '/extension_' . $folder . '.php';
+				$class_file = apply_filters( 'redux/extension/' . $ReduxFramework->args['opt_name'] . '/' . $folder, $class_file );
+				if ( $class_file && file_exists( $class_file ) ) {
+					require_once( $class_file );
+
+					if ( ! isset( $ReduxFramework->extensions[ $folder ] ) ) {
+						$ReduxFramework->extensions[ $folder ] = new $extension_class( $ReduxFramework );
+					}
+				}
 			}
 		}
 	}
@@ -35,3 +35,23 @@ if ( !function_exists( 'buddyboss_theme_redux_register_custom_extension_loader' 
 	// Modify {$redux_opt_name} to match your opt_name
 	add_action( "redux/extensions/{$redux_opt_name}/before", 'buddyboss_theme_redux_register_custom_extension_loader', 0 );
 endif;
+
+if ( ! function_exists( 'bb_theme_override_import_export_extension' ) ) {
+	/**
+	 * Change the path of load the import export extensions path.
+	 *
+	 * @since 2.3.1
+	 *
+	 * @param string $path Extension loader path.
+	 *
+	 * @return string
+	 */
+	function bb_theme_override_import_export_extension( $path ) {
+		$path = get_template_directory() . '/inc/admin/buddyboss-extensions/extensions/bb_import_export/class-redux-extension-import-export.php';
+
+		return $path;
+	}
+
+	add_filter( "redux/extension/{$redux_opt_name}/import_export", 'bb_theme_override_import_export_extension', 10, 1 );
+
+}

@@ -31,9 +31,60 @@ function make_experiences_languages() {
 }
 add_action('after_setup_theme', 'make_experiences_languages');
 
+if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
+    add_action( 'init', 'remove_bb_actions');
+    function remove_bb_actions() {
+        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    /**
+     * Add a viewport meta.
+     */
+    function buddyboss_theme_viewport_meta_custom() {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1" />';
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
+}
+
 function remove_unnecessary_scripts() {
-	//wp_dequeue_style( 'font-awesome' );
-	//wp_dequeue_style( 'essb-fontawsome' );
+    wp_dequeue_style( 'font-awesome' );
+	// if it's not a buddypress page, no need for these scripts
+    if ( is_page() && !is_buddypress() ) {
+        remove_action( 'wp_enqueue_scripts', 'buddyboss_theme_scripts' );
+        wp_dequeue_style( 'bp-nouveau' );
+        wp_deregister_script('bp-jquery-query');
+        wp_deregister_script('bp-confirm');
+        wp_deregister_script('bp-nouveau-magnific-popup');
+        wp_dequeue_style('buddyboss-theme-plugins');
+        wp_dequeue_style('buddyboss-theme-buddypress');
+        wp_dequeue_style('buddyboss-theme-select2-css');
+        wp_dequeue_style('buddyboss-theme-magnific-popup-css');
+        wp_dequeue_style('buddyboss-theme-template');
+        
+    }
+    // Check if LearnDash exists to prevent fatal errors.
+    if ( class_exists( 'SFWD_LMS' ) ) {
+        if( !is_singular( array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment' ) ) ) {
+            // Remove Default LearnDash Styles;
+            wp_dequeue_style( 'learndash_lesson_video-css' );
+            wp_dequeue_style( 'ldvc-css' );
+            wp_dequeue_style( 'learndash_quiz_front_css' );
+            wp_dequeue_style( 'learndash-front' );
+            wp_deregister_style( 'learndash-front' );
+            wp_dequeue_style( 'learndash-front' ); 
+            wp_deregister_script( 'learndash-front' );
+            wp_dequeue_script( 'learndash-front' );
+            wp_dequeue_script( 'buddyboss-theme-learndash-js' );
+            wp_dequeue_style( 'buddyboss-theme-learndash' );
+        }
+    }
+    // WooCommerce.
+    if ( function_exists( 'WC' ) ) {
+        if(!is_woocommerce()) {
+            wp_dequeue_style('buddyboss-theme-woocommerce');
+        }
+    }
+	
 }
 add_action( 'wp_print_styles', 'remove_unnecessary_scripts', PHP_INT_MAX ); // we want this to happen absolutely last
 
@@ -45,7 +96,7 @@ function remove_jquery_migrate( $scripts ) {
 		}
 	}
 }
-add_action( 'wp_default_scripts', 'remove_jquery_migrate' );
+add_action( 'wp_print_styles', 'remove_jquery_migrate' );
 
 /**
  * Enqueues scripts and styles for child theme front-end.
@@ -159,6 +210,11 @@ function add_slug_body_class($classes) {
 }
 add_filter('body_class', 'add_slug_body_class');
 
+// Disables the block editor from managing widgets in the Gutenberg plugin.
+add_filter( 'gutenberg_use_widgets_block_editor', '__return_false' );
+// Disables the block editor from managing widgets.
+add_filter( 'use_widgets_block_editor', '__return_false' );
+
 /*
  * Override any of the translation files if we need to change language
  *
@@ -194,5 +250,12 @@ add_filter( 'wp_mail_from_name', function( $name ) {
 
 // prevent password changed email
 add_filter( 'send_password_change_email', '__return_false' );
+
+// the default wp user created emails are bad, we got auth0 for that
+function disable_new_user_notifications() {
+    remove_action( 'register_new_user', 'wp_send_new_user_notifications' );
+}
+add_action( 'init', 'disable_new_user_notifications' );
+
 
 ?>

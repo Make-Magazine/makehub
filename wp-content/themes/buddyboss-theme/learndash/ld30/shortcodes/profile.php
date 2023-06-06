@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 global $learndash_assets_loaded;
-$shortcode_data_json = htmlspecialchars( json_encode( $shortcode_atts ) );
+$shortcode_data_json = htmlspecialchars( json_encode( $shortcode_atts ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
 
 /**
  * Logic to load assets as needed
@@ -188,7 +188,7 @@ endif; ?>
 				}
 				?>
 
-				<div class="ld-item-list-items" id="ld-main-course-list" data-ld-expand-list="true">
+				<div class="ld-item-list-items" id="ld-main-course-list" data-ld-expand-list="true" data-ld-expand-id="<?php echo esc_attr( 'ld-main-course-list' ); ?>">
 
 					<?php
 					if ( ! empty( $user_courses ) ) :

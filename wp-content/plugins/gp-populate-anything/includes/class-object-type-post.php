@@ -124,13 +124,21 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
+		if ( is_array( $filter_value ) ) {
+			$filter_value = implode( '-', $filter_value );
+		}
+
 		switch ( $filter['operator'] ) {
 			case '>=':
-			case '>':
+			case '<':
+				// Greater than or equal to should look from midnight of the target date, and look ahead.
+				// Less than should rewind from current date to midnight of the target date, and look before.
 				$filter_value = gmdate( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
 				break;
 			case '<=':
-			case '<':
+			case '>':
+				// Less than or equal to should look at end time (23:59:59) of the target date, and look behind.
+				// Greater than should look ahead after end time of the target date.
 				$filter_value = gmdate( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
 				break;
 			case 'is': // `post_date` is a DATETIME column which includes time, ensure date is within range (see HS#24545)
@@ -399,6 +407,21 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 					'callable' => array( $this, 'get_col_rows' ),
 					'args'     => array( $wpdb->posts, 'ID' ),
 					'orderby'  => true,
+					'operators' => array(
+						'is',
+						'isnot',
+						'>',
+						'>=',
+						'<',
+						'<=',
+						'contains',
+						'does_not_contain',
+						'starts_with',
+						'ends_with',
+						'like',
+						'is_in',
+						'is_not_in',
+					),
 				),
 				'post_type'          => array(
 					'label'    => esc_html__( 'Post Type', 'gp-populate-anything' ),
@@ -455,9 +478,26 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		}
 
-		/* Meta and all other props */
-		$prop = preg_replace( '/^meta_/', '', $prop );
+		/* Meta */
+		if ( strpos( $prop, 'meta_' ) === 0 ) {
+			$meta_key = preg_replace( '/^meta_/', '', $prop );
 
+			// We explicitly do not set "single" to true here. This is the default behavior if we were to use $object->{$prop}
+			$meta = get_post_meta( $object->ID, $meta_key );
+
+			// If it's a single item in the array, turn it back into a scalar value.
+			if ( is_array( $meta ) && count( $meta ) === 1 ) {
+				return $meta[0];
+			}
+
+			if ( is_array( $meta ) && count( $meta ) === 0 ) {
+				return null;
+			}
+
+			return $meta;
+		}
+
+		/* All other props */
 		if ( ! isset( $object->{$prop} ) ) {
 			return null;
 		}

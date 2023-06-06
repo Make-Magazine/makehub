@@ -12,7 +12,7 @@
  *
  * @see https://docs.woocommerce.com/document/template-structure/
  * @package WooCommerce/Templates
- * @version 3.6.0
+ * @version 7.0.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,35 +26,32 @@ do_action( 'woocommerce_before_edit_account_address_form' ); ?>
 <?php else : ?>
 
 	<form method="post" novalidate="novalidate">
-        
-        <div class="wc-MyAccount-sub-heading">
+
+		<div class="wc-MyAccount-sub-heading">
 		  <h2><?php echo apply_filters( 'woocommerce_my_account_edit_address_title', $page_title, $load_address ); ?></h2><?php // @codingStandardsIgnoreLine ?>
-        </div>
-        
-        <div class="wc-MyAccount-inner-content">
-    		<div class="woocommerce-address-fields">
-    			<?php do_action( "woocommerce_before_edit_address_form_{$load_address}" ); ?>
-    
-    			<div class="woocommerce-address-fields__field-wrapper">
-    				<?php
-    				foreach ( $address as $key => $field ) {
-    					if ( isset( $field['country_field'], $address[ $field['country_field'] ] ) ) {
-    						$field['country'] = wc_get_post_data_by_key( $field['country_field'], $address[ $field['country_field'] ]['value'] );
-    					}
-    					woocommerce_form_field( $key, $field, wc_get_post_data_by_key( $key, $field['value'] ) );
-    				}
-    				?>
-    			</div>
-    
-    			<?php do_action( "woocommerce_after_edit_address_form_{$load_address}" ); ?>
-    
-    			<p class="woocommerce-address-fields__ctrls-wrapper">
-    				<button type="submit" class="button" name="save_address" value="<?php esc_attr_e( 'Save address', 'buddyboss-theme' ); ?>"><?php esc_html_e( 'Save address', 'buddyboss-theme' ); ?></button>
-    				<?php wp_nonce_field( 'woocommerce-edit_address', 'woocommerce-edit-address-nonce' ); ?>
-    				<input type="hidden" name="action" value="edit_address" />
-    			</p>
-    		</div>
-        </div>
+		</div>
+
+		<div class="wc-MyAccount-inner-content">
+			<div class="woocommerce-address-fields">
+				<?php do_action( "woocommerce_before_edit_address_form_{$load_address}" ); ?>
+
+				<div class="woocommerce-address-fields__field-wrapper">
+					<?php
+					foreach ( $address as $key => $field ) {
+						woocommerce_form_field( $key, $field, wc_get_post_data_by_key( $key, $field['value'] ) );
+					}
+					?>
+				</div>
+
+				<?php do_action( "woocommerce_after_edit_address_form_{$load_address}" ); ?>
+
+				<p class="woocommerce-address-fields__ctrls-wrapper">
+					<button type="submit" class="button" name="save_address" value="<?php esc_attr_e( 'Save address', 'buddyboss-theme' ); ?>"><?php esc_html_e( 'Save address', 'buddyboss-theme' ); ?></button>
+					<?php wp_nonce_field( 'woocommerce-edit_address', 'woocommerce-edit-address-nonce' ); ?>
+					<input type="hidden" name="action" value="edit_address" />
+				</p>
+			</div>
+		</div>
 
 	</form>
 

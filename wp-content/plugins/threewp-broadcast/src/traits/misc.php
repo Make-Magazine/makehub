@@ -75,7 +75,9 @@ trait misc
 	{
 		if ( isset( $this->_js_enqueued ) )
 			return;
-		wp_enqueue_script( 'threewp_broadcast', $this->paths[ 'url' ] . '/js/js.js', '', $this->plugin_version );
+		$file_dir = dirname( $this->paths[ '__FILE__' ] ) . '/js/js.js';
+		$file_url = trailingslashit( $this->paths[ 'url' ] ) . 'js/js.js';
+		wp_enqueue_script( 'threewp_broadcast', $file_url, '', filemtime( $file_dir ) );
 		$this->_js_enqueued = true;
 	}
 
@@ -507,6 +509,16 @@ trait misc
 			'blogs_hide_overview' => 5,							// Use a summary in the overview if more than this amount of children / siblings.
 			'blog_selector_position' => 'bottom',				// Where to place the blog selector line in the meta box.
 			'canonical_url' => true,							// Override the canonical URLs with the parent post's.
+			/**
+				@brief		Which post types to use the canonical URL on.
+				@since		2023-02-24 08:26:18
+			**/
+			'canonical_limit_post_types' => '',
+			/**
+				@brief		Which post types to skip the canonical.
+				@since		2023-02-24 08:26:18
+			**/
+			'canonical_skip_post_types' => '',
 			'clear_post' => true,								// Clear the post before broadcasting.
 			'custom_field_blacklist' => '',						// Internal custom fields that should not be broadcasted.
 			'custom_field_protectlist' => '',					// Internal custom fields that should not be overwritten on broadcast

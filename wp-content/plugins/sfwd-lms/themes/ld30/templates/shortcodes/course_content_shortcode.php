@@ -36,9 +36,14 @@ if ( $has_course_content ) :
 	$shortcode_instance = ( isset( $atts ) && ! empty( $atts ) ? $atts : array() );
 	$shortcode_instance = htmlspecialchars( wp_json_encode( $shortcode_instance ) );
 
-	global $course_pager_results; ?>
+	global $course_pager_results;
 
-	<div class="learndash-wrapper">
+	if ( ( isset( $atts['wrapper'] ) ) && ( true === $atts['wrapper'] ) ) {
+		?>
+		<div class="learndash-wrapper">
+		<?php
+	}
+	?>
 		<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above?>
 		<div class="ld-item-list ld-lesson-list <?php echo esc_attr( 'ld-course-content-' . $course_id ); ?>" data-shortcode_instance="<?php echo $shortcode_instance; ?>">
 			<div class="ld-section-heading">
@@ -135,7 +140,11 @@ if ( $has_course_content ) :
 
 		</div> <!--/.ld-item-list-->
 
-	</div> <!--/.learndash-wrapper-->
-
 	<?php
+	if ( ( isset( $atts['wrapper'] ) ) && ( true === $atts['wrapper'] ) ) {
+		?>
+		</div> <!--/.learndash-wrapper-->
+		<?php
+	}
+
 endif; ?>

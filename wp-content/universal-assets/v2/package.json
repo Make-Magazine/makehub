@@ -1,0 +1,42 @@
+{
+   "name": "StyleGuide",
+   "version": "1.0.311",
+   "author": "Maker Media",
+   "license": "UNLICENSED",
+   "private": true,
+   "repository": {
+      "type": "git",
+      "url": "git://github.com/Make-Magazine/makehub.git"
+   },
+   "scripts": {
+      "cachebust:update": "npm version patch",
+      "postcachebust:update": "npm run replace:version",
+      "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
+      "scss:universal:compile": "sass scss/universal.scss css/universal.min.css --style compressed",
+      "scss:universal-firstload:compile": "sass scss/universal-firstload.scss css/universal-firstload.min.css --style compressed",
+      "js:universal:uglify": "uglifyjs js/*.js -o js/min/universal.min.js -c -m --source-map \"root='../../../', url='universal.min.js.map'\"",
+      "js:auth0:uglify": "uglifyjs js/auth0/*.js -o js/min/universal-auth0.min.js -c -m --source-map \"root='../../../', url='universal-auth0.min.js.map'\"",
+      "onchange:scss:universal": "onchange 'scss/**/*.scss' -- npm run scss:universal:compile",
+      "onchange:scss:universal-firstload": "onchange 'scss/**/*.scss' -- npm run scss:universal-firstload:compile",
+      "onchange:js:universal": "onchange 'js/*.js' -- npm run js:universal:uglify",
+      "onchange:js:auth0": "onchange 'js/auth0/*.js' -- npm run js:auth0:uglify",
+      "build": "npm-run-all js:**:uglify scss:**:compile",
+      "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
+      "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
+   },
+   "devDependencies": {
+      "@fortawesome/fontawesome-free": "^5.15.4",
+      "npm-run-all": "^4.1.5",
+      "onchange": "^5.2.0",
+      "replace-in-file": "^3.4.2",
+      "uglify-js": "^3.12.5"
+   },
+   "dependencies": {
+      "@popperjs/core": "^2.9.2",
+      "fontawesome-subset": "^4.3.1",
+      "g": "^2.0.1",
+      "npm": "^8.19.3",
+      "sass": "^1.60.0",
+      "scss": "^0.2.4"
+   }
+}

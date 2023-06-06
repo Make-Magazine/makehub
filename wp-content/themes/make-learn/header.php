@@ -81,7 +81,7 @@ endif;
 
                 <?php
                 // Universal Nav
-                require_once(WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html');
+                require_once(WP_CONTENT_DIR . '/universal-assets/v2/page-elements/universal-topnav.html');
                 ?>
                 <div id="universal-subnav" class="nav-level-2">
                     <?php

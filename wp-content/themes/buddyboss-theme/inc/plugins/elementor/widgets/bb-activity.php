@@ -96,7 +96,7 @@ class BBP_Activity extends Widget_Base {
 	 *
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 
 		$this->start_controls_section(
 			'section_content_layout',
@@ -598,6 +598,16 @@ class BBP_Activity extends Widget_Base {
 			wp_enqueue_script( 'bp-exif' );
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_active( 'video' ) && ( bp_is_profile_video_support_enabled() || bp_is_group_video_support_enabled() || bp_is_forums_video_support_enabled() ) ) {
+			wp_enqueue_style( 'bp-media-videojs-css' );
+			wp_enqueue_script( 'bp-media-videojs' );
+			wp_enqueue_script( 'bp-media-videojs-seek-buttons' );
+			wp_enqueue_script( 'bp-media-videojs-flv' );
+			wp_enqueue_script( 'bp-media-videojs-flash' );
+			wp_enqueue_script( 'bp-nouveau-video' );
+			bp_get_template_part( 'video/theatre' );
+		}
+
 		if ( bp_is_active( 'media' ) && ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_forums_media_support_enabled() ) ) {
 			bp_get_template_part( 'media/theatre' );
 		}
@@ -648,7 +658,7 @@ class BBP_Activity extends Widget_Base {
 					<?php if ( $settings['switch_more'] ) : ?>
 						<div class="bb-block-header__extra push-right">
 							<?php if( '' != $settings['activity_link_text'] ) { ?>
-								<a href="<?php echo esc_url( bp_get_activity_root_slug() ); ?>" class="count-more"><?php echo esc_html( $settings['activity_link_text'] ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a>
+								<a href="<?php bp_activity_directory_permalink(); ?>" class="count-more"><?php echo esc_html( $settings['activity_link_text'] ); ?><i class="bb-icon-l bb-icon-angle-right"></i></a>
 							<?php } ?>
 						</div>
 					<?php endif; ?>
@@ -740,7 +750,7 @@ class BBP_Activity extends Widget_Base {
 				<div class="bb-no-data bb-no-data--activity">
 					<img class="bb-no-data__image" src="<?php echo get_template_directory_uri(); ?>/assets/images/svg/dfy-no-data-icon01.svg" alt="Activity" />
 					<?php bp_nouveau_user_feedback( 'activity-loop-none' ); ?>
-					<a href="<?php echo esc_url( bp_get_activity_root_slug() ); ?>" class="bb-no-data__link"><?php _e( 'Post an Update', 'buddyboss-theme' ); ?></a>
+					<a href="<?php echo esc_url( bp_get_activity_directory_permalink() ); ?>" class="bb-no-data__link"><?php _e( 'Post an Update', 'buddyboss-theme' ); ?></a>
 				</div>
 
 			<?php endif; ?>

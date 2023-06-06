@@ -1,10 +1,10 @@
 === Jetpack - WP Security, Backup, Speed, & Growth ===
-Contributors: automattic, adamkheckler, adrianmoldovanwp, aduth, akirk, allendav, alternatekev, andy, annamcphee, annezazu, apeatling, arcangelini, azaozz, batmoo, barry, beaulebens, biskobe, blobaugh, bjorsch, brbrr, cainm, cena, cfinke, chaselivingston, chellycat, clickysteve, csonnek, danielbachhuber, davoraltman, daniloercoli, delawski, designsimply, dllh, drawmyface, dsmart, dzver, ebinnion, egregor, eliorivero, enej, eoigal, erania-pinnera, ethitter, fgiannar, gcorne, georgestephanis, gibrown, goldsounds, hew, hugobaeta, hypertextranch, iammattthomas, iandunn, jblz, jasmussen, jeffgolenski, jeherve, jenhooks, jenia, jessefriedman, jgs, jkudish, jmdodd, joanrho, johnjamesjacoby, jshreve, kbrownkd, keoshi, koke, kraftbj, lancewillett, leogermani, lschuyler, macmanx, martinremy, matt, matveb, mattwiebe, maverick3x6, mcsf, mdawaffe, mdbitz, MichaelArestad, migueluy, mikeyarce, mkaz, nancythanki, nickmomrik, obenland, oskosk, pento, professor44, rachelsquirrel, rdcoll, ryancowles, richardmuscat, richardmtl, robertbpugh, roccotripaldi, samhotchkiss, samiff, scarstocea, scottsweb, sdixon194, sdquirk, sermitr, simison, stephdau, tmoorewp, tyxla, Viper007Bond, westi, yoavf, zinigor
+Contributors: automattic, adamkheckler, adrianmoldovanwp, aduth, akirk, allendav, alternatekev, andy, annamcphee, annezazu, apeatling, arcangelini, azaozz, batmoo, barry, beaulebens, bindlegirl, biskobe, blobaugh, bjorsch, brbrr, cainm, cena, cfinke, chaselivingston, chellycat, clickysteve, csonnek, danielbachhuber, davoraltman, daniloercoli, delawski, designsimply, dllh, drawmyface, dsmart, dzver, ebinnion, egregor, eliorivero, enej, eoigal, erania-pinnera, ethitter, fgiannar, gcorne, georgestephanis, gibrown, goldsounds, hew, hugobaeta, hypertextranch, iammattthomas, iandunn, jblz, jasmussen, jeffgolenski, jeherve, jenhooks, jenia, jessefriedman, jgs, jkudish, jmdodd, joanrho, johnjamesjacoby, jshreve, kbrownkd, keoshi, koke, kraftbj, lancewillett, leogermani, lschuyler, macmanx, martinremy, matt, matveb, mattwiebe, maverick3x6, mcsf, mdawaffe, mdbitz, MichaelArestad, migueluy, mikeyarce, mkaz, nancythanki, nickmomrik, obenland, oskosk, pento, professor44, rachelsquirrel, rdcoll, ryancowles, richardmuscat, richardmtl, robertbpugh, roccotripaldi, samhotchkiss, samiff, scarstocea, scottsweb, sdixon194, sdquirk, sermitr, simison, stephdau, tmoorewp, tyxla, Viper007Bond, westi, wpkaren, yoavf, zinigor
 Tags: Security, backup, Woo, malware, scan, spam, CDN, search, social
-Stable tag: 10.7
-Requires at least: 5.8
+Stable tag: 12.0
+Requires at least: 6.0
 Requires PHP: 5.6
-Tested up to: 5.9
+Tested up to: 6.2
 
 Improve your WP security with powerful one-click tools like backup and malware scan. Get essential free tools including stats, CDN and social sharing.
 
@@ -17,7 +17,7 @@ WordPress security, performance, marketing, and design tools — Jetpack is made
 = 24/7 AUTO SITE SECURITY =
 We guard your site so you can run your site or business. Jetpack Security provides easy-to-use, comprehensive WordPress site security including auto real-time backups and easy restores, malware scans, and spam protection. Essential features like brute force protection and downtime / uptime monitoring are free.
 
-* Back up your site automatically in real time and restore to any point with one click. Unlimited storage for your backup. Great for eCommerce stores especially Woo.
+* Back up your site automatically in real time and restore to any point with one click. Cloud storage starts at 10GB, which is more than enough for most sites, with additional storage options available if needed. Great for eCommerce stores especially Woo.
 * Manage migration to a new host, migrate theme files and plugins to a new database, easily duplicate websites, create full database backups, clone websites, repair broken websites by restoring older backups or easily set up a test site by creating a duplicate of your existing WP website.
 * See every site change and who made it with the activity log, great for coordination, debug, maintenance, or troubleshooting.
 * Automatically perform malware scans and security scans for other code threats. One click fix to restore your site for malware.
@@ -26,6 +26,8 @@ We guard your site so you can run your site or business. Jetpack Security provid
 * Monitor your site uptime / downtime and get an instant alert of any change by email.
 * Secure WordPress.com powered login used by millions of sites with optional 2FA (two factor authentication) for extra protection.
 * Auto update individual plugins for easy site maintenance and management.
+
+You can purchase all of Jetpack’s security features in our Security bundle, or VaultPress Backup, Scan, and Akismet Anti-spam can each be purchased individually.
 
 = PEAK SPEED AND PERFORMANCE =
 Get blazing fast site speed with Jetpack, the premier WP plugin built to leverage the power of AMP, a tool that helps optimize your site on mobile devices. Jetpack’s free CDN (content delivery network) auto optimizes your images. Watch your page load times decrease — we’ll optimize your images and serve them from our own powerful global network, and speed up your site on mobile devices to reduce bandwidth usage and save money!
@@ -62,12 +64,12 @@ Quickly customize your site to make it stand out — no coding needed.
 = INTEGRATIONS =
 Jetpack is updated monthly to ensure seamless integration with top WordPress plugins and other tech products.
 
-* Built for WooCommerce: Jetpack and WooCommerce are both made by Automattic. Backup, Scan, Anti-spam, integrate perfectly for Woo / eComm stores
+* Built for WooCommerce: Jetpack and WooCommerce are both made by Automattic. Backup, Scan, Anti-spam, integrate perfectly for Woo / eComm stores.
 * Jetpack is fully compatible with v2.0 of the official AMP plugin for WordPress.
-* Better understand your customers and marketing with Google Analytics (GA) integration
-* Social media platforms: Instagram, Facebook, Twitter, LinkedIn
-* Simple Blocks to customize your site: Pinterest, Whatsapp, Podcast player, GIFs, maps, tiled gallery, slideshow
-* Payment processors: easily collect payments or donations and sell products through Stripe and PayPal
+* Better understand your customers and marketing with Google Analytics (GA) integration.
+* Social media platforms: Instagram, Facebook, Twitter, LinkedIn.
+* Simple Blocks to customize your site: Pinterest, Whatsapp, Podcast player, GIFs, maps, tiled gallery, slideshow.
+* Payment processors: easily collect payments or donations and sell products through Stripe and PayPal.
 * Site speed and performance plugins: Works great with WP Super Cache by Automattic and Cloudflare.
 * Contact form: Anti-spam (Powered by Akismet) blocks spam comments for Jetpack forms, Contact Form 7, Ninja Forms, Gravity Forms, Formidable Forms, and more.
 * Other tech integrations: Instagram, Creative Mail, Mailchimp, Calendly, Whatsapp, Pinterest, Revue, and more.
@@ -195,7 +197,7 @@ Blocks are the individual sections that make up a page. There are many block typ
 * Related Posts Block - The Related Posts feature scans all of your posts' contents, analyzes it, and uses that to display contextual posts your visitors might be interested in reading after they're finished with the current post.
 * Repeat Visitor Block - The Repeat Visitor block enables the author to control the visibility of its nested block(s) depending on how many times a visitor has previously visited the page.
 * Revue Block - The Revue block creates a simple signup form for readers to opt-in to receive your newsletter.
-* Slideshow Block - The Slideshow block lets you insert an image slideshow into a post or page.﻿
+* Slideshow Block - The Slideshow block lets you insert an image slideshow into a post or page.
 * Star Rating Block - The Ratings block allows any site author to add reviews to the site.
 * Subscription Form Block - The Subscription Form Block allows you to insert a subscription form within the content area of any post or page, enabling your readers to get notifications when you publish new posts.
 * Tiled Gallery Block - With Tiled Galleries you can display your image galleries in four styles: tiled mosaic, circular grid, square tiles, and tiled columns.
@@ -242,52 +244,46 @@ Jetpack Backup can do a full website migration to a new host, migrate theme file
 4. Promote your newest posts, pages, and products across your social media channels.
 
 == Changelog ==
-### 10.7 - 2022-02-28
+### 12.0 - 2023-04-04
 #### Enhancements
-- Add an AMP-compatible version of the email share button.
-- Add transformation from core/buttons to jetpack/recurring-payments block (requires gutenberg >= 11.5.0).
-- Blocks: add alignment block option for Form, Mailchimp, Podcast Player, Related Posts, and Repeat Visitor blocks.
-- Blocks: add support for color and spacing block options for Form, Mailchimp, Podcast Player, and Related Posts blocks.
-- Business Hours: Add support for color & spacing design tool.
-- Changed the plan description for invalid plans and added a Warning message for Premium content blocks with invalid plans.
-- Dashboard: improve performance of plugins page.
-- Dashboard: the Backup banner CTA on the At-a-Glance page will now be replaced with a "Redeem Coupon" CTA when a partner coupon is detected.
-- Dashboard: updated the logic for "Activate a Product" button in "My Plan" to be always visible.
-- Dashboard: update the Free plan description to consider the currently active products.
-- Dashboard: update the links used to purchase plans when in Jetpack settings.
-- Payment Block: updated the Payment block Upgrade nudge description to include the plan name that's required to use the block.
-- Premium Content Block: remove option to transform a premium content block to a premium content block.
-- Premium Content Block: use 'Guest' rather than visitor/Logged-out.
-- Subscribe block: various changes, including a name change, how the display for current subscribers is shown, and new styling options and enhancements.
+- Admin: fix submenu positioning in admin menu.
+- Blocks (beta): add a new beta Cookie Consent block to display a GDPR-compliant cookie consent widget on your site for your visitors.
+- Blocks: the cookie consent block is now available to general audience.
+- Blocks: the VideoPress block is now available to general audience.
+- Blocks: the writing prompts block is now available to general audience.
+- Forms: display carriage returns in user response text to properly display multiline text.
+- Forms: redesign the Multiple Choice and Single Choice fields
+- Newsletter: improve UI around newsletter visibility and add a help link in the post editor sidebar.
+- Notifications: remove all library dependencies for improved performance and lower footprint.
+- Paid newsletter block: improve logic for showing the UI based on site configuration.
+- Protect: remove account connection requirement to use the brute force protection feature.
+- Protect: share IP allow list between the Jetpack Firewall and Brute Force Protection modules.
+- SSO: add message to logout notice when SSO is enabled that gives a heads up to also log out of WordPress.com if they are on a shared computer.
+- Stats: updates the layout of the loading and some sections on the Stats page.
+- Stats: update visuals for the wp-admin dashboard Stats widget.
+- Subscriptions: make the Subscribe Block available, even when the Subscriptions module is off, so Subscriptions can be easily enabled.
 
 #### Improved compatibility
-- Image CDN: ensure that SVG images added to posts thanks to the SVG Support plugin can be displayed even when Jetpack's Image CDN is active.
-- Internet Defense League widget: Widget deprecation.
-- My Community widget: Hide widget from the block inserter and Legacy widget block drop-down menu
-- Performance: improve performance of Jetpack dashboard for sites without VideoPress enabled.
-- Search: Add deprecated class to prevent third-party integrations from failing after 10.6 updates.
-- VideoPress: Added title and aria-label to VideoPress iframe embeds for better screen reader support.
-- WordAds: deprecate the legacy Ad Widget in favor of the Ad Block when adding new Ad Widgets via the block-based widget editor.
+- Blocks: avoid conflicts with Better Click To Tweet plugin.
+- Blocks: ensure the Pinterest block does not trigger errors when using WordPress 6.2.
+- Connection: improve the connection flow that happens after plugin activation.
+- General: indicate full compatibility with the latest version of WordPress, 6.2.
+- Image CDN: do not process Flickr-hosted images with Jetpack's Image CDN.
+- SEO Tools: add message to settings screen when The SEO Framework plugin is active.
+- WordPress 6.2 compatibility: ensure that the block editor's External Media functionality and Jetpack's Twitter features in the block editor stays compatible with the upcoming version of WordPress.
 
 #### Bug fixes
-- Block Editor: cast selectedPlanId to boolean to remove a "0" character after block upgrade nudge.
-- Blocks: cron requests are now considered frontend requests, so blocks will no longer be rendered as fallbacks on those.
-- Contact Form: ensure form validation uses the correct variable types.
-- Dashboard: fix broken image in plan loading placeholder in "My Plan"
-- Dashboard: show Jetpack stats Screen Options label properly.
-- Fixed several React warnings shown on the console when SCRIPT_DEBUG is active
-- Form Block: custom CSS classes added to the block are now applied on the frontend.
-- Media Buttons: Fix issue where external medial modal cannot be closed.
-- Publicize: fixed bugs when using Publicize with the Classic Editor.
-- Search: avoid PHP warning when using Search widget.
-- Search: Make debug bar more reliable.
-- SSO: fix a bug with SSO not cleaning up wpcom_user_id.
-- Subscribe block: address front-end rendering issues.
-- Tiled Gallery Block: Fix performance issue affecting page views that use the Tiled Gallery.
-- Unroll Twitter Threads: ensure that only contributors can access the endpoint to unroll threads.
-- Widget Visibility: ensure role and logged in features are available.
-- Widget Visibility: update to match new user query parameter introduced in WordPress 5.9.
+- Blocks: avoid warnings in the block editor because of invalid categories for some blocks.
+- Blocks: fix the VideoPress preload behavior when "none" is chosen.
+- Blogging Prompts: avoid PHP notices with non-existing REST query paarameters.
+- Dashboard: avoid errors in the Recommendations dashboard.
+- Forms: avoid PHP notices when using a form with a dropdown field.
+- Forms: fix a PHP warning on Feedback->Response Forms when looking at old responses.
+- Slideshow Block: make slideshow block's play and pause icons visible.
+- Stats Widget: Fix incorrect invocation of module-restricted functions
+- Subscribe Block: don't show "Include social followers in count" when "Show subscribers count" is off, or Publicize is disabled.
+- Subscriptions: ensure the block's settings are displayed properly, even when using a block theme.
 
 --------
 
-[See the previous changelogs here](https://github.com/Automattic/jetpack/blob/master/projects/plugins/jetpack/CHANGELOG.md#changelog)
+[See the previous changelogs here](https://github.com/Automattic/jetpack/blob/trunk/projects/plugins/jetpack/CHANGELOG.md#changelog)

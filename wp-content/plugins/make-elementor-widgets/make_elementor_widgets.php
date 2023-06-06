@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-// AJAX
+// # load more action with ajax
 require_once(plugin_dir_path(__FILE__) . 'classes/ajax_omeda.php');
 
 /**
@@ -26,7 +26,7 @@ require_once(plugin_dir_path(__FILE__) . 'classes/ajax_omeda.php');
 final class Make_Elementor_Widgets
 {
 
-    const VERSION = '1.2.1';
+    const VERSION = '1.2.0';
     const MINIMUM_ELEMENTOR_VERSION = '3.5.0';
     const MINIMUM_PHP_VERSION = '7.0';
 
@@ -43,8 +43,8 @@ final class Make_Elementor_Widgets
         add_action('plugins_loaded', [$this, 'init']);
 
         // # load at frontend
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_styles'], 11);
-        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 11);
+        add_action('wp_enqueue_scripts', [$this, 'register_ajax_hooks']);
     }
 
     public function init() {
@@ -66,6 +66,12 @@ final class Make_Elementor_Widgets
             return;
         }
 
+		//verify xprofile fields are active
+		if(!bp_is_active('xprofile')){
+			add_action('admin_notices', [$this, 'admin_notice_missing_xprofile']);
+			return;
+		}
+
         // Add Plugin actions
         add_action('elementor/widgets/register', [$this, 'init_widgets']);
     }
@@ -77,6 +83,18 @@ final class Make_Elementor_Widgets
             /* translators: 1: Plugin name 2: Elementor */
             esc_html__('"%1$s" requires "%2$s" to be installed and activated.', 'make-elementor-widgets'),
             '<strong>' . esc_html__('Elementor', 'make-elementor-widgets') . '</strong>'
+        );
+
+        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+    }
+
+	public function admin_notice_missing_xprofile() {
+        if (isset($_GET['activate'])) unset($_GET['activate']);
+
+        $message = sprintf(
+            /* translators: 1: Plugin name 2: Elementor */
+            esc_html__('"%1$s" requires "%2$s" to be installed and activated.', 'make-elementor-widgets'),
+            '<strong>' . esc_html__('BuddyPress Xprofile', 'make-elementor-widgets') . '</strong>'
         );
 
         printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
@@ -110,9 +128,6 @@ final class Make_Elementor_Widgets
 
     /**
     * We will register our widgets within init_widgets function
-	* deprecated widgets:
-	*		facilitator_event_listings-widget.php
-	*		my_campus_tickets-widget.php
     */
     public function init_widgets() {
         // ----------------------
@@ -130,7 +145,7 @@ final class Make_Elementor_Widgets
 		// ----------------------
         // # My Makerspaces Widget
         // ----------------------
-        require_once(__DIR__ . '/widgets/my-makerCamp-widget.php'); // Include Widget files
+        require_once(__DIR__ . '/widgets/my-MakerCamp-widget.php'); // Include Widget files
         \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_MyMakerCamp_Widget()); // Register widget
 
 		// ----------------------
@@ -154,10 +169,8 @@ final class Make_Elementor_Widgets
 		// ----------------------
         // # Subscription information from Omeda Widget
         // ----------------------
-		if(bp_is_active('xprofile')){
-        	require_once(__DIR__ . '/widgets/my-subscription-widget.php'); // Include Widget files
-        	\Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_mySubscription_Widget()); // Register widget
-		}
+        require_once(__DIR__ . '/widgets/my-subscription-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_mySubscription_Widget()); // Register widget
 
 		// ----------------------
         // # Make: customized MZ feed based on member interestes
@@ -171,7 +184,7 @@ final class Make_Elementor_Widgets
     /**
     * we will add stylesheet for our plugin in style.css
     */
-    public function enqueue_styles() {
+    public function enqueue_scripts() {
 		//widget styles
 		wp_register_style("make-elementor-style", plugins_url('/css/style.css', __FILE__), array(), self::VERSION );
 		wp_enqueue_style('make-elementor-style');
@@ -179,14 +192,21 @@ final class Make_Elementor_Widgets
 
 
    /**
-    * register javascript files
+    * we will register javascript files here.
+    * for the form within 'my supscription' widget, we will use ajax.
     */
-    public function enqueue_scripts() {
+    public function register_ajax_hooks() {
 		//widget scripts
 		wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), self::VERSION  );
+
+		//ajax for form submission
+		wp_enqueue_script('make-omeda-script', plugin_dir_url(__FILE__) . 'js/omeda.js', array('jquery'), self::VERSION , true);
+		wp_localize_script('make-omeda-script', 'make_ajax_object', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+			'ajaxnonce' => wp_create_nonce('omeda_ajax')
+		));
     }
 }
-
 Make_Elementor_Widgets::instance();
 
 /* Add new Make: category for our widgets */

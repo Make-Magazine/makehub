@@ -35,6 +35,73 @@ body {
 	#page.site { margin-left: 0px; }
 }
 
+body.buddypanel-closed.learndash-cpt-sfwd-lessons #page.site {
+	.site-header-custom { left: 0px; }
+	#primary { margin-top: 0px; }
+}
+body.buddyboss-theme:not(.learndash-cpt-sfwd-lessons) {
+    .site-header-custom {
+        width: 100% !important;
+        left: 0px;
+    }
+    .buddypanel {
+        margin-top: 121px;
+        z-index: 9;
+		margin-left:-230px;
+		font-weight: 400;
+		.bb-toggle-panel {
+			.bb-icon-sidebar:before {
+				content: "\e859";
+			}
+		}
+		li a i { opacity: 1 !important; }
+    }
+	#page.site {
+		margin-left: 0px;
+	}
+	&.buddypanel-open.bb-page-loaded, &.buddypanel-open.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px }
+		#page.site {
+			margin-left: 230px;
+		}
+		@media screen and (max-width: 805px) {
+			#page.site { margin-left: 0px; }
+		}
+		@media screen and (min-width: 805px) {
+			#makey-sign {
+				margin-left: 180px;
+				&:hover {
+					margin-left: 200px;
+				}
+			}
+		}
+        
+	}
+	&.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px; }
+        &:not(.sfwd-sidebar) {
+            #page.site {
+                margin-left: 68px;
+                @media screen and (max-width: 805px) {
+                    margin-left: 0px;
+                }
+            }
+        }
+		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
+		&.single-sfwd-lessons #page.site {
+			margin-left: 0px;
+		}
+	}
+}
+// Buddypanel Nav
+body.buddypanel-open:not(.learndash-cpt-sfwd-lessons)  {
+    #buddypanel-menu {
+        .bb-menu-item {
+            span { white-space: break-spaces !important; }
+        }
+    }
+}
+
 a {
 	color: $link-color;
 	&:hover {
@@ -267,13 +334,15 @@ button, input[type="submit"] {
 .feedback-btn {
 	position: fixed;
 	z-index: 9999;
-    bottom: 20px;
-    background: #eb002a;
+	bottom: 20px;
+	background: #ea002a;
 	color: #fff;
-	border: solid 1px #eb002a;
-    width: 120px;
-    right: -15px;
-	transition: 0.3s;
+	border: solid 1px #ea002a;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 120px;
+	right: -15px;
+	transition: .3s;
 	&:hover {
 		background: #fff;
 		color: #eb002a;

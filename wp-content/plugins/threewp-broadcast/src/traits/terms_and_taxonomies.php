@@ -174,6 +174,8 @@ trait terms_and_taxonomies
 		$action->taxonomy = $taxonomy;
 		$action->execute();
 
+		$bcd->synced_taxonomies()->add( $taxonomy );
+
 		// Clean up the terms.
 		foreach( $bcd->parent_blog_taxonomies[ $taxonomy ][ 'terms' ] as $index => $term )
 			if ( ! $term )
@@ -331,10 +333,7 @@ trait terms_and_taxonomies
 		if ( $refresh_cache )
 		{
 			delete_option( $taxonomy . '_children' );
-			clean_term_cache( '', $taxonomy );
 		}
-
-		$bcd->synced_taxonomies()->add( $taxonomy );
 
 		// Tell everyone we've just synced this taxonomy.
 		$action = $this->new_action( 'synced_taxonomy' );

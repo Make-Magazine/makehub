@@ -80,7 +80,7 @@ class BBP_Forums_Activity extends Widget_Base {
 	 *
 	 * @access protected
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 
 		$this->start_controls_section(
 			'section_content_layout',
@@ -923,7 +923,7 @@ class BBP_Forums_Activity extends Widget_Base {
 							<div class="bb-fa__topic-title"><h2><?php echo $topic_title; ?></h2></div>
 							<?php if ($settings['switch_meta']) : ?>
 								<div class="bb-fa__meta">
-									<span class="bb-fa__meta-count"><?php echo $topic_reply_count; ?> <?php _e( 'repl' . ($topic_reply_count != 1 ? 'ies' : 'y') . ' ', 'buddyboss-theme' ); ?></span>
+									<span class="bb-fa__meta-count"><?php echo $topic_reply_count; ?> <?php _e( 'repl' . ($topic_reply_count != 1 ? 'ies' : 'y'), 'buddyboss-theme' ); ?> </span>
 									<span class="bs-separator">·</span>
 									<span class="bb-fa__meta-who"><?php echo $get_last_reply_author_name; ?> <?php _e( 'replied', 'buddyboss-theme' ); ?> </span>
 									<span class="bb-fa__meta-when"><?php echo $get_last_reply_since; ?></span>

@@ -1,5 +1,6 @@
 import { enableSubmitButton } from '../helpers/toggleSubmitButton';
 import loUniq from 'lodash/uniq';
+// eslint-disable-next-line prettier/prettier
 import type { fieldID, formId } from './GPPopulateAnything';
 
 const $ = window.jQuery;
@@ -179,8 +180,8 @@ export default class GPPALiveMergeTags {
 	/**
 	 * Check if merge tag references a specific field ID
 	 *
-	 * @param  value   string Merge tag to check
-	 * @param  fieldId number Field ID to look for
+	 * @param value   string Merge tag to check
+	 * @param fieldId number Field ID to look for
 	 */
 	checkMergeTagForFieldId(
 		value: string,
@@ -219,7 +220,7 @@ export default class GPPALiveMergeTags {
 	/**
 	 * Check if a particular input is referenced in any Live attrs on the current form/page.
 	 *
-	 * @param  fieldId
+	 * @param fieldId
 	 */
 	hasLiveAttrOnPage( fieldId: fieldID ): boolean {
 		for ( const liveAttr of this.liveAttrsOnPage ) {
@@ -244,7 +245,7 @@ export default class GPPALiveMergeTags {
 	/**
 	 * Check if a particular input is referenced in any LMTs on the current form/page.
 	 *
-	 * @param  fieldId
+	 * @param fieldId
 	 */
 	hasLiveMergeTagOnPage( fieldId: fieldID ): boolean {
 		const lmts = $( '[data-gppa-live-merge-tag]' );

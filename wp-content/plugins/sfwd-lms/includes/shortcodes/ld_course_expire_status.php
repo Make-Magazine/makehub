@@ -23,15 +23,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  *    @type int     $course_id    Course ID. Default current course ID.
  *    @type int     $user_id      User ID. Default current user ID.
  *    @type string  $format       The date format. Default value of date_format option.
- *    @type boolean $autop        Whether to replace linebreaks with paragraph elements. Default true.
+ *    @type boolean $autop        Whether to replace line breaks with paragraph elements. Default true.
  *    @type string  $label_before The content to print before label. Default a translatable string.
  *    @type string  $label_after  The content to print after label. Default a translatable string.
  * }
  * @param string $content The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_course_expire_status'.
  *
  * @return string The `ld_course_expire_status` shortcode output.
  */
-function learndash_course_expire_status_shortcode( $atts = array(), $content = '' ) {
+function learndash_course_expire_status_shortcode( $atts = array(), $content = '', $shortcode_slug = 'ld_course_expire_status' ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
@@ -56,6 +57,9 @@ function learndash_course_expire_status_shortcode( $atts = array(), $content = '
 	} else {
 		$atts['autop'] = false;
 	}
+
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
 
 	/**
 	 * Filters `ld_course_expire_status` shortcode attributes.
@@ -119,4 +123,4 @@ function learndash_course_expire_status_shortcode( $atts = array(), $content = '
 	return $content;
 }
 
-add_shortcode( 'ld_course_expire_status', 'learndash_course_expire_status_shortcode', 10, 2 );
+add_shortcode( 'ld_course_expire_status', 'learndash_course_expire_status_shortcode', 10, 3 );

@@ -12,40 +12,65 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Legacy function used when not calling the WordPress shortcode API.
+ *
+ * @since 4.0.0
+ *
+ * @param array  $atts           See `learndash_quiz_shortcode_function` function for parameter details.
+ * @param string $content        See `learndash_quiz_shortcode_function` function for parameter details.
+ * @param bool   $show_materials Whether to show quiz materials. Default false.
+ */
+function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materials = false ) {
+	$atts['show_materials'] = $show_materials;
+
+	return learndash_quiz_shortcode_function( $atts, $content );
+}
+
+/**
  * Builds the `[ld_quiz]` shortcode output.
  *
  * @global boolean $learndash_shortcode_used
  * @global array   $learndash_shortcode_atts
  *
- * @param array   $atts {
- *    An array of shortcode attributes.
+ * @param array  $atts {
+ *   An array of shortcode attributes.
  *
  *    @type int  $course_id   Course ID. Default 0.
  *    @type int  $quiz_id     Quiz ID. Default 0.
  *    @type int  $quiz_pro_id Quiz pro ID. Default 0.
  * }
- * @param string  $content        The shortcode content. Default empty.
- * @param boolean $show_materials Whether to show quiz materials. Default false.
+ * @param string $content        The shortcode content. Default empty.
+ * @param string $shortcode_slug The shortcode slug. Default 'ld_quiz'.
  *
  * @return string The `ld_quiz` shortcode output.
  */
-function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materials = false ) {
+function learndash_quiz_shortcode_function( $atts = array(), $content = '', $shortcode_slug = 'ld_quiz' ) {
 
 	global $learndash_shortcode_used, $learndash_shortcode_atts;
 
 	$atts = shortcode_atts(
 		array(
-			'quiz_id'     => 0,
-			'course_id'   => 0,
-			'quiz_pro_id' => 0,
+			'quiz_id'        => 0,
+			'course_id'      => 0,
+			'quiz_pro_id'    => 0,
+			'show_materials' => 0,
 		),
 		$atts
 	);
 
+	/** This filter is documented in includes/shortcodes/ld_course_resume.php */
+	$atts = apply_filters( 'learndash_shortcode_atts', $atts, $shortcode_slug );
+
 	// Just to ensure compliance.
-	$quiz_id     = $atts['quiz_id'] = absint( $atts['quiz_id'] );
-	$course_id   = $atts['course_id'] = absint( $atts['course_id'] );
-	$quiz_pro_id = $atts['quiz_pro_id'] = absint( $atts['quiz_pro_id'] );
+	$quiz_id     = $atts['quiz_id']     = absint( $atts['quiz_id'] ); // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.Found
+	$course_id   = $atts['course_id']   = absint( $atts['course_id'] ); // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.Found
+	$quiz_pro_id = $atts['quiz_pro_id'] = absint( $atts['quiz_pro_id'] ); // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.Found
+
+	if ( ( ! isset( $atts['show_materials'] ) ) || ( true === $atts['show_materials'] ) || ( 'true' === $atts['show_materials'] ) || ( '1' === $atts['show_materials'] ) ) {
+		$atts['show_materials'] = true;
+	} else {
+		$atts['show_materials'] = false;
+	}
 
 	if ( empty( $atts['quiz_id'] ) ) {
 		return $content;
@@ -85,7 +110,11 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		$quiz_settings = learndash_get_setting( $atts['quiz_id'] );
 		$meta          = SFWD_CPT_Instance::$instances['sfwd-quiz']->get_settings_values( 'sfwd-quiz' );
 
-		$show_content   = ! ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) );
+		if ( ( ! empty( $course_id ) ) && ( ! empty( $user_id ) ) ) {
+			$has_access = sfwd_lms_has_access( $course_id, $user_id );
+		}
+
+		$show_content   = ! ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) ); // cspell:disable-line.
 		$attempts_count = 0;
 		$repeats        = ( isset( $quiz_settings['repeats'] ) ) ? trim( $quiz_settings['repeats'] ) : '';
 		if ( '' === $repeats ) {
@@ -134,18 +163,18 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 					}
 				}
 			} else {
-				$quizMapper = new WpProQuiz_Model_QuizMapper();
-				$quiz       = $quizMapper->fetch( $atts['quiz_pro_id'] );
-				$cookieTime = $quiz->getQuizRunOnceTime();
+				$quizMapper = new WpProQuiz_Model_QuizMapper(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+				$quiz       = $quizMapper->fetch( $atts['quiz_pro_id'] ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+				$cookieTime = $quiz->getQuizRunOnceTime(); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 
 				$_cookie = stripslashes_deep( $_COOKIE );
 
 				if ( isset( $_cookie['wpProQuiz_lock'] ) ) {
-					$cookieJson = json_decode( $_cookie['wpProQuiz_lock'], true );
-					if ( ( $cookieJson !== false ) && ( isset( $cookieJson[ $atts['quiz_pro_id'] ] ) ) ) {
-						$cookie_quiz = $cookieJson[ $atts['quiz_pro_id'] ];
+					$cookieJson = json_decode( $_cookie['wpProQuiz_lock'], true ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+					if ( ( false !== $cookieJson ) && ( isset( $cookieJson[ $atts['quiz_pro_id'] ] ) ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+						$cookie_quiz = $cookieJson[ $atts['quiz_pro_id'] ]; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 						$cookie_quiz = learndash_quiz_convert_lock_cookie( $cookie_quiz );
-						if ( $cookie_quiz['time'] === $cookieTime ) {
+						if ( $cookie_quiz['time'] === $cookieTime ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 							$attempts_count = absint( $cookie_quiz['count'] );
 						}
 					}
@@ -159,7 +188,7 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 
 		// For logged in users to allow an override filter.
 		/** This filter is documented in includes/course/ld-course-progress.php */
-		$bypass_course_limits_admin_users = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $user_id, $course_id, $quiz_post );
+		$bypass_course_limits_admin_users = apply_filters( 'learndash_prerequities_bypass', $bypass_course_limits_admin_users, $user_id, $course_id, $quiz_post ); // cspell:disable-line -- prerequities are prerequisites...
 		if ( ( true === $bypass_course_limits_admin_users ) && ( ! $attempts_left ) ) {
 			$attempts_left = 1;
 		}
@@ -172,14 +201,14 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		 * @since 3.1.0
 		 *
 		 * @param boolean $attempts_left  Whether any quiz attempts left for a user or not.
-		 * @param int     $attempts_count Number of Quiz attemplts already taken.
+		 * @param int     $attempts_count Number of Quiz attempts already taken.
 		 * @param int     $user_id        ID of User taking Quiz.
 		 * @param int     $quiz_id        ID of Quiz being taken.
 		 */
 		$attempts_left = apply_filters( 'learndash_quiz_attempts', $attempts_left, absint( $attempts_count ), absint( $user_id ), absint( $quiz_post->ID ) );
 		$attempts_left = absint( $attempts_left );
 
-		if ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) ) {
+		if ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) ) { // cspell:disable-line.
 			add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 );
 		}
 
@@ -192,18 +221,26 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		 *
 		 * @since 2.1.0
 		 *
-		 * @param string $message The content access message.
-		 * @param WP_Post $quiz_post    Quiz WP_Post object.
+		 * @param string  $message   The content access message.
+		 * @param WP_Post $quiz_post Quiz WP_Post object.
 		 */
-		$access_message = apply_filters( 'learndash_content_access', null, $quiz_post );
-		if ( ! is_null( $access_message ) ) {
+		$access_message = apply_filters( 'learndash_content_access', '', $quiz_post );
+		if ( ! empty( $access_message ) ) {
 			$quiz_content = $access_message;
 		} else {
-			if ( true === $show_materials ) {
-				if ( ! empty( $quiz_settings['quiz_materials'] ) ) {
+			if ( true === $atts['show_materials'] ) {
+				if ( ! isset( $quiz_settings['quiz_materials_enabled'] ) ) {
+					$quiz_settings['quiz_materials_enabled'] = '';
+					if ( ( isset( $quiz_settings['quiz_materials'] ) ) && ( ! empty( $quiz_settings['quiz_materials'] ) ) ) {
+						$quiz_settings['quiz_materials_enabled'] = 'on';
+					}
+				}
+
+				if ( ( 'on' === $quiz_settings['quiz_materials_enabled'] ) && ( ! empty( $quiz_settings['quiz_materials'] ) ) ) {
 					$materials = wp_specialchars_decode( $quiz_settings['quiz_materials'], ENT_QUOTES );
 					if ( ! empty( $materials ) ) {
 						$materials = do_shortcode( $materials );
+						$materials = wpautop( $materials );
 					}
 				}
 			}
@@ -265,7 +302,7 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 		$content = learndash_ob_get_clean( $level );
 
 		// Added this defined wrap in v2.1.8 as it was effecting <pre></pre>, <code></code> and other formatting of the content.
-		// See wrike https://www.wrike.com/open.htm?id=77352698 as to why this define exists.
+		// See https://www.wrike.com/open.htm?id=77352698 as to why this define exists.
 		if ( ( defined( 'LEARNDASH_NEW_LINE_AND_CR_TO_SPACE' ) ) && ( LEARNDASH_NEW_LINE_AND_CR_TO_SPACE == true ) ) {
 
 			// Why is this here?
@@ -280,4 +317,4 @@ function learndash_quiz_shortcode( $atts = array(), $content = '', $show_materia
 
 	return $content;
 }
-add_shortcode( 'ld_quiz', 'learndash_quiz_shortcode', 10, 2 );
+add_shortcode( 'ld_quiz', 'learndash_quiz_shortcode_function', 10, 3 );

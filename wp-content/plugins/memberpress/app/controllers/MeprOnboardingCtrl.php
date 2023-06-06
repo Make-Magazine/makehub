@@ -148,6 +148,7 @@ class MeprOnboardingCtrl extends MeprBaseCtrl {
         'finish_nonce' => wp_create_nonce('mepr_onboarding_finish'),
         'memberships_url' => admin_url('edit.php?post_type=memberpressproduct'),
         'error_installing_addon' => __('An error occurred when installing an add-on, please download and install the add-ons manually.', 'memberpress'),
+        'edition_url_param' => isset($_GET['edition']) ? sanitize_text_field(wp_unslash($_GET['edition'])) : '',
       ]);
 
       wp_enqueue_script('paypal-partner-sdk', 'https://www.paypal.com/webapps/merchantboarding/js/lib/lightbox/partner.js', [], MEPR_VERSION, true);
@@ -421,13 +422,12 @@ class MeprOnboardingCtrl extends MeprBaseCtrl {
 
   public static function get_content_search_results_html($search_query = '') {
     $posts = array();
+    $post_types = ['page'];
+    if(MeprOnboardingHelper::is_courses_addon_applicable()){
+      $post_types = ['mpcs-course', 'page'];
+    }
     if('' == $search_query){
       $content_id = MeprOnboardingHelper::get_content_post_id();
-      $post_types = ['page'];
-
-      if(MeprOnboardingHelper::is_courses_addon_applicable()){
-        $post_types = ['mpcs-course', 'page'];
-      }
 
       $args = [
         'post_type' => $post_types,

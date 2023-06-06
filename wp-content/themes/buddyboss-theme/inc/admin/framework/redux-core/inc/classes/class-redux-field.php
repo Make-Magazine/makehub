@@ -16,6 +16,7 @@ if ( ! class_exists( 'Redux_Field', false ) ) {
 	/**
 	 * Class Redux_Field
 	 */
+	#[\AllowDynamicProperties]
 	abstract class Redux_Field {
 
 		/**

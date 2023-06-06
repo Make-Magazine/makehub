@@ -365,6 +365,12 @@ button.ges-change, button.ges-change:hover {
 			&:after {
 				visibility: visible;
 				content: "Yes";
+				position: absolute;
+				top: 2.5px;
+				left: 30px;
+				color: #000 !important;
+				font-family: Roboto;
+				font-size: 16px;
 			}
 		}
 	}
@@ -470,4 +476,9 @@ button.ges-change, button.ges-change:hover {
 	.bp-generic-meta .generic-button {
 		margin-right: 0px !important;
 	}
+}
+
+#content-report.moderation-popup, #block-member.block-member-popup, #reported-content.content-report-popup { display: none; }
+.mfp-content {
+	#content-report.moderation-popup, #block-member.block-member-popup, #reported-content.content-report-popup { display: block; }
 }

@@ -3,8 +3,8 @@ Contributors: j__3rk, digamberpradhan
 Tags: zoom video conference, video conference, zoom, zoom video conferencing, web conferencing, online meetings
 Donate link: https://www.paypal.com/donate?hosted_button_id=2UCQKR868M9WE
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 4.0.11
+Tested up to: 6.2
+Stable tag: 4.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,51 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 9. Shortcode Output
 
 == Changelog ==
+
+= 4.1.9 Arpil 6th, 2023 =
+* Updated: WebSDK to version 2.11.0
+* Updated: Websdk Compile method.
+* Updated: Join via web browser design changes.
+
+= 4.1.8 Arpil 3rd, 2023 =
+* Added capability to view recordings by roles who have edit_posts capbilities.
+* Fixed: Duration of meeting not showing correctly when in hours and minutes.
+
+= 4.1.7 March 13th, 2023 =
+* Fix: Admin CSS not working in some pages.
+
+= 4.1.6 March 9th, 2023 =
+* Updated: Translations
+* Fixed: Embed post block not working correctly in block based themes.
+* Fixed: Minutes and Hours translations not working correctly.
+* Updated: Zoom WebSDK to version 2.10.1
+
+= 4.1.5 March 3rd, 2023 =
+* Fixed: Gutenberg blocks on embed posts.
+
+= 4.1.4 February 28th, 2023 =
+* Fix: Template issue for meeting by post id shortcode.
+
+= 4.1.3 February 27th, 2023 =
+* Updated SDK key and SDK secret text on connect tab to sync with Zoom new changes.
+* Bug fix that showed PHP 7.4 above constraint warnings.
+* Bug fix that relates to JWT firebase library update.
+
+= 4.1.2 February 22nd, 2023 =
+* Updated: plugin now requires PHP version 7.4
+
+= 4.1.1 February 21st, 2023 =
+* Removed sorting by meeting ID fields
+* Fixed: JWT signature not generating because of firebase library update.
+
+= 4.1.0 February 21st, 2023 =
+* Updated: WebSDK to version 2.9.7
+* Fixed: removed wc_date_format() function from core.
+* Fixed: Undefined property: stdClass::$start_time in shortcode embed.
+* Added: Ability to join meetings with registrations enabled for PRO version.
+* Fixed: A bug where WP_Error was giving a fatal error in rare case.
+* Developer: Script bundler changed to webpack.
+* Huge bug fixes and code refactoring.
 
 = 4.0.11 December 30th, 2022 =
 * Fixed: Join via browser showing invalid parameters when email field was disabled.

@@ -63,7 +63,7 @@ class GP_Field_Nested_Form extends GF_Field {
 		$column_count     = count( $nested_field_ids ) + 1; // + 1 for actions column
 
 		// Show warning message when form/fields need to be configured
-		if ( ! $nested_field_ids ) {
+		if ( ! $nested_field_ids || ! $nested_form ) {
 			// GF 2.5 border color
 			$border_color = ( version_compare( GFForms::$version, '2.5.0', '>=' ) ) ? '#ddd' : '#D2E0EB';
 			return sprintf(
@@ -83,7 +83,9 @@ class GP_Field_Nested_Form extends GF_Field {
 			$entries = gp_nested_forms()->get_entries( $value );
 		}
 
-		$tabindex         = GFCommon::get_tabindex();
+		$tabindex = GFCommon::get_tabindex();
+
+		// translators: placeholder is a singlular item label such as "Item" or "Player"
 		$add_button_label = sprintf( __( 'Add %s', 'gp-nested-forms' ), $this->get_item_label() );
 		$nested_fields    = ! empty( $nested_form ) ? gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form ) : array();
 
@@ -204,6 +206,7 @@ class GP_Field_Nested_Form extends GF_Field {
 	}
 
 	public function get_add_button_max_message( $form_id, $nested_form_id ) {
+		// translators: placeholder is a plural item label such as "Items" or "Players"
 		$message = sprintf( __( 'Maximum number of %s reached.', 'gp-nested-forms' ), strtolower( $this->get_items_label() ) );
 
 		if ( $this->is_form_editor() ) {
@@ -287,6 +290,7 @@ class GP_Field_Nested_Form extends GF_Field {
 					),
 					admin_url( 'admin.php' )
 				),
+				// translators: placeholder is a singular item label such as "Item" or "Player"
 				sprintf( __( 'View Expanded %s List', 'gp-nested-forms' ), $this->get_item_label() )
 			);
 		}
@@ -300,7 +304,7 @@ class GP_Field_Nested_Form extends GF_Field {
 			'template'             => $template,
 			'field'                => $this,
 			'nested_form'          => $nested_form,
-			'nested_fields'        => gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form ),
+			'nested_fields'        => gp_nested_forms()->get_fields_by_ids( $nested_field_ids, $nested_form, true ),
 			'nested_field_ids'     => $nested_field_ids,
 			'value'                => $value,
 			'entries'              => $entries,
@@ -340,6 +344,11 @@ class GP_Field_Nested_Form extends GF_Field {
 
 		if ( $actions['related_entries'] != $related_entries_link ) {
 			$actions['related_entries'] = $related_entries_link;
+		}
+
+		// Ensure GFFormDisplay is loaded in places such as printing entries. This is needed as of GF 2.7+.
+		if ( ! class_exists( 'GFFormDisplay' ) ) {
+			require_once( GFCommon::get_base_path() . '/form_display.php' );
 		}
 
 		$template = new GP_Template( gp_nested_forms() );

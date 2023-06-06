@@ -6,7 +6,7 @@
  */
 /* * **************************** THEME SETUP ***************************** */
 
-require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php');
 
 // Defines the child theme (do not remove).
 define('CHILD_THEME_NAME', 'Make - Maker Camp');
@@ -35,7 +35,7 @@ add_action('after_setup_theme', 'maker_camp_languages');
 /**
  * Enqueues scripts and styles for child theme front-end.
  *
- * @since Make Experiences  1.0.0
+ * @since Maker Camp 1.0.0
  */
 function maker_camp_scripts_styles() {
     $my_theme = wp_get_theme();
@@ -50,7 +50,7 @@ function maker_camp_scripts_styles() {
      * */
 
     ### SUBTHEME STYLES ###
-    wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
+    wp_enqueue_style('maker_camp-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
 
     // lib src packages up bootstrap, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
@@ -65,6 +65,23 @@ function load_admin_styles() {
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
+
+// fight back against buddyboss ruining our accessibility
+if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
+    add_action( 'init', 'remove_bb_actions');
+    function remove_bb_actions() {
+        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
+    /**
+     * Add a viewport meta.
+     */
+    function buddyboss_theme_viewport_meta_custom() {
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1" />';
+    }
+    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
+}
+
 
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
@@ -110,7 +127,7 @@ foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function spinner_url($image_src, $form) {
-    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+    return "/wp-content/universal-assets/v2/images/makey-spinner.gif";
 }
 
 function parse_yturl($url) {

@@ -8,6 +8,9 @@ class MpElementor {
     add_action( 'elementor/element/section/section_advanced/after_section_end', array( $this, 'row_settings' ) );
     add_filter( 'elementor/frontend/section/should_render', array( $this, 'should_render' ), 10, 2 );
     add_action( 'elementor/frontend/section/before_render', array( $this, 'before_render' ) );
+    add_action( 'elementor/element/container/section_layout/after_section_end', array( $this, 'row_settings' ) );
+    add_filter( 'elementor/frontend/container/should_render', array( $this, 'should_render' ), 10, 2 );
+    add_action( 'elementor/frontend/container/before_render', array( $this, 'before_render' ) );
     add_action( 'elementor/common/after_register_scripts', array( $this, 'enqueues' ) );
   }
 
@@ -114,6 +117,10 @@ class MpElementor {
       return;
     }
 
+    wp_enqueue_style( 'dashicons' );
+    wp_enqueue_style( 'mp-login-css', MEPR_CSS_URL.'/ui/login.css', null, MEPR_VERSION);
+    wp_enqueue_script('mepr-login-js', MEPR_JS_URL.'/login.js', array('jquery', 'underscore', 'wp-i18n'), MEPR_VERSION);
+
     echo $this->unauth_content( $settings );
   }
 
@@ -148,20 +155,13 @@ class MpElementor {
     ob_start();
     ?>
 
-    <section class="elementor-section elementor-top-section elementor-element">
+    <section class="elementor-section elementor-top-section elementor-element elementor-section-boxed elementor-section-height-default elementor-section-height-default" data-element_type="section">
       <div class="elementor-container elementor-column-gap-default">
-        <div class="elementor-row">
-          <div class="elementor-column elementor-col-100 elementor-top-column elementor-element">
-            <div class="elementor-column-wrap elementor-element-populated">
-              <div class="elementor-widget-wrap">
-                <div class="elementor-element elementor-widget elementor-widget-text-editor">
-                  <div class="elementor-widget-container">
-                    <div class="elementor-text-editor elementor-clearfix">
-                      <div class="memberpress-unauthorized">
-                          <?php echo $output; ?>
-                      </div>
-                    </div>
-                  </div>
+        <div class="elementor-column elementor-col-100 elementor-top-column elementor-element" data-element_type="column">
+          <div class="elementor-widget-wrap elementor-element-populated">
+            <div class="elementor-element elementor-widget elementor-widget-text-editor" data-element_type="widget" data-widget_type="text-editor.default">
+                <div class="elementor-widget-container">
+                  <?php echo $output; ?>
                 </div>
               </div>
             </div>
@@ -171,7 +171,6 @@ class MpElementor {
     </section>
 
     <?php
-
     $output = ob_get_clean();
 
     if ( 'hide' === $settings['memberpress_unauthorized'] ) {

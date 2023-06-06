@@ -24,135 +24,66 @@
     font-weight: 600;
 }
 
-///////////// GROUPS //////////////////
-
-//show hidden groups if you're a member
-#groups-dir-list, .mygroups {
-    .is-member.hidden {
-        display: block !important
+body.buddyboss-theme {
+    .site-header-custom {
+        width: 100% !important;
+        left: 0px;
     }
-}
-.subnav-search.groups-search {
-    margin: -10px 15px 20px;
-    float: none;
-}
-#bp-media-uploader .modal-container {
-    position: inherit;
-}
-.groups {
-    .bp-manage-group-container {
-        #group-settings-form {
-            .bp-controls-wrap { display: none; }
-        }
+    .buddypanel {
+        margin-top: 121px;
+        z-index: 9;
+		margin-left:-230px;
+		font-weight: 400;
+		top: 0px;
+		.bb-toggle-panel {
+			.bb-icon-sidebar:before {
+				content: "\e859";
+			}
+		}
+		li a i { opacity: 1 !important; }
     }
-    &.group-hidden, &.group-private {
-        &:not(.my-group) {
-            #invite-groups-li {
-                display: none;
+	#page.site {
+		margin-left: 0px;
+	}
+	&.buddypanel-open.bb-page-loaded, &.buddypanel-open.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px }
+		#page.site {
+			margin-left: 230px;
+		}
+		@media screen and (max-width: 805px) {
+			#page.site { margin-left: 0px; }
+		}
+		@media screen and (min-width: 805px) {
+			#makey-sign {
+				margin-left: 180px;
+				&:hover {
+					margin-left: 200px;
+				}
+			}
+		}
+        
+	}
+	&.buddypanel-closed.bb-page-loaded {
+		.buddypanel { margin-left: 0px; }
+        &:not(.sfwd-sidebar) {
+            #page.site {
+                margin-left: 68px;
+                @media screen and (max-width: 805px) {
+                    margin-left: 0px;
+                }
             }
         }
-    }
+		// lesson pages are set to not show any buddypanel since they have a left hand nav of their own
+		&.single-sfwd-lessons #page.site {
+			margin-left: 0px;
+		}
+	}
 }
-// only admins get to set group types
-body:not(.admin-bar) {
-    #create-group-form {
-        .group-create-types { display: none; }
-    }
-}
-
-button.ges-change, button.ges-change:hover {
-    padding: 10px 20px !important;
-}
-
-.bs-styled-radio + .bb-radio-label, .bs-styled-radio + label {
-    display: flex;
-    align-items: center;
-    &::before {
-        left: -20px;
-        margin-right: -10px;
-    }
-}
-
-/* makerspace information */
-.ms_info .fieldLabel {
-    font-weight:bold;
-
-}
-.ms_info .fieldData {
-    padding: 10px;
-}
-.ms_info .fieldInfo {
-    margin: 10px;
-}
-
-.bb-footer, .site-content, .site-header {
-    padding: 0px;
-}
-
-/* blue toad digital library page */
-#page-content.bluetoad iframe{
-    width: 100%;
-    height: 100vh;
-    border: none;
-    margin-bottom: -10px;
-    padding-bottom: 150px;
-}
-
-// Profile pages
-.profile.buddypress, .my-account.buddypress {
-    .item-header-wrap {
-        .item-meta {
-            .separator, .activity { display: none; }
-        }
-    }
-    .buddypress-wrap#buddypress {
-        .member-header-actions {
-            .generic-button a {
-                border-radius: 2px;
-            }
+// Buddypanel Nav
+body.buddypanel-open {
+    #buddypanel-menu {
+        .bb-menu-item {
+            span { white-space: break-spaces !important; }
         }
     }
 }
-
-// Makerspace dir Page
-.page-members-type-makerspaces {
-    h1.entry-title::after {
-        content: ": Makerspaces";
-    }
-}
-.directory {
-    .dir-list {
-        .grid.bp-list > li {
-            flex: 0 0 20%;
-            max-width: 20%;
-            @media screen and (max-width: 1500px) {
-                flex: 0 0 25%;
-                max-width: 25%;
-            }
-            @media screen and (max-width: 1200px) {
-                flex: 0 0 33%;
-                max-width: 33%;
-            }
-            @media screen and (max-width: 981px) {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-            @media screen and (max-width: 768px) {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-            @media screen and (max-width: 480px) {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-        }
-    }
-    #secondary {
-        flex: 0 0 300px;
-        max-width: 300px;
-    }
-}
-
-
-// nobody needs to know when I was last on the notification page
-.member-request-list-wrap .last-activity { display: none; }

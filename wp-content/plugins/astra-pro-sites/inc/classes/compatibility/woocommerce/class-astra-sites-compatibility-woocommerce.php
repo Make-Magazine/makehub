@@ -135,7 +135,7 @@ if ( ! class_exists( 'Astra_Sites_Compatibility_WooCommerce' ) ) :
 							'attribute_orderby' => 'menu_order',
 							'attribute_public'  => 0,
 						);
-						$wpdb->insert( $wpdb->prefix . 'woocommerce_attribute_taxonomies', $attribute );
+						$wpdb->insert( $wpdb->prefix . 'woocommerce_attribute_taxonomies', $attribute ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- WP Query would be expensive here, we are adding taxonomy attributes for WooCommerce.
 						delete_transient( 'wc_attribute_taxonomies' );
 					}
 

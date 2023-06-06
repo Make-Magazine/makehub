@@ -3,7 +3,7 @@
  * Plugin Name: Visual Customizer for LearnDash
  * Plugin URI: http://www.snaporbital.com/downloads/
  * Description: Enhance and customize the LearnDash design
- * Version: 2.3.7.5
+ * Version: 2.3.16
  * Author: SnapOrbital
  * Author URI: http://www.snaporbital.com
  * Text Domain: lds_skins
@@ -22,7 +22,7 @@ if( !class_exists( 'EDD_SL_Plugin_Updater' ) ) {
 $definitions = array(
 	'LDS_STORE_URL'			=>	'https://www.snaporbital.com',
 	'EDD_LEARNDASH_SKINS'		=>	'LearnDash Visual Customizer',
-	'LDS_VER'					=>	'2.3.7.5',
+	'LDS_VER'					=>	'2.3.16',
 	'LDS_PATH'				=>	plugin_dir_path(__FILE__),
 	'LDS_URL'					=>	plugins_url( '', __FILE__ )
 );
@@ -31,7 +31,7 @@ foreach( $definitions as $definition => $value ) {
 	if( !defined( $definition ) ) define( $definition, $value );
 }
 
-add_action( 'plugins_loaded', 'ldvc_init', 1000 );
+add_action( 'plugins_loaded', 'ldvc_init', 9000 );
 function ldvc_init() {
 
 	// Make sure LearnDash is running
@@ -39,10 +39,16 @@ function ldvc_init() {
 		return;
 	}
 
-	if( defined('LEARNDASH_VERSION') && version_compare( LEARNDASH_VERSION, '2.6.5', '>=' ) && defined('LD_30_VER') ) {
-		define( 'LDVC_MODE', 'modern' );
-	} else {
+	$active_theme = false;
+
+	if( class_exists('LearnDash_Theme_Register') ) {
+		$active_theme = LearnDash_Theme_Register::get_active_theme_key();
+	}
+
+	if( defined('LEARNDASH_VERSION') && version_compare( LEARNDASH_VERSION, '2.6.5', '>=' ) && $active_theme == 'legacy' ) {
 		define( 'LDVC_MODE', 'legacy' );
+	} else {
+		define( 'LDVC_MODE', 'modern' );
 	}
 
 	do_action( 'ldvc_before_init' );

@@ -30,6 +30,7 @@ jQuery(document).ready(function() {
         wploggedin = true;
         //let's set up the dropdowns
         displayButtons();
+        // we are skipping setting auth0 localStorage as log in is managed by the auth0 plugin
     } else {
         //otherwise we need to call auth0 for login and to show the user drop down
 
@@ -116,8 +117,9 @@ jQuery(document).ready(function() {
 		} else {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
-			var currentDate = new Date();
-			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > currentDate.getTime()) {
+			console.log("auth0_comp: " + localStorage.getItem('expires_at') + "/" + Date.now());
+			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > Date.now()) {
+				console.log("not expired");
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v1/images/default-makey.png") {
@@ -131,13 +133,6 @@ jQuery(document).ready(function() {
 					displayButtons();
 				});
 			} else {
-				// log if we are still getting any user info after the expiration
-				if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') <= currentDate.getTime()) {
-					webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
-						console.log("can we get any user data anyways?");
-						console.log(user);
-					});
-				}
 		        //check if logged in another place
  				checkSession();
 			}
@@ -152,7 +147,7 @@ jQuery(document).ready(function() {
 					if (err.error !== 'login_required') {
 						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 					}
-
+			
 					// This should take care of SSO
 					// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 					//If you are makehub and you are logged in, you will never hit this code
@@ -191,7 +186,7 @@ jQuery(document).ready(function() {
         if (authResult) {
             // Set the time that the access token will expire at
             var expiresAt = JSON.stringify(
-                authResult.expiresIn * 36000 + new Date().getTime()
+                authResult.expiresIn * 360000 + new Date().getTime()
             );
             localStorage.setItem('access_token', authResult.accessToken);
             localStorage.setItem('id_token', authResult.idToken);

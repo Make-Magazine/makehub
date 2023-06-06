@@ -1,0 +1,61 @@
+// Typography
+// --------------------------------------------------
+@font-face {
+	font-family: 'Roboto';
+	src: url('../fonts/Roboto-Regular.ttf');
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Roboto Light';
+	src: url('../fonts/Roboto-Light.ttf');
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Roboto Bold';
+	src: url('../fonts/Roboto-Bold.ttf');
+	font-display: swap;
+}
+@font-face {
+	font-family: 'Roboto Condensed';
+	src: url('../fonts/RobotoCondensed-Regular.ttf');
+	font-display: swap;
+}
+
+html,
+body {
+  font-family: Roboto, "Helvetica Neue", Helvetica, sans-serif !important;
+  font-size: 16px;
+  font-weight: 300;
+  color: #4a4a4a;
+}
+
+// Headings
+// -------------------------
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Roboto Light, "Helvetica Neue", Helvetica, sans-serif;
+  line-height: 1.2em;
+  strong, b {
+    font-weight: 400;
+  }
+}
+
+// Body text
+// -------------------------
+
+p {
+  font-family: Roboto, "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 16px; // 16px
+  line-height: 1.5em; // 24px
+  font-weight: 300;
+  margin: 0 0 1em;
+}
+.elementor-element p {
+  font-size: inherit;
+  color: inherit;
+}
+
+// youtube
+.epyt-gallery-title {
+	font-size: 100%;
+}

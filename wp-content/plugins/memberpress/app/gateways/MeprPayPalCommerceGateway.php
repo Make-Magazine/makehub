@@ -130,13 +130,13 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     $this->debug = defined( 'WP_MEPR_DEBUG' ) && WP_MEPR_DEBUG === true;
 
     if ( $this->is_test_mode() ) {
-      $this->settings->url          = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+      $this->settings->url          = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr';
       $this->settings->api_url      = 'https://api-3t.sandbox.paypal.com/nvp';
       $this->settings->rest_api_url = 'https://api-m.sandbox.paypal.com';
     } else {
-      $this->settings->url          = 'https://www.paypal.com/cgi-bin/webscr';
+      $this->settings->url          = 'https://ipnpb.paypal.com/cgi-bin/webscr';
       $this->settings->api_url      = 'https://api-3t.paypal.com/nvp';
-      $this->settings->rest_api_url = 'https://api-m.paypal.com';
+      $this->settings->rest_api_url = 'https://api.paypal.com';
     }
 
     $this->settings->api_version = 69;
@@ -180,6 +180,20 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         $first_txn->coupon_id  = $sub->coupon_id;
       }
 
+      $existing = MeprTransaction::get_one_by_trans_num( $_POST['txn_id'] );
+
+      //There's a chance this may have already happened during the return handler, if so let's just get everything up to date on the existing one
+      if ( $existing != null && isset( $existing->id ) && (int) $existing->id > 0 ) {
+        $txn = new MeprTransaction( $existing->id );
+        $handled = $txn->get_meta('mepr_paypal_notification_handled');
+
+        if (!empty($handled)) {
+          return;
+        }
+      } else {
+        $txn = new MeprTransaction();
+      }
+
       //If this is a trial payment, let's just convert the confirmation txn into a payment txn
       if ( $this->is_subscr_trial_payment( $sub ) ) {
         $txn                  = $first_txn; //For use below in send notices
@@ -193,15 +207,6 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         $txn->set_gross( $_POST['mc_gross'] );
         $txn->store();
       } else {
-        $existing = MeprTransaction::get_one_by_trans_num( $_POST['txn_id'] );
-
-        //There's a chance this may have already happened during the return handler, if so let's just get everything up to date on the existing one
-        if ( $existing != null && isset( $existing->id ) && (int) $existing->id > 0 ) {
-          $txn = new MeprTransaction( $existing->id );
-        } else {
-          $txn = new MeprTransaction();
-        }
-
         $txn->created_at      = MeprUtils::ts_to_mysql_date( $timestamp );
         $txn->user_id         = $first_txn->user_id;
         $txn->product_id      = $first_txn->product_id;
@@ -219,7 +224,13 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
           $sub->status = MeprSubscription::$active_str;
           $sub->store();
         }
+
+        // Not waiting for an IPN here bro ... just making it happen even though
+        // the total occurrences is already capped in record_create_subscription()
+        $sub->limit_payment_cycles();
       }
+
+      $txn->update_meta('mepr_paypal_notification_handled', true);
 
       $this->email_status( "Subscription Transaction\n" . MeprUtils::object_to_string( $txn->rec, true ), $this->debug );
 
@@ -640,6 +651,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
   }
 
   public function process_signup_form( $txn ) {
+    if ($txn->amount == 0) {
+      MeprTransaction::create_free_transaction($txn);
+      return;
+    }
     if ( isset( $_POST['smart-payment-button'] ) && $_POST['smart-payment-button'] == true ) {
       $data = $this->setup_payment_with_paypal_commerce( $txn, true );
       wp_send_json( $data );
@@ -722,6 +737,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     $response = wp_remote_retrieve_body( $response );
     $response = json_decode( $response, true );
 
+    if (!isset($response['purchase_units'])) {
+      $this->log($response);
+    }
+
     return $response;
   }
 
@@ -773,7 +792,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
    * @return array|mixed|string|WP_Error
    */
   protected function get_paypal_sale_payment_object( $pp_payment_id ) {
-    $response = wp_remote_get( $this->settings->rest_api_url . '/v1/payments/sale/' . $pp_payment_id, [
+    $response = wp_remote_get( $this->settings->rest_api_url . '/v2/payments/captures/' . $pp_payment_id, [
       'headers' => [
         'Content-Type'                  => 'application/json',
         'PayPal-Partner-Attribution-Id' => MeprPayPalConnectCtrl::PAYPAL_BN_CODE,
@@ -906,7 +925,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         ],
       ];
 
-      $payload = json_encode( $payload, JSON_UNESCAPED_SLASHES );
+      $payload = json_encode( MeprHooks::apply_filters('mepr_paypal_onetime_subscription_args', $payload, $txn), JSON_UNESCAPED_SLASHES );
 
       $response = wp_remote_post( $api_url . '/v2/checkout/orders', [
         'body'      => $payload,
@@ -972,11 +991,17 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
    * Returs the payment form and required fields for the gateway
    */
   public function spc_payment_fields() {
+    global $mepr_shortcode_registration_product_id;
     $mepr_options        = MeprOptions::fetch();
     $payment_method      = $this;
     $payment_form_action = 'mepr-paypal-payment-form';
     $user                = MeprUtils::is_user_logged_in() ? MeprUtils::get_currentuserinfo() : null;
     $membership_id       = get_the_ID();
+
+    if ( ! empty( $mepr_shortcode_registration_product_id ) ) {
+      $membership_id = $mepr_shortcode_registration_product_id;
+    }
+
     $product             = new MeprProduct( $membership_id );
 
     return MeprView::get_string( "/checkout/MeprPayPalCommerceGateway/payment_form", get_defined_vars() );
@@ -1190,7 +1215,10 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       'currency'       => $mepr_options->currency_code,
     );
 
-    $plan_meta_key = '_mepr_paypal_plan_' . implode( '_', $args );
+    $plan_args = $args;
+    $plan_args['memberpress_product_id'] = $product->ID;
+
+    $plan_meta_key = '_mepr_paypal_plan_' . implode( '_', $plan_args );
     $plan_id       = get_post_meta( $product->ID, $plan_meta_key, true );
 
     if ( empty( $plan_id ) ) {
@@ -1207,7 +1235,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
           'pricing_scheme' => [
             'fixed_price' => [
               'currency_code' => $mepr_options->currency_code,
-              'value'         => $trial_amount,
+              'value'         => (string) $trial_amount,
             ]
           ],
           'tenure_type'    => 'TRIAL',
@@ -1366,20 +1394,11 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     <?php
   }
 
-  public function is_ipn_for_me() {
-    if(isset($_POST['custom']) && !empty($_POST['custom'])) {
-      $custom_vars = (array)json_decode($_POST['custom']);
-
-      if(isset($custom_vars['gateway_id']) && $custom_vars['gateway_id'] == $this->id) {
-        return true;
-      }
-    }
-
-    return false;
-  }
-
   public function ipn_listener() {
     $_POST = wp_unslash( $_POST );
+    $this->log('IPN received');
+    $this->log($_POST);
+    do_action('mepr_paypal_commerce_ipn_listener_preprocess');
     $this->email_status( "PayPal IPN Recieved\n" . MeprUtils::object_to_string( $_POST, true ) . "\n", $this->debug );
 
     if ( $this->validate_ipn() ) {
@@ -1390,7 +1409,9 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       }
 
       $standard_gateway = new MeprPayPalStandardGateway();
+      $mepr_options->legacy_integrations[ $this->id ]['debug'] = $this->debug;
       $standard_gateway->load( $mepr_options->legacy_integrations[ $this->id ] );
+
       return $standard_gateway->process_ipn();
     }
 
@@ -1400,6 +1421,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
   public function webhook_handler() {
     $request = @file_get_contents( 'php://input' );
     $request = json_decode( $request, true );
+    $this->log( 'Webhook received' );
     $this->log( $request );
 
     if ( ! isset( $request['event_type'] ) ) {
@@ -1457,18 +1479,21 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       $this->record_refund();
     } elseif ( $request['event_type'] == 'PAYMENT.SALE.COMPLETED' ) {
       $pp_payment = $this->get_paypal_sale_payment_object( $request['resource']['id'] );
+      $resource = $request['resource'];
       $this->log( 'Processing recurring payment' );
       $this->log( $pp_payment );
+      $this->log( $resource );
 
-      if ( $pp_payment['state'] == 'completed' && isset( $pp_payment['custom'] ) ) {
-        $sub = new MeprSubscription( $pp_payment['custom'] );
+      if ( $pp_payment['status'] == 'COMPLETED' && isset( $pp_payment['custom_id'] ) ) {
+        $this->log( 'Payment confirmed' );
+        $sub = new MeprSubscription( $pp_payment['custom_id'] );
 
-        if ( $sub->subscr_id == $pp_payment['billing_agreement_id'] ) {
+        if ( $sub->subscr_id == $resource['billing_agreement_id'] ) {
           $_POST['recurring_payment_id'] = $pp_payment['id'];
           $_POST['txn_id']               = $pp_payment['id'];
-          $_POST['mc_gross']             = $pp_payment['amount']['total'];
-          $_POST['payment_date']         = $pp_payment['create_time'];
-          $_POST['subscr_id']            = $pp_payment['billing_agreement_id'];
+          $_POST['mc_gross']             = $resource['amount']['total'];
+          $_POST['payment_date']         = $resource['create_time'];
+          $_POST['subscr_id']            = $resource['billing_agreement_id'];
 
           $this->record_subscription_payment();
         }
@@ -1644,6 +1669,8 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     $mepr_options = MeprOptions::fetch();
     // Handled with a GET REQUEST by PayPal
     $this->email_status( "Paypal Cancel \$_REQUEST:\n" . MeprUtils::object_to_string( $_REQUEST, true ) . "\n", $this->debug );
+
+    MeprHooks::do_action('mepr_paypal_checkout_cancelled_before', $_REQUEST);
 
     if ( isset( $_REQUEST['txn_id'] ) && is_numeric( $_REQUEST['txn_id'] ) ) {
       $txn = new MeprTransaction( $_REQUEST['txn_id'] );

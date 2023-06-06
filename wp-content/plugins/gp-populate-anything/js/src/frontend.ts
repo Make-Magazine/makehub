@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 /* Polyfills */
 import 'core-js/es/array/includes';
+import 'core-js/es/array/find';
 import 'core-js/es/object/assign';
 import 'core-js/es/object/values';
 import 'core-js/es/object/entries';
@@ -12,69 +13,64 @@ import GPPopulateAnything, {
 import GPPALiveMergeTags from './classes/GPPALiveMergeTags';
 import deepmerge from 'deepmerge';
 
-const gppaMergedFieldMaps: { [ formId: string ]: fieldMap } = {};
+const gppaMergedFieldMaps: { [formId: string]: fieldMap } = {};
 
 window.gppaForms = {};
 window.gppaLiveMergeTags = {};
 
-for ( const prop in window ) {
+for (const prop in window) {
 	if (
-		window.hasOwnProperty( prop ) &&
-		( prop.indexOf( 'GPPA_FILTER_FIELD_MAP' ) === 0 ||
-			prop.indexOf( 'GPPA_FIELD_VALUE_OBJECT_MAP' ) === 0 )
+		window.hasOwnProperty(prop) &&
+		(prop.indexOf('GPPA_FILTER_FIELD_MAP') === 0 ||
+			prop.indexOf('GPPA_FIELD_VALUE_OBJECT_MAP') === 0)
 	) {
-		const formId = prop.split( '_' ).pop() as string;
-		const map = ( window as any )[ prop ];
+		const formId = prop.split('_').pop() as string;
+		const map = (window as any)[prop];
 
-		if ( ! ( formId in gppaMergedFieldMaps ) ) {
-			gppaMergedFieldMaps[ formId ] = {};
+		if (!(formId in gppaMergedFieldMaps)) {
+			gppaMergedFieldMaps[formId] = {};
 		}
 
-		gppaMergedFieldMaps[ formId ] = deepmerge(
-			gppaMergedFieldMaps[ formId ],
-			map[ formId ]
+		gppaMergedFieldMaps[formId] = deepmerge(
+			gppaMergedFieldMaps[formId],
+			map[formId]
 		);
 	}
 }
 
-const maybeRegisterForm = ( formId: formId, fieldMap = {} ) => {
-	if ( ! ( formId in window.gppaLiveMergeTags ) ) {
-		if ( ! ( formId in window.gppaForms ) ) {
-			window.gppaForms[ formId ] = new GPPopulateAnything(
-				formId,
-				fieldMap
-			);
+const maybeRegisterForm = (formId: formId, fieldMap = {}) => {
+	if (!(formId in window.gppaLiveMergeTags)) {
+		if (!(formId in window.gppaForms)) {
+			window.gppaForms[formId] = new GPPopulateAnything(formId, fieldMap);
 		}
 
-		window.gppaLiveMergeTags[ formId ] = new GPPALiveMergeTags( formId );
+		window.gppaLiveMergeTags[formId] = new GPPALiveMergeTags(formId);
 	}
 };
 
-for ( const [ formId, fieldMap ] of Object.entries( gppaMergedFieldMaps ) ) {
-	maybeRegisterForm( formId, fieldMap );
+for (const [formId, fieldMap] of Object.entries(gppaMergedFieldMaps)) {
+	maybeRegisterForm(formId, fieldMap);
 }
 
 /**
  * WooCommerce Gravity Forms Product Add-Ons appears to add the ID to the form after page load so
  * div[id^="gform_wrapper_"] was added as a fallback.
  */
-jQuery( 'form[id^="gform_"], div[id^="gform_wrapper_"]' ).each(
-	( index, el ) => {
-		const formId = jQuery( el )
-			?.attr( 'id' )
-			?.replace( /^gform_(wrapper_)?/, '' );
+jQuery('form[id^="gform_"], div[id^="gform_wrapper_"]').each((index, el) => {
+	const formId = jQuery(el)
+		?.attr('id')
+		?.replace(/^gform_(wrapper_)?/, '');
 
-		if ( ! formId ) {
-			return;
-		}
-
-		maybeRegisterForm( formId );
+	if (!formId) {
+		return;
 	}
-);
 
-window.gform.addAction( 'gpnf_init_nested_form', ( formId: any ) => {
-	maybeRegisterForm( formId );
-} );
+	maybeRegisterForm(formId);
+});
+
+window.gform.addAction('gpnf_init_nested_form', (formId: any) => {
+	maybeRegisterForm(formId);
+});
 
 /**
  * Initialize GPPA JS for a specific form
@@ -83,8 +79,8 @@ window.gform.addAction( 'gpnf_init_nested_form', ( formId: any ) => {
  *
  * @since 1.0-beta-4.167
  *
- * @param  number formId  Form ID to initialize
+ * @param number formId  Form ID to initialize
  */
-window.gform.addAction( 'gppa_register_form', ( formId: number ) => {
-	maybeRegisterForm( formId );
-} );
+window.gform.addAction('gppa_register_form', (formId: number) => {
+	maybeRegisterForm(formId);
+});

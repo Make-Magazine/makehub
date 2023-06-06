@@ -332,7 +332,21 @@
 		 font-size: 18px;
 		 color: #333;
 	 }
- }
+}
+.ld-section-heading h2 {
+	color: #fff;
+	padding: 10px;
+}
+.lds-btn {
+	display: flex;
+	color: #fff !important;
+	border-radius: 5px;
+	padding: 10px 5px;
+	&:hover {
+		background-color: #fff !important;
+		color: #333 !important;
+	}
+}
 
 // EXCEPTIONS
 body.cat-education {

@@ -1,0 +1,206 @@
+// our Custom RSS feed widget styling
+.widget_fancy_rss:not(.make-ad) {
+    .custom-rss {
+        li {
+            .pop-left {
+                float: left;
+                width: 22%;
+            }   
+            .pop-right {
+                float: right;
+                width: 71%;
+            }     
+            img {
+                padding: 5px;
+                border: 1px solid #efefef;
+                width: 100%;
+                height: auto;
+                aspect-ratio: 1;
+                object-fit: cover;
+            }            
+            .title {
+                font-size: 16px;
+                font-weight: 700;
+                line-height: 1.2em;
+            }
+            .details {
+                margin-top: 8px;
+                font-size: 0px;
+                color: #999;
+            }
+            cite {
+                font-weight: 500;
+                font-size: 15px;
+                line-height: 12px;
+            }            
+        }
+    }
+}
+// we added a make-ad class
+.widget_fancy_rss.make-ad {
+    position: relative;
+    .sidebar-title {
+        border-bottom: 0px;
+    }
+    a {cursor: pointer; }
+    .custom-rss {
+        img { 
+            width: 100%;
+         }
+         .rssTitle {
+            text-align: center;
+            color: #999;
+            margin-top: 5px;
+         }
+    }
+    &:hover {
+        &:after {
+            content: "Buy Now!";
+            font-size: 18px;
+            position: absolute;
+            background: #fff;
+            padding: 10px;
+            border-radius: 3px;
+            color: $color-blue;
+            border: solid 1px $color-blue;
+            top: 50%;
+            text-align: center;
+            left: 0;
+            right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            width: 140px;
+            pointer-events: none;
+        }
+    }
+}
+
+//upcoming faires
+.widget_upcoming_mfaires_widget {
+    padding-top: 30px;
+    .mf-logo {
+        padding: 0 15px;
+    }
+    h2 { text-align: center; }
+    .widget-title {
+        text-transform: uppercase;
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding-top: 10px;
+        margin-bottom: 15px;
+        font-size: 1.65vw;
+        @media screen and ( min-width: 1660px ) {
+            font-size: 23px;
+        }
+        @media screen and ( max-width: 982px ) {
+            font-size: 23px;
+        }
+    }
+    .upcoming-makerfaires-feed {
+        margin-top: -10px;
+        ul {
+            margin: 0px;
+            margin-top:20px;
+            li {
+                list-style: none;
+                padding: 10px 0px;
+                text-align: left;
+                border-top: solid 1px #f1f1f1;
+                border-bottom: 0px;
+                @media screen and ( max-width: 982px ) {
+                    text-align: center;
+                }
+                a {
+                    font-size: 14px;
+                    color: #999 !important;
+                    display: flex;
+                    flex-wrap: wrap;
+                    h4 {
+                        font-size: 16px;
+                        font-weight: 600;
+                        color: #333 !important;
+                        width:100%;
+                        margin: 0px;
+                        margin-bottom: 10px;
+                    }
+                    .faire-feed-date {
+                        margin-right: 10px;
+                    }
+                }
+                &:first-of-type {
+                    border-top: none;
+                }
+            }
+        }
+    }
+}
+
+.widget_block.widget_categories {
+    li.cat-item {
+        padding-top: 4px;
+        padding-bottom: 4px;
+        font-size: 16px;
+        border-bottom: 0px;
+        .see-children {
+            color: #147ec2;
+            margin-right: 5px;
+            transition: transform .4s;
+        }
+        .children { 
+            max-height: 0px;
+            transition: max-height .4s;
+            overflow: hidden;
+            li { 
+                padding-top: 4px;
+                padding-bottom: 4px; 
+                a {
+                    font-size: 15px;
+                }
+            }
+        }
+        &.show-children {
+            .see-children {
+                transform: rotate(45deg);
+            }
+            .children {
+                max-height: 500px;
+            }
+        }
+    }
+}
+
+// Podcast widget
+.wp-block-jetpack-podcast-player {
+	.jetpack-podcast-player__current-track-info, .jetpack-podcast-player__track-description {
+		padding: 0px !important;
+	}
+	.jetpack-podcast-player__podcast-title {
+		display: none;
+	}
+	.jetpack-podcast-player__tracks {
+		margin-top: 5px !important;
+		.jetpack-podcast-player__track.is-active {
+			font-family: "Roboto Bold";
+			font-weight: 500;
+			a {
+				color: inherit !important;
+			}
+		}
+		.jetpack-podcast-player__track-link {
+			padding-left: 0px !important;
+			padding-top: 3px;
+		}
+	}
+	
+}
+.mejs-controls {
+	display: inline-flex;
+	padding: 0px !important;
+	button { 
+		border: 0px;
+		padding: 0px;
+		width: 20px;
+		font-size: 0px;
+	 }
+}

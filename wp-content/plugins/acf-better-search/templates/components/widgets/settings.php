@@ -50,7 +50,7 @@
 		<div class="acfbsPage__widgetRow">
 			<button type="submit"
 				name="<?php echo esc_attr( $submit_value ); ?>"
-				class="acfbsButton acfbsButton--green">
+				class="acfbsButton acfbsButton--bg acfbsButton--blue">
 				<?php echo esc_html( __( 'Save Changes', 'acf-better-search' ) ); ?>
 			</button>
 		</div>

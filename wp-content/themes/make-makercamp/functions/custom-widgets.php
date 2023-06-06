@@ -1,7 +1,6 @@
 <?php
 
 function register_custom_widgets() {
-    register_widget('shopify_widget');
     register_widget('fancy_rss_widget');
     register_widget('upcoming_mfaires_widget');
     register_widget('make_projects_widget');

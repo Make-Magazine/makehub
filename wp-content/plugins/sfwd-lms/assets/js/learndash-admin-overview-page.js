@@ -61,6 +61,10 @@ window.learndash.admin.overview = {
 			incompletePanels.push( panel );
 		});
 
+		if ( incompletePanels.length == 0 ) {
+			return;
+		}
+
 		var toggle = incompletePanels[0].querySelector('.ld-bootcamp__accordion--toggle');
 		var accordionContent = incompletePanels[0].querySelector( '.ld-bootcamp__accordion--content' );
 
@@ -171,7 +175,7 @@ window.learndash.admin.overview = {
 			return;
 		}
 
-		// Prevent unnecesary DOM manipulation.
+		// Prevent unnecessary DOM manipulation.
 		if ( 'false' === toggle.getAttribute( 'aria-selected' ) ) {
 			return;
 		}

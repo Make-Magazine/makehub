@@ -86,8 +86,20 @@ body.register {
 			display: none !important;
 		}
 	}
-	.login-msg { font-size: 22px !important;}
+	.login-msg { 
+		font-size: 22px;
+		text-align: center;
+	}
 }
 body.register.logged-in .login-msg {
 	display: none;
+}
+
+.page-school-maker-faire-registration.logged-in {
+	.ginput_container_email, .name_first, .name_last {
+		input {
+			pointer-events:none;
+			background: #ccc;
+		}
+	}
 }

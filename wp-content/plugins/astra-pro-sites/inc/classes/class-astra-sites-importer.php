@@ -56,6 +56,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			// Import AJAX.
 			add_action( 'wp_ajax_astra-sites-import-wpforms', array( $this, 'import_wpforms' ) );
 			add_action( 'wp_ajax_astra-sites-import-cartflows', array( $this, 'import_cartflows' ) );
+			add_action( 'wp_ajax_astra-sites-import-spectra-settings', array( $this, 'import_spectra_settings' ) );
 			add_action( 'wp_ajax_astra-sites-import-customizer-settings', array( $this, 'import_customizer_settings' ) );
 			add_action( 'wp_ajax_astra-sites-import-prepare-xml', array( $this, 'prepare_xml_data' ) );
 			add_action( 'wp_ajax_astra-sites-import-options', array( $this, 'import_options' ) );
@@ -83,7 +84,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			add_action( 'wp_ajax_astra-sites-delete-terms', array( $this, 'delete_imported_terms' ) );
 
 			if ( version_compare( get_bloginfo( 'version' ), '5.1.0', '>=' ) ) {
-				add_filter( 'http_request_timeout', array( $this, 'set_timeout_for_images' ), 10, 2 );
+				add_filter( 'http_request_timeout', array( $this, 'set_timeout_for_images' ), 10, 2 ); //phpcs:ignore WordPressVIPMinimum.Hooks.RestrictedHooks.http_request_timeout -- We need this to avoid timeout on slow servers while installing theme, plugin etc.
 			}
 
 			add_action( 'init', array( $this, 'disable_default_woo_pages_creation' ), 2 );
@@ -110,7 +111,12 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 		 * @return array $options The options.
 		 */
 		public function plugin_install_clear_directory( $options ) {
-			if ( isset( $_REQUEST['clear_destination'] ) && 'true' === $_REQUEST['clear_destination'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			if ( true !== astra_sites_has_import_started() ) {
+				return $options;
+			}
+			// Verify Nonce.
+			check_ajax_referer( 'astra-sites', 'ajax_nonce' );
+			if ( isset( $_REQUEST['clear_destination'] ) && 'true' === $_REQUEST['clear_destination'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- This is a callback filter while performing plugin install action - https://developer.wordpress.org/reference/hooks/upgrader_package_options/, We don't quite have access to the nonce here. We are skipping it here.
 				$options['clear_destination'] = true;
 			}
 
@@ -210,7 +216,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 				}
 			}
 
-			$wpforms_url = ( isset( $_REQUEST['wpforms_url'] ) ) ? urldecode( $_REQUEST['wpforms_url'] ) : $wpforms_url;
+			$wpforms_url = ( isset( $_REQUEST['wpforms_url'] ) ) ? sanitize_url( urldecode( $_REQUEST['wpforms_url'] ) ) : sanitize_url( $wpforms_url ); // phpcs:ignore -- We need to remove this ignore once the WPCS has released this issue fix - https://github.com/WordPress/WordPress-Coding-Standards/issues/2189.
 			$ids_mapping = array();
 
 			if ( ! astra_sites_is_valid_url( $wpforms_url ) ) {
@@ -302,6 +308,10 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 		 * @return void
 		 */
 		public function import_cartflows( $url = '' ) {
+			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error();
+			}
 			// Disable CartFlows import logging.
 			add_filter( 'cartflows_enable_log', '__return_false' );
 
@@ -311,7 +321,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			add_action( 'cartflows_step_imported', array( $this, 'track_flows' ) );
 			add_filter( 'cartflows_enable_imported_content_processing', '__return_false' );
 
-			$url = ( isset( $_REQUEST['cartflows_url'] ) ) ? urldecode( $_REQUEST['cartflows_url'] ) : urldecode( $url ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$url = ( isset( $_REQUEST['cartflows_url'] ) ) ? sanitize_url( urldecode( $_REQUEST['cartflows_url'] ) ) : sanitize_url( urldecode( $url ) ); // phpcs:ignore -- We need to remove this ignore once the WPCS has released this issue fix - https://github.com/WordPress/WordPress-Coding-Standards/issues/2189.
 			if ( ! empty( $url ) && is_callable( 'CartFlows_Importer::get_instance' ) ) {
 
 				// Download JSON file.
@@ -336,6 +346,60 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 					}
 				} else {
 					wp_send_json_error( __( 'There was an error downloading the CartFlows flows file.', 'astra-sites' ) );
+				}
+			}
+
+			if ( defined( 'WP_CLI' ) ) {
+				WP_CLI::line( 'Imported from ' . $url );
+			} elseif ( wp_doing_ajax() ) {
+				wp_send_json_success( $url );
+			}
+		}
+
+		/**
+		 * Import Spectra Settings
+		 *
+		 * @since 3.1.16
+		 *
+		 * @param  string $url Spectra Settings JSON file URL.
+		 * @return void
+		 */
+		public function import_spectra_settings( $url = '' ) {
+
+			check_ajax_referer( 'astra-sites', '_ajax_nonce' );
+			if ( ! current_user_can( 'edit_posts' ) ) {
+				wp_send_json_error();
+			}
+			$url = ( isset( $_REQUEST['spectra_settings'] ) ) ? sanitize_url( urldecode( $_REQUEST['spectra_settings'] ) ) : sanitize_url( urldecode( $url ) ); // phpcs:ignore -- We need to remove this ignore once the WPCS has released this issue fix - https://github.com/WordPress/WordPress-Coding-Standards/issues/2189.
+			if ( ! astra_sites_is_valid_url( $url ) ) {
+				/* Translators: %s is XML URL. */
+				wp_send_json_error( sprintf( __( 'Invalid Request URL - %s', 'astra-sites' ), $url ) );
+			}
+
+			if ( ! empty( $url ) && is_callable( 'UAGB_Admin_Helper::get_instance' ) ) {
+
+				// Download JSON file.
+				$file_path = Astra_Sites_Helper::download_file( $url );
+
+				if ( $file_path['success'] ) {
+					if ( isset( $file_path['data']['file'] ) ) {
+
+						$ext = strtolower( pathinfo( $file_path['data']['file'], PATHINFO_EXTENSION ) );
+
+						if ( 'json' === $ext ) {
+							$settings = json_decode( Astra_Sites::get_instance()->get_filesystem()->get_contents( $file_path['data']['file'] ), true );
+
+							if ( ! empty( $settings ) ) {
+								UAGB_Admin_Helper::get_instance()->update_admin_settings_shareable_data( $settings );
+							}
+						} else {
+							wp_send_json_error( __( 'Invalid file for Spectra Settings', 'astra-sites' ) );
+						}
+					} else {
+						wp_send_json_error( __( 'There was an error downloading the Spectra Settings file.', 'astra-sites' ) );
+					}
+				} else {
+					wp_send_json_error( __( 'There was an error downloading the Spectra Settings file.', 'astra-sites' ) );
 				}
 			}
 
@@ -413,7 +477,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 				wp_send_json_error( __( 'The XMLReader library is not available. This library is required to import the content for the website.', 'astra-sites' ) );
 			}
 
-			$wxr_url = ( isset( $_REQUEST['wxr_url'] ) ) ? urldecode( $_REQUEST['wxr_url'] ) : '';
+			$wxr_url = ( isset( $_REQUEST['wxr_url'] ) ) ? sanitize_url( urldecode( $_REQUEST['wxr_url'] ) ) : ''; // phpcs:ignore -- We need to remove this ignore once the WPCS has released this issue fix - https://github.com/WordPress/WordPress-Coding-Standards/issues/2189.
 
 			if ( ! astra_sites_is_valid_url( $wxr_url ) ) {
 				/* Translators: %s is XML URL. */
@@ -528,7 +592,9 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 				}
 			}
 
-			$widgets_data = ( isset( $_POST['widgets_data'] ) ) ? (object) json_decode( stripslashes( $_POST['widgets_data'] ) ) : (object) $widgets_data;
+			$data = astra_get_site_data( 'astra-site-widgets-data' );
+
+			$widgets_data = ( isset( $data ) ) ? (object) json_decode( $data ) : (object) $widgets_data;
 
 			if ( ! empty( $widgets_data ) ) {
 
@@ -713,7 +779,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			$this->update_latest_checksums();
 
 			// Flush permalinks.
-			flush_rewrite_rules();
+			flush_rewrite_rules(); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.flush_rewrite_rules_flush_rewrite_rules -- This function is called only after import is completed
 		}
 
 		/**

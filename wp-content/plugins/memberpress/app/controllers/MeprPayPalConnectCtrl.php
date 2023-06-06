@@ -29,6 +29,11 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
 
   public function mepr_saved_options($settings) {
     $mepr_options = MeprOptions::fetch();
+
+    if ( ! isset( $settings['mepr-integrations'] ) || empty( $settings['mepr-integrations'] ) || ! is_array( $settings['mepr-integrations'] ) ) {
+      return $settings;
+    }
+
     foreach ( $settings['mepr-integrations'] as $key => $integration ) {
       if ( $integration['gateway'] == MeprPayPalCommerceGateway::class ) {
         if ( isset( $mepr_options->legacy_integrations[ $key ] ) ) {
@@ -181,8 +186,8 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
     add_action( 'wp_ajax_mepr_paypal_commerce_create_smart_button', array( $this, 'generate_smart_button_object' ) );
     add_action( 'wp_ajax_nopriv_mepr_paypal_commerce_create_smart_button', array( $this, 'generate_smart_button_object' ) );
     add_action( 'admin_init', array( $this, 'onboarding_success' ) );
-    //add_action( 'admin_notices', array( $this, 'check_and_show_upgrade_notices' ) );
-    //add_action( 'admin_notices', array( $this, 'show_notices_if_commerce_not_connected' ) );
+    // add_action( 'admin_notices', array( $this, 'check_and_show_upgrade_notices' ) );
+    // add_action( 'admin_notices', array( $this, 'show_notices_if_commerce_not_connected' ) );
     add_action( 'admin_notices', array( $this, 'admin_notices' ) );
     add_filter('mepr_signup_form_payment_description', array($this, 'maybe_render_payment_form'), 10, 3);
   }
@@ -388,13 +393,15 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
   }
 
   /**
+   * @todo this is unused for now, we can't delete webhook because new webhook won't receive
+   * notifications for payments created from prior webhook
    * @param $webhook_id
    * @param $token
    *
    * @return bool
    */
-  public static function delete_webhook( $webhook_id, $token ) {
-    $url     = self::get_base_paypal_endpoint() . '/v1/notifications/webhooks/' . $webhook_id;
+  public static function delete_webhook( $webhook_id, $token, $sandbox = false ) {
+    $url     = self::get_base_paypal_endpoint($sandbox) . '/v1/notifications/webhooks/' . $webhook_id;
     $options = [
       "headers" => [
         "Authorization"                 => 'Basic ' . $token,
@@ -457,7 +464,7 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
       $integrations[ $methodId ]['test_auth_code'] = '';
       $mepr_options->integrations = $integrations;
       $mepr_options->store( false );
-      $message = esc_html( __( 'You have disconnected your PayPal. You should login to your PayPal account and go to Developer settings to delete the app created by this gateway', 'memberpress' ) );
+      $message = esc_html( __( 'You have disconnected your PayPal. You should login to your PayPal account and go to Developer settings to delete the app created by this gateway unless you have active recurring subscriptions that were created with this gateway', 'memberpress' ) );
       $url     = admin_url( 'admin.php?page=memberpress-options&paypal-gateway-message-success=' . $message . '#mepr-integration' );
       MeprUtils::wp_redirect( $url );
     }
@@ -485,14 +492,11 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
     $response_code = wp_remote_retrieve_response_code( $response );
     $body          = wp_remote_retrieve_body( $response );
     $integrations  = $mepr_options->integrations;
-    $payment_method = $mepr_options->payment_method( $methodId );
 
     if ( empty( $sandbox ) ) {
-      self::delete_webhook( $payment_method->settings->live_webhook_id, $payment_method->get_pp_basic_auth_token() );
       $integrations[ $methodId ]['live_webhook_id'] = '';
     } else {
       $integrations[ $methodId ]['test_webhook_id'] = '';
-      self::delete_webhook( $payment_method->settings->test_webhook_id, $payment_method->get_pp_basic_auth_token() );
     }
 
     self::debug_log( $body );
@@ -510,7 +514,7 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
 
       $mepr_options->integrations = $integrations;
       $mepr_options->store( false );
-      $message = esc_html( __( 'You have disconnected your PayPal. You should login to your PayPal account and go to Developer settings to delete the app created by this gateway', 'memberpress' ) );
+      $message = esc_html( __( 'You have disconnected your PayPal. You should login to your PayPal account and go to Developer settings to delete the app created by this gateway unless you have active recurring subscriptions that were created with this gateway', 'memberpress' ) );
       $url     = admin_url( 'admin.php?page=memberpress-options&paypal-gateway-message-success=' . $message . '#mepr-integration' );
     } else {
       self::debug_log( $options );
@@ -633,9 +637,6 @@ class MeprPayPalConnectCtrl extends MeprBaseCtrl {
   }
 
   public function generate_smart_button_object() {
-    $rawInput = file_get_contents('php://input');
-    $input = json_decode($rawInput, true);
-    $_POST = $input;
     $_POST['smart-payment-button'] = true;
     $checkout_ctrl = MeprCtrlFactory::fetch( 'checkout' );
     $checkout_ctrl->process_signup_form();

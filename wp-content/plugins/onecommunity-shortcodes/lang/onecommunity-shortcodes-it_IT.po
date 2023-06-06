@@ -1,0 +1,396 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OneCommunity Shortcodes\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-04-26 14:33+0000\n"
+"PO-Revision-Date: 2021-06-11 13:29+0000\n"
+"Last-Translator: Michael\n"
+"Language-Team: Italian\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.2; wp-5.7.2\n"
+"X-Domain: onecommunity-shortcodes"
+
+#: inc/blog.php:671
+#, php-format
+msgid "%s ago"
+msgstr ""
+
+#: inc/buddypress.php:1354 inc/buddypress.php:1469 inc/buddypress.php:1556
+#, php-format
+msgid "%s Posts"
+msgstr ""
+
+#: inc/buddypress.php:1659
+#, php-format
+msgid "%s's Posts"
+msgstr ""
+
+#: inc/buddypress.php:164 inc/buddypress.php:409 inc/buddypress.php:416
+msgid "Active"
+msgstr ""
+
+#: inc/buddypress.php:1097
+msgid "Admins"
+msgstr ""
+
+#: inc/blog.php:618
+msgid "All"
+msgstr ""
+
+#: inc/buddypress.php:163
+msgid "Alphabetical"
+msgstr ""
+
+#: inc/profile-fields.php:40
+msgid "Birthdate"
+msgstr ""
+
+#: inc/buddypress.php:1520 inc/buddypress.php:1547 inc/buddypress.php:1627
+msgid "Blog"
+msgstr ""
+
+#: inc/buddypress.php:1521 inc/buddypress.php:1628
+msgid "blog"
+msgstr ""
+
+#: inc/buddypress.php:13
+msgid "Blog comments"
+msgstr ""
+
+#: inc/blog.php:692
+msgid "by"
+msgstr ""
+
+#: inc/general.php:132
+msgid "Create New Account!"
+msgstr ""
+
+#: inc/buddypress.php:480
+msgid "Dark mode"
+msgstr ""
+
+#: inc/learnpress.php:224
+msgid "day"
+msgstr ""
+
+#: inc/learnpress.php:239
+msgid "days"
+msgstr ""
+
+#. Author of the plugin
+msgid "Diabolique Design"
+msgstr ""
+
+#: inc/buddypress.php:1077
+msgid "Displays group admins and moderators."
+msgstr ""
+
+#: inc/buddypress.php:1300
+msgid "Displays group blog posts. It can be displayed on the group page only."
+msgstr ""
+
+#: inc/buddypress.php:666
+msgid "Displays group`s photos. It can be used on the single group page only."
+msgstr ""
+
+#: inc/buddypress.php:1414
+msgid "Displays user blog posts. It can be displayed on the user profile only."
+msgstr ""
+
+#: inc/buddypress.php:966
+msgid ""
+"Displays user friends. It can be displayed on the user profile page only."
+msgstr ""
+
+#: inc/buddypress.php:859
+msgid ""
+"Displays user groups. It can be displayed on the user profile page only."
+msgstr ""
+
+#: inc/buddypress.php:760
+msgid ""
+"Displays user`s photos. It can be displayed on the user profile page only."
+msgstr ""
+
+#: inc/buddypress.php:1173
+msgid "Displays user`s profile fields."
+msgstr ""
+
+#: inc/learnpress.php:69 inc/learnpress.php:170
+msgid "Duration"
+msgstr ""
+
+#: inc/blog.php:418
+msgid "Events"
+msgstr ""
+
+#: inc/blog.php:417
+msgid "Featured"
+msgstr ""
+
+#: inc/general.php:132
+msgid "Forgot your password?"
+msgstr ""
+
+#: inc/buddypress.php:13
+msgid "Forum posts"
+msgstr ""
+
+#: inc/buddypress.php:13
+msgid "Forum topics"
+msgstr ""
+
+#: inc/buddypress.php:13 inc/buddypress.php:410 inc/buddypress.php:1017
+msgid "Friends"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:1074
+msgid "Group Admins & Moderators"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:1297
+msgid "Group Blog Posts"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:663
+msgid "Group Gallery"
+msgstr ""
+
+#: inc/buddypress.php:13 inc/buddypress.php:413 inc/buddypress.php:908
+msgid "Groups"
+msgstr ""
+
+#: inc/profile-fields.php:85
+msgid "Hair colour"
+msgstr ""
+
+#: inc/profile-fields.php:99
+msgid "Height"
+msgstr ""
+
+#: inc/learnpress.php:222
+msgid "hour"
+msgstr ""
+
+#: inc/learnpress.php:237
+msgid "hours"
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid "http://themeforest.net/user/Diabolique"
+msgstr ""
+
+#: inc/bbpress.php:26 inc/blog.php:159
+msgid "in"
+msgstr ""
+
+#: inc/buddypress.php:1203
+msgid "Informations"
+msgstr ""
+
+#: inc/buddypress.php:1214
+msgid ""
+"It can be customized under Users -> Profile Fields and in the "
+"plugins/onecommunity-shortcodes/inc/profile-fields.php file."
+msgstr ""
+
+#: inc/profile-fields.php:19
+msgid "Joined"
+msgstr ""
+
+#: inc/learnpress.php:96 inc/buddypress.php:217 inc/buddypress.php:1575
+#: inc/buddypress.php:1678 inc/blog.php:247
+msgid "Load More"
+msgstr ""
+
+#: inc/profile-fields.php:70
+msgid "Location"
+msgstr ""
+
+#: inc/general.php:111 inc/general.php:125
+msgid "Log In"
+msgstr ""
+
+#: inc/general.php:113
+msgid "Login to your account and check out the new messages."
+msgstr "Translated"
+
+#: inc/profile-fields.php:113
+msgid "Lucky number"
+msgstr ""
+
+#: inc/buddypress.php:407
+msgid "Members"
+msgstr ""
+
+#: inc/learnpress.php:220
+msgid "minute"
+msgstr ""
+
+#: inc/learnpress.php:235
+msgid "minutes"
+msgstr ""
+
+#: inc/buddypress.php:1109
+msgid "Mods"
+msgstr ""
+
+#: inc/blog.php:216
+msgid "Most Commented"
+msgstr ""
+
+#: inc/blog.php:416
+msgid "Most commented"
+msgstr ""
+
+#: inc/blog.php:215 inc/blog.php:415
+msgid "Most Liked"
+msgstr ""
+
+#: inc/buddypress.php:414
+msgid "My Active"
+msgstr ""
+
+#: inc/buddypress.php:411
+msgid "New"
+msgstr ""
+
+#: inc/buddypress.php:162 inc/buddypress.php:417
+msgid "Newest"
+msgstr ""
+
+#: inc/buddypress.php:1337 inc/buddypress.php:1452 inc/buddypress.php:1579
+#: inc/buddypress.php:1682
+msgid "No posts found."
+msgstr ""
+
+#: inc/buddypress.php:1036
+msgid "Number of friends:"
+msgstr ""
+
+#: inc/buddypress.php:926
+msgid "Number of groups:"
+msgstr ""
+
+#: inc/buddypress.php:720 inc/buddypress.php:819
+msgid "Number of photos:"
+msgstr ""
+
+#: inc/buddypress.php:1373 inc/buddypress.php:1488
+msgid "Number of posts:"
+msgstr ""
+
+#: inc/bbpress.php:37
+msgid "Oh bother! No topics were found here!"
+msgstr ""
+
+#. Name of the plugin
+msgid "OneCommunity Shortcodes"
+msgstr ""
+
+#. Description of the plugin
+msgid "OneCommunity shortcodes plugin"
+msgstr ""
+
+#: inc/buddypress.php:412
+msgid "Online"
+msgstr ""
+
+#: inc/general.php:119
+msgid "Password"
+msgstr ""
+
+#: inc/buddypress.php:702 inc/buddypress.php:801
+msgid "Photos"
+msgstr ""
+
+#: inc/buddypress.php:165 inc/buddypress.php:408 inc/buddypress.php:415
+msgid "Popular"
+msgstr ""
+
+#: inc/buddypress.php:13
+msgid "Profiles"
+msgstr ""
+
+#: inc/blog.php:217
+msgid "Recent"
+msgstr ""
+
+#: inc/general.php:122
+msgid "Remember Me"
+msgstr ""
+
+#: inc/buddypress.php:1002
+msgid "Sorry, no members were found."
+msgstr ""
+
+#: inc/profile-fields.php:55
+msgid "Status"
+msgstr ""
+
+#: inc/buddypress.php:370 inc/buddypress.php:894
+msgid "There were no groups found."
+msgstr ""
+
+#: inc/general.php:88
+msgid "This content is visible for members only"
+msgstr ""
+
+#: inc/buddypress.php:1132
+msgid "This widget displays group administrators and moderators."
+msgstr ""
+
+#: inc/buddypress.php:715 inc/buddypress.php:814 inc/buddypress.php:921
+#: inc/buddypress.php:1209
+msgid "Title:"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:1411
+msgid "User Blog Posts"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:963
+msgid "User Friends"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:757
+msgid "User Gallery"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:856
+msgid "User Groups"
+msgstr ""
+
+#. Widget name will appear in UI
+#: inc/buddypress.php:1170
+msgid "User Profile Fields"
+msgstr ""
+
+#: inc/general.php:117
+msgid "Username"
+msgstr ""
+
+#: inc/learnpress.php:226
+msgid "week"
+msgstr ""
+
+#: inc/learnpress.php:241
+msgid "weeks"
+msgstr ""
+
+#: inc/buddypress.php:103
+msgid "You must login first to see activity of your friends."
+msgstr ""

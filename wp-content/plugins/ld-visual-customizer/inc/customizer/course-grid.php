@@ -39,6 +39,24 @@ if( defined('LEARNDASH_COURSE_GRID_VERSION') ) {
             'transport'     =>  'refresh',
             'capability'    =>  'edit_theme_options'
         ),
+        'lds_cg_heading_txt_size' => array(
+             'default'       =>  '',
+             'type'          => 'option',
+             'transport'     =>  'refresh',
+             'capability'    =>  'edit_theme_options'
+        ),
+        'lds_cg_body_txt_size' => array(
+             'default'       =>  '',
+             'type'          => 'option',
+             'transport'     =>  'refresh',
+             'capability'    =>  'edit_theme_options'
+        ),
+        'lds_cg_btn_txt_size' => array(
+             'default'       =>  '',
+             'type'          => 'option',
+             'transport'     =>  'refresh',
+             'capability'    =>  'edit_theme_options'
+        ),
         'lds_cg_ribbon_text' => array(
             'default'       =>  '',
             'type'          => 'option',
@@ -138,6 +156,33 @@ if( defined('LEARNDASH_COURSE_GRID_VERSION') ) {
             'max'        => 50,
             'step'       => 1,
             'default'    => 20
+        ),
+        'lds_cg_heading_txt_size' => array(
+             'label'      => __( 'Heading Text Size', 'lds_skins' ),
+             'section'    => 'lds_visual_customizer_course_grid',
+             'settings'   => 'lds_cg_heading_txt_size',
+             'min'        => 0,
+             'max'        => 100,
+             'step'       => 1,
+             'default'    => 20,
+        ),
+        'lds_cg_body_txt_size' => array(
+             'label'      => __( 'Body Text Size', 'lds_skins' ),
+             'section'    => 'lds_visual_customizer_course_grid',
+             'settings'   => 'lds_cg_body_txt_size',
+             'min'        => 0,
+             'max'        => 100,
+             'step'       => 1,
+             'default'    => 20,
+        ),
+        'lds_cg_btn_txt_size' => array(
+             'label'      => __( 'Button Text Size', 'lds_skins' ),
+             'section'    => 'lds_visual_customizer_course_grid',
+             'settings'   => 'lds_cg_btn_txt_size',
+             'min'        => 0,
+             'max'        => 100,
+             'step'       => 1,
+             'default'    => 20,
         ),
     ) );
 

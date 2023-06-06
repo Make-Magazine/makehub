@@ -1,7 +1,7 @@
 <?php
 bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 
-$email = trim ( filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+$email = trim ( bb_theme_filter_input_string( INPUT_GET, 'email' ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
     <aside class="bp-feedback bp-send-invites bp-template-notice success">
@@ -16,7 +16,7 @@ if ( isset( $email ) && '' !== $email ) {
 	<?php
 }
 
-$failed = trim ( filter_input( INPUT_GET, 'failed', FILTER_SANITIZE_STRING ) );
+$failed = trim ( bb_theme_filter_input_string( INPUT_GET, 'failed' ) );
 if ( isset( $failed ) && '' !== $failed ) {
 	?>
     <aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -32,7 +32,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
-$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
+$exists = trim ( bb_theme_filter_input_string( INPUT_GET, 'exists' ) );
 if ( isset( $exists ) && '' !== $exists ) {
 	?>
     <aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -165,14 +165,14 @@ if ( isset( $exists ) && '' !== $exists ) {
 
 			$current_page = max(1, get_query_var('paged'));
 
-			echo paginate_links(array(
-				'base' => get_pagenum_link(1) . '%_%',
-				'format' => '?paged=%#%',
-				'current' => $current_page,
-				'total' => $total_pages,
-				'prev_text'    => __('« Prev', 'buddyboss-theme'),
-				'next_text'    => __('Next »', 'buddyboss-theme'),
-			));
+			echo paginate_links( array(
+				'base'      => add_query_arg( 'paged', '%#%' ),
+				'format'    => '',
+				'current'   => $current_page,
+				'total'     => $total_pages,
+				'prev_text' => __( '« Prev', 'buddyboss-theme' ),
+				'next_text' => __( 'Next »', 'buddyboss-theme' ),
+			) );
 		}
 
 		wp_reset_postdata();

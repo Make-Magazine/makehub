@@ -329,7 +329,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 		 * @return string Current Server Software.
 		 */
 		public static function get_software() {
-			return $_SERVER['SERVER_SOFTWARE'];
+			return isset( $_SERVER['SERVER_SOFTWARE'] ) ? sanitize_text_field( $_SERVER['SERVER_SOFTWARE'] ) : '';
 		}
 
 		/**
@@ -378,9 +378,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 		 * @return string Current PHP Max Input Vars
 		 */
 		public static function get_php_max_input_vars() {
-			// @codingStandardsIgnoreStart
 			return ini_get( 'max_input_vars' ); // phpcs:disable PHPCompatibility.IniDirectives.NewIniDirectives.max_input_varsFound
-			// @codingStandardsIgnoreEnd
 		}
 
 		/**
@@ -451,7 +449,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 					LIKE %s",
 						'%_transient_timeout_' . $transient . '%'
 					)
-				);
+				); // WPCS: cache ok. // WPCS: db call ok.
 
 				$older_date       = $transient_timeout[0];
 				$transient_status = 'Transient: Not Expired! Recheck in ' . human_time_diff( time(), $older_date );
@@ -485,7 +483,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 								$file      = str_replace( $upload_dir['path'], $upload_dir['url'], $file );
 								?>
 								<li>
-									<a target="_blank" href="<?php echo esc_attr( $file ); ?>"><?php echo esc_html( $file_name ); ?></a>
+									<a target="_blank" href="<?php echo esc_url( $file ); ?>"><?php echo esc_html( $file_name ); ?></a>
 								</li>
 							<?php } ?>
 						</ul>
@@ -499,7 +497,7 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 								$file      = str_replace( $upload_dir['path'], $upload_dir['url'], $file );
 								?>
 								<li>
-									<a target="_blank" href="<?php echo esc_attr( $file ); ?>"><?php echo esc_html( $file_name ); ?></a>
+									<a target="_blank" href="<?php echo esc_url( $file ); ?>"><?php echo esc_html( $file_name ); ?></a>
 								</li>
 							<?php } ?>
 						</ul>

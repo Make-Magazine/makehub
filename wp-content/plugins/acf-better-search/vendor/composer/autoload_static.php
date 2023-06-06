@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849
+class ComposerStaticInit2866bc5cf08859aa43dfe439ed45da36
 {
     public static $prefixLengthsPsr4 = array (
         'A' => 
@@ -22,14 +22,18 @@ class ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849
 
     public static $classMap = array (
         'AcfBetterSearch\\AcfBetterSearch' => __DIR__ . '/../..' . '/src/AcfBetterSearch.php',
-        'AcfBetterSearch\\Admin\\Acf' => __DIR__ . '/../..' . '/src/Admin/Acf.php',
         'AcfBetterSearch\\Admin\\Assets' => __DIR__ . '/../..' . '/src/Admin/Assets.php',
         'AcfBetterSearch\\Admin\\Install' => __DIR__ . '/../..' . '/src/Admin/Install.php',
-        'AcfBetterSearch\\Admin\\Notice' => __DIR__ . '/../..' . '/src/Admin/Notice.php',
         'AcfBetterSearch\\Admin\\Plugin' => __DIR__ . '/../..' . '/src/Admin/Plugin.php',
         'AcfBetterSearch\\Admin\\Uninstall' => __DIR__ . '/../..' . '/src/Admin/Uninstall.php',
         'AcfBetterSearch\\Helper\\ViewLoader' => __DIR__ . '/../..' . '/src/Helper/ViewLoader.php',
         'AcfBetterSearch\\HookableInterface' => __DIR__ . '/../..' . '/src/HookableInterface.php',
+        'AcfBetterSearch\\Notice\\AcfRequiredNotice' => __DIR__ . '/../..' . '/src/Notice/AcfRequiredNotice.php',
+        'AcfBetterSearch\\Notice\\ConverterPluginNotice' => __DIR__ . '/../..' . '/src/Notice/ConverterPluginNotice.php',
+        'AcfBetterSearch\\Notice\\NoticeAbstract' => __DIR__ . '/../..' . '/src/Notice/NoticeAbstract.php',
+        'AcfBetterSearch\\Notice\\NoticeIntegration' => __DIR__ . '/../..' . '/src/Notice/NoticeIntegration.php',
+        'AcfBetterSearch\\Notice\\NoticeInterface' => __DIR__ . '/../..' . '/src/Notice/NoticeInterface.php',
+        'AcfBetterSearch\\Notice\\ThanksNotice' => __DIR__ . '/../..' . '/src/Notice/ThanksNotice.php',
         'AcfBetterSearch\\PluginInfo' => __DIR__ . '/../..' . '/src/PluginInfo.php',
         'AcfBetterSearch\\Search\\Init' => __DIR__ . '/../..' . '/src/Search/Init.php',
         'AcfBetterSearch\\Search\\Join' => __DIR__ . '/../..' . '/src/Search/Join.php',
@@ -47,9 +51,9 @@ class ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6533a5ab5d63d6d9965e7098eff80849::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit2866bc5cf08859aa43dfe439ed45da36::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit2866bc5cf08859aa43dfe439ed45da36::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2866bc5cf08859aa43dfe439ed45da36::$classMap;
 
         }, null, ClassLoader::class);
     }

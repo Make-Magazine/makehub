@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { __, sprintf } from '@wordpress/i18n';
 import Lottie from 'react-lottie-player';
+import { __, sprintf } from '@wordpress/i18n';
 import PreviousStepLink from '../../components/util/previous-step-link/index';
 import DefaultStep from '../../components/default-step/index';
 import ImportLoader from '../../components/import-steps/import-loader';
@@ -144,6 +144,7 @@ const ImportSite = () => {
 		let cfStatus = false;
 		let formsStatus = false;
 		let customizerStatus = false;
+		let spectraStatus = false;
 
 		resetStatus = await resetOldSite();
 
@@ -160,7 +161,11 @@ const ImportSite = () => {
 		}
 
 		if ( customizerStatus ) {
-			await importSiteContent();
+			spectraStatus = await importSiteContent();
+		}
+
+		if ( spectraStatus ) {
+			await ImportSpectraSettings();
 		}
 	};
 
@@ -216,6 +221,7 @@ const ImportSite = () => {
 					init: plugin.init,
 					name: plugin.name,
 					clear_destination: true,
+					ajax_nonce: astraSitesVars._ajax_nonce,
 					success() {
 						dispatch( {
 							type: 'set',
@@ -410,11 +416,12 @@ const ImportSite = () => {
 	/**
 	 * 1. Reset.
 	 * The following steps are covered here.
-	 * 		1. Reset Customizer
-	 * 		2. Reset Site Options
-	 * 		3. Reset Widgets
-	 * 		4. Reset Forms and Terms
-	 * 		5. Reset all posts
+	 * 		1. Settings backup file store.
+	 * 		2. Reset Customizer
+	 * 		3. Reset Site Options
+	 * 		4. Reset Widgets
+	 * 		5. Reset Forms and Terms
+	 * 		6. Reset all posts
 	 */
 	const resetOldSite = async () => {
 		if ( ! reset ) {
@@ -427,6 +434,7 @@ const ImportSite = () => {
 			importPercent: percentage,
 		} );
 
+		let backupFileStatus = false;
 		let resetCustomizerStatus = false;
 		let resetWidgetStatus = false;
 		let resetOptionsStatus = false;
@@ -434,9 +442,16 @@ const ImportSite = () => {
 		let resetPostsStatus = false;
 
 		/**
+		 * Settings backup file store.
+		 */
+		backupFileStatus = await performSettingsBackup();
+
+		/**
 		 * Reset Customizer.
 		 */
-		resetCustomizerStatus = await performResetCustomizer();
+		if ( backupFileStatus ) {
+			resetCustomizerStatus = await performResetCustomizer();
+		}
 
 		/**
 		 * Reset Site Options.
@@ -556,6 +571,50 @@ const ImportSite = () => {
 				return false;
 			} );
 		return true;
+	};
+
+	/**
+	 * 1.0 Perform Settings backup file stored.
+	 */
+	const performSettingsBackup = async () => {
+		dispatch( {
+			type: 'set',
+			importStatus: __( 'Taking settings backup.', 'astra-sites' ),
+		} );
+
+		const customizerContent = new FormData();
+		customizerContent.append( 'action', 'astra-sites-backup-settings' );
+		customizerContent.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
+
+		const status = await fetch( ajaxurl, {
+			method: 'post',
+			body: customizerContent,
+		} )
+			.then( ( response ) => response.text() )
+			.then( ( text ) => {
+				const response = JSON.parse( text );
+				if ( response.success ) {
+					percentage += 2;
+					dispatch( {
+						type: 'set',
+						importPercent: percentage,
+					} );
+					return true;
+				}
+				throw response.data;
+			} )
+			.catch( ( error ) => {
+				report(
+					__( 'Taking settings backup failed.', 'astra-sites' ),
+					'',
+					error?.message,
+					'',
+					'',
+					error
+				);
+				return false;
+			} );
+		return status;
 	};
 
 	/**
@@ -1123,6 +1182,71 @@ const ImportSite = () => {
 	};
 
 	/**
+	 * 6. Import Spectra Settings.
+	 */
+	const ImportSpectraSettings = async () => {
+		const spectraSettings =
+			encodeURI( templateResponse[ 'astra-site-spectra-settings' ] ) ||
+			'';
+
+		if ( '' === spectraSettings || 'null' === spectraSettings ) {
+			return true;
+		}
+
+		dispatch( {
+			type: 'set',
+			importStatus: __( 'Importing Spectra Settings.', 'astra-sites' ),
+		} );
+
+		const spectra = new FormData();
+		spectra.append( 'action', 'astra-sites-import-spectra-settings' );
+		spectra.append( 'spectra_settings', spectraSettings );
+		spectra.append( '_ajax_nonce', astraSitesVars._ajax_nonce );
+
+		const status = await fetch( ajaxurl, {
+			method: 'post',
+			body: spectra,
+		} )
+			.then( ( response ) => response.text() )
+			.then( ( text ) => {
+				try {
+					const data = JSON.parse( text );
+					if ( data.success ) {
+						percentage += 2;
+						dispatch( {
+							type: 'set',
+							importPercent: percentage,
+						} );
+						return true;
+					}
+					throw data.data;
+				} catch ( error ) {
+					report(
+						__(
+							'Importing Spectra Settings failed due to parse JSON error.',
+							'astra-sites'
+						),
+						'',
+						error,
+						'',
+						'',
+						text
+					);
+					return false;
+				}
+			} )
+			.catch( ( error ) => {
+				report(
+					__( 'Importing Spectra Settings Failed.', 'astra-sites' ),
+					'',
+					error
+				);
+				return false;
+			} );
+		return status;
+	};
+
+	/**
 	 * Imports XML using EventSource.
 	 *
 	 * @param {JSON} data JSON object for all the content in XML
@@ -1360,9 +1484,8 @@ const ImportSite = () => {
 						localStorage.setItem( 'st-import-end', +new Date() );
 						setInterval( function () {
 							counter--;
-							const counterEl = document.getElementById(
-								'redirect-counter'
-							);
+							const counterEl =
+								document.getElementById( 'redirect-counter' );
 							if ( counterEl ) {
 								if ( counter < 0 ) {
 									dispatch( {
@@ -1401,9 +1524,8 @@ const ImportSite = () => {
 					localStorage.setItem( 'st-import-end', +new Date() );
 					setInterval( function () {
 						counter--;
-						const counterEl = document.getElementById(
-							'redirect-counter'
-						);
+						const counterEl =
+							document.getElementById( 'redirect-counter' );
 						if ( counterEl ) {
 							if ( counter < 0 ) {
 								dispatch( {

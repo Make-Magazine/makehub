@@ -29,27 +29,33 @@ if ( ! $bbp_is_forum_group_forum && $bbpress_banner ) {
 		$bbpress_banner_title       = buddyboss_theme_get_option( 'bbpress_banner_title' );
 		$bbpress_banner_description = buddyboss_theme_get_option( 'bbpress_banner_description' );
 		$bbpress_banner_search      = buddyboss_theme_get_option( 'bbpress_banner_search' );
-        
+		$bbpress_banner_text_color  = buddyboss_theme_get_option( 'bbpress_banner_text' );
+
+		$bbpress_banner_text_color_style = '';
+		if ( '' !== $bbpress_banner_text_color ) {
+			$bbpress_banner_text_color_style = 'color:' . $bbpress_banner_text_color;
+		}
+
         /* Convert hexdec color string to rgb(a) string */
- 
+
         function hex2rgba( $color, $opacity = false ) {
- 
+
         	$default = 'rgb( 0, 0, 0 )';
-         
+
         	/**
         	 * Return default if no color provided
         	 */
         	if( empty( $color ) ) {
-                return $default; 
+                return $default;
         	}
-         
+
         	/**
         	 * Sanitize $color if "#" is provided
         	 */
             if ( $color[0] == '#' ) {
             	$color = substr( $color, 1 );
             }
-         
+
             /**
              * Check if color has 6 or 3 characters and get values
              */
@@ -60,13 +66,13 @@ if ( ! $bbp_is_forum_group_forum && $bbpress_banner ) {
             } else {
                 return $default;
             }
-         
+
             /**
              * [$rgb description]
              * @var array
              */
             $rgb =  array_map( 'hexdec', $hex );
-         
+
             /**
              * Check if opacity is set(rgba or rgb)
              */
@@ -77,13 +83,13 @@ if ( ! $bbp_is_forum_group_forum && $bbpress_banner ) {
             } else {
 				$output = 'rgba( ' . implode( "," ,$rgb ) . ', 0 )';
             }
-         
+
             /**
              * Return rgb(a) color string
              */
             return $output;
         }
-        
+
 		if( 'transparent' === $bbpress_banner_overlay ) {
 			$rgba = 'transparent';
 		} else {
@@ -93,12 +99,19 @@ if ( ! $bbp_is_forum_group_forum && $bbpress_banner ) {
 		<div class="bs-forums-banner has-banner-img container-full <?php echo ( $bbpress_banner_image == '' ) ? 'thin-banner-img' : ''; ?> <?php echo ( abs($bbpress_banner_overlay_opacity / 100 ) < 0.2 ) ? 'lucid-banner-img' : ''; ?>"
 		     style="background-image: url(<?php echo $bbpress_banner_image; ?>);box-shadow: inset 0 0 0 1000px <?php echo $rgba; ?>;">
 			<div class="container text-center">
-				<?php if( !empty( $bbpress_banner_title ) ) { ?>
-					<h1 class="bb-banner-title"><?php echo $bbpress_banner_title; ?></h1>
-				<?php } ?>
-				<?php if( !empty( $bbpress_banner_description ) ) { ?>
-					<p class="bb-banner-desc"><?php echo $bbpress_banner_description; ?></p>
-				<?php } ?>
+				<?php
+				if ( ! empty( $bbpress_banner_title ) ) {
+					?>
+					<h1 class="bb-banner-title" style="<?php echo esc_attr( $bbpress_banner_text_color_style ); ?>"><?php echo $bbpress_banner_title; ?></h1>
+					<?php
+				}
+
+				if ( ! empty( $bbpress_banner_description ) ) {
+					?>
+					<p class="bb-banner-desc" style="<?php echo esc_attr( $bbpress_banner_text_color_style ); ?>"><?php echo $bbpress_banner_description; ?></p>
+					<?php
+				}
+				?>
 
 				<?php if ( $bbpress_banner_search ) : ?>
 					<div id="forums-dir-search" role="search" class="bs-dir-search bs-forums-search">

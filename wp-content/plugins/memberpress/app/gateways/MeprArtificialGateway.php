@@ -387,12 +387,13 @@ class MeprArtificialGateway extends MeprBaseRealGateway {
 
     $invoice = MeprTransactionsHelper::get_invoice($txn);
     echo $invoice;
+    echo MeprOptionsHelper::payment_method_description( $this );
 
     ?>
       <div class="mp_wrapper mp_payment_form_wrapper">
         <form action="" method="post" id="payment-form" class="mepr-form" novalidate>
           <input type="hidden" name="mepr_process_payment_form" value="Y" />
-          <input type="hidden" name="mepr_transaction_id" value="<?php echo $txn_id; ?>" />
+          <input type="hidden" name="mepr_transaction_id" value="<?php echo esc_attr($txn_id); ?>" />
 
           <div class="mepr_spacer">&nbsp;</div>
 

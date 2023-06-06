@@ -1,5 +1,24 @@
 # Change Log
 
+## 3.2.4 - 2023-03-16
+### Fixed
+ - More package deployment fixes
+
+## 3.2.3 - 2023-03-16
+
+### Added
+- Footer with helpful links
+
+### Fixed
+- Fixed package files deployed unecessarily
+- Debug warnings
+- Correct bootstrap file required
+
+## 3.2.2 - 2022-10-24
+
+### Fixed
+- Fixed undefined index notice
+
 ## 3.2.1 - 2022-04-19
 
 ### Fixed

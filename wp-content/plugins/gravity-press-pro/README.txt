@@ -14,6 +14,12 @@ http://docs.ristrettoapps.com/
 
 ### Change Log ###
 
+== 3.4.5 ==
+- Fix: Disable presslog.txt debug file from being generated to reduce security vulnerabilies
+- Fix: Defined the variable with default value 0
+- Fix: Fixed the warnings with optional parameters
+- Fix: Fixed missing 'get_default_card' error
+
 == 3.4.3 ==
 -Fix: Double Stripe calculation issue in MemberPress reporting
 -Fix: Membership status not showing Complete when this is setup in feed settings for offline payments and/ free membership registration
