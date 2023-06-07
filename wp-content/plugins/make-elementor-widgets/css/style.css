@@ -1,18 +1,22 @@
 .make-elementor-expando-box {
 	border-bottom: solid 2px #ccc;
+	margin-top: 5px;
 }
 .make-elementor-expando-box h4 {
-	 font-family: 'Roboto Bold';
-	 color: #333;
-	 font-size: 22px;
-	 display: flex;
-	 position: relative;
-	 align-items: center;
-	 margin: 0px;
+	font-family: 'Roboto';
+	color: #333;
+	font-size: 22px;
+	display: flex;
+	position: relative;
+	align-items: center;
+	margin: 0px;
+}
+.make-elementor-expando-box h4:before {
+	margin-left: 5px;
 }
 .make-elementor-expando-box h4 img {
-	 margin-right: 10px;
-	 max-height: 50px;
+	margin-right: 10px;
+	max-height: 50px;
 }
 .expandobox-align-after .make-elementor-expando-box h4::after, .expandobox-align-before .make-elementor-expando-box h4::before {
 	font-family: FontAwesome;
@@ -27,7 +31,7 @@
 	margin-right: 10px;
 }
 .expandobox-align-after .make-elementor-expando-box h4:not(.closed)::after, .expandobox-align-before .make-elementor-expando-box h4:not(.closed)::before {
-	 content: "\f077";
+	content: "\f077";
 }
 .make-elementor-expando-box h4:not(.closed) {
 	border-bottom: solid 2px #ccc;
@@ -44,15 +48,15 @@
 	margin-bottom: 0px;
 }
 .make-elementor-expando-box ul li {
-	 margin: 5px 0;
+	margin: 5px 0;
 }
 .make-elementor-expando-box ul li p {
-	 margin: 0px;
+	margin: 0px;
 }
 .make-elementor-expando-box ul:not(.closed) {
-	 max-height: 3000px;
-	 height: auto;
-	 margin-top: auto;
+	max-height: 3000px;
+	height: auto;
+	margin-top: auto;
 }
 
 /* Elementor Widget Custom RSS */
@@ -364,7 +368,7 @@ ul.custom-rss-element.horizontal.carousel .owl-nav button i {
 }
 
 .subscriptions-wrapper ul {
-	margin: 10px 5px !important;
+	margin-left: 5px;
 }
 .subscriptions-wrapper .subscription-item-wrapper {
 	background: #fff;
