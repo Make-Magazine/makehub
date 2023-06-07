@@ -154,6 +154,12 @@ final class Make_Elementor_Widgets
         require_once(__DIR__ . '/widgets/make-custom-rss-feed.php'); // Include Widget files
         \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_makeCustomRss_Widget()); // Register widget
 
+        // ----------------------
+        // # Make: Interests RSS Feed Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/make-interests-rss-feed.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_makeInterestsRss_Widget()); // Register widget
+
 		// ----------------------
         // # Make: upcoming MakerFaire Widget
         // ----------------------

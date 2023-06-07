@@ -427,7 +427,7 @@ ul.custom-rss-element.horizontal.carousel .owl-nav button i {
 	font-weight: bold;
 	display: inline;
 }
-..subscription-item.disclaimer .universal-btn .fa-spinner {
+.subscription-item.disclaimer .universal-btn .fa-spinner {
 	margin-left: 10px;
 }
 .subscriptions-wrapper .subscription-item-wrapper .subscription-item.open {

@@ -264,21 +264,12 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		    'field'   => 'Interests',
 		    'user_id' => bp_loggedin_user_id()
 		);
-<<<<<<< HEAD
-		$interests = bp_get_profile_field_data($args);
-		//var_dump(bp_get_profile_field_data('Topics'));
-		array_walk($interests, function (&$value) {
-			$value = str_replace("&amp;", "", $value);
-			$value = preg_replace("/\W+/","-",$value);
-		    $value = strtolower(trim($value,"-"));
-=======
 		
 		$interests = $interest_slugs = bp_get_profile_field_data($args);
 		
 		array_walk($interest_slugs, function (&$value) {
 			$term = get_term_by('name', $value, "category");
 			$value = $term->slug;
->>>>>>> master
 		});
 
 		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests
