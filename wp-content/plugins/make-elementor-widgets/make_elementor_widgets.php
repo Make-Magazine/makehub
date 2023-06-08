@@ -292,8 +292,8 @@ function makewidget_rss_output($rss, $settings) {
                 }
                 // if it isn't a youtube feed, exclude feed items with no date
             }
-        } else if(strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
-			if($item->get_item_tags('', 'pubDate')[0]['data']){
+        } else if(isset($settings['rss_url']) && strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
+			if(isset($item->get_item_tags('', 'pubDate')[0]['data'])){
 				$dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
 			}
 		}
@@ -316,14 +316,14 @@ function makewidget_rss_output($rss, $settings) {
         $title = '<div class="rssTitle">' . $title . "</div>";
 
         //set image
-        if (strpos($settings['rss_url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
+        if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
             $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 600, 400) . '"  />';
         } else {
             $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 600, 400) . '"  />';
         }
 
         //set description
-		if (strpos($settings['rss_url'], 'www.makershed.com')) {
+		if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'www.makershed.com')) {
 			//$desc = "<p><b>" . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'variant')[0]['child']["http://jadedpixel.com/-/spec/shopify"]['price'][0]['data'] . "</b></p>";
 			$desc = "<a href='" . $link . "' class='universal-btn btn'>Buy Now</a>";
 		} else {
@@ -375,7 +375,7 @@ function makewidget_rss_output($rss, $settings) {
 	if ($summary != '') {
 		$wrapper_classes .= " summary";
 	}
-	if (strpos($settings['rss_url'], 'www.makershed.com')) {
+	if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'www.makershed.com')) {
 		$wrapper_classes .= " makershed";
 	}
     echo '<ul class="custom-rss-element' . $wrapper_classes . '">';

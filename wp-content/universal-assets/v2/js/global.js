@@ -78,6 +78,31 @@ function getUrlParam(name) {
     }
 }
 
+// open modal with that message
+function makeModal(message) {
+	var dialog = jQuery("<div>"+message+"</div>");
+	dialog.dialog({
+		dialogClass: 'hide-heading',
+		modal: true,
+		show: {
+			effect: "blind",
+			duration: 1000
+		},
+		hide: {
+			effect: "explode",
+			duration: 1200
+		},
+		open: function(){
+            jQuery('.ui-widget-overlay').bind('click',function(){
+                jQuery(".ui-dialog-content").dialog("close");
+            })
+        },
+        close: function(){
+           	 jQuery(this).remove();
+        }
+	});
+}
+
 // Once you got your event trigger named and linked in GTM, you can just use this to set it off
 function triggerGTMevent(eventName) {
     var dataObject = {

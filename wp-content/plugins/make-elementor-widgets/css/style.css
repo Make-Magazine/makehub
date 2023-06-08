@@ -367,6 +367,9 @@ ul.custom-rss-element.horizontal.carousel .owl-nav button i {
     left: -10px;
 }
 
+.subscriptions-wrapper {
+	margin-bottom: 15px;
+}
 .subscriptions-wrapper ul {
 	margin-left: 5px;
 }
@@ -430,6 +433,7 @@ ul.custom-rss-element.horizontal.carousel .owl-nav button i {
 .subscription-item.disclaimer .universal-btn {
 	font-weight: bold;
 	display: inline;
+	margin-top: 10px;
 }
 .subscription-item.disclaimer .universal-btn .fa-spinner {
 	margin-left: 10px;

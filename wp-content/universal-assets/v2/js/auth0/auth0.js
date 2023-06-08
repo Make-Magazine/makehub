@@ -20,7 +20,7 @@ jQuery(document).ready(function() {
     if (url.indexOf('make.co') !== -1 || url.indexOf('makehub') !== -1) {
         makehubSite = true;
         wpLoginRequired = true;
-    } else if (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) {
+    } else if (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1 || url.indexOf('mzine') !== -1 || url.indexOf('makezine') !== -1) {
         wpLoginRequired = true;
     }
 
