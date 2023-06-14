@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Make: Elementor Widgets
- * Description: This plugin adds some common Make: dashboard widgets including: Makershed purchases, My Makerspace listings, Facilitator Event listings, Maker Campus tickets, Maker camp projects
- * Version:     1.2.1
- * Author:      Alicia Williams
+ * Description: This plugin adds some common Make: dashboard widgets
+ * Version:     1.2.0
+ * Author:      Make: developers
  * Text Domain: elementor-make-widget
  *
  * Elementor tested up to: 3.5.0
@@ -14,33 +14,206 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+// # load more action with ajax
+require_once(plugin_dir_path(__FILE__) . 'classes/ajax_omeda.php');
+
 /**
- * Register oEmbed Widget.
- *
- * Include widget file and register widget class.
- *
- * @since 1.0.0
- * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager.
- * @return void
+ * @package Make_Elementor_Widgets
+ * @author Make: developers
+ * @version 1.0.0
+ * @see https://developers.elementor.com/creating-an-extension-for-elementor/
  */
-function register_make_widgets( $widgets_manager ) {
-	// Include all function files in the makerfaire/functions directory:
-	foreach (glob(__DIR__ . '/widgets/*.php') as $file) {
-		require_once($file);
-	}
+final class Make_Elementor_Widgets
+{
 
-	$widgets_manager->register( new \Elementor_mShedPurch_Widget() );
-	$widgets_manager->register( new \Elementor_myMspaces_Widget() );
-	//$widgets_manager->register( new \Elementor_MakeFacilitatorEvents_Widget() );
-	//$widgets_manager->register( new \Elementor_MyCampusTickets_Widget() );
-	$widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );
-	$widgets_manager->register( new \Elementor_makeCustomRss_Widget() );
-	$widgets_manager->register( new \Elementor_makeInterestsRss_Widget() );
-	$widgets_manager->register( new \Elementor_upcomingMakerFaires_Widget() );
-	$widgets_manager->register( new \Elementor_makeInitatives_Widget() );
+    const VERSION = '1.2.0';
+    const MINIMUM_ELEMENTOR_VERSION = '3.5.0';
+    const MINIMUM_PHP_VERSION = '7.0';
 
+    private static $_instance = null;
+
+    public static function instance() {
+        if (is_null(self::$_instance)) {
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function __construct() {
+        add_action('plugins_loaded', [$this, 'init']);
+
+        // # load at frontend
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts'], 11);
+        add_action('wp_enqueue_scripts', [$this, 'register_ajax_hooks']);
+    }
+
+    public function init() {
+        // Check if Elementor installed and activated
+        if (!did_action('elementor/loaded')) {
+            add_action('admin_notices', [$this, 'admin_notice_missing_main_plugin']);
+            return;
+        }
+
+        // Check for required Elementor version
+        if (!version_compare(ELEMENTOR_VERSION, self::MINIMUM_ELEMENTOR_VERSION, '>=')) {
+            add_action('admin_notices', [$this, 'admin_notice_minimum_elementor_version']);
+            return;
+        }
+
+        // Check for required PHP version
+        if (version_compare(PHP_VERSION, self::MINIMUM_PHP_VERSION, '<')) {
+            add_action('admin_notices', [$this, 'admin_notice_minimum_php_version']);
+            return;
+        }
+
+		//verify xprofile fields are active
+		if(!bp_is_active('xprofile')){
+			add_action('admin_notices', [$this, 'admin_notice_missing_xprofile']);
+			return;
+		}
+
+        // Add Plugin actions
+        add_action('elementor/widgets/register', [$this, 'init_widgets']);
+    }
+
+    public function admin_notice_missing_main_plugin() {
+        if (isset($_GET['activate'])) unset($_GET['activate']);
+
+        $message = sprintf(
+            /* translators: 1: Plugin name 2: Elementor */
+            esc_html__('"%1$s" requires "%2$s" to be installed and activated.', 'make-elementor-widgets'),
+            '<strong>' . esc_html__('Elementor', 'make-elementor-widgets') . '</strong>'
+        );
+
+        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+    }
+
+	public function admin_notice_missing_xprofile() {
+        if (isset($_GET['activate'])) unset($_GET['activate']);
+
+        $message = sprintf(
+            /* translators: 1: Plugin name 2: Elementor */
+            esc_html__('"%1$s" requires "%2$s" to be installed and activated.', 'make-elementor-widgets'),
+            '<strong>' . esc_html__('BuddyPress Xprofile', 'make-elementor-widgets') . '</strong>'
+        );
+
+        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+    }
+
+    public function admin_notice_minimum_elementor_version() {
+        if (isset($_GET['activate'])) unset($_GET['activate']);
+
+        $message = sprintf(
+            /* translators: 1: Plugin name 2: Elementor 3: Required Elementor version */
+            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'make-elementor-widgets'),
+            '<strong>' . esc_html__('Elementor', 'make-elementor-widgets') . '</strong>',
+            self::MINIMUM_ELEMENTOR_VERSION
+        );
+
+        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+    }
+
+    public function admin_notice_minimum_php_version() {
+        if (isset($_GET['activate'])) unset($_GET['activate']);
+
+        $message = sprintf(
+            /* translators: 1: Plugin name 2: PHP 3: Required PHP version */
+            esc_html__('"%1$s" requires "%2$s" version %3$s or greater.', 'make-elementor-widgets'),
+            '<strong>' . esc_html__('PHP 7.0', 'make-elementor-widgets') . '</strong>',
+            self::MINIMUM_PHP_VERSION
+        );
+
+        printf('<div class="notice notice-warning is-dismissible"><p>%1$s</p></div>', $message);
+    }
+
+    /**
+    * We will register our widgets within init_widgets function
+    */
+    public function init_widgets() {
+        // ----------------------
+        // # Maker Shed purchases Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/shed-purchases-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_mShedPurch_Widget()); // Register widget
+
+		// ----------------------
+        // # My Makerspaces Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/my-makerspaces-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_myMspaces_Widget()); // Register widget
+
+		// ----------------------
+        // # My Makerspaces Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/my-makerCamp-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_MyMakerCamp_Widget()); // Register widget
+
+		// ----------------------
+        // # Make: Custom RSS Feed Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/make-custom-rss-feed.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_makeCustomRss_Widget()); // Register widget
+
+        // ----------------------
+        // # Make: Interests RSS Feed Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/make-interests-rss-feed.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_makeInterestsRss_Widget()); // Register widget
+
+		// ----------------------
+        // # Make: upcoming MakerFaire Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/upcoming-makerfaires-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_upcomingMakerFaires_Widget()); // Register widget
+
+		// ----------------------
+        // # Make: initiativies Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/make-initiatives.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_makeInitatives_Widget()); // Register widget
+
+		// ----------------------
+        // # Subscription information from Omeda Widget
+        // ----------------------
+        require_once(__DIR__ . '/widgets/my-subscription-widget.php'); // Include Widget files
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor_mySubscription_Widget()); // Register widget
+
+		// ----------------------
+        // # Make: customized MZ feed based on member interestes
+        // ----------------------
+        // require_once(__DIR__ . '/widgets/make-interests-rss-widget.php'); // Include Widget files
+        // \Elementor\Plugin::instance()->widgets_manager->register_widget(new \Elementor_makeInterestsRss_Widget()); // Register widget
+
+    }
+
+
+    /**
+    * we will add stylesheet for our plugin in style.css
+    */
+    public function enqueue_scripts() {
+		//widget styles
+		wp_register_style("make-elementor-style", plugins_url('/css/style.css', __FILE__), array(), self::VERSION );
+		wp_enqueue_style('make-elementor-style');
+    }
+
+
+   /**
+    * we will register javascript files here.
+    * for the form within 'my supscription' widget, we will use ajax.
+    */
+    public function register_ajax_hooks() {
+		//widget scripts
+		wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), self::VERSION  );
+
+		//ajax for form submission
+		wp_enqueue_script('make-omeda-script', plugin_dir_url(__FILE__) . 'js/omeda.js', array('jquery'), self::VERSION , true);
+		wp_localize_script('make-omeda-script', 'make_ajax_object', array(
+			'ajaxurl' => admin_url('admin-ajax.php'),
+			'ajaxnonce' => wp_create_nonce('omeda_ajax')
+		));
+    }
 }
-add_action( 'elementor/widgets/register', 'register_make_widgets' );
+Make_Elementor_Widgets::instance();
 
 /* Add new Make: category for our widgets */
 function add_elementor_widget_categories( $elements_manager ) {
@@ -54,6 +227,7 @@ function add_elementor_widget_categories( $elements_manager ) {
 }
 add_action( 'elementor/elements/categories_registered', 'add_elementor_widget_categories' );
 
+//common functions
 function makewidget_rss_output($rss, $settings) {
     if (is_string($rss)) {
         $rss = fetch_feed($rss);
@@ -118,8 +292,8 @@ function makewidget_rss_output($rss, $settings) {
                 }
                 // if it isn't a youtube feed, exclude feed items with no date
             }
-        } else if(strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
-			if(isset($item->get_item_tags('', 'pubDate')[0]) && $item->get_item_tags('', 'pubDate')[0]['data']){
+        } else if(isset($settings['rss_url']) && strpos($settings['rss_url'], 'youtube.com/feeds') == false ) {
+			if(isset($item->get_item_tags('', 'pubDate')[0]['data'])){
 				$dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
 			}
 		}
@@ -139,18 +313,17 @@ function makewidget_rss_output($rss, $settings) {
         if (empty($title)) {
             $title = __('Untitled');
         }
-
-        //set image
-        if (strpos($settings['rss_url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
-            $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 600, 400) . '" alt="'.$title.'"  />';
-        } else {
-            $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 600, 400) . '" alt="'.$title.'" />';
-        }
-        
         $title = '<div class="rssTitle">' . $title . "</div>";
 
+        //set image
+        if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
+            $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 600, 400) . '"  />';
+        } else {
+            $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 600, 400) . '"  />';
+        }
+
         //set description
-		if (strpos($settings['rss_url'], 'www.makershed.com')) {
+		if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'www.makershed.com')) {
 			//$desc = "<p><b>" . $item->get_item_tags("http://jadedpixel.com/-/spec/shopify", 'variant')[0]['child']["http://jadedpixel.com/-/spec/shopify"]['price'][0]['data'] . "</b></p>";
 			$desc = "<a href='" . $link . "' class='universal-btn btn'>Buy Now</a>";
 		} else {
@@ -199,13 +372,10 @@ function makewidget_rss_output($rss, $settings) {
 	if ($carousel == 'yes') {
 		$wrapper_classes .= " carousel";
 	}
-    if ($show_summary == 'yes') {
-		$wrapper_classes .= " description";
-	}
 	if ($summary != '') {
 		$wrapper_classes .= " summary";
 	}
-	if (strpos($settings['rss_url'], 'www.makershed.com')) {
+	if (isset($settings['rss_url']) && strpos($settings['rss_url'], 'www.makershed.com')) {
 		$wrapper_classes .= " makershed";
 	}
     echo '<ul class="custom-rss-element' . $wrapper_classes . '">';
@@ -238,16 +408,16 @@ function makewidget_rss_output($rss, $settings) {
 		if ($show_summary == "yes") {
             echo "{$summary}";
         }
+		if ($horizontal == 'yes') {
+			echo "</div>";
+			echo "</div>";
+		}
 		if ($item['show_date'] == 'yes') {
             echo '<date>' . $item['date'] . '</date>';
         }
 		if ($show_author == "yes") {
             echo "{$author}";
         }
-        if ($horizontal == 'yes') {
-			echo "</div>";
-			echo "</div>";
-		}
 		if ($link != '') {
             echo "</a>";
 		}
@@ -259,12 +429,4 @@ function makewidget_rss_output($rss, $settings) {
     echo '</ul>';
     $rss->__destruct();
     unset($rss);
-}
-
-
-add_action( 'wp_enqueue_scripts', 'make_elementor_enqueue_scripts');
-function make_elementor_enqueue_scripts() {
-	$myVersion = '2.58';
-	wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), $myVersion );
-	wp_enqueue_style('make-elementor-style', plugins_url( '/css/style.css', __FILE__ ), array(),$myVersion );
 }

@@ -81,6 +81,31 @@
 
     <body <?php body_class(); ?>>
 
+        <?php wp_body_open(); ?>
+
+		<?php
+		// Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
+        if (!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes") { ?>
+
+			<!-- Pinterest Tag -->
+			<script>
+			!function(e){if(!window.pintrk){window.pintrk = function () {
+			window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var
+			  n=window.pintrk;n.queue=[],n.version="3.0";var
+			  t=document.createElement("script");t.async=!0,t.src=e;var
+			  r=document.getElementsByTagName("script")[0];
+			  r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+			pintrk('load', '2613138638003', {em: 'webmaster@make.co'});
+			pintrk('page');
+			</script>
+			<noscript>
+			<img height="1" width="1" style="display:none;" alt=""
+			  src="https://ct.pinterest.com/v3/?event=init&tid=2613138638003&pd[em]=01392d484c1786527202fad89aa49be69f7f2cc04b95fee86ce581b81e6e4536&noscript=1" />
+			</noscript>
+			<script>pintrk('track', 'pagevisit', {event_id: '<?php echo $pageUniq; ?>'});</script>
+			<!-- end Pinterest Tag -->
+
+		<?php } // end cookie law if  ?>
         <?php if (!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes") { ?>
             <!-- Google Tag Manager (noscript) -->
             <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5PRW4M2"
