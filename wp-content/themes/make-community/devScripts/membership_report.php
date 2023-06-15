@@ -55,7 +55,7 @@ if($export_csv){
     $file = fopen('php://output', 'w');
 
     // send the column headers
-    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Gifted Coupon ID', 'Created At', 
+    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon Used', 'Gifted Coupon ID', 'Created At', 
                          'Expires', 'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country', 'Trx Type', 'Parent Trx ID'));
 
     //send the data
@@ -138,7 +138,7 @@ if($export_csv){
                     <td>Membership</td>
                     <!-- Transaction information -->
                     <td>Amount</td>
-                    <td>Coupon</td>
+                    <td>Coupon Used</td>
                     <td>Gifted Coupon ID</td>
                     <td>Created At</td>
                     <td>Expires</td>
