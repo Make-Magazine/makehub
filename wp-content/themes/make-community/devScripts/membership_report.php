@@ -13,9 +13,9 @@ $export_csv  = (isset($_GET['export_csv'])?TRUE:FALSE);
 
 //sql query to retrieve transactions
 $sql = 'SELECT wp_mepr_transactions.ID, amount, user_id, product_id, coupon_id, status, created_at, 
-            txn_type, parent_transaction_id,
-            (select meta_value from wp_mepr_transaction_meta where meta_key="_gift_status" and transaction_id=wp_mepr_transactions.ID limit 1) as gift_status,
+            txn_type, parent_transaction_id,            
             (select post_title from wp_posts where wp_posts.ID=coupon_id) as coupon_name,
+            (select post_title from wp_posts where wp_posts.id = (select meta_value from wp_mepr_transaction_meta where meta_key="_gift_coupon_id" and transaction_id=wp_mepr_transactions.ID limit 1)) as gifted_coupon,
             expires_at,
             (select post_title from wp_posts where wp_posts.ID=product_id) as product_name,
             (select meta_value from wp_usermeta where wp_usermeta.user_id =wp_mepr_transactions.user_id  and meta_key = "first_name" limit 1) as first_name,
@@ -55,7 +55,7 @@ if($export_csv){
     $file = fopen('php://output', 'w');
 
     // send the column headers
-    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Gift Status', 'Created At', 
+    fputcsv($file, array('Trx ID', 'Status', 'Membership', 'Amount', 'Coupon', 'Gifted Coupon ID', 'Created At', 
                          'Expires', 'User ID', 'Customer Name', 'Customer Email', 'Address', 'Address 2', 'City', 'State', 'Zip', 'Country', 'Trx Type', 'Parent Trx ID'));
 
     //send the data
@@ -66,7 +66,7 @@ if($export_csv){
         $state = ($row['customer_state']!=''?$row['customer_state']:$row['mepr_address_state']);
         $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
         $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
-        $giftStatus = ($row['gift_status']!='NULL'?$row['gift_status']:'');
+        $giftStatus = ($row['gifted_coupon']!='NULL'?$row['gifted_coupon']:'');
         $output = array($row['ID'],$row['status'],$row['product_name'],
                         $row['amount'], $row['coupon_name'], $giftStatus,$row['created_at'],$row['expires_at'],
                         $row['user_id'],
@@ -139,7 +139,7 @@ if($export_csv){
                     <!-- Transaction information -->
                     <td>Amount</td>
                     <td>Coupon</td>
-                    <td>Gift Status</td>
+                    <td>Gifted Coupon ID</td>
                     <td>Created At</td>
                     <td>Expires</td>
                     <td>User ID</td>
@@ -159,7 +159,7 @@ if($export_csv){
                     $state = ($row['customer_state']!=''?$row['customer_state']:$row['mepr_address_state']);
                     $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
                     $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
-                    $giftStatus = ($row['gift_status']!='NULL'?$row['gift_status']:'');
+                    $gifted_coupon = ($row['gifted_coupon']!='NULL'?$row['gifted_coupon']:'');
                     ?>
                     <tr>
                         <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
@@ -168,7 +168,7 @@ if($export_csv){
                         <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
                         <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
                         <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
-                        <td tabindex=<?php echo $tabIndex+4?>><?php echo $giftStatus;?></td>
+                        <td tabindex=<?php echo $tabIndex+4?>><?php echo $gifted_coupon;?></td>
                         <td tabindex=<?php echo $tabIndex+5;?>><?php echo $row['created_at']?></td>
                         <td tabindex=<?php echo $tabIndex+6;?>><?php echo $row['expires_at']?></td>
                         <!--User information -->
