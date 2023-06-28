@@ -23,10 +23,18 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
       <?php } ?>
     </div>
 
-    <?php if(absint($invoice->credit_number) > 0) : ?>
-      <?php printf( '<h1>%s: %s | %s: %s</h1>', esc_html__( 'CREDIT NOTE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->credit_number ), esc_html__( 'ORIG. INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+    <?php if(isset($txn->order_id) && $txn->order_id > 0) : ?>
+      <?php if(absint($invoice->credit_number) > 0) : ?>
+        <?php printf( '<h1>%s: %s | %s: %s | %s: %s</h1>', esc_html__( 'CREDIT NOTE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->credit_number ), esc_html__( ' ORDER NO', 'memberpress-pdf-invoice' ),  $txn->order_id, esc_html__( 'ORIG. INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+      <?php else: ?>
+        <?php printf( '<h1>%s: %s | %s: %s</h1>', esc_html__( ' ORDER NO', 'memberpress-pdf-invoice' ),  $txn->order_id, esc_html__( 'INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+      <?php endif; ?>
     <?php else: ?>
-      <?php printf( '<h1>%s: %s</h1>', esc_html__( 'INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+      <?php if(absint($invoice->credit_number) > 0) : ?>
+        <?php printf( '<h1>%s: %s | %s: %s</h1>', esc_html__( 'CREDIT NOTE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->credit_number ), esc_html__( 'ORIG. INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+      <?php else: ?>
+        <?php printf( '<h1>%s: %s</h1>', esc_html__( 'INVOICE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
+      <?php endif; ?>
     <?php endif; ?>
     <table>
       <tr>
@@ -85,22 +93,26 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
     </tr>
     <?php endif; ?>
 
-    <?php if ( $invoice->tax['amount'] > 0.00 || $invoice->tax['percent'] > 0.00 ) : ?>
-        <tr>
-          <td><?php esc_html_e( 'SUBTOTAL', 'memberpress-pdf-invoice' ); ?></td>
-      <?php if ( $invoice->show_quantity ) : ?>
-      <td>&nbsp;</td>
-      <?php endif; ?>
+    <?php if( is_array( $invoice->tax_items ) && count( $invoice->tax_items ) ): ?>
+      <tr>
+        <td><?php esc_html_e( 'SUBTOTAL', 'memberpress-pdf-invoice' ); ?></td>
+        <?php if ( $invoice->show_quantity ) : ?>
+        <td>&nbsp;</td>
+        <?php endif; ?>
           <td class="total"><?php echo MeprAppHelper::format_currency( $invoice->subtotal, true, false ); ?></td>
-        </tr>
-        <tr>
-          <td><?php echo MeprUtils::format_tax_percent_for_display( $invoice->tax['percent'] ) . '% ' . $invoice->tax['type']; ?></td>
-          <?php if ( $invoice->show_quantity ) : ?>
-      <td>&nbsp;</td>
-      <?php endif; ?>
-          <td class="total"><?php echo MeprAppHelper::format_currency( $invoice->tax['amount'], true, false ); ?></td>
-        </tr>
-      <?php endif; ?>
+      </tr>
+    <?php foreach( $invoice->tax_items as $tax_item ): ?>
+        <?php if($tax_item['amount'] > 0 || $tax_item['percent'] > 0) : ?>
+          <tr>
+            <?php if( $invoice->show_quantity ): ?>
+              <td>&nbsp;</td>
+            <?php endif; ?>
+            <td class="mepr-tax-invoice"><?php echo MeprUtils::format_tax_percent_for_display($tax_item['percent']) . '% ' . $tax_item['type']; ?> <?php if( count($invoice->tax_items) > 1 && isset($tax_item['post_title']) && ! empty($tax_item['post_title']) ):?><br /><small><?php echo esc_html($tax_item['post_title']); ?></small><?php endif; ?></td>
+            <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency( $tax_item['amount'], true, false ); ?></td>
+          </tr>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    <?php endif; ?>
         <tr>
           <td class="grand total"><?php esc_html_e( 'GRAND TOTAL', 'memberpress-pdf-invoice' ); ?></td>
           <?php if ( $invoice->show_quantity ) : ?>

@@ -73,7 +73,7 @@ class MPCA_Signup_Controller {
         return _e('Invalid corporate account (2)', 'memberpress-corporate');
       }
 
-      $ca->add_sub_account_user($sa_id);
+      $sub_account_txn = $ca->add_sub_account_user($sa_id);
 
       // Signup email handling
       $mailer = MeprEmailFactory::fetch('Mepr_Sub_Account_Signup_Email');
@@ -87,6 +87,11 @@ class MPCA_Signup_Controller {
       $product = new MeprProduct($txn->product_id);
       $sanitized_title = sanitize_title($product->post_title);
       $query_params = array('membership' => $sanitized_title, 'trans_num' => $txn->trans_num, 'membership_id' => $product->ID);
+
+      if($sub_account_txn instanceof MeprTransaction) {
+        $query_params['transaction_id'] = $sub_account_txn->id;
+      }
+
       // Skip the payment options; set url to be the thank you page instead
       $url = $mepr_options->thankyou_page_url(build_query($query_params));
 

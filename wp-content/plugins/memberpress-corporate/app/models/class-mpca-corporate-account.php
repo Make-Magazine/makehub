@@ -335,6 +335,7 @@ class MPCA_Corporate_Account extends MeprBaseModel {
   public function remove_sub_account_user($user_id) {
     global $wpdb;
     $mepr_db = MeprDb::fetch();
+    $mepr_user = new MeprUser($user_id);
     $transaction = self::get_user_sub_account_transaction($user_id);
     $parent_transaction = $this->setup_parent_transaction();
 
@@ -357,6 +358,8 @@ class MPCA_Corporate_Account extends MeprBaseModel {
     $wpdb->query($q);
 
     delete_user_meta($user_id, 'mpca_corporate_account_id', $this->id);
+
+    $mepr_user->update_member_data(array('active_txn_count', 'expired_txn_count', 'memberships', 'inactive_memberships'));
 
     if($transaction !== false) {
       do_action('mpca_remove_sub_account', $transaction->id, $parent_transaction->id);

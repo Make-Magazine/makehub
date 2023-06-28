@@ -7,6 +7,10 @@ class MPCA_Account_Controller {
     add_action('mepr-account-subscriptions-actions', array($this,'maybe_add_sub_account_management_link'), 10, 4);
     add_action('wp_ajax_mpca_remove_sub_account', array($this,'ajax_remove_sub_account'));
 
+    // Add email param to display URL to Manage Sub Accounts page
+    add_filter('mepr_transaction_email_vars', array($this, 'add_email_var'));
+    add_filter('mepr_transaction_email_params', array($this, 'add_email_param'), 10, 2);
+
     // Add hidden field to checkout form if "ca" is present in the URL
     add_action( 'mepr-checkout-before-submit', array($this, 'add_checkout_fields') );
   }
@@ -145,6 +149,16 @@ class MPCA_Account_Controller {
       $app_helper = new MPCA_App_Helper();
 
       $product_id = $ca->get_obj()->product_id;
+
+      $active_sub = false;
+      if($ca->obj_type === 'subscriptions') {
+        $sub = new MeprSubscription($ca->obj_id);
+        $latest_txn = $sub->latest_txn();
+        $active_sub = $latest_txn && $latest_txn->is_active();
+      } else if($ca->obj_type === 'transactions') {
+        $txn = new MeprTransaction($ca->obj_id);
+        $active_sub = $txn->status != MeprTransaction::$pending_str;
+      }
 
       // We now have a valid corporate account
       require(MeprView::file('/mpca-manage-account-template'));
@@ -379,5 +393,30 @@ class MPCA_Account_Controller {
     $message = __('You successfully added a sub account', 'memberpress-corporate');
 
     return compact('message', 'errors');
+  }
+
+  public function add_email_var($vars) {
+    $vars[] = 'subaccounts_url';
+
+    return $vars;
+  }
+
+  public function add_email_param($params, $txn) {
+    global $wpdb;
+    $user = $txn->user();
+    $caid = get_user_meta($user->ID, 'mpca_corporate_account_id', true);
+    if(empty($caid) && $user) {
+      $query = $wpdb->prepare(
+        "SELECT uuid FROM {$wpdb->prefix}mepr_corporate_accounts WHERE user_id = %d",
+        (int)$user->ID
+      );
+      $uuid = $wpdb->get_var($query);
+      if(isset($uuid)) {
+        $mepr_options = MeprOptions::fetch();
+        $params['subaccounts_url'] = $mepr_options->account_page_url('action=manage_sub_accounts&ca='.$uuid);
+      }
+    }
+
+    return $params;
   }
 }

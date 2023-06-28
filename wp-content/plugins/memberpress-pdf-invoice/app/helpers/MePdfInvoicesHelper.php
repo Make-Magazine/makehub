@@ -274,8 +274,11 @@ class MePdfInvoicesHelper {
    */
   public static function get_formatted_country( $country_code ) {
     if ( MeprHooks::apply_filters( 'mepr_pdf_invoice_full_biz_country', true ) ) {
-      $countries    = MeprUtils::countries();
-      $country_code = trim( preg_replace( '/\s*\([^)]*\)/', '', $countries[ $country_code ] ) ); // Removes brackets
+      $countries = MeprUtils::countries();
+
+      if ( isset( $countries[ $country_code ] ) ) {
+        $country_code = trim( preg_replace( '/\s*\([^)]*\)/', '', $countries[ $country_code ] ) ); // Removes brackets
+      }
     }
 
     return $country_code;

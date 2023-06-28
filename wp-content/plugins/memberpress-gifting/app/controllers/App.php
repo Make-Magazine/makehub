@@ -16,6 +16,7 @@ class App extends lib\BaseCtrl {
     add_filter('mepr_view_get_string', array($this, 'add_transaction_filter_type'), 10, 3);
     add_filter('mepr-list-table-joins', array($this, 'transaction_filter_type_joins'));
     add_filter('mepr-list-table-args', array($this, 'transaction_filter_type_args'));
+    add_filter('mepr-bypass-user-roles-setup', array($this, 'is_gifted_transaction'), 10, 4);
     add_action( 'plugins_loaded', array($this, 'load_language') ); // Must load here or it won't work with PolyLang etc
   }
 
@@ -136,6 +137,21 @@ class App extends lib\BaseCtrl {
     $path_from_plugins_folder = \memberpress\gifting\PLUGIN_NAME . '/i18n/';
     load_plugin_textdomain( \memberpress\gifting\PLUGIN_NAME, false, $path_from_plugins_folder );
     load_plugin_textdomain( \memberpress\gifting\PLUGIN_NAME, false, '/mepr-i18n' );
+  }
+
+  public function is_gifted_transaction( $bool, $obj, $sub_status, $wp_user ) {
+    if($obj instanceof \MeprTransaction){
+      if( isset($_POST['mpgft-signup-gift-checkbox']) && "on" == $_POST['mpgft-signup-gift-checkbox'] ) {
+        return true; // Transaction is a gift.
+      }
+
+      $gifter_id = (int) $obj->get_meta( models\Gift::$gifter_id_str, true);
+      if($gifter_id > 0 || $obj->get_meta( models\Gift::$is_gift_complete_str, true )  || $obj->get_meta( models\Gift::$is_gift_pending_str, true ) ){
+        return true; // Transaction is a gift.
+      }
+    }
+
+    return $bool;
   }
 
 }

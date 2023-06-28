@@ -5,6 +5,12 @@
 
 <h3><?php _e('Shortcodes', 'memberpress-developer-tools'); ?></h3>
 <div>
-  <a href="https://www.memberpress.com/user-manual/available-shortcodes/">https://www.memberpress.com/user-manual/available-shortcodes/</a>
+  <a href="https://docs.memberpress.com/article/112-available-shortcodes" target="_blank">https://docs.memberpress.com/article/112-available-shortcodes</a>
+</div>
+
+<h3><?php _e('Hooks', 'memberpress-developer-tools'); ?></h3>
+<div>
+  <a href="https://docs.memberpress.com/article/329-filter-hooks-in-memberpress" target="_blank">https://docs.memberpress.com/article/329-filter-hooks-in-memberpress</a><br/><br/>
+  <a href="https://docs.memberpress.com/article/325-action-hooks-in-memberpress" target="_blank">https://docs.memberpress.com/article/325-action-hooks-in-memberpress</a>
 </div>
 

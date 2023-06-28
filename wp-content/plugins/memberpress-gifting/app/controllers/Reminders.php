@@ -6,8 +6,6 @@ if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');
 use memberpress\gifting as base;
 use memberpress\gifting\lib as lib;
 use memberpress\gifting\models as models;
-use memberpress\gifting\helpers as helpers;
-use memberpress\gifting\emails as emails;
 
 class Reminders extends lib\BaseCtrl {
   public function load_hooks() {

@@ -31,6 +31,8 @@ class MeprDb {
         'transactions',
         'transaction_meta',
         'rule_access_conditions',
+        'orders',
+        'order_meta',
       )
     );
   }
@@ -118,6 +120,7 @@ class MeprDb {
           amount decimal(16,2) NOT NULL,
           total decimal(16,2) DEFAULT 0,
           tax_amount decimal(16,2) DEFAULT 0,
+          tax_reversal_amount decimal(16,2) DEFAULT 0,
           tax_rate decimal(6,3) DEFAULT 0,
           tax_desc varchar(255) DEFAULT '',
           tax_compound int(1) DEFAULT 0,
@@ -137,10 +140,12 @@ class MeprDb {
           expires_at datetime DEFAULT '".MeprUtils::db_lifetime()."',
           corporate_account_id bigint(20) DEFAULT 0,
           parent_transaction_id bigint(20) DEFAULT 0,
+          order_id bigint(20) DEFAULT 0,
           PRIMARY KEY  (id),
           KEY amount (amount),
           KEY total (total),
           KEY tax_amount (tax_amount),
+          KEY tax_reversal_amount (tax_reversal_amount),
           KEY tax_rate (tax_rate),
           KEY tax_desc (tax_desc(191)),
           KEY tax_compound (tax_compound),
@@ -158,7 +163,8 @@ class MeprDb {
           KEY created_at (created_at),
           KEY expires_at (expires_at),
           KEY corporate_account_id (corporate_account_id),
-          KEY parent_transaction_id (parent_transaction_id)
+          KEY parent_transaction_id (parent_transaction_id),
+          KEY order_id (order_id)
         ) {$char_col};";
 
       dbDelta($txns);
@@ -275,6 +281,7 @@ class MeprDb {
            price decimal(16,2) NOT NULL,
            total decimal(16,2) DEFAULT 0,
            tax_amount decimal(16,2) DEFAULT 0,
+           tax_reversal_amount decimal(16,2) DEFAULT 0,
            tax_rate decimal(6,3) DEFAULT 0,
            tax_desc varchar(255) DEFAULT '',
            tax_compound int(1) DEFAULT 0,
@@ -294,6 +301,7 @@ class MeprDb {
            trial_days int(11) DEFAULT 1,
            trial_amount decimal(16,2) DEFAULT 0.00,
            trial_tax_amount decimal(16,2) DEFAULT 0,
+           trial_tax_reversal_amount decimal(16,2) DEFAULT 0,
            trial_total decimal(16,2) DEFAULT 0,
            status varchar(20) DEFAULT '".MeprSubscription::$pending_str."',
            created_at datetime NOT NULL,
@@ -301,6 +309,7 @@ class MeprDb {
            cc_exp_month varchar(10) DEFAULT '01',
            cc_exp_year varchar(10) DEFAULT '1999',
            token varchar(64) DEFAULT NULL,
+           order_id bigint(20) DEFAULT 0,
            PRIMARY KEY  (id),
            KEY mp_user_id (user_id),
            KEY mp_product_id (product_id),
@@ -320,7 +329,8 @@ class MeprDb {
            KEY mp_cc_last4 (cc_last4),
            KEY mp_cc_exp_month (cc_exp_month),
            KEY mp_cc_exp_year (cc_exp_year),
-           KEY mp_token (token)
+           KEY mp_token (token),
+           KEY mp_order_id (order_id)
         ) {$char_col};";
 
       dbDelta($subscriptions);
@@ -398,6 +408,38 @@ class MeprDb {
         ) {$char_col};";
 
       dbDelta($rule_access);
+
+      $orders =
+        "CREATE TABLE {$this->orders} (
+          id bigint(20) NOT NULL auto_increment,
+          user_id bigint(20) NOT NULL,
+          primary_transaction_id bigint(20) DEFAULT 0,
+          trans_num varchar(255) DEFAULT NULL,
+          status varchar(20) DEFAULT '" . MeprOrder::$pending_str . "',
+          gateway varchar(255) DEFAULT NULL,
+          created_at datetime NOT NULL,
+          PRIMARY KEY  (id),
+          KEY user_id (user_id),
+          KEY trans_num (trans_num(191)),
+          KEY status (status),
+          KEY gateway (gateway(191)),
+          KEY created_at (created_at)
+        ) {$char_col};";
+
+      dbDelta($orders);
+
+      $ordermeta =
+        "CREATE TABLE {$this->order_meta} (
+          id bigint(20) NOT NULL auto_increment,
+          order_id bigint(20) DEFAULT 0,
+          meta_key varchar(255) DEFAULT NULL,
+          meta_value longtext,
+          PRIMARY KEY  (id),
+          KEY order_id (order_id),
+          KEY meta_key (meta_key(191))
+        ) {$char_col};";
+
+      dbDelta($ordermeta);
 
       try {
         $this->after_upgrade($old_db_version);
@@ -828,19 +870,28 @@ class MeprDb {
         $important_join_str = $join_str;
       }
       else {
-        $search_join = explode('.', $search_field);
-        $search_join_str = $search_join[0];
-        if(strpos($important_join_str, "AS {$search_join_str}") === false) {
-          //we know we have find the join
-          foreach($normal_joins as $join) {
-            if(strpos($join, $search_join_str) !== false) {
-              //include it in importants
-              $important_joins[] = $join;
+        $search_fields = explode(',', $search_field);
+
+        foreach($search_fields as $search_field) {
+          $search_join = explode('.', trim($search_field));
+          $search_join_str = $search_join[0];
+          if(strpos($important_join_str, "AS {$search_join_str}") === false) {
+            //we know we have find the join
+            foreach($normal_joins as $join) {
+              if(strpos($join, $search_join_str) !== false) {
+                //include it in importants
+                $important_joins[] = $join;
+              }
             }
+            $important_join_str = " " . implode(" ", $important_joins);
           }
-          $important_join_str = " " . implode(" ", $important_joins);
+
+          $searches[] = $wpdb->prepare("{$search_field} LIKE %s", "%{$search}%");
         }
-        $search_str = $searches[] = $wpdb->prepare("{$search_field} LIKE %s", "%{$search}%");
+
+        if(!empty($searches)) {
+          $search_str = implode(" OR ", $searches);
+        }
       }
     }
 

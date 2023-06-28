@@ -272,6 +272,16 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
    * @return void
    */
   public function collect_invoice_data( $txn, $mepr_options, $prd, $current_user ) {
+    $txn_has_order = false;
+
+    if($txn->order_id > 0) {
+      if(class_exists('MeprOrder') && ($order = $txn->order()) instanceof MeprOrder) {
+        $txn_has_order = true;
+        $txn = new MeprTransaction($order->primary_transaction_id);
+        $prd = new MeprProduct($txn->product_id);
+      }
+    }
+
     $created_ts = strtotime( $txn->created_at );
     $blog_name  = get_option( 'blogname' );
 
@@ -291,58 +301,66 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     $this->invoice['color']           = $mepr_options->attr( 'biz_invoice_color' );
     $this->invoice['paid_logo_url']   = $txn->status == MeprTransaction::$refunded_str ? MPDFINVOICE_PATH . 'app/views/account/invoice/refund.jpg' : MPDFINVOICE_PATH . 'app/views/account/invoice/paid.jpg';
 
-    if ( ( $sub = $txn->subscription() ) ) {
-      if ( $sub->trial && $sub->txn_count < 1 ) {
-        $desc = esc_html__( 'Initial Payment', 'memberpress-pdf-invoice' );
-        // Must do this *after* apply tax so we don't screw up the invoice
-        $txn->subscription_id = $sub->id;
-      } elseif ( $sub->txn_count >= 1 ) {
-        $desc = esc_html__( 'Subscription Payment', 'memberpress-pdf-invoice' );
-      } else {
-        $desc = esc_html__( 'Initial Payment', 'memberpress-pdf-invoice' );
-      }
-    } else {
-      $desc = esc_html__( 'Payment', 'memberpress-pdf-invoice' );
+    $sub = $txn->subscription();
+
+    if($sub instanceof MeprSubscription && (($sub->trial && $sub->trial_days > 0 && $sub->txn_count < 1) || $txn->txn_type == MeprTransaction::$subscription_confirmation_str)) {
+      self::set_invoice_txn_vars_from_sub($txn, $sub);
     }
 
-    if ($txn->status == MeprTransaction::$refunded_str) {
-      $desc .= ' ' . esc_html__( 'Refund', 'memberpress-pdf-invoice' );
-    }
+    $desc = self::get_payment_description($txn, $sub);
+    $calculate_taxes = (bool) get_option('mepr_calculate_taxes');
+    $tax_inclusive = $mepr_options->attr('tax_calc_type') == 'inclusive';
+    $show_negative_tax_on_invoice = get_option('mepr_show_negative_tax_on_invoice');
 
     if ( ( $coupon = $txn->coupon() ) ) {
-      $amount     = $txn->amount;
       $prd        = new MeprProduct($txn->product_id);
       $show_coupon = true;
 
       if($sub) {
         $amount = $sub->price; // Attempt to get price from Subscription
 
+        // Add the tax amount to the subtotal if we are showing tax as negative
+        if($show_negative_tax_on_invoice && $sub->tax_reversal_amount > 0) {
+          $amount = $amount + $sub->tax_reversal_amount;
+        }
+
         //For standard discounts the subscription price will be the price after the coupon, so either reverse and show coupon,
         //or hide the coupon, defaults to reverse, to hide coupon they can use the filter to set to false
-        if ($coupon->discount_mode == 'standard') {
-          if (apply_filters('mepr-pdf-invoice-reverse-coupon', true, $txn, $mepr_options, $prd, $current_user)) {
-            //Since we store the after coupon price when the coupon is standard discount type, then we have to reverse that for the invoice
-            if ($coupon->discount_type == 'percent') {
-              $amount = $amount / (1 - ($coupon->discount_amount / 100)); //Conver the percent to decimal, subtract from 1, then dive
-            } else if ($coupon->discount_type == 'dollar') {
-              $amount = $amount + $coupon->discount_amount;
-            }
-          } else {
-            $show_coupon = false;
+        if ($coupon->discount_amount > 0 && apply_filters('mepr-pdf-invoice-reverse-coupon', true, $txn, $mepr_options, $prd, $current_user)) {
+          //Since we store the after coupon price when the coupon is standard discount type, then we have to reverse that for the invoice
+          if ($coupon->discount_type == 'percent') {
+            $amount = $amount / (1 - ($coupon->discount_amount / 100)); //Convert the percent to decimal, subtract from 1, then dive
+          } else if ($coupon->discount_type == 'dollar') {
+            $amount = $amount + $coupon->discount_amount;
           }
+        } elseif ($coupon->discount_mode == 'standard') {
+          $show_coupon = false;
         }
       }
-      elseif ($prd) {
-        $amount = $prd->price; //Note, this is not 100% acurrate, but its the best we can do right now.
+      else {
+        if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
+          $amount = $prd->price;
+          $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount);
+        }
+        else {
+          $remove_tax = $calculate_taxes && $tax_inclusive && $txn->tax_rate > 0;
+          $amount = $remove_tax ? ($prd->price/(1+($txn->tax_rate/100))) : $prd->price;
+        }
       }
 
       if(apply_filters('mepr-pdf-invoice-show-coupon', $show_coupon, $txn, $mepr_options, $prd, $current_user)) {
         $cpn_id     = $coupon->ID;
         $cpn_desc   = sprintf( esc_html__( "Coupon Code '%s'", 'memberpress-pdf-invoice' ), $coupon->post_title );
-        $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount );
+
+        if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
+          $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount );
+        }
+        else {
+          $cpn_amount = MeprUtils::format_float( (float) $amount - (float) $txn->amount );
+        }
       }
     } else {
-      $amount     = $txn->amount;
+      $amount     = $show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0 ? $txn->amount + $txn->tax_reversal_amount : $txn->amount;
       $cpn_id     = 0;
       $cpn_desc   = '';
       $cpn_amount = 0.00;
@@ -362,13 +380,110 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       }
     }
 
-    $this->invoice['items'] = array(
-      array(
+    $items = array(
+      $prd->ID => array(
         'description' => $prd->post_title . '&nbsp;&ndash;&nbsp;' . $desc,
         'quantity'    => 1,
         'amount'      => $amount,
-      ),
+        'txn_status'  => $txn->status
+      )
     );
+
+    $tax_amount = 0.00;
+    $tax_items = array();
+
+    if($txn->tax_rate > 0 || $txn->tax_amount > 0) {
+      $txn_tax_amount = $show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0 ? -1 * $txn->tax_reversal_amount : $txn->tax_amount;
+      $tax_amount += $txn_tax_amount;
+
+      $tax_item = array(
+        'percent' => $txn->tax_rate,
+        'type'    => $txn->tax_desc,
+        'amount'  => $txn_tax_amount
+      );
+
+      if($txn_has_order) {
+        $tax_item['post_title'] = $prd->post_title;
+      }
+
+      $tax_items = array($prd->ID => $tax_item);
+    }
+
+    if( $txn_has_order ) {
+      $order_bump_transactions = MeprTransaction::get_all_by_order_id_and_gateway($txn->order_id, $txn->gateway, $txn->id);
+      $processed_sub_ids = [];
+
+      if( ! empty($order_bump_transactions) ) {
+        foreach( $order_bump_transactions as $order_bump_txn ) {
+          $product = $order_bump_txn->product();
+
+          if( $product->ID === $prd->ID ) {
+            continue;
+          }
+
+          $subscription = $order_bump_txn->subscription();
+
+          if($subscription instanceof MeprSubscription) {
+            // Subs can have both a payment txn and confirmation txn, make sure we don't process a sub twice
+            if(in_array((int) $subscription->id, $processed_sub_ids, true)) {
+              continue;
+            }
+
+            $processed_sub_ids[] = (int) $subscription->id;
+
+            if(($subscription->trial && $subscription->trial_days > 0 && $subscription->txn_count < 1) || $order_bump_txn->txn_type == MeprTransaction::$subscription_confirmation_str) {
+              self::set_invoice_txn_vars_from_sub($order_bump_txn, $subscription);
+            }
+          }
+
+          $order_bump_amount = $show_negative_tax_on_invoice && $order_bump_txn->tax_reversal_amount > 0 ? $order_bump_txn->amount + $order_bump_txn->tax_reversal_amount : $order_bump_txn->amount;
+
+          if($order_bump_txn->tax_rate > 0 || $order_bump_txn->tax_amount > 0) {
+            $order_bump_tax_amount = $show_negative_tax_on_invoice && $order_bump_txn->tax_reversal_amount > 0 ? -1 * $order_bump_txn->tax_reversal_amount : $order_bump_txn->tax_amount;
+            $tax_amount = $tax_amount + $order_bump_tax_amount;
+
+            $tax_items[$product->ID] = array(
+              'percent' => $order_bump_txn->tax_rate,
+              'type' => $order_bump_txn->tax_desc,
+              'amount' => $order_bump_tax_amount,
+              'post_title' => $product->post_title,
+            );
+          }
+
+          $price_string = '';
+          if($product->register_price_action != 'hidden' && MeprHooks::apply_filters('mepr_checkout_show_terms', true, $product)) {
+            if(!$order_bump_txn->is_one_time_payment() && $subscription instanceof MeprSubscription && $subscription->id > 0) {
+              $price_string = MeprAppHelper::format_price_string($subscription, $subscription->price);
+            }
+            else {
+              ob_start();
+              MeprProductsHelper::display_invoice($product);
+              $price_string = ob_get_clean();
+            }
+          }
+
+          $order_bump_title = $product->post_title;
+          $order_bump_desc = self::get_payment_description($order_bump_txn, $subscription);
+
+          if('' !== $order_bump_desc) {
+            $order_bump_title .= '&nbsp;&ndash;&nbsp;' . $order_bump_desc;
+          }
+
+          if($price_string != '') {
+            $order_bump_title .= apply_filters('mepr_order_bump_price_string', ' <br /><small>' . $price_string . '</small>');
+          }
+
+          $items[$product->ID] = array(
+            'description' => $order_bump_title,
+            'quantity' => 1,
+            'amount' => $order_bump_amount,
+            'txn_status'  => $order_bump_txn->status
+          );
+        }
+      }
+    }
+
+    $this->invoice['items'] = $items;
 
     $this->invoice['coupon'] = array(
       'id'     => $cpn_id,
@@ -376,11 +491,7 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       'amount' => $cpn_amount,
     );
 
-    $this->invoice['tax'] = array(
-      'percent' => $txn->tax_rate,
-      'type'    => $txn->tax_desc,
-      'amount'  => $txn->tax_amount,
-    );
+    $this->invoice['tax_items'] = $tax_items;
 
     $this->invoice['show_quantity'] = MeprHooks::apply_filters( 'mepr-invoice-show-quantity', false, $txn );
 
@@ -390,21 +501,22 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     }
 
     $this->invoice['subtotal'] = (float) array_sum( $quantities ) - (float) $this->invoice['coupon']['amount'];
-    $this->invoice['total']    = $this->invoice['subtotal'] + $this->invoice['tax']['amount'];
+    $this->invoice['total']    = $this->invoice['subtotal'] + $tax_amount;
+    $this->invoice['tax_amount'] =  $tax_amount;
 
-    //Show Negative Values for Refunds
-    if ($txn->status == MeprTransaction::$refunded_str) {
-      $new_items = array();
-
-      foreach ( $this->invoice['items'] as $item ) {
-        $item['amount'] = -1 * $item['amount'];
-        $new_items[] = $item;
+    $refunded_total_adjustment = 0;
+    foreach ( $this->invoice['items'] as $i => $item ) {
+      if( $item['txn_status'] == MeprTransaction::$refunded_str ) {
+        $this->invoice['items'][$i]['amount'] = -1 * $item['amount'];
+        $refunded_total_adjustment = $refunded_total_adjustment - $item['amount'];
       }
-
-      $this->invoice['items'] = $new_items;
-      $this->invoice['subtotal'] = -1 * $this->invoice['subtotal'];
-      $this->invoice['total'] =  -1 * $this->invoice['total'];
     }
+
+    if( $refunded_total_adjustment > 0 ) {
+      $this->invoice['subtotal'] = $this->invoice['subtotal'] - $refunded_total_adjustment;
+      $this->invoice['total'] =  $this->invoice['total'] - $refunded_total_adjustment;
+    }
+
 
     return MeprHooks::apply_filters( 'mepr-pdf-invoice-data', $this->invoice, $txn );
   }
@@ -809,5 +921,52 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     $thousands_sep = $wp_locale->number_format['thousands_sep'];
 
     return (string)number_format((float)$number, 2, $decimal_point, $thousands_sep);
+  }
+
+  protected static function get_payment_description($txn, $sub) {
+    if($sub instanceof MeprSubscription) {
+      if($txn->subscription_payment_index() <= 1) {
+        $desc = esc_html__('Initial Payment', 'memberpress-pdf-invoice');
+      }
+      else {
+        $desc = esc_html__('Subscription Payment', 'memberpress-pdf-invoice');
+      }
+    }
+    else {
+      $desc = esc_html__('Payment', 'memberpress-pdf-invoice');
+    }
+
+    if($txn->status == MeprTransaction::$refunded_str) {
+      $desc .= ' ' . esc_html__('Refund', 'memberpress-pdf-invoice');
+    }
+
+    return $desc;
+  }
+
+  /**
+   * Set the transaction vars from the given subscription
+   *
+   * Used when there is a trial period or confirmation transaction to be displayed in the invoice.
+   *
+   * @param MeprTransaction $txn
+   * @param MeprSubscription $sub
+   */
+  protected static function set_invoice_txn_vars_from_sub(MeprTransaction $txn, MeprSubscription $sub) {
+    if($sub->trial && $sub->trial_days > 0) {
+      $txn->amount = $sub->trial_total - $sub->trial_tax_amount;
+      $txn->total = $sub->trial_total;
+      $txn->tax_amount = $sub->trial_tax_amount;
+      $txn->tax_reversal_amount = $sub->trial_tax_reversal_amount;
+    }
+    else {
+      $txn->amount = $sub->price;
+      $txn->total = $sub->total;
+      $txn->tax_amount = $sub->tax_amount;
+      $txn->tax_reversal_amount = $sub->tax_reversal_amount;
+    }
+
+    $txn->tax_rate = $sub->tax_rate;
+    $txn->tax_desc = $sub->tax_desc;
+    $txn->tax_class = $sub->tax_class;
   }
 } //End class

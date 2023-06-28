@@ -173,6 +173,20 @@ return array(
     'required' => false,
     'desc' => __('If set to true, the content on the Thank You page will be overridden with the message contained in thank_you_message value.', 'memberpress-developer-tools')
   ),
+  'thank_you_page_type' => array(
+    'name' => __('Thank You Page Type', 'memberpress-developer-tools'),
+    'type' => 'string',
+    'default' => 'message',
+    'required' => false,
+    'desc' => __('Supported values are message or page.', 'memberpress-developer-tools')
+  ),
+  'thank_you_page_id' => array(
+    'name' => __('Thank You Page ID', 'memberpress-developer-tools'),
+    'type' => 'integer',
+    'default' => '0',
+    'required' => false,
+    'desc' => __('The Page ID of the thank you page.', 'memberpress-developer-tools')
+  ),
   'thank_you_message' => array(
     'name' => __('Thank You Page Message', 'memberpress-developer-tools'),
     'type' => 'string',

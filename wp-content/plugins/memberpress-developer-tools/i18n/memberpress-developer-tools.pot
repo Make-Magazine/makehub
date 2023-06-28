@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the MemberPress Developer Tools plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Developer Tools 1.2.16\n"
+"Project-Id-Version: MemberPress Developer Tools 1.2.17\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-developer-tools\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-03-07T19:29:42+00:00\n"
+"POT-Creation-Date: 2023-04-25T14:48:04+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: memberpress-developer-tools\n"
@@ -964,140 +964,156 @@ msgid "If set to true, the content on the Thank You page will be overridden with
 msgstr ""
 
 #: app/docs/update_args/memberships.php:177
-msgid "Thank You Page Message"
+msgid "Thank You Page Type"
 msgstr ""
 
 #: app/docs/update_args/memberships.php:181
-msgid "A string containing the Custom Thank You Page Message which is shown on the Thank You page anytime this Membership is purchased. thank_you_page_enabled must be set to true before this will be shown."
+msgid "Supported values are message or page."
 msgstr ""
 
 #: app/docs/update_args/memberships.php:184
-msgid "Enable Custom Login URLs"
+msgid "Thank You Page ID"
 msgstr ""
 
 #: app/docs/update_args/memberships.php:188
-msgid "If set to true, you can modify the login redirection by using the custom_login_urls_default and/or the custom_login_urls to control where a member is taken to after logging in."
+msgid "The Page ID of the thank you page."
 msgstr ""
 
 #: app/docs/update_args/memberships.php:191
-msgid "Default Login Redirection URL For This Membership"
+msgid "Thank You Page Message"
 msgstr ""
 
 #: app/docs/update_args/memberships.php:195
-msgid "The URL the member will be redirected to by deafult when logging in if they have purchased this Membership. This overrides the global Login Redirect URL set in MemberPress -> Options."
+msgid "A string containing the Custom Thank You Page Message which is shown on the Thank You page anytime this Membership is purchased. thank_you_page_enabled must be set to true before this will be shown."
 msgstr ""
 
 #: app/docs/update_args/memberships.php:198
-msgid "Custom Login Redirect URLs"
+msgid "Enable Custom Login URLs"
 msgstr ""
 
 #: app/docs/update_args/memberships.php:202
-msgid "An array of standard objects. Each object should have \\$obj->url and \\$obj->count. url is the URL the user should be redirected to when logging in, and count is the number of times they've logged in. So for example, if you wanted to take your user to a specific landing page on their 4th login attempt, you would set the url to the landing page, and the count to 4."
+msgid "If set to true, you can modify the login redirection by using the custom_login_urls_default and/or the custom_login_urls to control where a member is taken to after logging in."
 msgstr ""
 
 #: app/docs/update_args/memberships.php:205
-msgid "Membership Expiration Type"
+msgid "Default Login Redirection URL For This Membership"
 msgstr ""
 
 #: app/docs/update_args/memberships.php:209
+msgid "The URL the member will be redirected to by deafult when logging in if they have purchased this Membership. This overrides the global Login Redirect URL set in MemberPress -> Options."
+msgstr ""
+
+#: app/docs/update_args/memberships.php:212
+msgid "Custom Login Redirect URLs"
+msgstr ""
+
+#: app/docs/update_args/memberships.php:216
+msgid "An array of standard objects. Each object should have \\$obj->url and \\$obj->count. url is the URL the user should be redirected to when logging in, and count is the number of times they've logged in. So for example, if you wanted to take your user to a specific landing page on their 4th login attempt, you would set the url to the landing page, and the count to 4."
+msgstr ""
+
+#: app/docs/update_args/memberships.php:219
+msgid "Membership Expiration Type"
+msgstr ""
+
+#: app/docs/update_args/memberships.php:223
 msgid "none, delay, or fixed"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:210
+#: app/docs/update_args/memberships.php:224
 msgid "If the Membership is a one-time payment (not auto-recurring), then you can set if/when it should expire. A value of none means it will be good for a lifetime. A value of delay means it expires at some delayed point in the future (example: 6 months). And a value of fixed means it will expire on a fixed date in the future (example December 31st 2019). Note: this does not work on recurring Memberships."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:213
+#: app/docs/update_args/memberships.php:227
 msgid "Expire Membership After"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:217
+#: app/docs/update_args/memberships.php:231
 msgid "If the expire_type is set to \"delay\", use this to determine how many expire_unit's before the Membership expires. This should be a number (example \"6\", for 6 days/months/weeks/years)."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:220
+#: app/docs/update_args/memberships.php:234
 msgid "Expire Membership Unit"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:224
+#: app/docs/update_args/memberships.php:238
 #: app/docs/update_args/rules.php:80
 #: app/docs/update_args/rules.php:117
 msgid "days, weeks, months, or years"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:225
+#: app/docs/update_args/memberships.php:239
 msgid "If the expire_type is set to \"delay\", use this to set the unit for the expire_after value. For example, if expire_after was set to \"6\" and this was set to \"months\", then the Membership would expire 6 months after the date the Member registered."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:228
+#: app/docs/update_args/memberships.php:242
 msgid "Expire Membership Fixed Date"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:232
+#: app/docs/update_args/memberships.php:246
 msgid "If the expire_type is set to \"fixed\", then set this to the string of the date on which this Membership should expire. You can use any date format which PHP's strtotime() function can understand."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:235
+#: app/docs/update_args/memberships.php:249
 msgid "Tax Exempt"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:239
+#: app/docs/update_args/memberships.php:253
 msgid "Should this Membership be exempt from taxes or not."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:242
+#: app/docs/update_args/memberships.php:256
 msgid "Allow Renewals"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:246
+#: app/docs/update_args/memberships.php:260
 msgid "Allow Members to renew one-time payments before they have expired. Note: this only works on one-time payment Memberships which have a \"delay\" expire_type value."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:249
+#: app/docs/update_args/memberships.php:263
 msgid "Membership Access URL"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:253
+#: app/docs/update_args/memberships.php:267
 msgid "Use this to add a URL which should be used as the page the member can access the content for this Membership subscription."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:258
+#: app/docs/update_args/memberships.php:272
 msgid "Allow Simultaneous Subscriptions"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:262
+#: app/docs/update_args/memberships.php:276
 msgid "Allow Members to have multiple active Subscriptions to this Product simultaneously. Note: Do not use this if allow_renewal is set to true."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:265
+#: app/docs/update_args/memberships.php:279
 msgid "Use Custom Template"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:269
+#: app/docs/update_args/memberships.php:283
 msgid "Whether or not to use a Custom Page Template for this Membership page."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:272
+#: app/docs/update_args/memberships.php:286
 msgid "Custom Page Template Path"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:276
+#: app/docs/update_args/memberships.php:290
 msgid "The relative path to your template file."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:279
+#: app/docs/update_args/memberships.php:293
 msgid "Customize Payment Methods"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:283
+#: app/docs/update_args/memberships.php:297
 msgid "Allow Payment Methods to be disabled on this Membership. A disabled payment method cannot be used by a Member at checkout."
 msgstr ""
 
-#: app/docs/update_args/memberships.php:286
+#: app/docs/update_args/memberships.php:300
 msgid "Custom Payment Methods"
 msgstr ""
 
-#: app/docs/update_args/memberships.php:290
+#: app/docs/update_args/memberships.php:304
 msgid "If customize_payment_methods is true, then this must be an array of the valid payment method ID's for this Membership. Note: If filtering valid payment methods, this MUST have at least one gateway ID."
 msgstr ""
 
@@ -2096,6 +2112,10 @@ msgstr ""
 
 #: app/views/resources.php:6
 msgid "Shortcodes"
+msgstr ""
+
+#: app/views/resources.php:11
+msgid "Hooks"
 msgstr ""
 
 #: app/views/route.php:8

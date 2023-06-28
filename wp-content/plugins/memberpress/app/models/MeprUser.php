@@ -858,7 +858,7 @@ class MeprUser extends MeprBaseModel {
       }
 
       if(email_exists($user_email)) {
-        $current_url = urlencode(esc_url($current_url ? $current_url : $_SERVER['REQUEST_URI']));
+        $current_url = $current_url ? $current_url : urlencode(esc_url($_SERVER['REQUEST_URI']));
         $login_url = $mepr_options->login_page_url("redirect_to={$current_url}");
 
         $errors['user_email'] = sprintf(__('This email address has already been used. If you are an existing user, please %sLogin%s to complete your purchase. You will be redirected back here to complete your sign-up afterwards.', 'memberpress'), "<a href=\"{$login_url}\"><strong>", "</strong></a>");
@@ -960,6 +960,16 @@ class MeprUser extends MeprBaseModel {
     //Make sure this isn't the logged in purchases form
     if(!isset($logged_in_purchase) || (isset($logged_in_purchase) && $mepr_options->show_fields_logged_in_purchases)) {
       $custom_fields_errors = MeprUsersCtrl::validate_extra_profile_fields(null, null, null, true, $product);
+    }
+
+    $order_bump_product_ids = isset($_POST['mepr_order_bumps']) && is_array($_POST['mepr_order_bumps']) ? array_filter(array_map('intval', $_POST['mepr_order_bumps'])) : array();
+
+    if( !empty($order_bump_product_ids) ) {
+      try {
+          MeprCheckoutCtrl::get_order_bump_products($mepr_product_id, $order_bump_product_ids);
+      } catch( \Exception $ex ) {
+        $errors[] = $ex->getMessage();
+      }
     }
 
     return array_merge($errors, $custom_fields_errors);
@@ -1418,7 +1428,7 @@ class MeprUser extends MeprBaseModel {
     $use_address_from_request = false;
     $action = isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '';
 
-    if(!empty($action) && in_array($action, ['mepr_update_price_string', 'mepr_update_spc_invoice_table', 'mepr_stripe_create_payment_client_secret'], true)) {
+    if(!empty($action) && in_array($action, ['mepr_update_price_string', 'mepr_update_spc_invoice_table', 'mepr_stripe_get_elements_options'], true)) {
       $mepr_options = MeprOptions::fetch();
 
       if(!MeprUtils::is_user_logged_in() || ($mepr_options->show_address_fields && $mepr_options->show_fields_logged_in_purchases)) {
@@ -1489,31 +1499,20 @@ class MeprUser extends MeprBaseModel {
   }
 
   public function calculate_tax($subtotal, $num_decimals=2, $prd_id=null) {
-    $mepr_options = MeprOptions::fetch();
     $rate = $this->tax_rate($prd_id);
 
     // We assume that we're dealing with the subtotal
     $tax_amount = MeprUtils::format_float(($subtotal*($rate->tax_rate/100.00)), $num_decimals);
     $total = MeprUtils::format_float(($subtotal + $tax_amount), $num_decimals);
+    $tax_reversal_amount = 0.00;
 
-    if (
-      $rate->customer_type === 'business' &&
-      MeprTransactionsHelper::is_charging_business_net_price() &&
-      apply_filters( 'mepr_is_valid_vat_number_reversal', false, $this, $rate, $tax_amount )
-    ) {
-      $show_negative_tax_on_invoice = get_option( 'mepr_show_negative_tax_on_invoice' );
-      if( $show_negative_tax_on_invoice ){
-        $total = $subtotal;
-        $subtotal = $subtotal;
-        $tax_amount = -$tax_amount;
-      }else{
-        $total = $subtotal;
-        $subtotal = $subtotal - $tax_amount;
-        $tax_amount = 0;
-      }
+    if($rate->customer_type === 'business' && $rate->reversal) {
+      $total = MeprUtils::format_float($subtotal, $num_decimals);
+      $tax_reversal_amount = $tax_amount;
+      $tax_amount = 0.00;
     }
 
-    return array(MeprUtils::format_float($total - $tax_amount), $total, $rate->tax_rate, $tax_amount, $rate->tax_desc, $rate->tax_class);
+    return array(MeprUtils::format_float($total - $tax_amount), $total, $rate->tax_rate, $tax_amount, $rate->tax_desc, $rate->tax_class, $tax_reversal_amount);
   }
 
   public function calculate_subtotal($total, $percent=null, $num_decimals=2, $prd=null) {
@@ -1548,7 +1547,7 @@ class MeprUser extends MeprBaseModel {
     if($addr2 and !empty($addr2)) { $addr .= "<br/>{$addr2}"; }
     if($country and !empty($country)) { $country = "<br/>{$country}"; } else { $country = ''; }
 
-    $addr = sprintf( __('<br/>%1$s<br/>%2$s, %3$s %4$s%5$s<br/>', 'memberpress'), $addr, $city, $state, $zip, $country );
+    $addr = sprintf( '<br/>' . __('%1$s', 'memberpress') . '<br/>' . __('%2$s, %3$s %4$s%5$s', 'memberpress') . '<br/>', $addr, $city, $state, $zip, $country );
 
     return MeprHooks::apply_filters( 'mepr-user-formatted-address', $addr, $this );
   }
@@ -2802,6 +2801,7 @@ class MeprUser extends MeprBaseModel {
     }
     else {
       MeprUtils::debug_log("PROBLEM WITH MEMBER DATA?!");
+      return $mepr_db->delete_records($mepr_db->members, array('user_id' => $this->ID));
     }
 
     return false;

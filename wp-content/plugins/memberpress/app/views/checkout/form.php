@@ -125,6 +125,8 @@
     <?php MeprHooks::do_action('mepr-before-coupon-field'); //Deprecated ?>
     <?php MeprHooks::do_action('mepr-checkout-before-coupon-field', $product->ID); ?>
 
+    <?php MeprHooks::do_action('mepr_render_order_bumps', $product); ?>
+
     <?php if($payment_required || !empty($product->plan_code)): ?>
       <?php if($mepr_options->coupon_field_enabled): ?>
         <a class="have-coupon-link" data-prdid="<?php echo $product->ID; ?>" href="">
@@ -146,7 +148,7 @@
       <div class="mepr-payment-methods-wrapper">
         <?php $active_pms = $product->payment_methods(); ?>
         <?php $pms = $product->payment_methods(); ?>
-        <?php echo MeprOptionsHelper::payment_methods_dropdown('mepr_payment_method', $active_pms); ?>
+        <?php echo MeprOptionsHelper::payment_methods_dropdown('mepr_payment_method', $active_pms, $product); ?>
       </div>
     <?php else: ?>
       <input type="hidden" name="mepr_coupon_code" value="<?php echo (isset($mepr_coupon_code))?esc_attr(stripslashes($mepr_coupon_code)):''; ?>" />

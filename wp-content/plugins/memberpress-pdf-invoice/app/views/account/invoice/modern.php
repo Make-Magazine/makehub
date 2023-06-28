@@ -151,7 +151,9 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
         <td>
         </td>
         <td>
-
+        <?php if(isset($txn->order_id) && $txn->order_id > 0) : ?>
+          <?php printf( '<p><span>%s:</span> %s</p>', esc_html__( 'Order NO', 'memberpress-pdf-invoice' ), strtoupper( $txn->order_id ) ); ?>
+        <?php endif; ?>
         <?php if(absint($invoice->credit_number) > 0) : ?>
           <?php printf( '<p><span class="green-label">%s:</span> %s</p>', esc_html__( 'CREDIT NOTE NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->credit_number ) ); ?>
           <?php printf( '<p><span class="green-label">%s:</span> %s</p>', esc_html__( 'ORIG. Invoice NO', 'memberpress-pdf-invoice' ), strtoupper( $invoice->invoice_number ) ); ?>
@@ -188,7 +190,6 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
             <?php if ( $invoice->show_quantity ) : ?>
               <td class="unit"><?php echo MePdfInvoicesCtrl::format_real_number($item['quantity']); ?></td>;
             <?php endif; ?>
-            ?>
             <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency( $item['amount'], true, false ); ?></td>
           </tr>
           <?php
@@ -205,21 +206,25 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
       </tr>
       <?php endif; ?>
 
-      <?php if ( $invoice->tax['amount'] > 0.00 || $invoice->tax['percent'] > 0.00 ) : ?>
+      <?php if( is_array( $invoice->tax_items ) && count( $invoice->tax_items ) ): ?>
       <tr>
         <td><?php esc_html_e( 'SUBTOTAL', 'memberpress-pdf-invoice' ); ?></td>
-      <?php if ( $invoice->show_quantity ) : ?>
-      <td>&nbsp;</td>
-      <?php endif; ?>
-          <td class="total"><?php echo MeprAppHelper::format_currency( $invoice->subtotal, true, false ); ?></td>
-        </tr>
-        <tr>
-          <td><?php echo MeprUtils::format_tax_percent_for_display( $invoice->tax['percent'] ) . '% ' . $invoice->tax['type']; ?></td>
-          <?php if ( $invoice->show_quantity ) : ?>
-      <td>&nbsp;</td>
-      <?php endif; ?>
-          <td class="total"><?php echo MeprAppHelper::format_currency( $invoice->tax['amount'], true, false ); ?></td>
-        </tr>
+        <?php if ( $invoice->show_quantity ) : ?>
+        <td>&nbsp;</td>
+        <?php endif; ?>
+        <td class="total"><?php echo MeprAppHelper::format_currency( $invoice->subtotal, true, false ); ?></td>
+      </tr>
+      <?php foreach( $invoice->tax_items as $tax_item ): ?>
+          <?php if($tax_item['amount'] > 0 || $tax_item['percent'] > 0) : ?>
+            <tr>
+              <?php if( $invoice->show_quantity ): ?>
+                <td>&nbsp;</td>
+              <?php endif; ?>
+              <td class="mepr-tax-invoice"><?php echo MeprUtils::format_tax_percent_for_display($tax_item['percent']) . '% ' . $tax_item['type']; ?> <?php if( count($invoice->tax_items) > 1 && isset($tax_item['post_title']) && ! empty($tax_item['post_title']) ):?><br /><small><?php echo esc_html($tax_item['post_title']); ?></small><?php endif; ?></td>
+              <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency( $tax_item['amount'], true, false ); ?></td>
+            </tr>
+          <?php endif; ?>
+        <?php endforeach; ?>
       <?php endif; ?>
         <tr>
           <td class="grand"><?php esc_html_e( 'GRAND TOTAL', 'memberpress-pdf-invoice' ); ?></td>

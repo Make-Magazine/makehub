@@ -8,6 +8,7 @@ class MpBuddyPress {
   public $membership_groups_str         = '_mepr_buddypress_groups';
   public $protect_bp_section            = 'mepr_bp_protect_bp_section';
   public $protect_members_area          = 'mepr_bp_protect_members_area';
+  public $allow_other_profiles_area     = 'mepr_bp_allow_other_profiles_area';
 
   public function __construct() {
     include_once(ABSPATH . 'wp-admin/includes/plugin.php');
@@ -100,6 +101,7 @@ class MpBuddyPress {
     $groups               = (bp_is_active('groups'))?BP_Groups_Group::get(array('show_hidden' => true, 'type'=>'alphabetical', 'per_page' => 9999)):false;
     $protect_bp_section   = get_option($this->protect_bp_section, 0);
     $protect_members_area = get_option($this->protect_members_area, 0);
+    $allow_other_profiles_area  = get_option($this->allow_other_profiles_area, 0);
 
     //Make sure it's an array
     if(empty($default_groups)) { $default_groups = array(); }
@@ -164,7 +166,15 @@ class MpBuddyPress {
             <label for="mepr_bp_protect_members_area" style="vertical-align:top;"><?php _e('Protect Main Members Listing Page', 'memberpress-buddypress'); ?></label>
           <?php MeprAppHelper::info_tooltip( 'mepr-protect-members-section',
             __('BuddyPress Members Page Protection', 'memberpress-buddypress'),
-            __('Protect the main BuddyPress members page where the list of all members is displayed.', 'memberpress-buddypress')); ?></small>
+            __('Protect the main BuddyPress/BuddyBoss members page where the list of all members is displayed. With this option checked, only users with at least one active membership will have access to that page.', 'memberpress-buddypress')); ?></small>
+        </div>
+        <br/>
+        <div id="mepr_bp_allow_other_profiles_section" class="mepr-hidden" style="margin-left:20px;">
+          <input type="checkbox" id="mepr_bp_allow_other_profiles_area" name="mepr_bp_allow_other_profiles_area" <?php checked($allow_other_profiles_area); ?> />
+          <label for="mepr_bp_allow_other_profiles_area" style="vertical-align:top;"><?php _e('Allow Access to Other Profiles', 'memberpress-buddypress'); ?></label>
+          <?php MeprAppHelper::info_tooltip( 'mepr-protect-other-profiles-section',
+            __('Access to Other Profiles', 'memberpress-buddypress'),
+            __('Allow access to other profiles under main BuddyPress/BuddyBoss members page for users with at least one active membership.', 'memberpress-buddypress')); ?></small>
           </div>
         </div>
       </div>
@@ -177,6 +187,7 @@ class MpBuddyPress {
     update_option($this->default_groups_str, (!empty($_POST['mepr_bp_default_groups']))?(array)$_POST['mepr_bp_default_groups']:array());
     update_option($this->protect_bp_section, (isset($_POST['mepr_bp_protect_bp_section'])));
     update_option($this->protect_members_area, (isset($_POST['mepr_bp_protect_members_area'])));
+    update_option($this->allow_other_profiles_area, (isset($_POST['mepr_bp_allow_other_profiles_area'])));
   }
 
   public function enqueue_options_page_scripts($hook) {
@@ -508,13 +519,14 @@ class MpBuddyPress {
     }
 
     $protect_members_area = get_option($this->protect_members_area, 0);
+    $allow_other_profiles_area = get_option($this->allow_other_profiles_area, 0);
 
     if ( is_user_logged_in() && !current_user_can('administrator') && (bp_is_user() || ($protect_members_area && bp_is_members_directory())) ) {
       $user = MeprUtils::get_currentuserinfo();
       $active_products = $user->active_product_subscriptions( 'ids' );
       if (
         (empty( $active_products ) && (($protect_members_area && bp_is_members_directory()) || strpos( $_SERVER['REQUEST_URI'], MeprHooks::apply_filters('mepr-bp-info-main-nav-slug', 'mp-membership') ) === false)) ||
-        (!empty( $active_products ) && (($protect_members_area && bp_is_members_directory()) || (bp_displayed_user_id() && bp_loggedin_user_id() != bp_displayed_user_id())))
+        (!empty( $active_products ) && !$allow_other_profiles_area && (bp_displayed_user_id() && bp_loggedin_user_id() != bp_displayed_user_id()))
       ) {
         $redirect_url = bp_core_get_user_domain( get_current_user_id() ) . MeprHooks::apply_filters('mepr-bp-info-main-nav-slug', 'mp-membership');
       }

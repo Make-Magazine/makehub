@@ -3,7 +3,7 @@
 Plugin Name: MemberPress Elementor Content Protection
 Plugin URI: http://www.memberpress.com/
 Description: Elementor integration to protect content with MemberPress.
-Version: 1.0.4
+Version: 1.0.6
 Author: Caseproof, LLC
 Author URI: http://caseproof.com/
 Text Domain: memberpress-elementor
