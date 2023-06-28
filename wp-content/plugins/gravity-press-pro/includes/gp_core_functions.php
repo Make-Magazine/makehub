@@ -35,13 +35,25 @@ class GravityPressAddMembership {
     }
 
     /*-------[ Add User to MemberPress for Existing Users - All Payment Addons except PayPal Standard ]-------*/
-    public function pre_enroll_existing_user ( $confirmation, $form, $entry, $ajax ){     
+    public function pre_enroll_existing_user ( $confirmation, $form, $entry, $ajax ){
         $form_id = $form['id'];
         $gp_feed_active = $this->are_GP_feeds_active($form_id);
         $payment_status = $entry['payment_status'];
         $user_logged_in = is_user_logged_in();
         $has_registration_feed_type_create = gf_user_registration()->has_feed_type('create', $form);
-       
+
+        // Verify User Registration type create conditions are met
+        if ( $has_registration_feed_type_create ) {
+        $has_registration_feed_type_create = false;
+        $feeds = gf_user_registration()->get_feeds( $form_id );
+        foreach ( $feeds as $feed ) {
+            if ( $feed['is_active'] && gf_user_registration()->is_feed_condition_met( $feed, $form, $entry ) ) {
+                $has_registration_feed_type_create = true;
+                break;
+            }
+        }
+    }
+
         // stop running this hook for Stripe Payment Form method, either delay registration option is enabled or disabled
         $stripe_delay_register = gform_get_meta($entry['id'], 'gp_stripe_delay_register', true);
         global $stripe_checkout;
@@ -51,7 +63,7 @@ class GravityPressAddMembership {
 
         //Ensure Gravity Press feeds are active and user logged in
         //if ( $gp_feed_active == 1 &&  $user_logged_in == 1 && !$has_registration_feed_type_create) {
-        if ( $gp_feed_active == 1 &&  $user_logged_in == 1) {
+        if ( $gp_feed_active == 1 &&  $user_logged_in == 1) {        
 
             //Ensure payment is either not collected or Paid but not in processing status
             if ( $payment_status != 'Processing' ) {

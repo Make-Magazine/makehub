@@ -3,7 +3,7 @@
 Plugin Name: Gravity Press Pro
 Plugin URI: https://ristrettoapps.com/downloads/gravity-press/
 Description: Integrates Gravity Forms with MemberPress. <a href='https://docs.ristrettoapps.com/article-categories/version-3-x/' target='blank'>Instructions</a>
-Version: 3.4.4
+Version: 3.4.6
 Author: Ristretto Apps
 Author URI: http://ristrettoapps.com
 ------------------------------------------------------------------------
@@ -93,6 +93,6 @@ function gravitypress_login_form_shortcode($atts, $content = null)
 add_shortcode('gravitypress_loginform', 'gravitypress_login_form_shortcode');
 
 //Plugin Version
-define( 'GRAVITYPRESS_VERSION', '3.4.2' );
+define( 'GRAVITYPRESS_VERSION', '3.4.5' );
 
 ?>

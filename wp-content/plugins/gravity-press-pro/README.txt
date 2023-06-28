@@ -14,7 +14,14 @@ http://docs.ristrettoapps.com/
 
 ### Change Log ###
 
+== 3.4.6 ==
+- Added support for conditional logic to Gravity Press feeds
+
 == 3.4.5 ==
+- Fix: Warning: Defined variable with default value 0
+- Fix: Warnings with optional parameters
+
+== 3.4.4 ==
 - Fix: Disable presslog.txt debug file from being generated to reduce security vulnerabilies
 - Fix: Defined the variable with default value 0
 - Fix: Fixed the warnings with optional parameters
