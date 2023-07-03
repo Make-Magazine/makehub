@@ -180,6 +180,10 @@ textarea {
 	.mce-widget[aria-label="LearnDash Shortcodes"], .mce-widget[aria-label="Add Vimeography Gallery"] { display: none; }
 }
 
+.grecaptcha-badge {
+	bottom: 65px !important;
+}
+
 .feedback-btn {
 	position: fixed;
 	z-index: 9999;
