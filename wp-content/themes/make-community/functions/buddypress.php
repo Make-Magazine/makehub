@@ -27,9 +27,11 @@ function parent_overrides() {
  * Remove courses and course settings from group creation.
  */
 add_filter( 'get_header', function ( ) {
-	$bp = buddypress();
-	unset( $bp->groups->group_creation_steps['courses'] );
-	unset( $bp->groups->group_creation_steps['group-course-settings'] );
+    if (function_exists('buddypress')) {
+        $bp = buddypress();
+        unset( $bp->groups->group_creation_steps['courses'] );
+        unset( $bp->groups->group_creation_steps['group-course-settings'] );
+    }
 }, 9999 );
 
 
