@@ -13,7 +13,7 @@ use LearnDash\Hub\Traits\Permission;
  */
 class Settings_Controller extends Controller {
 	use Permission;
-  use License;
+	use License;
 
 	/**
 	 * Constructor.

@@ -11,7 +11,7 @@ use LearnDash\Hub\Traits\Permission;
  */
 class Signin_Controller extends Controller {
 	use Permission;
-  use License;
+	use License;
 
 	/**
 	 * Constructor.

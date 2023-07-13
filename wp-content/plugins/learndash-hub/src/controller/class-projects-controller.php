@@ -99,8 +99,8 @@ class Projects_Controller extends Controller {
 	/**
 	 * When we download a project, the auth header should be added.
 	 *
-	 * @param array  $parsed_args An array of HTTP request arguments.
-	 * @param string $url         The request URL.
+	 * @param array $parsed_args An array of HTTP request arguments.
+	 * @param string $url The request URL.
 	 *
 	 * @return array
 	 */
@@ -225,18 +225,18 @@ class Projects_Controller extends Controller {
 
 	public function process_plugin_update( $upgrader_object, $options ) {
 		if (
-		! isset( $options['action'] ) || 'update' !== $options['action'] ||
-		! isset( $options['type'] ) || 'plugin' !== $options['type'] ||
-		! isset( $options['plugins'] ) || ! is_array( $options['plugins'] )
+			! isset( $options['action'] ) || 'update' !== $options['action'] ||
+			! isset( $options['type'] ) || 'plugin' !== $options['type'] ||
+			! isset( $options['plugins'] ) || ! is_array( $options['plugins'] )
 		) {
-				return;
+			return;
 		}
 
 		foreach ( $options['plugins'] as $plugin ) {
 			if (
-			strpos( $plugin, 'learndash' ) !== false ||
-			strpos( $plugin, 'ld' ) !== false ||
-			strpos( $plugin, 'sfwd-lms' ) !== false
+				strpos( $plugin, 'learndash' ) !== false ||
+				strpos( $plugin, 'ld' ) !== false ||
+				strpos( $plugin, 'sfwd-lms' ) !== false
 			) {
 				delete_site_option( 'learndash_hub_fetch_projects' );
 				delete_site_option( 'learndash_hub_update_plugins_cache' );
@@ -248,9 +248,9 @@ class Projects_Controller extends Controller {
 	/**
 	 * Add our plugin information so it can be retrieved via the function plugins_api
 	 *
-	 * @param object $res    Default update-info provided by WordPress.
+	 * @param object $res Default update-info provided by WordPress.
 	 * @param string $action What action was requested (theme or plugin?).
-	 * @param object $args   Details used to build default update-info.
+	 * @param object $args Details used to build default update-info.
 	 *
 	 * @return object
 	 */
@@ -261,9 +261,9 @@ class Projects_Controller extends Controller {
 
 		$slug = $args->slug;
 		if (
-		stristr( $slug, 'learndash' ) === false &&
-		stristr( $slug, 'ld' ) === false &&
-		'sfwd-lms' !== $slug
+			stristr( $slug, 'learndash' ) === false &&
+			stristr( $slug, 'ld' ) === false &&
+			'sfwd-lms' !== $slug
 		) {
 			return $res;
 		}
@@ -333,12 +333,14 @@ class Projects_Controller extends Controller {
 			'projects'          => $this->get_service()->get_projects( $api_data ),
 			'installedProjects' => $this->get_service()->get_installed_projects( $api_data ),
 			'categories'        => $this->get_service()->get_projects_category( $api_data ),
+			'premiumProjects'   => $this->get_service()->get_premium_projects( $api_data ),
+			'affProjects'       => $this->get_service()->get_aff_projects(),
 			'nonces'            => array(
 				'handle_plugin' => wp_create_nonce( 'ld_hub_plugin_handle' ),
 				'refresh_repo'  => wp_create_nonce( 'ld_hub_refresh_repo' ),
 				'bulk_action'   => wp_create_nonce( 'ld_hub_bulk_action' ),
 			),
-			'adminUrl'          => admin_url( 'admin.php?page=learndash-hub-projects' ),
+			'adminUrl'          => admin_url( 'admin.php?page=learndash-hub' ),
 			'externalUrl'       => admin_url( 'plugin-install.php?s=learndash&tab=search&type=tag' ),
 		);
 	}

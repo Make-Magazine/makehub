@@ -116,7 +116,33 @@ function ld_propanel_get_users_count( $bypass_transient = false ) {
 				if ( is_multisite() ) {
 					$users_courses_sql .= " AND um1.meta_key = '{$wpdb->prefix}capabilities' ";
 				}
-				$users_courses_sql .= " AND um2.meta_key IN ('_sfwd-course_progress', '_sfwd-quizzes') ";
+
+				/**
+				 * Filter Overview Widget Students Progress Types.
+				 *
+				 * @since 2.1.4.2
+				 *
+				 * @param array $progress_types Student Progress Types.
+				 *
+				 * @return array of progress types.
+				 */
+				$progress_types = apply_filters( 'ld_propanel_overview_students_progress_types', array( '_sfwd-course_progress', '_sfwd-quizzes' ) );
+
+				if ( empty( $progress_types ) ) {
+					$progress_types = array( '_sfwd-course_progress', '_sfwd-quizzes' );
+				}
+
+				$users_courses_sql .= " AND um2.meta_key IN (" . "'" . implode( "','", $progress_types ) . "'" . ") ";
+
+				/**
+				 * Filter Overview Widget Students Count Query.
+				 *
+				 * @since 2.1.4.2
+				 *
+				 * @param string $users_courses_sql SQL Statement used to query students count.
+				 */
+				$users_courses_sql = apply_filters( 'ld_propanel_overview_students_query', $users_courses_sql );
+				
 				$users_courses_results = $wpdb->get_col( $users_courses_sql );
 				if ( ( is_array( $users_courses_results ) ) && ( ! empty( $users_courses_results ) ) ) {
 					$all_user_ids = array_merge( $all_user_ids, $users_courses_results );

@@ -43,6 +43,7 @@ class Base {
 				'method'  => $method,
 				'headers' => $this->get_auth_headers(),
 				'body'    => $args,
+				'timeout' => 30
 			)
 		);
 

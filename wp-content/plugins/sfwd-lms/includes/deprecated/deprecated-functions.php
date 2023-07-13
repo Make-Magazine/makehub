@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/4.7.0.1/functions.php';
+require_once __DIR__ . '/4.6.0/functions.php';
 require_once __DIR__ . '/4.5.0/functions.php';
 require_once __DIR__ . '/4.1.0/functions.php';
 require_once __DIR__ . '/3.6.0/functions.php';

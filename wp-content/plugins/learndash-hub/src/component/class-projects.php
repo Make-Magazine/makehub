@@ -243,6 +243,38 @@ class Projects extends Base {
 	}
 
 	/**
+	 * @param array $api_data The get_projects API data.
+	 *
+	 * @return array
+	 */
+	public function get_premium_projects( array $api_data ): array {
+		$installed_projects = $this->get_installed_projects( $api_data );
+		foreach ( $api_data as $slug => $item ) {
+			if ( $item['product_type'] !== 'premium' ) {
+				unset( $api_data[ $slug ] );
+				continue;
+			}
+
+			// now check if the plugins is installed.
+			$api_data[ $slug ]['is_installed'] = isset( $installed_projects[ $slug ] );
+		}
+
+		return $api_data;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function get_aff_projects() {
+		$projects = $this->do_api_request( '/repo/aff_plugins' );
+		if ( ! is_array( $projects ) ) {
+			return array();
+		}
+
+		return $projects;
+	}
+
+	/**
 	 * Return the projects that has not installed.
 	 *
 	 * @param array $api_data The get_projects API data.
@@ -253,6 +285,11 @@ class Projects extends Base {
 		$installed_projects = $this->get_installed_projects( $api_data );
 
 		foreach ( $api_data as $slug => $item ) {
+			if ( $item['product_type'] !== 'standard' ) {
+				unset( $api_data[ $slug ] );
+				continue;
+			}
+
 			if ( isset( $installed_projects[ $slug ] ) ) {
 				unset( $api_data[ $slug ] );
 			}
@@ -264,8 +301,8 @@ class Projects extends Base {
 	/**
 	 * Look up a project object, this is use when pulling the plugin info.
 	 *
-	 * @param string $slug     The project slug, eg: sfwd-lms.
-	 * @param array  $api_data The plugins data, pulling from the api.
+	 * @param string $slug The project slug, eg: sfwd-lms.
+	 * @param array $api_data The plugins data, pulling from the api.
 	 *
 	 * @return false|array Return the project data as an array, or false if nothing found.
 	 */
@@ -277,14 +314,20 @@ class Projects extends Base {
 
 		$projects = $this->get_projects( $api_data );
 
-		return $projects[ $slug ] ?? false;
+		$project = $projects[ $slug ] ?? false;
+		if ( false === $project ) {
+			$premiums = $this->get_premium_projects( $api_data );
+			$project  = $premiums[ $slug ] ?? false;
+		}
+
+		return $project;
 	}
 
 	/**
 	 * Install a project
 	 *
-	 * @param string $slug      The plugin folder name.
-	 * @param bool   $is_update Update instead of install.
+	 * @param string $slug The plugin folder name.
+	 * @param bool $is_update Update instead of install.
 	 *
 	 * @return bool|\WP_Error
 	 */
@@ -396,7 +439,7 @@ class Projects extends Base {
 	/**
 	 * Get the plugin slug from folder name.
 	 *
-	 * @param string $slug        The plugin folder.
+	 * @param string $slug The plugin folder.
 	 * @param string $plugin_name The plugin name.
 	 *
 	 * @return string|bool

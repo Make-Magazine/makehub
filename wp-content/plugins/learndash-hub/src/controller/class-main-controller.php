@@ -16,7 +16,6 @@ class Main_Controller extends Controller {
 	 */
 	public function __construct() {
 		parent::__construct();
-
 		$this->register_page(
 			__( 'Add-ons', 'learndash_hub' ),
 			'learndash-hub',

@@ -5,10 +5,10 @@ Plugin URI: https://learndash.com/propanel-by-learndash/
 LD Requires at least: 2.4.0
 Slug: learndash-propanel
 Requires at least: 5.0
-Tested up to: 5.5.1
+Tested up to: 5.7.1
 Requires PHP: 7.0
-Stable tag: 2.1.4
-Last Update: 2020-10-15
+Stable tag: 2.1.4.1
+Last Update: 2021-05-12
 
 Easily manage and view your LearnDash LMS activity.
 
@@ -30,6 +30,19 @@ If the auto-update is not working, you always have the option to update manually
 1. Activate the ProPanel plugin via the PLUGINS menu.
 
 == Changelog ==
+
+= 2.1.4.1 =
+
+* Added progress icon on front end when reports are displayed 
+* Fixed latex not rendering on quiz stats when accessed from ProPanel widget
+* Fixed time format with timezone not working on start/end dates
+* Fixed SQL error missing syntax for multisite
+* Fixed in progress/not started filters not showing data when start date filter is set 
+* Fixed PHP 8 deprecation notices
+* Fixed reporting widget not working without filtering widget 
+* Fixed email sending message never goes away
+* Fixed selected hour not showing in new start/end filters
+* Fixed date picker format 
 
 = 2.1.4 = 
 

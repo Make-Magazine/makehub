@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by learndash on 29-March-2023 using Strauss.
+ * Modified by learndash on 10-July-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 

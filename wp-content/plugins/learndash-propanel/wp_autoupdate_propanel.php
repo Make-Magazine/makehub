@@ -1,6 +1,6 @@
 <?php
 
-class nss_plugin_updater_learndash_propanel 
+class nss_plugin_updater_learndash_propanel
 {
     /**
      * The plugin current version
@@ -27,9 +27,9 @@ class nss_plugin_updater_learndash_propanel
     public $slug;
 
 	public $code;
-	
+
 	private $ld_updater;
-	
+
     /**
      * Initialize a new instance of the WordPress Auto-Update class
      * @param string $current_version
@@ -43,19 +43,19 @@ class nss_plugin_updater_learndash_propanel
         //$this->update_path = $update_path;
 		$this->plugin_slug = $plugin_slug;
         $this->current_version = $this->get_plugin_data()->Version;
-        
+
 		list ($t1, $t2) = explode('/', $plugin_slug);
         $this->slug = str_replace('.php', '', $t2);
 		$code = $this->code = $this->slug;
-		
+
 		$license = get_option('nss_plugin_license_'.$code);
 		$licenseemail = get_option('nss_plugin_license_email_'.$code);
 		$this->update_path = $update_path.'?pluginupdate='.$code.'&licensekey='.urlencode($license).'&licenseemail='.urlencode($licenseemail).'&nsspu_wpurl='.urlencode(get_bloginfo('wpurl')).'&nsspu_admin='.urlencode(get_bloginfo('admin_email')).'&current_version='.$this->current_version;
-		
-        
+
+
 		//Add Menu
 		add_action('admin_menu', array(&$this, 'nss_plugin_license_menu'), 1);
-			
+
         // define the alternative API for updating checking
         add_filter('pre_set_site_transient_update_plugins', array(&$this, 'check_update'));
 
@@ -75,9 +75,9 @@ class nss_plugin_updater_learndash_propanel
 				}
 				</style>";
 		$licensepage = get_admin_url(null,'admin.php?page=nss_plugin_license-'.$this->code.'-settings');
-		echo "<p id='nss_plugin_updater_admin_notice'>License of your plugin <b>".$this->get_plugin_data()->Name."</b> is invalid or incomplete. Please click <a href='".$licensepage."'>here</a> and update your license.</p>";			
+		echo "<p id='nss_plugin_updater_admin_notice'>License of your plugin <b>".$this->get_plugin_data()->Name."</b> is invalid or incomplete. Please click <a href='".$licensepage."'>here</a> and update your license.</p>";
 	}
-	
+
 	function invalid_current_license() {
 		add_action( 'admin_notices', array(&$this, 'admin_notice'));
 		deactivate_plugins( $this->plugin_slug );
@@ -104,10 +104,10 @@ class nss_plugin_updater_learndash_propanel
         // Get the remote version
         $remote_version = $this->getRemote_version();
 		$license = $this->getRemote_license();
-		
-		if ( empty( $license ) ) 
+
+		if ( empty( $license ) )
 			$this->getRemote_current_license();
-		
+
         // If a newer version is available, add the update
         if ( version_compare( $this->current_version, $remote_version, '<' ) ) {
             $obj = new stdClass();
@@ -115,7 +115,7 @@ class nss_plugin_updater_learndash_propanel
             $obj->new_version = $remote_version;
             $obj->url = $this->update_path;
             $obj->package = $this->update_path;
-			
+
 			if ( is_null( $this->ld_updater ) ) {
 				$this->ld_updater = new LearnDash_Addon_Updater();
 			}
@@ -127,22 +127,22 @@ class nss_plugin_updater_learndash_propanel
 						unset( $obj->$property_key );
 					}
 				}
-				
+
 				foreach( $plugin_readme as $key => $val ) {
 					if ( !property_exists ( $obj, $key ) ) {
 						$obj->$key = $val;
 					}
 				}
 			}
-			
+
 			if ( !property_exists ( $obj, 'icons' ) ) {
 				// Add an image for the WP 4.9.x plugins update screen.
 				$obj->icons = array(
 					'default' => LD_PP_PLUGIN_URL .'/assets/images/learndash-propanel.jpg'
 				);
 			}
-			
-			
+
+
             $transient->response[$this->plugin_slug] = $obj;
         }
         ///var_dump($transient);
@@ -161,7 +161,7 @@ class nss_plugin_updater_learndash_propanel
     {
 		if ( empty( $arg ) || empty( $arg->slug ) || empty( $this->slug ) )
 			return $false;
-		
+
         if ($arg->slug === $this->slug) {
             $information = $this->getRemote_information();
             return $information;
@@ -195,12 +195,12 @@ class nss_plugin_updater_learndash_propanel
 			if ( empty( $information ) ) {
 				$information = new stdClass();
 			}
-			
+
 			if ( is_null( $this->ld_updater ) ) {
 				$this->ld_updater = new LearnDash_Addon_Updater();
 			}
 			$plugin_readme = $this->ld_updater->update_plugin_readme( 'learndash-propanel-readme' );
-			
+
 			if ( !empty( $plugin_readme ) ) {
 				// First we remove the properties we DON'T want from the support site
 				foreach( array( 'sections', 'requires', 'tested', 'last_updated' ) as $property_key ) {
@@ -208,17 +208,17 @@ class nss_plugin_updater_learndash_propanel
 						unset( $information->$property_key );
 					}
 				}
-				
+
 				foreach( $plugin_readme as $key => $val ) {
 					if ( !property_exists ( $information, $key ) ) {
 						$information->$key = $val;
 					}
 				}
-							
+
 				//$information_array = $this->ld_updater->convert_readme( (array)$information );
 				//$information = (object)$information_array;
 			}
-			
+
 			return $information;
         }
 
@@ -240,7 +240,7 @@ class nss_plugin_updater_learndash_propanel
 		//add_action( 'admin_notices', array(&$this, 'admin_notice'));
         return true;
     }
-	
+
     public function getRemote_current_license()
     {
         $request = wp_remote_post($this->update_path, array('body' => array('action' => 'current_license')));
@@ -251,8 +251,8 @@ class nss_plugin_updater_learndash_propanel
      	 }
 		//$this->invalid_current_license();
         return true;
-    }	
-	
+    }
+
 	function nss_plugin_license_menu() {
 		add_submenu_page("learndash-lms-non-existant", $this->get_plugin_data()->Name." License", $this->get_plugin_data()->Name." License",'manage_options','nss_plugin_license-'.$this->code.'-settings', array(&$this, 'nss_plugin_license_menupage'));
 
@@ -261,7 +261,7 @@ class nss_plugin_updater_learndash_propanel
 	function nss_plugin_license_menupage()
 	{
 		$code = $this->code;
-	   //must check that the user has the required capability 
+	   //must check that the user has the required capability
 		if (!current_user_can('manage_options'))
 		{
 		  wp_die( __('You do not have sufficient permissions to access this page.', 'default' ) );
@@ -277,12 +277,12 @@ class nss_plugin_updater_learndash_propanel
 			// Read their posted value
 			$license = $_POST['nss_plugin_license_'.$code];
 			$email = $_POST['nss_plugin_license_email_'.$code];
-		
+
 			// Save the posted value in the database
 			update_option( 'nss_plugin_license_'.$code, $license);
 			update_option( 'nss_plugin_license_email_'.$code, $email);
-			
-			
+
+
 
 			// Put an settings updated message on the screen
 
@@ -301,7 +301,7 @@ class nss_plugin_updater_learndash_propanel
 	}
 	</style>
 	<div class=wrap>
-	<form method="post" action="<?php echo $_SERVER["REQUEST_URI"]; ?>">
+	<form method="post" action="<?php echo sanitize_url( $_SERVER["REQUEST_URI"] ); ?>">
 	<h2><?php __("License Settings", "ld_propanel"); ?></h2>
 	<br>
 	<h3><?php _e("Email:", "ld_propanel"); ?></h3>

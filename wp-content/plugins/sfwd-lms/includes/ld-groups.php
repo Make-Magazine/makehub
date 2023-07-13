@@ -2341,7 +2341,7 @@ function learndash_validate_groups( $group_ids = array() ) {
  *
  * @param int $group_id Optional. The ID of the group. Default 0.
  *
- * @return int The number of lessons per page or 0.
+ * @return int The number of courses per page or 0.
  */
 function learndash_get_group_courses_per_page( $group_id = 0 ) {
 	$group_courses_per_page = 0;
@@ -2445,7 +2445,7 @@ function learndash_get_group_courses_order( $group_id = 0 ) {
 function learndash_get_group_courses_list( $group_id = 0, $query_args = array() ) {
 	global $course_pager_results;
 
-	$courses_ids = array();
+	$course_ids = array();
 
 	$group_id = absint( $group_id );
 	if ( ! empty( $group_id ) ) {
@@ -2474,6 +2474,8 @@ function learndash_get_group_courses_list( $group_id = 0, $query_args = array() 
 		}
 		$group_courses_order_args = learndash_get_group_courses_order( $group_id );
 
+		$offset = $query_args['offset'] ?? null;
+
 		$query_args = array(
 			'post_type'      => learndash_get_post_type_slug( 'course' ),
 			'fields'         => 'ids',
@@ -2486,6 +2488,11 @@ function learndash_get_group_courses_list( $group_id = 0, $query_args = array() 
 				),
 			),
 		);
+
+		if ( ! is_null( $offset ) ) {
+			$query_args['offset'] = $offset;
+		}
+
 		$query_args = array_merge( $query_args, $group_courses_order_args );
 
 		$query = new WP_Query( $query_args );
@@ -2875,53 +2882,39 @@ function learndash_is_group_post( $post ): bool {
 }
 
 /**
- * Returns group enrollment url.
+ * Deletes group leader metadata when a group leader role is removed from a user.
  *
- * @param WP_Post|int|null $post Post or Post ID.
- *
- * @since 4.1.0
- *
- * @return string
- */
-function learndash_get_group_enrollment_url( $post ): string {
-	if ( empty( $post ) ) {
-		return '';
-	}
-
-	if ( is_int( $post ) ) {
-		$post = get_post( $post );
-
-		if ( is_null( $post ) ) {
-			return '';
-		}
-	}
-
-	$url = get_permalink( $post );
-
-	$settings = learndash_get_setting( $post );
-
-	if ( 'paynow' === $settings['group_price_type'] && ! empty( $settings['group_price_type_paynow_enrollment_url'] ) ) {
-		$url = $settings['group_price_type_paynow_enrollment_url'];
-	} elseif ( 'subscribe' === $settings['group_price_type'] && ! empty( $settings['group_price_type_subscribe_enrollment_url'] ) ) {
-		$url = $settings['group_price_type_subscribe_enrollment_url'];
-	}
-
-	/** This filter is documented in includes/course/ld-course-functions.php */
-	return apply_filters( 'learndash_group_join_redirect', $url, $post->ID );
-}
-
-/**
- * Deletes group leader metadata when a group leader role is changed to another.
- *
- * @since 4.5.0
+ * @since 4.7.0
  */
 add_action(
-	'set_user_role',
-	function( int $user_id, string $role, array $old_roles ) {
+	'remove_user_role',
+	function( int $user_id, string $role ) {
+		$referer = wp_get_referer();
+		$found   = [];
+
 		if (
-			in_array( 'group_leader', $old_roles, true )
-			&& 'group_leader' !== $role
+			$referer
+			&& strpos( $referer, '/wp-admin/user-edit.php' ) !== false
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			&& is_array( $_POST )
 		) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			foreach ( $_POST as $key => $value ) {
+				if ( strpos( $key, 'role' ) === false ) {
+					continue;
+				}
+
+				$found[] = is_array( $value )
+					? in_array( 'group_leader', $value, true )
+					: (
+						is_string( $value )
+							? strpos( $value, 'group_leader' ) !== false
+							: null
+					);
+			}
+		}
+
+		if ( 'group_leader' === $role && ! in_array( true, $found, true ) ) {
 			global $wpdb;
 
 			$wpdb->query(
@@ -2934,5 +2927,5 @@ add_action(
 		}
 	},
 	10,
-	3
+	2
 );

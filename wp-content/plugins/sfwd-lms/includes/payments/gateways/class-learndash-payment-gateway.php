@@ -7,6 +7,10 @@
  * @package LearnDash
  */
 
+use LearnDash\Core\Models\Product;
+use LearnDash\Core\Models\Transaction;
+use LearnDash\Core\Utilities\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -316,14 +320,14 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param mixed                   $data    Data.
-		 * @param Learndash_Product_Model $product Product.
+		 * @param mixed   $data    Data.
+		 * @param Product $product Product.
 		 *
 		 * @throws Learndash_DTO_Validation_Exception Transaction data validation exception.
 		 *
 		 * @return Learndash_Transaction_Meta_DTO
 		 */
-		abstract protected function map_transaction_meta( $data, Learndash_Product_Model $product ): Learndash_Transaction_Meta_DTO;
+		abstract protected function map_transaction_meta( $data, Product $product ): Learndash_Transaction_Meta_DTO;
 
 		/**
 		 * Returns AJAX action name for setup.
@@ -356,6 +360,11 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$result = array();
 
 			foreach ( self::$gateways as $gateway ) {
+				// skip empty gateways.
+				if ( empty( $gateway::get_name() ) ) {
+					continue;
+				}
+
 				$result[ $gateway::get_name() ] = $gateway::get_label();
 			}
 
@@ -401,8 +410,8 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products    Products.
-		 * @param string                    $gateway_url Gateway url. Default empty string.
+		 * @param Product[] $products    Products.
+		 * @param string    $gateway_url Gateway url. Default empty string.
 		 *
 		 * @return string
 		 */
@@ -410,7 +419,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function ( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 			$products = array_values( $products );
@@ -418,27 +427,34 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			// For buy now and recurring types, use the “enrollment URL” field from post settings.
 
 			if ( 1 === count( $products ) ) {
-				$product = $products[0];
+				$product        = $products[0];
+				$setting_prefix = LDLMS_Post_Types::get_post_type_key( $product->get_post_type() );
 
-				if ( learndash_is_course_post( $product->get_post() ) ) {
-					$enrollment_url = learndash_get_course_enrollment_url( $product->get_post() );
-				} elseif ( learndash_is_group_post( $product->get_post() ) ) {
-					$enrollment_url = learndash_get_group_enrollment_url( $product->get_post() );
+				if ( $product->is_price_type_paynow() ) {
+					$product_enrollment_url = Cast::to_string(
+						$product->get_setting( "{$setting_prefix}_price_type_paynow_enrollment_url" )
+					);
+				} elseif ( $product->is_price_type_subscribe() ) {
+					$product_enrollment_url = Cast::to_string(
+						$product->get_setting( "{$setting_prefix}_price_type_subscribe_enrollment_url" )
+					);
+				} else {
+					$product_enrollment_url = '';
 				}
 
-				if ( ! empty( $enrollment_url ) ) {
+				if ( ! empty( $product_enrollment_url ) ) {
 					/**
 					 * Filters URL for successful payments.
 					 *
 					 * @since 4.5.0
 					 *
-					 * @param string                    $url                  The URL, where user will be redirected after the successful payment.
-					 * @param string                    $payment_gateway_name Payment gateway name.
-					 * @param Learndash_Product_Model[] $products             Purchased products.
+					 * @param string    $url                  The URL, where user will be redirected after the successful payment.
+					 * @param string    $payment_gateway_name Payment gateway name.
+					 * @param Product[] $products             Purchased products.
 					 *
 					 * @return string The URL, where user will be redirected after the successful payment.
 					 */
-					return apply_filters( 'learndash_payment_option_url_success', $enrollment_url, static::get_name(), $products );
+					return apply_filters( 'learndash_payment_option_url_success', $product_enrollment_url, static::get_name(), $products );
 				}
 			}
 
@@ -487,8 +503,8 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products    Products.
-		 * @param string                    $gateway_url Gateway url. Default empty string.
+		 * @param Product[] $products    Products.
+		 * @param string    $gateway_url Gateway url. Default empty string.
 		 *
 		 * @return string
 		 */
@@ -496,7 +512,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function ( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 			$products = array_values( $products );
@@ -509,9 +525,9 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 				 *
 				 * @since 4.5.0
 				 *
-				 * @param string                    $url                  The URL, where user will be redirected after the failed payment.
-				 * @param string                    $payment_gateway_name Payment gateway name.
-				 * @param Learndash_Product_Model[] $products             Purchased products.
+				 * @param string    $url                  The URL, where user will be redirected after the failed payment.
+				 * @param string    $payment_gateway_name Payment gateway name.
+				 * @param Product[] $products             Purchased products.
 				 *
 				 * @return string The URL, where user will be redirected after the failed payment.
 				 */
@@ -539,7 +555,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products Products.
+		 * @param Product[] $products Products.
 		 *
 		 * @return string
 		 */
@@ -547,12 +563,12 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 
 			$product_titles = array_map(
-				function( Learndash_Product_Model $product ): string {
+				function( Product $product ): string {
 					return $product->get_post()->post_title;
 				},
 				$products
@@ -566,7 +582,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products Products.
+		 * @param Product[] $products Products.
 		 *
 		 * @return string
 		 */
@@ -576,7 +592,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function ( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 			$products = array_values( $products );
@@ -626,7 +642,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$transaction_id = learndash_transaction_create( $meta, $post, $user, $this->parent_transaction_id );
 
 			if ( 0 === $this->parent_transaction_id ) {
-				$transaction = Learndash_Transaction_Model::find( $transaction_id );
+				$transaction = Transaction::find( $transaction_id );
 
 				if ( $transaction ) {
 					$parent_transaction = $transaction->get_parent();
@@ -831,8 +847,8 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products Products.
-		 * @param WP_User                   $user     User.
+		 * @param Product[] $products Products.
+		 * @param WP_User   $user     User.
 		 *
 		 * @return array<int, mixed> Return the results of enroll() method of each product update.
 		 */
@@ -840,7 +856,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function ( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 
@@ -858,8 +874,8 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @param Learndash_Product_Model[] $products Products.
-		 * @param WP_User                   $user     User.
+		 * @param Product[] $products Products.
+		 * @param WP_User   $user     User.
 		 *
 		 * @return array<int, mixed> Return the results of unenroll() method of each product update.
 		 */
@@ -867,7 +883,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			$products = array_filter(
 				$products,
 				function ( $product ) {
-					return $product instanceof Learndash_Product_Model;
+					return $product instanceof Product;
 				}
 			);
 
@@ -950,7 +966,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 			 * @since 4.5.0
 			 *
 			 * @param string $button_label         Payment button label.
-			 * @param string $payment_gateway_name Payment gateway name.
+			 * @param string $payment_gateway_name Payment gateway name. Can be empty.
 			 *
 			 * @return string Payment button label.
 			 */

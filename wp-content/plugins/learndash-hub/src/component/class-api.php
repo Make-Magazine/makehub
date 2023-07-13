@@ -25,7 +25,7 @@ class API extends Base {
 	/**
 	 * Trigger a license verification.
 	 *
-	 * @param string $email       The email that registered with LearnDash.
+	 * @param string $email The email that registered with LearnDash.
 	 * @param string $license_key The license key provided when registered.
 	 * @param bool   $force_check Force check the license status.
 	 *

@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS - ProPanel
  * Plugin URI: http://www.learndash.com
  * Description: Easily manage and view your LearnDash LMS activity.
- * Version: 2.1.4.1
+ * Version: 2.1.4.2
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * License: GPL-2.0+
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 
 if ( ! defined( 'LD_PP_VERSION' ) ) {
-	define( 'LD_PP_VERSION', '2.1.4.1' );
+	define( 'LD_PP_VERSION', '2.1.4.2' );
 }
 
 if ( ! defined( 'LD_PP_PLUGIN_DIR' ) ) {
@@ -78,7 +78,7 @@ LearnDash_Dependency_Check_ProPanel::get_instance()->set_dependencies(
 	)
 );
 LearnDash_Dependency_Check_ProPanel::get_instance()->set_message(
-	esc_html__( 'LearnDash ProPanel requires the following plugin(s) be active:', 'ld_propanel' ) 
+	esc_html__( 'LearnDash ProPanel requires the following plugin(s) be active:', 'ld_propanel' )
 );
 
 /**
