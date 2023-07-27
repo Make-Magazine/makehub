@@ -131,7 +131,7 @@ jQuery(document).ready(function() {
 	function checkSession() {
 		webAuth.checkSession({},
 			function(err, result) {
-                alert(result);
+                //alert(result);
 				if (err) {
 					//not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
 					if (err.error !== 'login_required') {
