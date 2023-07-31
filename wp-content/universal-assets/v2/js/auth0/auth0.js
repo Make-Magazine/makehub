@@ -112,7 +112,7 @@ jQuery(document).ready(function() {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
 					if(err && jQuery("#profile-view img.avatar").attr('src') == "https://make.co/wp-content/universal-assets/v2/images/default-makey.png") {
-						console.log(err);
+						console.log('Get User Info Error: ${err}');
 						checkSession();
 						//jQuery("#LogoutBtn").click();
 					}
@@ -133,6 +133,7 @@ jQuery(document).ready(function() {
 			function(err, result) {
                 //alert(result);
 				if (err) {
+                    console.log("Check Session - Logging out");
 					//not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
 					if (err.error !== 'login_required') {
 						errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
@@ -142,6 +143,7 @@ jQuery(document).ready(function() {
 					// If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
 					//If you are makehub and you are logged in, you will never hit this code
 					if (wpLoginRequired && jQuery("body").is(".logged-in")) {
+                        console.log("WP logout triggered");
 						WPlogout();
 					}
 					clearLocalStorage();
