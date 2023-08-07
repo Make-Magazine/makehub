@@ -107,7 +107,7 @@ jQuery(document).ready(function() {
 		} else {
 			//check if expires at is set and not expired and accesstoken is set in local storage
 			//if yes then run the webAuth.client.userInfo() call
-			console.log("auth0_comp: " + localStorage.getItem('expires_at') + "/" + Date.now());
+			//console.log("auth0_comp: " + localStorage.getItem('expires_at') + "/" + Date.now());
 			if(localStorage.getItem('expires_at') && localStorage.getItem('expires_at') > Date.now()) {
 				webAuth.client.userInfo(localStorage.getItem('access_token'), function(err, user) {
 					// if we're getting an error at this stage and see the blank default makey avatar, let's complete logging the user out
@@ -129,7 +129,7 @@ jQuery(document).ready(function() {
     }
 
 	function checkSession() {
-        if (navigator.userAgent.includes("Safari") && (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) ) {
+        if ( (navigator.userAgent.includes("Safari") || /iPad|iPhone|iPod/.test(navigator.userAgent) ) && (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) ) {
             if(jQuery("body").is(".logged-in")) {
                 wploggedin = true;
             }
@@ -214,9 +214,9 @@ jQuery(document).ready(function() {
 
     function getProfile() {
         var user = {};
-        //are they logged into WP or Auth0 and is this a makeco domain?
+        //are they logged into WP? this should just be mf and make.co domains
         if (wploggedin) {
-            //user is logged into wordpress at this point and is on a make.co site let's display wordpress data
+            //user is logged into wordpress at this point, let's display wordpress data
             user = {
                 user_avatar: (ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
                 user_email: (ajax_object.wp_user_email == undefined) ? '' : ajax_object.wp_user_email,
