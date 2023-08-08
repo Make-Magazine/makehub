@@ -139,7 +139,7 @@ jQuery(document).ready(function() {
                 function(err, result) {
                     //alert(result);
                     if (err) {
-                        console.log("Check Session - Logging out");
+                        //("Check Session - Logging out");
                         //not logged into auth0 - Commenting these out since they go off even if a user is just visiting a site before logging in
                         if (err.error !== 'login_required') {
                             errorMsg("User had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
@@ -149,7 +149,7 @@ jQuery(document).ready(function() {
                         // If this IS makerfaire or makehub, and the user is logged into WP, we need to log them out as they are no longer logged into Auth0
                         //If you are makehub and you are logged in, you will never hit this code
                         if (wpLoginRequired && jQuery("body").is(".logged-in")) {
-                            console.log("WP logout triggered");
+                            //console.log("WP logout triggered");
                             WPlogout();
                         }
                         clearLocalStorage();
