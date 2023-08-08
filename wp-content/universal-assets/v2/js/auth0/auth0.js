@@ -74,7 +74,7 @@ jQuery(document).ready(function() {
                     returnTo: location.protocol + "//" + location.hostname,
                 });
             });
-        } else {
+        } else if(url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) {
             jQuery("#LoginBtn").on("click", function(event) {
                 setCookie("make_redirect_url", window.location.href, 1);
             });
