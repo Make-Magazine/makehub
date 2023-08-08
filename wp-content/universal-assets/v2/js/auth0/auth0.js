@@ -5,6 +5,12 @@ if(window.location.hash.indexOf("access_token") > -1) {
 	localStorage.setItem('auth0_hash', auth0Hash);
 	localStorage.setItem('first_login', 'true');
 }
+// go to where we logged in from
+if( window.location.pathname == '/' && getCookie("make_redirect_url") ) {
+	window.location.replace(getCookie("make_redirect_url"));
+	delete_cookie("make_redirect_url");
+}
+
 
 jQuery(document).ready(function() {
     //set variable defaults
@@ -53,7 +59,7 @@ jQuery(document).ready(function() {
         if (wpLoginRequired == false) {
             jQuery("#LoginBtn").on("click", function(event) {
                 event.preventDefault();
-				setCookie("mz_redirect_url", window.location.href, 1);
+				setCookie("make_redirect_url", window.location.href, 1);
                 webAuth.authorize({
                     clientID: AUTH0_CLIENT_ID,
                     redirect_uri: location.protocol + "//" + location.hostname,
@@ -67,6 +73,10 @@ jQuery(document).ready(function() {
                     clientID: AUTH0_CLIENT_ID,
                     returnTo: location.protocol + "//" + location.hostname,
                 });
+            });
+        } else {
+            jQuery("#LoginBtn").on("click", function(event) {
+                setCookie("make_redirect_url", window.location.href, 1);
             });
         }
 		//check for if this is the first login
