@@ -51,7 +51,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
     box-shadow: 0 1px 5px rgba(0,0,0, .3);
     width: 100%;
 	max-width: 100vw;
-	@media screen and (min-width: 768px) {
+	@media screen and (min-width: 807px) {
 		height: 121px; // hardcoded to prevent CLS
 		background: $color-grey;
 	}
@@ -636,7 +636,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 // default padding underneath universal nav
 #page .site-content {
 	padding-top: 121px;
-	@media screen and (max-width: 768px) {
+	@media screen and (max-width: 807px) {
 		padding-top: 76px;
 	}
 }

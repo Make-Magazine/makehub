@@ -195,31 +195,31 @@ jQuery(document).ready(function () {
 
     // make some room for our fixed header
     jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "121px");
-    if (jQuery(window).width() <= 800) {
+    if (jQuery(window).width() <= 801) {
         jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav, div[id^='sm_box_']").first().css("padding-top", "76px");
     }
 
     // Subnav
     jQuery(".site-header-custom").append(jQuery("#universal-subnav"));
     jQuery(".nav-level-2").css("display", "block");
-    if (jQuery(window).width() < 800) {
+    if (jQuery(window).width() < 8001) {
 		jQuery("#primary-navbar h3").text(sitename);
         jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#menu-secondary_universal_menu"));
 		jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#make-coin"));
     }
     window.onresize = function() {
-        if (jQuery(window).width() < 800 && (jQuery("#universal-subnav #menu-secondary_universal_menu").length ) ) {
+        if (jQuery(window).width() < 801 && (jQuery("#universal-subnav #menu-secondary_universal_menu").length ) ) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
 			jQuery("#primary-navbar h3").text(sitename);
 	        jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#menu-secondary_universal_menu"));
 			jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#make-coin"));
-        } else if (jQuery(window).width() >= 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length ) {
+        } else if (jQuery(window).width() >= 801 && jQuery("#primary-navbar #menu-secondary_universal_menu").length ) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
             jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
 			jQuery("#make-join").before(jQuery("#make-coin"));
 			jQuery("#primary-navbar h3").text("");
         }
-        if (jQuery(window).width() >= 800) {
+        if (jQuery(window).width() >= 801) {
             navListOrder();
         }
     }
