@@ -202,7 +202,7 @@ jQuery(document).ready(function () {
     // Subnav
     jQuery(".site-header-custom").append(jQuery("#universal-subnav"));
     jQuery(".nav-level-2").css("display", "block");
-    if (jQuery(window).width() < 8001) {
+    if (jQuery(window).width() < 801) {
 		jQuery("#primary-navbar h3").text(sitename);
         jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#menu-secondary_universal_menu"));
 		jQuery("#primary-navbar .mobile-subscribe-btn").after(jQuery("#make-coin"));
