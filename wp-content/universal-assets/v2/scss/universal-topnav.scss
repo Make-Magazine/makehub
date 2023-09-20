@@ -634,7 +634,7 @@ body:not(.makeco):not(.makershed):not(.makezine):not(#makerfaire):not(.makercamp
 }
 
 // default padding underneath universal nav
-#page .site-content {
+#page .site-content, body > div[data-elementor-type="wp-page"], #buddypress.buddypress-wrap {
 	padding-top: 121px;
 	@media screen and (max-width: 807px) {
 		padding-top: 76px;
