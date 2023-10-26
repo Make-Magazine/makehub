@@ -194,6 +194,12 @@
                             font-size: 34px;
                             margin-right: 8px;
                             padding-bottom: .1em;
+                            .footer-x-logo {
+                                margin-top: -8px;
+                                &:hover {
+                                    filter: invert(50%) sepia(72%) saturate(1562%) hue-rotate(176deg) brightness(95%) contrast(99%);
+                                }
+                            }
                             &:last-of-type {
                                 margin-right: 0px;
                             }
@@ -205,9 +211,7 @@
                                 padding: 0px;
                                 font-size: 34px;
                             }
-                            .fa-twitter-square:hover {
-                                color: #1da1f2;
-                            }
+    
                             .fa-facebook-square:hover {
                                 color: #3b5998;
                             }
