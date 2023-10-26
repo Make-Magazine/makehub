@@ -30,7 +30,7 @@ function register_make_widgets( $widgets_manager ) {
 	}
 
 	$widgets_manager->register( new \Elementor_mShedPurch_Widget() );
-	$widgets_manager->register( new \Elementor_myMspaces_Widget() );
+	//$widgets_manager->register( new \Elementor_myMspaces_Widget() );
 	//$widgets_manager->register( new \Elementor_MakeFacilitatorEvents_Widget() );
 	//$widgets_manager->register( new \Elementor_MyCampusTickets_Widget() );
 	$widgets_manager->register( new \Elementor_MyMakerCamp_Widget() );

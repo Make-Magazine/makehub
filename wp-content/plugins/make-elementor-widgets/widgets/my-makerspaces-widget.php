@@ -1,4 +1,9 @@
 <?php
+
+use FacebookAds\Object\CustomAudienceNormalizers\CityNormalizer;
+use OpenCloud\Common\Constants\State;
+use plainview\sdk_broadcast\form2\inputs\email;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -141,33 +146,49 @@ class Elementor_myMspaces_Widget extends \Elementor\Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-    $settings = $this->get_settings_for_display();
+		$settings = $this->get_settings_for_display();
 
-    global $wpdb;
-    global $bp;
+		global $wpdb;
+		global $bp;
 
-    $user = wp_get_current_user();
-    $user_email = (string) $user->user_email;
-    $user_slug = $user->user_nicename;
+		$user = wp_get_current_user();
+		$user_email = (string) $user->user_email;
+		$user_slug = $user->user_nicename;
 
-    //pull makerspace information from the makerspace site
-    $sql = 'SELECT meta_key, meta_value from wp_3_gf_entry_meta '
-            . ' where entry_id = (select entry_id FROM `wp_3_gf_entry_meta` '
-            . '                    WHERE `meta_key` LIKE "141" and meta_value like "' . $user_email . '")';
-    $ms_results = $wpdb->get_results($sql);
+		//pull makerspace information from the makerspace site
+		$sql = 'SELECT distinct(entry.id) as entry_id, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=1 and entry_id=entry.id) as space_name, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=2 and entry_id=entry.id) as space_website, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=11 and entry_id=entry.id) as space_city, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=12 and entry_id=entry.id) as space_state, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=89 and entry_id=entry.id) as space_country, '.
+				'(select meta_value from wp_3_gf_entry_meta where meta_key=13 and entry_id=entry.id) as space_zipcode '.
+				'from wp_3_gf_entry entry '.
+				'left outer join wp_3_gf_entry_meta contact_email '.
+					'on contact_email.meta_key in("141","86") and contact_email.meta_value = "alicia.williams130@gmail.com" '.
+					'and contact_email.entry_id = entry.id '.
+				'where entry.form_id=5 and entry.status="Active" and contact_email.id <>""';	
 
-    if (!empty($ms_results)) {
-        ?>
-        <div class="dashboard-box make-elementor-expando-box">
-            <h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'My Makerspace listings');?></h4>
-            <ul class="closed">
-                <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
-                <li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>
-            </ul>
-        </div>
-        <?php
-    }
-
+		
+		$ms_results = $wpdb->get_results($sql);
+		if (!empty($ms_results)) {
+			?>
+			<div class="dashboard-box make-elementor-expando-box">
+				<h4 class="closed"><?php echo ($settings['title']!=''?$settings['title']:'My Makerspace listings');?></h4>
+				<ul class="closed">
+			<?php
+			foreach($ms_results as $ms){
+				?>
+				<li><p><b><?php echo $ms['space_name']; ?></b> - <?php echo $ms['space_website']; ?></p></li>
+				<?php
+			}
+			?>
+					<li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>
+				</ul>
+			</div>
+			<?php
+		}
+                        
 	}
 
 }
