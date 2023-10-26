@@ -189,13 +189,14 @@
                     ul {
                         margin: 0 auto 10px;
                         min-height: 40px;
+                        display: flex;
                         li {
-                            float: left;
                             font-size: 34px;
+                            margin-top: auto;
                             margin-right: 8px;
                             padding-bottom: .1em;
+                            a { display: flex; }
                             .footer-x-logo {
-                                margin-top: -8px;
                                 &:hover {
                                     filter: invert(50%) sepia(72%) saturate(1562%) hue-rotate(176deg) brightness(95%) contrast(99%);
                                 }
