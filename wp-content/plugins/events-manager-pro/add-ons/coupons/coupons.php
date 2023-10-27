@@ -26,7 +26,7 @@ class EM_Coupons extends EM_Object {
 			}
 			//manual bookings - add coupons for single event manual bookings
 			if( !empty($_REQUEST['action']) && $_REQUEST['action'] == 'manual_booking' ){
-				add_action('em_booking_form_footer', array('EM_Coupons', 'em_booking_form_footer'),1,2);
+				add_action('em_booking_form_summary_footer', array('EM_Coupons', 'em_booking_form'),1,2);
 			}
 			if( !empty($_REQUEST['manual_booking']) && wp_verify_nonce($_REQUEST['manual_booking'], 'em_manual_booking_'.$_REQUEST['event_id']) ){
 				add_filter('em_booking_get_post', array('EM_Coupons', 'em_booking_get_post'), 10, 2);
@@ -35,7 +35,7 @@ class EM_Coupons extends EM_Object {
 			}
 		}else{ //normal mode
 		    //add to any booking form
-			add_action('em_booking_form_footer', array('EM_Coupons', 'em_booking_form_footer'),1,2);
+			add_action('em_booking_form_summary_footer', array('EM_Coupons', 'em_booking_form'),1,2);
 			//meta box hook for adding coupons to booking info
 			add_filter('em_event_get_post_meta',array('EM_Coupons', 'em_event_get_post_meta'),10,2);
 			add_filter('em_event_save_meta',array('EM_Coupons', 'em_event_save_meta'),10,2);
@@ -447,13 +447,20 @@ class EM_Coupons extends EM_Object {
 	 * Outputs coupon code input field at bottom of booking form.
 	 * @param EM_Event $EM_Event
 	 */
-	public static function em_booking_form_footer($EM_Event){
+	public static function em_booking_form( $EM_Event, $EM_Booking ){
 		if( !$EM_Event->is_free(true) && EM_Coupons::event_has_coupons($EM_Event) > 0){
 			?>
-			<p class="em-bookings-form-coupon">
-				<label><?php _e('Coupon Code','em-pro'); ?></label>
-				<input type="text" name="coupon_code" class="input em-coupon-code" />
-			</p>
+			<div class="em-booking-form-section-coupons em-booking-section <?php if ( $EM_Booking->get_spaces() == 0 ) echo 'hidden'; ?>">
+				<div class="input-type em-bookings-form-coupon">
+					<label for="em-coupont-code-<?php echo esc_attr($EM_Event->event_id); ?>"><?php _e('Coupon Code','em-pro'); ?></label>
+					<div class="em-coupon-code-fields">
+						<div class="em-coupon-code-wrap input-wrap">
+							<input type="text" name="coupon_code" class="input em-coupon-code" id="em-coupont-code-<?php echo esc_attr($EM_Event->event_id); ?>">
+						</div>
+						<button type="button" class="em-coupon-code-button" data-text-apply="<?php esc_attr_e('Apply') ?>" data-text-remove="<?php esc_attr_e('Remove'); ?>"><?php esc_html_e('Apply') ?></button>
+					</div>
+				</div>
+			</div>
 			<?php
 			add_action('em_booking_js_footer', array('EM_Coupons', 'em_booking_js_footer') );
 		}
@@ -487,8 +494,18 @@ class EM_Coupons extends EM_Object {
 		//override this with CSS in your own theme
 		?>
 		<style type="text/css">
-			.em-coupon-message { display:inline-block; margin:5px 0 0; }
-			.em-coupon-success { color:green; }
+			.em-coupon-code-fields {
+				margin-bottom: 15px;
+			}
+			.em .em-coupon-code-fields div.input-wrap.em-coupon-code-wrap {
+				margin-bottom: 0 !important;
+			}
+			input.em-coupon-code.loading {
+				background: var(--icon-spinner) calc(100% - 10px) 50% no-repeat !important;
+				background-size: 22px !important;
+			}
+			.em-coupon-message { display:inline-block; margin: 0; }
+			.em-coupon-success { color:green;; margin: 7px 5px; }
 			.em-coupon-error { color:red; }
 			.em-cart-coupons-form .em-coupon-message{ margin:0 20px 0 0; }
 			.em-coupon-error .em-icon {
@@ -500,10 +517,6 @@ class EM_Coupons extends EM_Object {
 				background-color: green;
 				-webkit-mask-image: var(--icon-checkmark-circle);
 				mask-image: var(--icon-checkmark-circle);
-			}
-			.em-coupon-code.loading {
-				background: var(--icon-spinner) calc(100% - 10px) 50% no-repeat;
-				background-size: 20px;
 			}
 		</style>
 		<?php

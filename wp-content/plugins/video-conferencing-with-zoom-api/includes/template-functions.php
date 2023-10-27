@@ -147,7 +147,7 @@ function video_conference_zoom_meeting_join() {
 			wp_localize_script( 'video-conferencing-with-zoom-api', 'mtg_data', $data );
 		}
 
-	} else if ( ! empty( $zoom['api']->state ) && $zoom['api']->state == "ended" ) {
+	} elseif ( ! empty( $zoom['api']->state ) && $zoom['api']->state == "ended" ) {
 		echo "<p>" . __( 'This meeting has ended.', 'video-conferencing-with-zoom-api' ) . "</p>";
 	} else {
 		echo "<p>" . __( 'Please login to join this meeting.', 'video-conferencing-with-zoom-api' ) . "</p>";
@@ -166,7 +166,7 @@ function video_conference_zoom_meeting_join() {
 function video_conference_zoom_meeting_join_link( $zoom_meeting ) {
 	$disable_app_join = apply_filters( 'vczoom_join_meeting_via_app_disable', false );
 	if ( ! empty( $zoom_meeting->join_url ) && ! $disable_app_join ) {
-		$join_url = ! empty( $zoom_meeting->encrypted_password ) ? vczapi_get_pwd_embedded_join_link( $zoom_meeting->join_url, $zoom_meeting->encrypted_password ) : $zoom_meeting->join_url;
+		$join_url = ! empty( $zoom_meeting->encrypted_password ) ? \Codemanas\VczApi\Helpers\Links::getPwdEmbeddedJoinLink( $zoom_meeting->join_url, $zoom_meeting->encrypted_password ) : $zoom_meeting->join_url;
 		?>
         <a target="_blank" href="<?php echo esc_url( $join_url ); ?>"
            class="btn btn-join-link btn-join-via-app"><?php echo apply_filters( 'vczapi_join_meeting_via_app_text', __( 'Join Meeting via Zoom App', 'video-conferencing-with-zoom-api' ) ); ?></a>
@@ -178,11 +178,16 @@ function video_conference_zoom_meeting_join_link( $zoom_meeting ) {
 		$meeting_details = get_post_meta( $post_id, '_meeting_fields', true );
 		if ( ! empty( $zoom_meeting->id ) && ! empty( $post_id ) && empty( $meeting_details['site_option_browser_join'] ) && ! vczapi_check_disable_joinViaBrowser() ) {
 			$meeting_id = ! empty( $zoom_meeting->pmi ) ? $zoom_meeting->pmi : $zoom_meeting->id;
+
+			$args = [
+				'post_id' => $post_id,
+			];
+
 			if ( ! empty( $zoom_meeting->password ) ) {
-				echo vczapi_get_browser_join_links( $post_id, $meeting_id, $zoom_meeting->password );
-			} else {
-				echo vczapi_get_browser_join_links( $post_id, $meeting_id );
+				$args['password'] = $zoom_meeting->password;
 			}
+
+			echo \Codemanas\VczApi\Helpers\Links::getJoinViaBrowserJoinLinks( $args, $meeting_id );
 		}
 	}
 }
@@ -216,9 +221,9 @@ function video_conference_zoom_shortcode_join_link_webinar( $zoom_webinars ) {
 				}
 			}
 		}
-	} else if ( empty( $zoom_webinars->occurrences ) ) {
+	} elseif ( empty( $zoom_webinars->occurrences ) ) {
 		$zoom_webinars->start_time = false;
-	} else if ( ! empty( $zoom_webinars->type ) && $zoom_webinars->type === 6 ) {
+	} elseif ( ! empty( $zoom_webinars->type ) && $zoom_webinars->type === 6 ) {
 		$zoom_webinars->start_time = false;
 	}
 
@@ -228,13 +233,16 @@ function video_conference_zoom_shortcode_join_link_webinar( $zoom_webinars ) {
 	if ( $now <= $start_time ) {
 		unset( $GLOBALS['webinars'] );
 
+		$args = [
+			'link_only' => true
+		];
+
 		if ( ! empty( $zoom_webinars->password ) ) {
-			$browser_join = vczapi_get_browser_join_shortcode( $zoom_webinars->id, $zoom_webinars->password, true );
-		} else {
-			$browser_join = vczapi_get_browser_join_shortcode( $zoom_webinars->id, false, true );
+			$args['password'] = $zoom_webinars->password;
 		}
 
-		$join_url            = ! empty( $zoom_webinars->encrypted_password ) ? vczapi_get_pwd_embedded_join_link( $zoom_webinars->join_url, $zoom_webinars->encrypted_password ) : $zoom_webinars->join_url;
+		$browser_join        = \Codemanas\VczApi\Helpers\Links::getJoinViaBrowserJoinLinks( $args, $zoom_webinars->id );
+		$join_url            = ! empty( $zoom_webinars->encrypted_password ) ? \Codemanas\VczApi\Helpers\Links::getPwdEmbeddedJoinLink( $zoom_webinars->join_url, $zoom_webinars->encrypted_password ) : $zoom_webinars->join_url;
 		$GLOBALS['webinars'] = array(
 			'join_uri'    => apply_filters( 'vczoom_join_webinar_via_app_shortcode', $join_url, $zoom_webinars ),
 			'browser_url' => ! vczapi_check_disable_joinViaBrowser() ? apply_filters( 'vczoom_join_webinar_via_browser_disable', $browser_join ) : false
@@ -261,7 +269,7 @@ function video_conference_zoom_shortcode_join_link( $zoom_meetings ) {
 	}
 
 	if ( empty( $zoom_meetings->timezone ) ) {
-		$zoom_meetings->timezone = zvc_get_timezone_offset_wp();
+		$zoom_meetings->timezone = \Codemanas\VczApi\Helpers\Date::get_timezone_offset();
 	}
 
 	$now               = new DateTime( 'now -1 hour', new DateTimeZone( $zoom_meetings->timezone ) );
@@ -276,11 +284,11 @@ function video_conference_zoom_shortcode_join_link( $zoom_meetings ) {
 				}
 			}
 		}
-	} else if ( empty( $zoom_meetings->occurrences ) ) {
+	} elseif ( empty( $zoom_meetings->occurrences ) ) {
 		$zoom_meetings->start_time = false;
-	} else if ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 3 ) {
+	} elseif ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 3 ) {
 		$zoom_meetings->start_time = false;
-	} else if ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 4 ) {
+	} elseif ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 4 ) {
 		$zoom_meetings->start_time = false;
 	}
 
@@ -290,16 +298,19 @@ function video_conference_zoom_shortcode_join_link( $zoom_meetings ) {
 	if ( $now <= $start_time ) {
 		unset( $GLOBALS['meetings'] );
 
+		$args = [
+			'link_only' => true
+		];
+
 		if ( ! empty( $zoom_meetings->password ) ) {
-			$browser_join = vczapi_get_browser_join_shortcode( $zoom_meetings->id, $zoom_meetings->password, true );
-		} else {
-			$browser_join = vczapi_get_browser_join_shortcode( $zoom_meetings->id, false, true );
+			$args['password'] = $zoom_meetings->password;
 		}
 
-		$join_url            = ! empty( $zoom_meetings->encrypted_password ) ? vczapi_get_pwd_embedded_join_link( $zoom_meetings->join_url, $zoom_meetings->encrypted_password ) : $zoom_meetings->join_url;
+		$browser_join        = \Codemanas\VczApi\Helpers\Links::getJoinViaBrowserJoinLinks( $args, $zoom_meetings->id );
+		$join_url            = ! empty( $zoom_meetings->encrypted_password ) ? \Codemanas\VczApi\Helpers\Links::getPwdEmbeddedJoinLink( $zoom_meetings->join_url, $zoom_meetings->encrypted_password ) : $zoom_meetings->join_url;
 		$GLOBALS['meetings'] = array(
 			'join_uri'    => apply_filters( 'vczoom_join_meeting_via_app_shortcode', $join_url, $zoom_meetings ),
-			'browser_url' => ! vczapi_check_disable_joinViaBrowser() ? apply_filters( 'vczoom_join_meeting_via_browser_disable', $browser_join ) : false
+			'browser_url' => ! \Codemanas\VczApi\Data\Metastore::checkDisableJoinViaBrowser() ? apply_filters( 'vczoom_join_meeting_via_browser_disable', $browser_join ) : false
 		);
 		vczapi_get_template( 'shortcode/join-links.php', true, false );
 	}
@@ -334,7 +345,7 @@ if ( ! function_exists( 'video_conference_zoom_shortcode_table' ) ) {
 					<?php
 					if ( $zoom_meetings->status === "waiting" ) {
 						_e( 'Waiting - Not started', 'video-conferencing-with-zoom-api' );
-					} else if ( $zoom_meetings->status === "started" ) {
+					} elseif ( $zoom_meetings->status === "started" ) {
 						_e( 'Meeting is in Progress', 'video-conferencing-with-zoom-api' );
 					} else {
 						echo $zoom_meetings->status;
@@ -377,7 +388,7 @@ if ( ! function_exists( 'video_conference_zoom_shortcode_table' ) ) {
 							}
 
 							if ( $closest_occurence ) {
-								echo vczapi_dateConverter( $closest_occurence, $zoom_meetings->timezone, 'F j, Y @ g:i a' );
+								echo \Codemanas\VczApi\Helpers\Date::dateConverter( $closest_occurence, $zoom_meetings->timezone, 'F j, Y @ g:i a' );
 							} else {
 								_e( 'Meeting has ended !', 'video-conferencing-with-zoom-api' );
 							}
@@ -393,25 +404,25 @@ if ( ! function_exists( 'video_conference_zoom_shortcode_table' ) ) {
                     </tr>
 					<?php
 				}
-			} else if ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 3 ) {
+			} elseif ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 3 ) {
 				?>
                 <tr class="vczapi-shortcode-meeting-table--row6">
                     <td><?php _e( 'Start Time', 'video-conferencing-with-zoom-api' ); ?></td>
                     <td><?php _e( 'This is a meeting with no Fixed Time.', 'video-conferencing-with-zoom-api' ); ?></td>
                 </tr>
 				<?php
-			} else if ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 4 ) {
+			} elseif ( ! empty( $zoom_meetings->type ) && $zoom_meetings->type === 4 ) {
 				?>
                 <tr class="vczapi-shortcode-meeting-table--row6">
                     <td><?php _e( 'Type', 'video-conferencing-with-zoom-api' ); ?></td>
                     <td><?php _e( 'Personal Meeting Room', 'video-conferencing-with-zoom-api' ); ?></td>
                 </tr>
 				<?php
-			} else if ( ! empty( $zoom_meetings->start_time ) ) {
+			} elseif ( ! empty( $zoom_meetings->start_time ) ) {
 				?>
                 <tr class="vczapi-shortcode-meeting-table--row6">
                     <td><?php _e( 'Start Time', 'video-conferencing-with-zoom-api' ); ?></td>
-                    <td><?php echo vczapi_dateConverter( $zoom_meetings->start_time, $zoom_meetings->timezone, 'F j, Y @ g:i a' ); ?></td>
+                    <td><?php echo \Codemanas\VczApi\Helpers\Date::dateConverter( $zoom_meetings->start_time, $zoom_meetings->timezone, 'F j, Y @ g:i a' ); ?></td>
                 </tr>
 			<?php } ?>
 			<?php if ( ! empty( $zoom_meetings->timezone ) ) { ?>
@@ -525,23 +536,32 @@ function video_conference_zoom_after_jbh_html() {
 	do_action( 'vczapi_join_via_browser_footer' );
 
 	ob_start( 'vczapi_removeWhitespace' );
+
 	global $post;
-	if ( isset( $_GET['redirect'] ) && ! empty( $_GET['redirect'] ) ) {
+	if ( ! empty( $_GET['redirect'] ) ) {
 		$post_link = esc_url( $_GET['redirect'] );
-	} else if ( ! empty( $post ) && ! empty( $post->ID ) ) {
+	} elseif ( ! empty( $post ) && ! empty( $post->ID ) ) {
 		$post_link = get_permalink( $post->ID );
 	} else {
 		$post_link = home_url( '/' );
 	}
 
-	$localize = array(
-		'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-		'zvc_security'  => wp_create_nonce( "_nonce_zvc_security" ),
-		'redirect_page' => apply_filters( 'vczapi_api_redirect_join_browser', esc_url( $post_link ) ),
-		'meeting_id'    => base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['join'] ) ),
-		'meeting_pwd'   => ! empty( $_GET['pak'] ) ? base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['pak'] ) ) : false,
-		'disableInvite' => ( get_option( 'vczapi_disable_invite' ) == 'yes' ),
-		'sdk_version'   => ZVC_ZOOM_WEBSDK_VERSION
+	global $current_user;
+	$full_name                 = ! empty( $current_user->display_name ) ? $current_user->display_name : 'Guest';
+	$enable_direct_via_browser = \Codemanas\VczApi\Data\Metastore::enabledDirectJoinViaBrowser();
+	$meeting_id                = base64_encode( \Codemanas\VczApi\Helpers\Encryption::decrypt( $_GET['join'] ) );
+	$meeting_pwd               = ! empty( $_GET['pak'] ) ? base64_encode( \Codemanas\VczApi\Helpers\Encryption::decrypt( $_GET['pak'] ) ) : '';
+	$localize                  = array(
+		'ajaxurl'                        => admin_url( 'admin-ajax.php' ),
+		'zvc_security'                   => wp_create_nonce( "_nonce_zvc_security" ),
+		'redirect_page'                  => apply_filters( 'vczapi_api_redirect_join_browser', esc_url( $post_link ) ),
+		'meeting_id'                     => $meeting_id,
+		'meeting_pwd'                    => $meeting_pwd,
+		'disableInvite'                  => ( get_option( 'vczapi_disable_invite' ) == 'yes' ),
+		'sdk_version'                    => ZVC_ZOOM_WEBSDK_VERSION,
+		'user_mail'                      => ! empty( $current_user->user_email ) ? $current_user->user_email : '',
+		'user_name'                      => $full_name,
+		'enable_direct_join_via_browser' => ! empty( $_GET['direct_join'] ) ? (bool) $_GET['direct_join'] : $enable_direct_via_browser,
 	);
 
 	/**
@@ -563,7 +583,7 @@ function video_conference_zoom_after_jbh_html() {
 	$localize        = array_merge( $localize, $additional_data );
 	?>
     <script id='video-conferencing-with-zoom-api-browser-js-extra'>
-      var zvc_ajx = <?php echo wp_json_encode( $localize ); ?>;
+        var zvc_ajx = <?php echo wp_json_encode( $localize ); ?>;
     </script>
 
 <?php if ( ! defined( 'VCZAPI_STATIC_CDN' ) ) { ?>
@@ -634,4 +654,59 @@ function video_conference_zoom_before_post_loop() {
 
 		$GLOBALS['zoom']['columns'] = $columns;
 	}
+}
+
+/**
+ * Display template for single pages.
+ *
+ * @param $post
+ * @param $template
+ *
+ * @return bool|mixed|string
+ */
+function vczapi_get_single_or_zoom_template( $post, $template = false ) {
+	if ( empty( $post ) && $post->post_type != 'zoom-meetings' ) {
+		return false;
+	}
+
+	unset( $GLOBALS['zoom'] );
+
+	$show_zoom_author_name = get_option( 'zoom_show_author' );
+
+	$GLOBALS['zoom'] = get_post_meta( $post->ID, '_meeting_fields', true ); //For Backwards Compatibility ( Will be removed someday )
+	$meeting_details = get_post_meta( $post->ID, '_meeting_zoom_details', true );
+
+	if ( ! empty( $show_zoom_author_name ) ) {
+		$meeting_author = vczapi_get_meeting_author( $post->ID, $meeting_details );
+	} else {
+		$meeting_author = get_userdata( $post->post_author );
+		$meeting_author = ! empty( $meeting_author ) && ! empty( $meeting_author->first_name ) ? $meeting_author->first_name . ' ' . $meeting_author->last_name : $meeting_author->display_name;
+	}
+
+	$GLOBALS['zoom']['host_name'] = ! empty( $meeting_author ) ? $meeting_author : false;
+	if ( ! empty( $meeting_details ) ) {
+		$GLOBALS['zoom']['api'] = get_post_meta( $post->ID, '_meeting_zoom_details', true );
+	}
+
+	$terms = get_the_terms( $post->ID, 'zoom-meeting' );
+	if ( ! empty( $terms ) ) {
+		$set_terms = array();
+		foreach ( $terms as $term ) {
+			$set_terms[] = $term->name;
+		}
+		$GLOBALS['zoom']['terms'] = $set_terms;
+	}
+
+	if ( isset( $_GET['type'] ) && $_GET['type'] === "meeting" && isset( $_GET['join'] ) ) {
+		$enable_direct_via_browser = \Codemanas\VczApi\Data\Metastore::enabledDirectJoinViaBrowser();
+		$whichTemplate             = $enable_direct_via_browser ? 'join-web-browser-directly.php' : 'join-web-browser.php';
+		$template                  = vczapi_get_template( $whichTemplate );
+	} elseif ( ! empty( $template ) && vczapi_is_fse_theme() ) {
+		return $template;
+	} else {
+		//Render View
+		$template = vczapi_get_template( 'single-meeting.php' );
+	}
+
+	return $template;
 }

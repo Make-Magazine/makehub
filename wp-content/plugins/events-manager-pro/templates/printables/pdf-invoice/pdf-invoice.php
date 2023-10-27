@@ -7,13 +7,14 @@ $EM_Event = $EM_Booking->get_event();
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<titleEvents Manager Booking</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title><?php esc_html_e('Event Booking', 'events-manager-pro'); ?></title>
 
 	<style>
 		<?php
 		emp_locate_template('printables/pdf-printable.css', true);
 		emp_locate_template('printables/pdf-invoice/pdf-invoice.css', true);
+		echo "#content { font-family: ". esc_attr(get_option('dbem_bookings_pdf_font', 'dejavusans')) . ", Helvetica, Arial, sans-serif; }";
 		?>
 	</style>
 </head>

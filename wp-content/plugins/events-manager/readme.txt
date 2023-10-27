@@ -4,8 +4,8 @@ Donate link: https://wp-events-plugin.com
 Tags: bookings, calendar, tickets, events, buddypress, event management, google maps, maps, locations, registration, zoom
 Text Domain: events-manager
 Requires at least: 5.2
-Tested up to: 6.2
-Stable tag: 6.3
+Tested up to: 6.3
+Stable tag: 6.4.5.1
 Requires PHP: 5.3
 
 Fully featured event registration management including recurring events, locations management, calendar, Google map integration, booking management
@@ -160,6 +160,96 @@ See our [FAQ](http://wp-events-plugin.com/documentation/faq/) page, which is upd
 18. Grid view for displaying your upcoming events at a glance
 
 == Changelog ==
+= 6.4.5.1 =
+* fixed fatal error caused by use of Pro function in settings page when Pro isn't activated, bug introduced in EM 6.4.5
+
+= 6.4.5 =
+* added RSVP functionality (re-confirming a booking)
+* add uncancel option so users can undo a cancellation if spaces still available
+* switched my bookings page action links to a button dropdown rather than loose links
+* fixed class static binding issues with EM_OAuth libraries causing problems in Zoom-enabled bookings
+* fixed tippy dropdown button width issues
+
+= 6.4.4 =
+* fixed session wakeup issues for the EM_Booking object due to recent atomic tickets update,
+* fixed EM_Tickets_Bookings and EM_Ticket_Booking possibly returning erroneous booking property
+* added JS booking form helper functions em_booking_form_unhide_success, em_booking_form_enable_button, em_booking_form_disable_button,
+* added backwards compatibility for booking ajax responses including the 'result' property rather than the new 'success' property
+* fixed calendar navigation issues showing default calendar size according to responsive sizing even when using forced calendar_size="large"
+* fixed advanced filters button in calendar not working when search forms disabled in settings page
+* moved advanced search trigger button html/php into separate template
+* fixed view of calendar changing to default events list format if default search forms disabled in settings
+* fixed error messages when updating Events Manager
+* moved default view setting to events formatting section, outside of search form options
+* fixed booking forms not always auto-hiding after submission is complete,
+* fixed scrolling overflow issues for skeleton loaders on booking form
+
+= 6.4.3 =
+* changed EM_Booking::set_status() parameters so $email_args is 4th overloaded function to prevent compile errors in Pro 3.2.2 or earlier with PHP 8
+* fixed cancelled events not triggering booking cancellations
+
+= 6.4.2 =
+* fixed google maps JS errors with embedded Google maps
+* fixed booking form issues and added fallbacks for settings and template overrides where booking intents are not present on initial booking form load
+* added fallback polyfill function to add booking_intent to booking forms overriden in template files which still uses em_booking_form_footer
+* fixed compatiblity issues with other plugins using reCaptcha breaking booking form AJAX process and causing "Network Error" error messages
+* added further fallbacks to handle non-network issues triggering  caused by unhandled thrown errors preventing booking form from fully processing
+* changed JS use of response.result to response.success in bookingform.js
+* fixed fatal PHP error when deleting an event on front-end admin
+* fixed fatal error when 0 views are selected/saved to settings or if dbem_search_form_views is saved incorrectly
+* added PHP $email_args parameter to EM_Booking status change functions which is passed onto the email() function for limiting admin/attendee sending
+* added event status feature including active and cancelled states along with options to email booked users about a cancellation
+* added is_cancelled and is_active conditional placeholders
+* added #_EVENTSTATUS placeholder
+* added cancelled (bool), active (bool) and active_status (int) search arguments for PHP and shortcode arguments
+* (minor) fixed PHP 8 error in ticket editor
+* fixed booking form summary showing all ticket (non-required) minimum spaces as if booked upon initial form load
+* fixed ticket columns not showing on booking admin summary tables
+* added multiple ticket support for columns showing single ticket data
+* added support for tippy html content in regular tooltip constructor html
+* fixed pagination issues with grouped event lists
+* fixed calendar advanced search popup not appearing when clicking trigger
+* fixed calendar size view change upon a calendar advanced search
+
+= 6.4.1 =
+* fixed data privacy consent checkbox not showing on booking form since
+* fixed 'undefined' button error
+* added back-compat fallback for deleted actions on booking form
+
+= 6.4 =
+* revamped booking form html structure (backwards compatible) and added a dynamic booking price summary
+* moved booking button into own template
+* rewritten booking form JS to remove dependence on jQuery entirely
+* added booking intent architecture
+* added skeleton loader CSS for more intuitive UI AJAX laoding
+* split email logic in EM_Booking->email into email_attendee and email_admins functions
+* added EM_Booking->get_currency() for later multi-currency integration possibilities
+* changed EM_Booking->boking_status back to public scope
+* fixed bug where ticket_id isn't added to EM_Ticket_Booking if supplied via $ticket_data
+* fixed calendar links not going through if tooltip and modal previews are disabled
+* added minified js files
+* split up events-manager.js into separate src files and compiled/minified by a grunt project in src folder
+* added min main JS and flatpickr l10n file loading if WP_DEBUG, SCRIPT_DEBUG or EM_DEBUG defined to true
+* fixed n/a booking field values when field ID is excessively long
+* added migration for copying previously used uuids in booking meta and making it the booking_uuid (without dashes) value given it is still not 'officiallly in use'
+* fixed shortcode events_list not recognizing the view argument such as [events_list view="grid"]
+* fixed PHP warning on graph dashboard
+* added/fixed search form support for inline advanced search and additional options to show/hide fields in both main and advanced search sections,
+* added individual settings for search/geo/scope search input fields in both main/advanced search forms
+* split up search form templates avoiding redundant data,
+* fixed disappearing input fields in responsive forms when search text field disabled,
+* fixed/improved logic for calculating when advanced fields and main search bar should/not be shown,
+* added view selection to advanced fields when main search bar is not shown
+* added fixed ids to view wrappers for fixed pages including event/calendar lists, calendar day lists, location lists, category/tag pages, event/location/tag/category single pages making it easier to use search forms placed on other parts of the page using shortcode
+* added em_template_before_{$template_name} and em_template_after_{$template_name} actions when auto-loading via em_locate_template
+* added additional verification and revokation methods for tokens in oauth api class if access token is not passed within the url
+* added better handling of errors upon OAuth requests
+* added em_search_form_footer action and moved hidden input fields for pre-defined search params without selectable fields into action function
+* fixed issue with misaligned event image placeholder date in widgets
+* tweaked EM_Options::remove to allow deleting entire array options
+* moved privacy checkbox to bottom of booking form user/form fields, above summary and buttons
+* fixed outdated coupon trigger not firing in jQuery for updated booking form
+
 = 6.3 =
 * fixed mobile display issue for selecting list views from search toolbar
 * added grid view for events and locations
@@ -1927,7 +2017,7 @@ See our [FAQ](http://wp-events-plugin.com/documentation/faq/) page, which is upd
 * events with >1 ticket will show multi-ticket editor regardless of single ticket mode setting
 * updated Brazilian language, added Catalan and fixed a few language datepicker oddities
 * fixed RSS validation fails for some special characters
-* fixed cancellations being possible after event boookings close 
+* fixed cancellations being possible after event bookings close
 * fixed admin-side search-by-category
 * fixed manage_others_bookings not allowing access to bookings without other caps
 * fixed calendar widgets taking on day link search arguments from other parts of the page

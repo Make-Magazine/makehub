@@ -109,27 +109,29 @@ class Automations extends EM_Object implements Iterator, Countable {
 	}
 	
 	//Countable Implementation
+	#[\ReturnTypeWillChange]
 	public function count() {
 		return count($this->items);
 	}
 	
 	//Iterator Implementation
+	#[\ReturnTypeWillChange]
 	public function rewind() {
 		reset($this->items);
 	}
-	
+	#[\ReturnTypeWillChange]
 	public function current() {
 		return current($this->items);
 	}
-	
+	#[\ReturnTypeWillChange]
 	public function key() {
 		return key($this->items);
 	}
-	
+	#[\ReturnTypeWillChange]
 	public function next() {
 		return next($this->items);
 	}
-	
+	#[\ReturnTypeWillChange]
 	public function valid() {
 		$key = key($this->items);
 		$var = ($key !== NULL && $key !== FALSE);

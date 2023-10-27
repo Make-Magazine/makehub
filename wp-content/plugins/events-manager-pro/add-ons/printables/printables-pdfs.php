@@ -71,8 +71,7 @@ class PDFs {
 	
 	public static function get_pdf_content( $template, $args ){
 		// attach an invoice
-		include ('dompdf/autoload.inc.php');
-		$dompdf = new Dompdf(array('isRemoteEnabled' => true,));
+		$dompdf = self::load_dompdf();
 		ob_start();
 		emp_locate_template($template, true, $args);
 		$dompdf->loadHtml(ob_get_clean());
@@ -127,9 +126,27 @@ class PDFs {
 		<?php
 	}
 	
-	public static function download_booking_pdf( $EM_Booking, $what, $output_html = false ){
+	public static function load_dompdf(){
+		// get font based on font to be used
+		$fonts = emp_locate_template('printables/fonts/installed-fonts.json');
+		$args = array(
+			'isRemoteEnabled' => true,
+			'defaultFont' => get_option('dbem_bookings_pdf_font', 'dejavusans'),
+			'isFontSubsettingEnabled' => get_option('dbem_bookings_pdf_font_subset'),
+		);
+		if( $fonts ) {
+			if( !str_contains( $fonts, EMP_DIR ) ){
+				$fonts_dir = str_replace( '/installed-fonts.json', '', $fonts );
+				$args['fontDir'] = $fonts_dir;
+				$args['fontCache'] = $fonts_dir;
+			}
+		}
 		include('dompdf/autoload.inc.php');
-		$dompdf = new Dompdf(array('isRemoteEnabled' => true,));
+		return new Dompdf( $args );
+	}
+	
+	public static function download_booking_pdf( $EM_Booking, $what, $output_html = false ){
+		$dompdf = static::load_dompdf();
 		ob_start();
 		if( $what == 'invoice' ){
 			$template = emp_locate_template('printables/pdf-invoice/pdf-invoice.php');

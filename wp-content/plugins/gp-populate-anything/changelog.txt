@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.2.56
+
+	- Fixed an issue with live merge tags having a fallback with forward slash not working.
+
+## 1.2.55
+
+	- Fixed a JavaScript error that could occur with Live Merge Tags if using multiple Nested Form fields in a form pointing to the same child form.
+	- Fixed regression with Live Merge Tags in checkbox choices not working as expected in some cases.
+	- Added new [`gppa_submit_button`](https://gravitywiz.com/documentation/gppa_submit_button) JavaScript filter.
+	- Fixed a PHP warning that could be triggered in some situations when using GravityView.
+
+## 1.2.54
+
+	- Fixed a potential PHP warning during form render.
+	- Fixed a PHP 8.1 warning that could be encountered with the GF Entry Object Type.
+	- Fixed an issue where number comparisons with non-Number fields would not work as expected with the Gravity Forms Entry Object Type.
+
+## 1.2.53
+
+	- Fixed issue where inputs inside fields with array-based values would be converted incorrectly when used with Live Merge Tags.
+	- Fixed issue where Live Merge Tags would generate errors in Repeater fields that contained selects. Note: Repeater fields do not support Live Merge Tags yet.
+
+## 1.2.52
+
+	- Fixed issue where fields that use the Database Object Type could have their population settings reset if `GFFormsModel::update_form_meta()` was called during a request from a non-admin user.
+	- Added new `$entry` parameter to the `gppa_skip_field_value_during_hydration` hook.
+	- Fixed PHP error that could occur if BuddyPress was previously activated and then deactivated.
+
+## 1.2.51
+
+	- Fixed PHP warnings related to default field values.
+	- Fixed PHP errors present in PHP 8.2.5 and 8.1.18.
+
+## 1.2.50
+
+	- Fixed issue where Populate Anything would sometimes enqueue scripts if the `gform_pre_render` filter hook is used on a page but the form isn't actually displayed.
+	- Added "is in" and "is not in" operator when filtering by Post Title.
+	- Added additional accessibility improvements to the filters UI in the form editor.
+	- Improved user-experience of filters by focusing the property select in a newly added filter.
+
 ## 1.2.49
 
 	- Fixed issue with `reset_gf_is_field_hidden_cache()` not clearing the `GFFormsModel::is_field_hidden` cache key for every field in the form for Live Merge Tags.

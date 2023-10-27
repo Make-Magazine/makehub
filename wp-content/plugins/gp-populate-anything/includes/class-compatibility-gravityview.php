@@ -149,12 +149,15 @@ class GPPA_Compatibility_GravityView {
 	public function localize_for_search( $search_fields, $self, $widget_args, $context ) {
 		$form = $this->get_widget_form( $widget_args, $context );
 
+		gp_populate_anything()->field_value_js( $form );
+		gp_populate_anything()->field_value_object_js( $form );
+
+		// Ensure that the scripts are enqueued as there may not be a form present.
 		if ( is_callable( array( 'GFCommon', 'output_hooks_javascript' ) ) ) {
 			GFCommon::output_hooks_javascript();
 		}
 
-		gp_populate_anything()->field_value_js( $form );
-		gp_populate_anything()->field_value_object_js( $form );
+		gp_populate_anything()->enqueue_scripts( $form );
 
 		return $search_fields;
 	}

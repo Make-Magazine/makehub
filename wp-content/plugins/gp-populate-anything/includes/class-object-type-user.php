@@ -265,8 +265,9 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 				'field'   => $xprofile_field,
 			);
 
-			return bp_get_profile_field_data( $args );
-
+			if ( function_exists( 'bp_get_profile_field_data' ) ) {
+				return bp_get_profile_field_data( $args );
+			}
 		}
 
 		$prop  = preg_replace( '/^meta_/', '', $prop );

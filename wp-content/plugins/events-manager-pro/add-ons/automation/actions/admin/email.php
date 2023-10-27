@@ -1,6 +1,5 @@
 <?php
 namespace EM\Automation\Actions\Admin;
-use EM\Automation;
 
 /**
  * Container for Trigger-specific admin outputs and post retrieval so that it is loaded and invoked only when needed
@@ -38,7 +37,7 @@ class Email extends Action {
 		</p>
 		<p>
 			<label><?php esc_html_e('Message'); ?></label>
-			<input type="text" name="action_data[<?php echo $id; ?>][data][message]" value="<?php echo $message; ?>" class="widefat">
+			<textarea name="action_data[<?php echo $id; ?>][data][message]"><?php echo esc_attr($message, ENT_QUOTES);?></textarea>
 		</p>
 		<?php
 	}

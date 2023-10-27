@@ -1,7 +1,22 @@
 const getSubmitButton = ($form: JQuery): JQuery => {
-	return $form
+	const $submitButton = $form
 		.find('.gform_footer, .gform_page_footer')
 		.find('input[type="submit"], input[type="button"]');
+
+	/**
+	 * Filter the submit button element that is used for enabling/disabling the button while Populate Anything is
+	 * loading results.
+	 *
+	 * @param {JQuery} $submitButton The submit button element.
+	 * @param {JQuery} $form         The form element.
+	 *
+	 * @since 1.2.55
+	 */
+	return window.gform.applyFilters(
+		'gppa_submit_button',
+		$submitButton,
+		$form
+	);
 };
 
 const toggleSubmitButton = ($form: JQuery, disabled: boolean): void => {

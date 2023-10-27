@@ -118,7 +118,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <th><label><?php _e( 'Enable Logs', 'video-conferencing-with-zoom-api' ); ?></label></th>
                             <td>
                                 <input type="checkbox"
-                                       name="zoom_api_debugger_logs" <?php echo ! empty( $debug_logs ) ? checked( $debug_logs, 'on' ) : false; ?>
+                                       name="zoom_api_debugger_logs" <?php echo ! empty( $settings['debugger_logs'] ) ? checked( $settings['debugger_logs'], 'on' ) : false; ?>
                                        class="zoom_api_debugger_logs">
                                 <span class="description"><?php _e( 'This can be helpful in finding issues related to Zoom.', 'video-conferencing-with-zoom-api' ); ?> <a
                                             href="<?php echo admin_url( 'edit.php?post_type=zoom-meetings&page=zoom-video-conferencing-settings&tab=debug' ); ?>"><?php esc_html_e( 'Logs are here.', 'video-conferencing-with-zoom-api' ); ?></a></span>
@@ -173,6 +173,16 @@ if ( ! defined( 'ABSPATH' ) ) {
                         </tr>
                         <tr>
                             <th>
+                                <label for="vczapi_enable_direct_join"><?php _e( 'Enable direct join via web browser?', 'video-conferencing-with-zoom-api' ); ?></label>
+                            </th>
+                            <td>
+                                <input type="checkbox" id="vczapi_enable_direct_join" name="vczapi_enable_direct_join"
+                                       value="yes" <?php ! empty( $settings['enable_direct_join_via_browser'] ) ? checked( $settings['enable_direct_join_via_browser'], 'yes' ) : false; ?>>
+                                <span class="description"><?php _e( 'Checking this will allow users to join via web browser directly. Without needing to enter any names or passwords.', 'video-conferencing-with-zoom-api' ); ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>
                                 <label><?php _e( 'Default Language for Join via browser page ?', 'video-conferencing-with-zoom-api' ); ?></label>
                             </th>
                             <td>
@@ -215,7 +225,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                         Italian italiano
                                     </option>
                                 </select>
-                                <p class="description"><?php _e( 'Select a default language for your join meeting via browser page.', 'video-conferencing-with-zoom-api' ); ?></p>
+                                <span class="description"><?php _e( 'Select a default language for your join meeting via browser page.', 'video-conferencing-with-zoom-api' ); ?></span>
                             </td>
                         </tr>
                         </tbody>
@@ -309,7 +319,6 @@ if ( ! defined( 'ABSPATH' ) ) {
             </div>
             <p class="submit">
                 <input type="submit" name="save_zoom_settings" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'video-conferencing-with-zoom-api' ); ?>">
-                <a href="javascript:void(0);" class="button button-primary check-api-connection"><?php esc_html_e( 'Check API Connection', 'video-conferencing-with-zoom-api' ); ?></a>
             </p>
         </form>
     </div>

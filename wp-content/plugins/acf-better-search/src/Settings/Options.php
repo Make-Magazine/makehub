@@ -40,7 +40,7 @@ class Options {
 			$field_types['table'] = __( 'Table', 'acf-better-search' );
 		}
 
-		return $field_types;
+		return apply_filters( 'acfbs_field_types', $field_types );
 	}
 
 	/**

@@ -77,6 +77,10 @@ class Queue extends AbstractASQueue {
 	 * @return bool
 	 */
 	public function job_preload_job_check_finished_async_exists() {
+		if ( ! did_action( 'init' ) || doing_action( 'init' ) ) {
+			return true;
+		}
+
 		$row_found = $this->search(
 			[
 				'hook'   => 'rocket_preload_job_check_finished',
@@ -121,4 +125,18 @@ class Queue extends AbstractASQueue {
 		$this->cancel_all( '' );
 	}
 
+	/**
+	 * Return pending actions inside AS scheduler queue.
+	 *
+	 * @return array
+	 */
+	public function get_pending_preload_actions(): array {
+		return $this->search(
+			[
+				'hook'     => 'rocket_preload_job_preload_url',
+				'status'   => ActionScheduler_Store::STATUS_PENDING,
+				'per_page' => -1,
+			]
+		);
+	}
 }

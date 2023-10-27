@@ -13,15 +13,15 @@ class Request implements HookableInterface {
 	 * {@inheritdoc}
 	 */
 	public function init_hooks() {
-		add_filter( 'posts_request', [ $this, 'sql_distinct' ], 10, 2 );
+		add_filter( 'posts_distinct', [ $this, 'set_query_distinct' ], 10, 2 );
 	}
 
-	public function sql_distinct( string $sql, \WP_Query $query ): string {
+	public function set_query_distinct( string $distinct, \WP_Query $query ): string {
 		if ( ! isset( $query->query_vars['s'] ) || empty( $query->query_vars['s'] )
 			|| ! apply_filters( 'acfbs_search_is_available', true, $query ) ) {
-			return $sql;
+			return $distinct;
 		}
 
-		return (string) preg_replace( '/SELECT/', 'SELECT DISTINCT', $sql, 1 );
+		return 'DISTINCT';
 	}
 }

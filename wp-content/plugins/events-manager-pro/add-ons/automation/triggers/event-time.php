@@ -51,8 +51,8 @@ class Event_Time extends Trigger {
 			// go through the events, run actions and mark triggered
 			foreach( $event_ids as $event_id ){
 				// we'll mark this as triggered before running actions, because if something goes wrong we could end up with an endless loop of retriggering without completing, resulting in fired actions over and over again perpetually
-				$result = $wpdb->insert(EM_META_TABLE, array('object_id' => $event_id, 'meta_key' => 'triggered', 'meta_value' => $this->id), array('%d', '%s', '%d'));
-				if( $result !== false ){
+				$insert_result = $wpdb->insert(EM_META_TABLE, array('object_id' => $event_id, 'meta_key' => 'triggered', 'meta_value' => $this->id), array('%d', '%s', '%d'));
+				if( $insert_result !== false ){
 					// fire the actions
 					$EM_Event = em_get_event($event_id);
 					if( $EM_Event->event_id ) {

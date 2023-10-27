@@ -24,7 +24,7 @@ class Events {
 	 * @return string
 	 */
 	public static function em_event_output_placeholder($replace, $EM_Event, $result){
-		switch( $replace ){
+		switch( $result ){
 			case '#_WAITLIST_EXPIRY': // hours an approved waitlisted booking keeps available spaces reserved
 				$replace = static::get_var('expiry', $EM_Event);
 				break;

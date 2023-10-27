@@ -427,8 +427,8 @@ class Admin {
 								<p>
 									<select name="trigger_output[bookings][gateways][]" id="em-automation-event-bookings" class="em-selectize checkboxes" multiple size="10" placeholder="<?php esc_html_e_emp('Gateways'); ?>">
 										<option value=""><?php esc_html_e('Choose booking statuses', 'em-pro'); ?></option>
-										<?php foreach( \EM_Gateways::active_gateways() as $gateway_key => $gateway ): ?>
-											<option value="<?php echo esc_attr($gateway_key); ?>" <?php if( in_array($gateway_key, $gateways) ) echo 'selected'; ?>><?php echo esc_html($gateway); ?></option>
+										<?php foreach( \EM\Payments\Gateways::active_gateways() as $gateway => $Gateway ): ?>
+											<option value="<?php echo esc_attr($gateway); ?>" <?php if( in_array($gateway, $gateways) ) echo 'selected'; ?>><?php echo esc_html($Gateway::$title); ?></option>
 										<?php endforeach; ?>
 									</select>
 								</p>

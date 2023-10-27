@@ -5,6 +5,7 @@ namespace WP_Rocket\Engine\Preload;
 
 use WP_Rocket\Admin\Options_Data;
 use WP_Rocket\Engine\Preload\Activation\Activation;
+use WP_Rocket\Engine\Preload\Controller\CheckExcludedTrait;
 use WP_Rocket\Engine\Preload\Controller\ClearCache;
 use WP_Rocket\Engine\Preload\Controller\LoadInitialSitemap;
 use WP_Rocket\Engine\Preload\Controller\Queue;
@@ -13,6 +14,8 @@ use WP_Rocket\Event_Management\Subscriber_Interface;
 use WP_Rocket_Mobile_Detect;
 
 class Subscriber implements Subscriber_Interface {
+
+	use CheckExcludedTrait;
 
 	/**
 	 * Options instance.
@@ -91,25 +94,38 @@ class Subscriber implements Subscriber_Interface {
 	 */
 	public static function get_subscribed_events() {
 		return [
-			'update_option_' . WP_ROCKET_SLUG     => [
+			'update_option_' . WP_ROCKET_SLUG        => [
 				[ 'maybe_load_initial_sitemap', 10, 2 ],
 				[ 'maybe_cancel_preload', 10, 2 ],
 			],
-			'rocket_after_process_buffer'         => 'update_cache_row',
-			'rocket_deactivation'                 => 'on_deactivation',
-			'permalink_structure_changed'         => 'on_permalink_changed',
-			'wp_rocket_upgrade'                   => [ 'on_update', 16, 2 ],
-			'rocket_rucss_complete_job_status'    => 'clean_url',
-			'rocket_rucss_after_clearing_usedcss' => [ 'clean_url', 20 ],
-			'rocket_after_automatic_cache_purge'  => 'preload_after_automatic_cache_purge',
-			'after_rocket_clean_post'             => [ 'clean_partial_cache', 10, 3 ],
-			'after_rocket_clean_term'             => [ 'clean_partial_cache', 10, 3 ],
-			'after_rocket_clean_file'             => 'clean_url',
-			'set_404'                             => 'delete_url_on_not_found',
-			'rocket_after_clean_terms'            => 'clean_urls',
-			'after_rocket_clean_domain'           => 'clean_full_cache',
-			'delete_post'                         => 'delete_post_preload_cache',
-			'pre_delete_term'                     => 'delete_term_preload_cache',
+			'rocket_after_process_buffer'            => 'update_cache_row',
+			'rocket_deactivation'                    => 'on_deactivation',
+			'rocket_reset_preload'                   => 'on_permalink_changed',
+			'permalink_structure_changed'            => 'on_permalink_changed',
+			'rocket_domain_changed'                  => 'on_permalink_changed',
+			'wp_rocket_upgrade'                      => [ 'on_update', 16, 2 ],
+			'rocket_rucss_complete_job_status'       => 'clean_url',
+			'rocket_rucss_after_clearing_usedcss'    => [ 'clean_url', 20 ],
+			'rocket_after_automatic_cache_purge'     => 'preload_after_automatic_cache_purge',
+			'after_rocket_clean_post'                => [ 'clean_partial_cache', 10, 3 ],
+			'after_rocket_clean_term'                => [ 'clean_partial_cache', 10, 3 ],
+			'after_rocket_clean_file'                => 'clean_url',
+			'set_404'                                => 'delete_url_on_not_found',
+			'rocket_after_clean_terms'               => 'clean_urls',
+			'after_rocket_clean_domain'              => 'clean_full_cache',
+			'delete_post'                            => 'delete_post_preload_cache',
+			'pre_delete_term'                        => 'delete_term_preload_cache',
+			'rocket_preload_format_url'              => 'format_preload_url',
+			'rocket_preload_lock_url'                => 'lock_url',
+			'rocket_preload_unlock_url'              => 'unlock_url',
+			'rocket_preload_unlock_all_urls'         => 'unlock_all_urls',
+			'rocket_preload_exclude_urls'            => [
+				[ 'add_preload_excluded_uri' ],
+				[ 'add_cache_reject_uri_to_excluded' ],
+				[ 'exclude_private_post_uri', 10, 2 ],
+			],
+			'rocket_rucss_after_clearing_failed_url' => [ 'clean_urls', 20 ],
+			'transition_post_status'                 => [ 'remove_private_post', 10, 3 ],
 		];
 	}
 
@@ -132,6 +148,8 @@ class Subscriber implements Subscriber_Interface {
 		if ( ! $value['manual_preload'] ) {
 			return;
 		}
+
+		rocket_renew_box( 'preload_notice' );
 
 		$this->controller->load_initial_sitemap();
 	}
@@ -173,19 +191,22 @@ class Subscriber implements Subscriber_Interface {
 
 		$url = home_url( add_query_arg( [], $wp->request ) );
 
-		if ( $this->query->is_preloaded( $url ) ) {
-			$detected = $this->mobile_detect->isMobile() && ! $this->mobile_detect->isTablet() ? 'mobile' : 'desktop';
+		$detected = $this->mobile_detect->isMobile() && ! $this->mobile_detect->isTablet() ? 'mobile' : 'desktop';
 
-			/**
-			 * Fires when the preload from an URL is completed.
-			 *
-			 * @param string $url URL preladed.
-			 * @param string $device Device from the cache.
-			 */
-			do_action( 'rocket_preload_completed', $url, $detected );
+		/**
+		 * Fires when the preload from an URL is completed.
+		 *
+		 * @param string $url URL preladed.
+		 * @param string $device Device from the cache.
+		 */
+		do_action( 'rocket_preload_completed', $url, $detected );
+
+		if ( ! empty( (array) $_GET ) || ( $this->query->is_pending( $url ) && $this->options->get( 'do_caching_mobile_files', false ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return;
 		}
 
-		if ( 0 < count( $_GET ) || ( $this->query->is_pending( $url ) && $this->options->get( 'do_caching_mobile_files', false ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( $this->is_excluded_by_filter( $url ) ) {
+			$this->query->delete_by_url( $url );
 			return;
 		}
 
@@ -216,7 +237,8 @@ class Subscriber implements Subscriber_Interface {
 	 */
 	public function on_permalink_changed() {
 		$this->query->remove_all();
-		$this->controller->load_initial_sitemap();
+		$this->queue->cancel_pending_jobs();
+		$this->queue->add_job_preload_job_load_initial_sitemap_async();
 	}
 
 	/**
@@ -273,7 +295,7 @@ class Subscriber implements Subscriber_Interface {
 	 * @param string   $lang lang from the website.
 	 * @return void
 	 */
-	public function clean_partial_cache( $object, array $urls, $lang ) {
+	public function clean_partial_cache( $object, array $urls, $lang ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.objectFound
 		// Add Homepage URL to $purge_urls for preload.
 		$urls[] = get_rocket_i18n_home_url( $lang );
 
@@ -374,5 +396,152 @@ class Subscriber implements Subscriber_Interface {
 				$this->clear_cache->partial_clean( [ str_replace( $data['home_path'], $data['home_url'], $file_path ) ] );
 			}
 		}
+	}
+
+	/**
+	 * Remove index from url.
+	 *
+	 * @param string $url url to reformat.
+	 *
+	 * @return string
+	 */
+	public function format_preload_url( string $url ) {
+		return preg_replace( '/(index(-https)?\.html$)|(index(-https)?\.html_gzip$)/', '', $url );
+	}
+
+	/**
+	 * Lock a URL.
+	 *
+	 * @param string $url URL to lock.
+	 *
+	 * @return void
+	 */
+	public function lock_url( string $url ) {
+		$this->query->lock( $url );
+	}
+
+	/**
+	 * Unlock all URL.
+	 *
+	 * @return void
+	 */
+	public function unlock_all_urls() {
+		$this->query->unlock_all();
+	}
+
+	/**
+	 * Unlock a URL.
+	 *
+	 * @param string $url URL to unlock.
+	 *
+	 * @return void
+	 */
+	public function unlock_url( string $url ) {
+		$this->query->unlock( $url );
+	}
+
+	/**
+	 * Add the excluded uri from the preload to the filter.
+	 *
+	 * @param array $regexes regexes containing excluded uris.
+	 * @return array|false
+	 */
+	public function add_preload_excluded_uri( $regexes ): array {
+		$preload_excluded_uri = (array) $this->options->get( 'preload_excluded_uri', [] );
+
+		if ( empty( $preload_excluded_uri ) ) {
+			return $regexes;
+		}
+
+		return array_merge( $regexes, $preload_excluded_uri );
+	}
+
+	/**
+	 * Remove private post from cache.
+	 *
+	 * @param string  $new_status New post status.
+	 * @param string  $old_status Old post status.
+	 * @param WP_Post $post Wp post object.
+	 * @return void
+	 */
+	public function remove_private_post( string $new_status, string $old_status, $post ) {
+
+		if ( $new_status === $old_status ) {
+			return;
+		}
+
+		if ( 'private' !== $new_status ) {
+			return;
+		}
+
+		$this->delete_post_preload_cache( $post->ID );
+	}
+
+	/**
+	 * Get all private urls for public post types.
+	 *
+	 * @return array
+	 */
+	private function get_all_private_urls() {
+		static $private_urls;
+
+		if ( rocket_get_constant( 'WP_ROCKET_IS_TESTING', false ) ) {
+			$private_urls = null;
+		}
+
+		if ( isset( $private_urls ) ) {
+			return $private_urls;
+		}
+
+		$private_urls = [];
+
+		$public_post_types = get_post_types( [ 'public' => true ] );
+		unset( $public_post_types['attachment'] );
+
+		$arg   = [
+			'post_type'      => $public_post_types,
+			'post_status'    => 'private',
+			'posts_per_page' => -1,
+		];
+		$query = new \WP_Query( $arg );
+
+		if ( ! $query->have_posts() ) {
+			return [];
+		}
+
+		foreach ( $query->posts as $post ) {
+			// Temporarily cast publish status to get pretty url.
+			$post->post_status = 'publish';
+			$private_post_url  = get_permalink( $post );
+
+			$private_urls[ md5( $private_post_url ) ] = $private_post_url;
+		}
+
+		return $private_urls;
+	}
+
+	/**
+	 * Exclude private urls.
+	 *
+	 * @param array  $regexes regexes containing excluded uris.
+	 * @param string $url Current url to test against.
+	 * @return array
+	 */
+	public function exclude_private_post_uri( $regexes, $url ): array {
+		if ( ! is_array( $regexes ) ) {
+			$regexes = (array) $regexes;
+		}
+
+		$private_urls = $this->get_all_private_urls();
+		if ( empty( $private_urls ) ) {
+			return $regexes;
+		}
+
+		if ( ! isset( $private_urls[ md5( $url ) ] ) ) {
+			return $regexes;
+		}
+
+		$regexes[] = $url;
+		return $regexes;
 	}
 }

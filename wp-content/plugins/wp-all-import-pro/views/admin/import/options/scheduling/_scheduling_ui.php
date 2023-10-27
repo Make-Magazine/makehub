@@ -38,7 +38,7 @@
                         						var lastPart = parts[parts.length-1];
 
                         						var opt = $('#timezone').find("option:contains('"+ lastPart +"')");
-                        						
+
                         						$('#timezone').val(opt.val());
                         						$('#timezone').trigger("chosen:updated");
 
@@ -74,7 +74,9 @@
 
 								<div style="margin-bottom: 2px; margin-left:26px;">
 									<label style="width: 100%; font-size: 13px;">
-										<?php _e('Run this import on a schedule.'); ?>
+										<?php printf(
+                                                /* translators: 1: Import ID */
+                                                esc_html__('Run import ID %d on a schedule.', PMXI_Plugin::LANGUAGE_DOMAIN), (int)$import_id); ?>
 									</label>
 								</div>
 								<div id="automatic-scheduling"
@@ -239,7 +241,7 @@
 												<p><?php _e('Have a license?'); ?>
 													<a href="javascript:void(0);" id="add-subscription"><?php _e('Register this site.'); ?></a> <?php _e('Questions?', PMXI_Plugin::LANGUAGE_DOMAIN); ?> <a href="javascript:void(0);" class="help_scheduling">Read more.</a></p>
 												<input type="password" id="add-subscription-field" style="position: absolute; z-index: 2; font-size:14px;" placeholder="<?php _e('Enter your license', PMXI_Plugin::LANGUAGE_DOMAIN); ?>" />
-												<div style="position: absolute;" id="find-subscription-link"><a href="http://www.wpallimport.com/portal/automatic-scheduling/" target="_blank"><?php _e('Find your license.', PMXI_Plugin::LANGUAGE_DOMAIN);?></a></div>
+												<div style="position: absolute;" id="find-subscription-link"><a href="https://www.wpallimport.com/portal/scheduling-service/" target="_blank"><?php _e('Find your license.', PMXI_Plugin::LANGUAGE_DOMAIN);?></a></div>
 											</div>
 										</div>
 										<?php
@@ -249,6 +251,12 @@
 								<?php include_once('_manual_scheduling.php'); ?>
 
 								<div style="clear: both;"></div>
+
+                                <?php $delete_missing_notice = wp_all_import_delete_missing_notice($post); ?>
+                                <?php if (!empty($delete_missing_notice)): ?>
+                                    <p class="exclamation"><?php echo $delete_missing_notice; ?></p>
+                                <?php endif; ?>
+
 							</div>
 
 							<div class="wpallimport-overlay"></div>
@@ -265,6 +273,6 @@
 					</tr>
 				</table>
 			</div>
-		</div>		
+		</div>
 	</div>
 </div>

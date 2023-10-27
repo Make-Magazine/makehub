@@ -30,6 +30,9 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 
 		//Ajax called for dismissing notice
 		add_action( 'wp_ajax_vczapi_dismiss_admin_notice', [ $this, 'admin_notice' ] );
+
+		//End Meeting
+		add_action( 'wp_ajax_vczapi_end_meeting', [ $this, 'end_meeting' ] );
 	}
 
 	public function admin_notice() {
@@ -69,7 +72,7 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 
 			wp_send_json( array(
 				'error' => 0,
-				'msg'   => __( "Deleted Meeting with ID", "video-conferencing-with-zoom-api" ) . ': ' . $meeting_id
+				'msg'   => __( "Deleted Meeting with ID", "video-conferencing-with-zoom-api" ) . ': ' . $meeting_id,
 			) );
 		} else {
 			wp_send_json( array(
@@ -113,7 +116,7 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 		} else {
 			wp_send_json( array(
 				'error' => 1,
-				'msg'   => __( "You need to select a data in order to initiate this action." )
+				'msg'   => __( "You need to select a data in order to initiate this action." ),
 			) );
 		}
 
@@ -138,26 +141,23 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 	public function check_connection() {
 		check_ajax_referer( '_nonce_zvc_security', 'security' );
 
-		$test = json_decode( zoom_conference()->listUsers() );
-		if ( ! empty( $test ) ) {
+		$type = filter_input( INPUT_POST, 'type' );
+		if ( $type === "oAuth" ) {
+			$test = \Codemanas\VczApi\Requests\Zoom::instance()->me();
 			if ( ! empty( $test->code ) ) {
-				wp_send_json( $test->message );
+				wp_send_json_error( $test->message );
 			}
 
-			if ( http_response_code() === 200 ) {
-				//After user has been created delete this transient in order to fetch latest Data.
-				video_conferencing_zoom_api_delete_user_cache();
-
-				wp_send_json( "API Connection is good. Please refresh !" );
-			} else {
-				wp_send_json( $test );
-			}
+			//After user has been created delete this transient in order to fetch latest Data.
+			video_conferencing_zoom_api_delete_user_cache();
+			wp_send_json_success( [ 'msg' => "API Connection is good. You can refresh this and start creating your Zoom Events."] );
 		}
+
 		wp_die();
 	}
 
 	/**
-	 * Get authenticated
+	 * Get authenticated io
 	 *
 	 * @since  3.2.0
 	 * @author Deepen Bajracharya
@@ -194,7 +194,7 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 			'iat'      => $iat,
 			'exp'      => $exp,
 			'appKey'   => $sdk_key,
-			'tokenExp' => $exp
+			'tokenExp' => $exp,
 		];
 
 		if ( empty( $secret_key ) ) {
@@ -295,17 +295,32 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 		wp_die();
 	}
 
+	public function end_meeting(): void {
+		check_ajax_referer( '_nonce_zvc_security', 'access' );
+		//only people who can create meeting can end them.  
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			return;
+		}
+		$meeting_id = sanitize_text_field( filter_input( INPUT_POST, 'meeting_id' ) );
+		zoom_conference()->end_meeting( $meeting_id );
+	}
+
 	/**
 	 * Assign Host ID page
 	 */
-	public function assign_host_id() {
+	public function assign_host_id(): void {
 		$draw   = filter_input( INPUT_GET, 'draw' );
 		$length = filter_input( INPUT_GET, 'length' );
 		$start  = filter_input( INPUT_GET, 'start' );
+		$search = filter_input( INPUT_GET, 'search', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 		$args   = [
 			'number' => ! empty( $length ) ? absint( $length ) : 10,
-			'paged'  => $start == 0 ? 1 : $start / $length + 1
+			'paged'  => $start == 0 ? 1 : $start / $length + 1,
 		];
+
+		if ( ! empty( $search['value'] ) ) {
+			$args['search'] = '*' . $search['value'] . '*';
+		}
 
 		$users      = vczapi_getWpUsers_basedon_UserRoles( $args );
 		$tableData  = array();
@@ -347,7 +362,7 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 				'draw'            => absint( $draw ),
 				'recordsTotal'    => $users->get_total(),
 				'recordsFiltered' => $users->get_total(),
-				'data'            => $tableData
+				'data'            => $tableData,
 			];
 
 			wp_send_json( $results );
@@ -365,8 +380,8 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 		$results       = array(
 			[
 				'id'   => '0',
-				'text' => 'Not a Host'
-			]
+				'text' => 'Not a Host',
+			],
 		);
 		if ( ! empty( $search_string ) ) {
 			$user = json_decode( zoom_conference()->getUserInfo( $search_string ) );
@@ -403,7 +418,7 @@ class Zoom_Video_Conferencing_Admin_Ajax {
 
 		$search_string = filter_input( INPUT_GET, 'term' );
 		$users         = vczapi_getWpUsers_basedon_UserRoles( [
-			'search' => $search_string
+			'search' => $search_string,
 		] );
 		$results       = array();
 		if ( ! empty( $users->get_results() ) ) {

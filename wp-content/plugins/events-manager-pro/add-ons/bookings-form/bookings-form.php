@@ -29,12 +29,9 @@ class EM_Booking_Form {
 				add_filter('em_multiple_booking_get_post', array('EM_Booking_Form', 'em_booking_get_post'), 10, 2); //get post data + validate
 				add_filter('em_multiple_booking_validate', array('EM_Booking_Form', 'em_booking_validate'), 10, 2); //validate object
 			    add_filter('em_multiple_booking_save', array('EM_Booking_Form', 'em_booking_save'), 1, 2); //add new user fields to current EM_Person instance for use on this run
-				add_action('em_checkout_form_footer',  array('EM_Booking_Form', 'booking_form_section_payment_confirmation_mb'), 1);
 			}else{
 			    //Normal bookings
 			    add_filter('em_booking_save', array('EM_Booking_Form', 'em_booking_save'), 1, 2); //add new user fields to current EM_Person instance for use on this run
-				add_action('em_booking_form_before_confirmation', array('EM_Booking_Form', 'booking_form_section_payment_confirmation'), 1, 1); // add 'payment and confirmation' header
-				add_action('em_booking_form_footer', array('EM_Booking_Form', 'booking_form_section_payment_confirmation'), 1, 1); //will run if above didn't run
 			}
 			add_filter('em_booking_get_post', array('EM_Booking_Form', 'em_booking_get_post'), 10, 2); //get post data + validate
 			add_filter('em_booking_validate', array('EM_Booking_Form', 'em_booking_validate'), 10, 2); //validate object
@@ -48,30 +45,6 @@ class EM_Booking_Form {
 		add_action('em_event_save_meta_pre',array('EM_Booking_Form', 'em_event_save_meta_pre'),10,1);
 		//Data Privacy
         add_filter('em_data_privacy_export_bookings_item', 'EM_Booking_Form::data_privacy_export', 10, 2);
-	}
-	
-	/**
-	 * @param EM_Event $EM_Event
-	 * @return void
-	 */
-	public static function booking_form_section_payment_confirmation( $EM_Event ){
-		if( !$EM_Event->is_free() && (doing_action('em_booking_form_before_confirmation') || !did_action('em_booking_form_before_confirmation')) && get_option('dbem_bookings_header_payment') ) {
-			?>
-			<h3 class="em-booking-section-title"><?php echo esc_html( get_option('dbem_bookings_header_payment') ); ?></h3>
-			<?php
-		}
-	}
-	
-	/**
-	 * @param EM_Multiple_Booking $EM_Multiple_Booking
-	 * @return void
-	 */
-	public static function booking_form_section_payment_confirmation_mb( $EM_Multiple_Booking ){
-		if( $EM_Multiple_Booking->get_price() > 0 && get_option('dbem_bookings_header_payment') ) {
-			?>
-			<h3 class="em-booking-section-title"><?php echo esc_html( get_option('dbem_bookings_header_payment') ); ?></h3>
-			<?php
-		}
 	}
 	
 	/**

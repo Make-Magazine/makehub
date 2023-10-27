@@ -149,7 +149,13 @@ const PageBuilder = () => {
 			}
 			actions={
 				<>
-					<PreviousStepLink before>
+					<PreviousStepLink
+						before
+						customizeStep={ true }
+						onClick={ () => {
+							window.location.href = starterTemplates.adminUrl;
+						} }
+					>
 						{ __( 'Back', 'astra-sites' ) }
 					</PreviousStepLink>
 				</>

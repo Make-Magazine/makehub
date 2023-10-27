@@ -3,7 +3,7 @@
  * Plugin Name: Premium Starter Templates
  * Plugin URI: https://wpastra.com/
  * Description: Starter Templates is all in one solution for complete starter sites, single page templates, blocks & images. This plugin offers the premium library of ready templates & provides quick access to beautiful Pixabay images that can be imported in your website easily.
- * Version: 3.2.0
+ * Version: 3.4.4
  * Author: Brainstorm Force
  * Author URI: https://www.brainstormforce.com
  * Text Domain: astra-sites
@@ -12,7 +12,7 @@
  */
 
 define( 'ASTRA_PRO_SITES_NAME', __( 'Premium Starter Templates', 'astra-sites' ) );
-define( 'ASTRA_PRO_SITES_VER', '3.2.0' );
+define( 'ASTRA_PRO_SITES_VER', '3.4.4' );
 define( 'ASTRA_PRO_SITES_FILE', __FILE__ );
 define( 'ASTRA_PRO_SITES_BASE', plugin_basename( ASTRA_PRO_SITES_FILE ) );
 define( 'ASTRA_PRO_SITES_DIR', plugin_dir_path( ASTRA_PRO_SITES_FILE ) );
@@ -58,5 +58,26 @@ if ( ! function_exists( 'astra_pro_sites_fetch_bundled_products' ) ) :
 	}
 
 	register_activation_hook( __FILE__, 'astra_pro_sites_fetch_bundled_products' );
+
+endif;
+
+
+if ( ! function_exists( 'astra_pro_sites_activation_redirect' ) ) :
+
+	/**
+	 * Astra pro sites activation redirect.
+	 *
+	 * @param mixed $plugin details of plugin.
+	 * @since 3.3.0
+	 * @return void
+	 */
+	function astra_pro_sites_activation_redirect( $plugin ) {
+		if ( ( ! defined( 'WP_CLI' ) || ! WP_CLI ) && plugin_basename( __FILE__ ) == $plugin ) {
+			wp_safe_redirect( admin_url( 'themes.php?page=starter-templates' ) );
+			exit();
+		}
+	}
+
+	add_action( 'activated_plugin', 'astra_pro_sites_activation_redirect' );
 
 endif;

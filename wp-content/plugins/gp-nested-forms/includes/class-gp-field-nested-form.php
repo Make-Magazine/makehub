@@ -8,6 +8,17 @@ class GP_Field_Nested_Form extends GF_Field {
 		return esc_attr__( 'Nested Form', 'gp-nested-forms' );
 	}
 
+	/**
+	 * Get field CSS class.
+	 *
+	 * @since GF 2.7
+	 *
+	 * @return string
+	 */
+	public function get_field_css_class() {
+		return 'gform-theme__no-reset--children';
+	}
+
 	public function get_form_editor_button() {
 		return array(
 			'group' => 'advanced_fields',
@@ -252,6 +263,10 @@ class GP_Field_Nested_Form extends GF_Field {
 	}
 
 	public function get_value_entry_detail( $value, $currency = '', $use_text = false, $format = 'html', $media = 'screen' ) {
+		// Ensure GFFormDisplay is loaded in places such as printing entries, even if nested entries is empty. This is needed as of GF 2.7+.
+		if ( ! class_exists( 'GFFormDisplay' ) ) {
+			require_once( GFCommon::get_base_path() . '/form_display.php' );
+		}
 
 		$entries = gp_nested_forms()->get_entries( $value );
 		if ( empty( $entries ) ) {
@@ -346,11 +361,6 @@ class GP_Field_Nested_Form extends GF_Field {
 			$actions['related_entries'] = $related_entries_link;
 		}
 
-		// Ensure GFFormDisplay is loaded in places such as printing entries. This is needed as of GF 2.7+.
-		if ( ! class_exists( 'GFFormDisplay' ) ) {
-			require_once( GFCommon::get_base_path() . '/form_display.php' );
-		}
-
 		$template = new GP_Template( gp_nested_forms() );
 		$markup   = $template->parse_template(
 			gp_nested_forms()->get_template_names( $args['template'], $this->formId, $this->id ),
@@ -380,7 +390,15 @@ class GP_Field_Nested_Form extends GF_Field {
 		$is_gravityview = $this->is_gravityview();
 		$is_print_page  = rgget( 'gf_page' ) == 'print-entry';
 
-		return $is_woocommerce || $is_print_page || $is_gravityview;
+		/**
+		 * Filter whether the simple detail template should be used. By default, it is used on
+		 * WooCommerce pages (Cart, Checkout, and View Order), GravityView, and when printing entries.
+		 *
+		 * @param bool $should_use_simple_detail_template Whether the simple detail template should be used.
+		 *
+		 * @since 1.1.31
+		 */
+		return apply_filters( 'gpnf_should_use_simple_details_template', $is_woocommerce || $is_print_page || $is_gravityview );
 
 	}
 

@@ -404,6 +404,10 @@ class GP_Nested_Forms extends GP_Plugin {
 			)
 		);
 
+		if ( ! is_array( rgar( $form, 'fields' ) ) ) {
+			return;
+		}
+
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->get_input_type() === 'form' ) {
 				$nested_form = $this->get_nested_form( $field->gpnfForm );
@@ -1132,8 +1136,16 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$markup = trim( ob_get_clean() );
-		wp_send_json( $markup );
 
+		/**
+		 * This previously just use to send the string using wp_send_json(), but when used with Weglot Translate, the
+		 * JSON string was malformed.
+		 *
+		 * Sending an object resolves the issue.
+		 */
+		wp_send_json( array(
+			'formHtml' => $markup,
+		) );
 	}
 
 	public function ajax_refresh_markup() {
@@ -1201,7 +1213,16 @@ class GP_Nested_Forms extends GP_Plugin {
 		$this->unload_nested_form_hooks( '', $nested_form_id );
 
 		$markup = trim( ob_get_clean() );
-		wp_send_json( $markup );
+
+		/**
+		 * This previously just use to send the string using wp_send_json(), but when used with Weglot Translate, the
+		 * JSON string was malformed.
+		 *
+		 * Sending an object resolves the issue.
+		 */
+		wp_send_json( array(
+			'formHtml' => $markup,
+		) );
 
 	}
 
@@ -1450,9 +1471,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			'format'               => $format,
 		);
 
-		/**
-		 * See GP_Field_Nested_Form::get_value_entry_detail().
-		 */
+		/** Documented in GP_Field_Nested_Form::get_value_entry_detail(). */
 		$args = gf_apply_filters( array( 'gpnf_template_args', $field->formId, $field->id ), $args, $this );
 
 		if ( ! $args['entries'] ) {
@@ -1513,9 +1532,13 @@ class GP_Nested_Forms extends GP_Plugin {
 			'field'       => $field,
 			'nested_form' => $nested_form,
 			'modifiers'   => $modifiers,
+			'entry_ids'   => $entry_ids,
 			'items'       => $this->get_simple_list_items( $entry_ids, $nested_form, $modifiers, $format ),
 			'format'      => $format,
 		);
+
+		/** Documented in GP_Field_Nested_Form::get_value_entry_detail(). */
+		$args = gf_apply_filters( array( 'gpnf_template_args', $field->formId, $field->id ), $args, $this );
 
 		$markup = $template->parse_template(
 			gp_nested_forms()->get_template_names( $args['template'], $field->formId, $field->id, $this->parse_modifier( 'template', $modifiers ) ),
@@ -1558,7 +1581,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				continue;
 			}
 
-			$items = array_merge( $items, gw_all_fields_template()->get_items( $nested_form, $entry, false, $use_text, $format, false, '', $modifiers ) );
+			$items = array_merge( $items, gw_all_fields_template()->get_items( $nested_form, $entry, true, $use_text, $format, false, '', $modifiers ) );
 
 		}
 
@@ -1572,7 +1595,8 @@ class GP_Nested_Forms extends GP_Plugin {
 		$nested_form = $this->get_nested_form( rgar( $field, 'gpnfForm' ) );
 
 		$values = array();
-		$args   = gf_apply_filters(
+		/** Documented in GP_Field_Nested_Form::get_value_entry_detail(). */
+		$args = gf_apply_filters(
 			array( 'gpnf_template_args', $field->formId, $field->id ),
 			array(
 				'template'        => 'nested-entry',
@@ -1604,6 +1628,9 @@ class GP_Nested_Forms extends GP_Plugin {
 			// Pass entry for integration with GP Preview Submission.
 			$args['modifiers'] = $modifiers . ",entry[{$entry_id}]";
 
+			// Pass filtered form with the entry for each entry that way Populate Anything and other plugins can modify it.
+			$args['form'] = $this->get_nested_form( rgar( $field, 'gpnfForm' ), $entry );
+
 			/**
 			 * Filter an individual entry's markup when displayed using {all_fields}.
 			 *
@@ -1620,7 +1647,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				true,
 				false,
 				$args
-			), $field, $nested_form, $entry, $args );
+			), $field, $args['form'], $entry, $args );
 
 		}
 
@@ -2202,6 +2229,11 @@ class GP_Nested_Forms extends GP_Plugin {
 			$entries        = $this->get_submitted_nested_entries( $form, $field->id );
 			$primary_color  = $field->gpnfModalHeaderColor ? $field->gpnfModalHeaderColor : '#3498db';
 
+			$ajax_context = array(
+				'post_id' => get_queried_object_id(),
+				'path'    => GPNF_Session::get_session_path(),
+			);
+
 			$args = array(
 				'formId'              => $form['id'],
 				'fieldId'             => $field['id'],
@@ -2243,6 +2275,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				'hasConditionalLogic' => GFFormDisplay::has_conditional_logic( $nested_form ),
 				'isGF25'              => $this->is_gf_version_gte( '2.5-beta-1' ),
 				'enableFocusTrap'     => true,
+				'ajaxContext'         => $ajax_context,
 			);
 
 			// Backwards compatibility for deprecated "modalTitle" option.
@@ -2312,7 +2345,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		for ( $i = 0; $i < 3; $i++ ) {
 			$dec      = hexdec( substr( $hex, $i * 2, 2 ) );
 			$dec      = min( max( 0, $dec + $dec * $percent ), 255 );
-			$new_hex .= str_pad( dechex( $dec ), 2, 0, STR_PAD_LEFT );
+			$new_hex .= str_pad( dechex( (int) $dec ), 2, 0, STR_PAD_LEFT );
 		}
 
 		return $new_hex;
@@ -2551,7 +2584,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $this->get_save_and_continue_token( $form['id'] ) );
-		if ( $incomplete_submission_info['form_id'] != $form['id'] ) {
+		if ( empty( $incomplete_submission_info ) || $incomplete_submission_info['form_id'] != $form['id'] ) {
 			return array();
 		}
 
@@ -2987,7 +3020,12 @@ class GP_Nested_Forms extends GP_Plugin {
 				continue;
 			}
 
-			$field      = GFFormsModel::get_field( $form, $input_id );
+			$field = GFFormsModel::get_field( $form, $input_id );
+			// If the Input ID doesn't point to a field on the form, skip it.
+			if ( ! $field ) {
+				continue;
+			}
+
 			$input_name = "input_{$field['id']}";
 
 			if ( $field->get_input_type() != 'fileupload' ) {

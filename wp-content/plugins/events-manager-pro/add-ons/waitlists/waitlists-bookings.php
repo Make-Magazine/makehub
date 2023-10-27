@@ -37,6 +37,9 @@ class Bookings {
 		add_action('wp_ajax_nopriv_waitlist_cancel', '\EM\Waitlist\Bookings::waitlist_cancel');
 		add_action('wp_ajax_waitlist_cancel', '\EM\Waitlist\Bookings::waitlist_cancel');
 		
+		// intercept booking to prevent double-booking issues
+		add_filter('em_before_booking_action_booking_add', '\EM\Waitlist\Bookings::em_before_booking_action_booking_add', 10, 2);
+		
 		// output and intercept waitlist form
 		remove_action('em_booking_form_status_full', 'em_booking_form_status_full');
 		add_action('em_booking_form_status_full', '\EM\Waitlist\Bookings::waitlist_form', 10, 1);
@@ -119,6 +122,7 @@ class Bookings {
 	 */
 	public static function can_event_waitlist( $EM_Event ){
 		// determine of waitlist is to be shown for this event
+		if( $EM_Event->event_active_status === 0 ) return false;
 		if( get_option('dbem_waitlists_events') ) {
 			$show_waitlist = false;
 			$waitlist_events = get_option('dbem_waitlists_events_default');
@@ -241,7 +245,7 @@ class Bookings {
 	}
 	
 	public static function handle_ajax_return( $result, $feedback, $errors, $EM_Booking ){
-		$return = array('result'=>$result, 'message'=>$feedback);
+		$return = array('result' => $result, 'success' => $result, 'message' => $feedback);
 		if( !$result ){
 			global $EM_Notices;
 			if( empty($errors) ){ $errors[] = $feedback; }
@@ -269,6 +273,7 @@ class Bookings {
 		static::$ignore_all = true;
 		\EM_Bookings::$disable_restrictions = true;
 		add_filter('em_ticket_is_available', '\EM\Waitlist\Tickets::em_ticket_is_available', 10, 2); // make sure tickets aren't checking quantities
+		add_filter('pre_option_dbem_bookings_double', '__return_true', 789); // unique number in case other filters at play
 		// sort out flags if we're dealing with a currently loaded booking
 		if( static::$booking ) {
 			$EM_Event = static::$booking->get_event();
@@ -288,6 +293,7 @@ class Bookings {
 		static::$ignore_all = false;
 		\EM_Bookings::$disable_restrictions = false;
 		remove_filter('em_ticket_is_available', '\EM\Waitlist\Tickets::em_ticket_is_available', 10, 2); // make sure tickets aren't checking quantities
+		remove_filter('pre_option_dbem_bookings_double', '__return_true', 789); // unique number in case other filters at play
 		// if booking is loaded
 		if( static::$booking ) {
 			$EM_Event = static::$booking->get_event();
@@ -295,6 +301,13 @@ class Bookings {
 			unset($EM_Event->event_attributes['temp_event_rsvp_spaces']);
 		}
 		do_action('em_waitlist_disable_booking_restrictions');
+	}
+	
+	public static function em_before_booking_action_booking_add( $EM_Event, $EM_Booking ){
+		if( !empty( $_REQUEST['waitlist_booking_uuid'] ) && static::get_booking($_REQUEST['waitlist_booking_uuid']) !== false ) {
+			static::disable_booking_restrictions();
+			add_action('em_bookings_added', '\EM\Waitlist\Bookings::reenable_booking_restrictions');
+		}
 	}
 	
 	
@@ -348,7 +361,11 @@ class Bookings {
 			}
 		}
 		// continue with default action if we get here
-		em_booking_form_status_full();
+		if( doing_action('em_booking_form_status_already_booked') ){
+			em_booking_form_status_already_booked();
+		} else {
+			em_booking_form_status_full();
+		}
 	}
 	
 	public static function display_booking_form(){

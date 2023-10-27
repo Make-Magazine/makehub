@@ -188,6 +188,14 @@ class Intelligent_Starter_Templates_Loader {
 			), site_url( '/' )
 		);
 
+		$spectraTheme = 'not-installed';
+		$themeStatus = Astra_Sites::get_instance()->get_theme_status();
+		// Theme installed and activate.
+		if ( 'spectra-one' === get_option( 'stylesheet', 'astra' ) ) {
+			$spectraTheme = 'installed-and-active';
+			$themeStatus = 'installed-and-active';
+		}
+
 		$data = array(
 			'imageDir' => INTELLIGENT_TEMPLATES_URI . 'assets/images/',
 			'URI' => INTELLIGENT_TEMPLATES_URI,
@@ -197,7 +205,8 @@ class Intelligent_Starter_Templates_Loader {
 			'demoId' => 0,
 			'skipImport' => false,
 			'adminEmail' => $current_user->user_email,
-			'themeStatus' => Astra_Sites::get_instance()->get_theme_status(),
+			'themeStatus' => $themeStatus,
+			'spectraTheme' => $spectraTheme,
 			'nonce' => wp_create_nonce( 'astra-sites-set-ai-site-data' ),
 			'restNonce' => wp_create_nonce( 'wp_rest' ),
 			'retryTimeOut' => 5000, // 10 Seconds.

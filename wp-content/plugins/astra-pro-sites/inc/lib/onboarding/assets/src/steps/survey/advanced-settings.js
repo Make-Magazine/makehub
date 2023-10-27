@@ -18,6 +18,7 @@ const AdvancedSettings = () => {
 			contentImportFlag,
 			requiredPlugins,
 			analyticsFlag,
+			templateResponse,
 		},
 		dispatch,
 	] = useStateValue();
@@ -70,16 +71,22 @@ const AdvancedSettings = () => {
 
 	const notActivePlugins =
 		requiredPlugins !== null
-			? requiredPlugins.required_plugins.inactive
+			? requiredPlugins.required_plugins?.inactive
 			: [];
 
 	const notInstalled =
 		requiredPlugins !== null
-			? requiredPlugins.required_plugins.notinstalled
+			? requiredPlugins.required_plugins?.notinstalled
 			: [];
 
 	const themeStatusClass =
 		'installed-and-active' !== themeStatus ? 'theme-check' : '';
+
+	const isSurecartTemplate = templateResponse?.[
+		'astra-site-surecart-settings'
+	]
+		? true
+		: false;
 
 	return (
 		<div
@@ -302,6 +309,33 @@ const AdvancedSettings = () => {
 							</Tooltip>
 						</li>
 					) }
+					{ isSurecartTemplate &&
+						astraSitesVars.surecart_store_exists && (
+							<li>
+								<input
+									type="checkbox"
+									id="surecart-store"
+									name="surecart-store"
+									defaultChecked={ true }
+									disabled
+								/>
+								<label htmlFor="surecart-store">
+									{ ' ' }
+									{ __(
+										'Replace Existing Surecart Store',
+										'astra-sites'
+									) }
+								</label>
+								<Tooltip
+									content={ __(
+										"Replace the current Surecart store with the imported store's data and settings.",
+										'astra-sites'
+									) }
+								>
+									{ ICONS.questionMark }
+								</Tooltip>
+							</li>
+						) }
 				</ul>
 			</div>
 		</div>

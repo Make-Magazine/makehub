@@ -19,7 +19,7 @@ jQuery(document).ready(function($){
 		}
 	});
 	//offline approval link - listen on body to take precedence of default listener
-	$('body').on('click', '.em-bookings-approve-offline', function(e){
+	$('body').on('click', '.em-bookings-approve-5', function(e){
 		if( !confirm(EM.offline_confirm) ){
 			e.stopPropagation();
 			e.stopImmediatePropagation();

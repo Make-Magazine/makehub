@@ -155,13 +155,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $form;
 		}
 
-		$this->_lmt_whitelist[ $form['id'] ] = array();
-
-		$iterator = new RecursiveIteratorIterator(
-			new RecursiveArrayIterator( $form )
+		$single_dimension_form = $this->flatten_multi_dimensional_array_to_index_array(
+			json_decode( json_encode( $form ), ARRAY_A )
 		);
 
-		foreach ( $iterator as $key => $value ) {
+		$this->_lmt_whitelist[ $form['id'] ] = array();
+
+		foreach ( $single_dimension_form as $value ) {
 			preg_match_all(
 				$this->live_merge_tag_regex,
 				$value,
@@ -183,6 +183,28 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return $form;
 	}
+
+	/**
+	 * Helper method to flatten multi-dimensional arrays to poplate the Live Merge Tag whitelist.
+	 *
+	 * @param array $array
+	 *
+	 * @return array
+	 */
+	public function flatten_multi_dimensional_array_to_index_array( $array ) {
+		$return = array();
+
+		foreach ( $array as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$return = array_merge( array_values( $return ), $this->flatten_multi_dimensional_array_to_index_array( $value ) );
+			} else {
+				$return[] = $value;
+			}
+		}
+
+		return $return;
+	}
+
 
 	/**
 	 * Resets the GF cache's is hidden keys after the form is mostly processed (priority 15).
@@ -597,6 +619,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		$has_lmt = false;
 
 		foreach ( array_values( $default_values ) as $default_value ) {
+			// Live Merge Tags are not supported in Repeater fields yet.
+			if ( is_array( $default_value ) ) {
+				continue;
+			}
 			if ( preg_match( '/@{.*?:?.+?}/', $default_value ) ) {
 				$has_lmt = true;
 				break;
@@ -745,7 +771,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 	public function add_localization_attr_variable( $form_string, $form ) {
 		if ( ! empty( $this->_live_attrs_on_page[ $form['id'] ] ) ) {
-			wp_localize_script( 'gp-populate-anything', "GPPA_LIVE_ATTRS_FORM_{$form['id']}", array_values( array_unique( $this->_live_attrs_on_page[ $form['id'] ] ) ) );
+			gp_populate_anything()->add_js_variable( "GPPA_LIVE_ATTRS_FORM_{$form['id']}", array_values( array_unique( $this->_live_attrs_on_page[ $form['id'] ] ) ) );
 		}
 
 		if ( ! empty( $this->_current_live_merge_tag_values[ $form['id'] ] ) ) {
@@ -759,7 +785,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		if ( $this->get_lmt_whitelist( $form ) ) {
-			wp_localize_script( 'gp-populate-anything', "GPPA_LMT_WHITELIST_{$form['id']}", $this->get_lmt_whitelist( $form ) );
+			gp_populate_anything()->add_js_variable( "GPPA_LMT_WHITELIST_{$form['id']}", $this->get_lmt_whitelist( $form ) );
 		}
 
 		return $form_string;
@@ -871,8 +897,9 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			if ( ! in_array( $field['type'], GP_Populate_Anything::get_interpreted_multi_input_field_types(), true ) ) {
-				// Convert input array to individual inputs.
-				if ( ! empty( $field->inputs ) && is_array( $entry_value ) ) {
+				// Convert input array to individual inputs only if they are a whole number and match the field ID.
+				// See https://github.com/gravitywiz/gp-populate-anything/pull/379
+				if ( ! empty( $field->inputs ) && is_array( $entry_value ) && (float) $input_id === (float) $field_id ) {
 					unset( $entry_values[ $input_id ] );
 
 					foreach ( $entry_value as $input_name => $input_value ) {
@@ -1213,6 +1240,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			foreach ( $field->choices as $choice_index => &$choice ) {
 				$choice['gppaOriginalValue'] = trim( $choice['value'] );
 				$choice['value']             = trim( $this->replace_live_merge_tags( $choice['value'], $form_for_lmts ) );
+
+				// Registration of text/label will happen in another method.
+				if ( preg_match( $this->live_merge_tag_regex, $choice['gppaOriginalValue'] ) ) {
+					$this->register_lmt_on_page( $form['id'], 'data-gppa-live-merge-tag-value' );
+				}
 
 				// If the value is empty, change POST params to prevent it from becoming checked on multi-page forms.
 				$input_id = sprintf( 'input_%d_%d', $field->id, $choice_index + 1 );

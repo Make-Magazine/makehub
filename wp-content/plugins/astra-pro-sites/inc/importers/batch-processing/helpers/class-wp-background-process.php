@@ -104,7 +104,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 			$key = $this->generate_key();
 
 			if ( ! empty( $this->data ) ) {
-				update_site_option( $key, $this->data, 'no' );
+				update_site_option( $key, $this->data );
 			}
 
 			return $this;
@@ -120,7 +120,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		 */
 		public function update( $key, $data ) {
 			if ( ! empty( $data ) ) {
-				update_site_option( $key, $data, 'no' );
+				update_site_option( $key, $data );
 			}
 
 			return $this;
@@ -164,7 +164,7 @@ if ( ! class_exists( 'WP_Background_Process' ) ) {
 		 */
 		public function maybe_handle() {
 			// Don't lock up other requests while processing.
-			session_write_close(); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.session_session_write_close
+			session_write_close(); //phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.session_session_write_close -- 3rd party library.
 
 			if ( $this->is_process_running() ) {
 				// Background process already running.

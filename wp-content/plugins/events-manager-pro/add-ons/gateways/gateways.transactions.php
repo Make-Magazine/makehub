@@ -1,8 +1,14 @@
 <?php
+use EM\Payments\Gateways, EM\Payments\Gateway;
+
 if(!class_exists('EM_Gateways_Transactions')) {
 class EM_Gateways_Transactions{
 	var $limit = 20;
 	var $total_transactions = 0;
+	public $order;
+	public $orderby;
+	public $page;
+	public $gateway;
 	
 	function __construct(){
 		$this->order = ( !empty($_REQUEST ['order']) ) ? $_REQUEST ['order']:'ASC';
@@ -29,13 +35,12 @@ class EM_Gateways_Transactions{
 	}
 	
 	/**
-	 * @param unknown $result
-	 * @param unknown $booking_ids
-	 * @return unknown
+	 * @param bool $result
+	 * @param int[] $booking_ids
+	 * @return bool
 	 */
 	public static function em_bookings_deleted($result, $booking_ids){
 		if( $result && count($booking_ids) > 0 ){
-			//TODO decouple transaction logic from gateways
 			global $wpdb;
 			foreach($booking_ids as $k => $v){ $booking_ids[$k] = absint($v); if( empty($booking_ids[$k]) ) unset($booking_ids[$k]); }
 			$wpdb->query('DELETE FROM '.EM_TRANSACTIONS_TABLE." WHERE booking_id IN (".implode(',', $booking_ids).")");
@@ -168,8 +173,8 @@ class EM_Gateways_Transactions{
 						<option value="">All</option>
 						<?php
 						global $EM_Gateways;
-						foreach ( $EM_Gateways as $EM_Gateway ) {
-							?><option value='<?php echo $EM_Gateway->gateway ?>' <?php if($EM_Gateway->gateway == $this->gateway) echo "selected='selected'"; ?>><?php echo $EM_Gateway->title ?></option><?php
+						foreach ( Gateways::list() as $Gateway ) {
+							?><option value='<?php echo $Gateway::$gateway ?>' <?php if($Gateway::$gateway == $this->gateway) echo "selected='selected'"; ?>><?php echo esc_html($Gateway::$title); ?></option><?php
 						}
 						?>
 					</select>

@@ -235,8 +235,9 @@ function emp_create_automation_logs_table(){
 
 function emp_add_options() {
 	global $wpdb;
-	add_option('em_pro_data', array());
 	add_option('dbem_disable_css',false); //TODO - remove this or create dependency in admin settings
+	// Manual Bookings
+	add_option('dbem_bookings_manual', 1);
 	// Bookings Manager - Frontend, QR etc.
 	add_option('dbem_bookings_manager', true);
 	add_option('dbem_bookings_manager_endpoint', 'bookings-manager');
@@ -319,6 +320,7 @@ function emp_add_options() {
     add_option('dbem_emp_booking_form_reg_show_name', !get_option('em_pro_version'));
 	add_option('dbem_gateway_use_buttons', 0);
 	add_option('dbem_gateway_label', __('Pay With','em-pro'));
+	add_option('dbem_gateway_payment_timeout', 0);
 	//paypal
 	add_option('em_paypal_option_name', 'PayPal');
 	add_option('em_paypal_form', '<img src="'.plugins_url('events-manager-pro/includes/images/paypal/paypal_info.png','events-manager').'" width="228" height="61" />');
@@ -352,6 +354,9 @@ function emp_add_options() {
 		add_option('dbem_bookings_pdf_logo', false);
 		add_option('dbem_bookings_pdf_logo_id', false);
 	}
+	add_option('dbem_bookings_pdf_font', 'dejavusans');
+	add_option('dbem_bookings_pdf_font_subset', false);
+	add_option('dbem_bookings_pdf_invoice_format', 'EVENT-#_BOOKINGID');
 	add_option('dbem_bookings_pdf_invoice_format', 'EVENT-#_BOOKINGID');
 	add_option('dbem_bookings_pdf_logo_alt', get_bloginfo('name'));
 	add_option('dbem_bookings_pdf_billing_details', "#_BOOKINGFORMCUSTOMREG{user_name}\n#_BOOKINGFORMCUSTOMREG{dbem_address}\n#_BOOKINGFORMCUSTOMREG{dbem_city}\n#_BOOKINGFORMCUSTOMREG{dbem_state}\n#_BOOKINGFORMCUSTOMREG{dbem_zip}\n#_BOOKINGFORMCUSTOMREG{dbem_country}");
@@ -675,6 +680,15 @@ function emp_add_options() {
 		
 		if( version_compare($current_version, '3.1.1.1', '<') ){
 			wp_clear_scheduled_hook('emp_cron_emails_ical_cleanup');
+		}
+		
+		if( version_compare($current_version, '3.2', '<') ){
+			EM_Options::site_set('legacy-gateways', true);
+			$message = esc_html__('Welcome to Events Manager Pro 3.2! This is a major update which includes a complete overhaul of our Gateway API foundation! Please visit the %s settings page for more information!', 'em-pro');
+			$settings_page_url = '<a href="'.admin_url('admin.php?page=events-manager-gateways').'">'. esc_html__emp('Gateways').'</a>';
+			$message = sprintf($message, $settings_page_url);
+			$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'ProV3.2-update', 'who' => 'admin', 'where' => 'all', 'message' => "$message" ));
+			EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 		}
 	}else{
 		//Booking form stuff only run on install

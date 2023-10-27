@@ -14,7 +14,8 @@ class EM_Emails {
 		//add booking email icals
 		add_filter('em_booking_email_messages', 'EM_Emails::booking_email_ical_attachments', 1000, 2);
 		add_filter('em_multiple_booking_email_messages', 'EM_Emails::booking_email_ical_attachments', 1000, 2);
-	    //email reminders
+	 
+		//email reminders
 	    add_action('update_option_dbem_emp_emails_reminder_time', array('EM_Emails','clear_crons'));
 		if( get_option('dbem_cron_emails', 1) ) {
 			//set up cron for addint to email queue
@@ -26,27 +27,35 @@ class EM_Emails {
 				$result = wp_schedule_event( $time,'daily','emp_cron_emails_queue');
 			}
 			add_action('emp_cron_emails_queue', array('EM_Emails','queue_emails') );
-			//set up cron for clearing email queue
+		}else{
+			//unschedule the crons
+			wp_clear_scheduled_hook('emp_cron_emails_queue');
+		}
+		
+		// generally, Pro has an email queuing feature and should be enabled, future versions will incorporate a different queue method so that if disabled the email is still sent directly
+		// for now, it's strongly recommended to leave this on
+		if( !defined('EM_EMAIL_QUEUE') || EM_EMAIL_QUEUE ) {
+			//set up cron for sending/clearing email queue
 			if( !wp_next_scheduled('emp_cron_emails_process_queue') ){
 				$result = wp_schedule_event( time(),'em_minute','emp_cron_emails_process_queue');
 			}
 			add_action('emp_cron_emails_process_queue', array('EM_Emails','process_queue') );
 			
-			//set up emails for ical cleaning
+			//set up email queue attachment cleaning
 			if( !wp_next_scheduled('emp_cron_emails_attachment_cleanup') ){
-			    $todays_time_to_run = strtotime(date('Y-m-d', current_time('timestamp')).' '.  get_option('dbem_emp_emails_reminder_time'), current_time('timestamp'));
-			    $tomorrows_time_to_run = strtotime(date('Y-m-d', current_time('timestamp')+(86400)).' '. get_option('dbem_emp_emails_reminder_time'), current_time('timestamp'));
-			    $time = $todays_time_to_run > current_time('timestamp') ? $todays_time_to_run:$tomorrows_time_to_run;
-			    $time -= ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ); //offset time to run at UTC time for WP Cron
+				$todays_time_to_run = strtotime(date('Y-m-d', current_time('timestamp')).' '.  get_option('dbem_emp_emails_reminder_time'), current_time('timestamp'));
+				$tomorrows_time_to_run = strtotime(date('Y-m-d', current_time('timestamp')+(86400)).' '. get_option('dbem_emp_emails_reminder_time'), current_time('timestamp'));
+				$time = $todays_time_to_run > current_time('timestamp') ? $todays_time_to_run:$tomorrows_time_to_run;
+				$time -= ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ); //offset time to run at UTC time for WP Cron
 				$result = wp_schedule_event( $time,'daily','emp_cron_emails_attachment_cleanup');
 			}
 			add_action('emp_cron_emails_attachment_cleanup', array('EM_Emails','clean_attachments') );
-		}else{
+		} else {
 			//unschedule the crons
 			wp_clear_scheduled_hook('emp_cron_emails_process_queue');
-			wp_clear_scheduled_hook('emp_cron_emails_queue');
-			wp_clear_scheduled_hook('emp_cron_emails_ical_cleanup');
+			wp_clear_scheduled_hook('emp_cron_emails_attachment_cleanup');
 		}
+		
 		//admin area
 		if( is_admin() ){
 		    include('emails-admin.php');
@@ -60,6 +69,7 @@ class EM_Emails {
 	
 	public static function booking_email_ical_attachments( $msg, $EM_Booking ){
 		//add email ical attachment
+		$GLOBALS['booking_email_ical_attachments'] = $EM_Booking;
 		$event_ids = array();
 		if( get_class($EM_Booking) == 'EM_Multiple_Booking' ){
 			if( !get_option('dbem_multiple_bookings_ical_attachments') ){
@@ -85,6 +95,7 @@ class EM_Emails {
 		$ical_attachment = EM_Mailer::add_email_attachment($ical_filename, $icalcontent);
 		$ical_file_array = array('name'=>'invite.ics', 'type'=>'text/calendar','path'=>$ical_attachment, 'delete'=>true);
 		$msg['user']['attachments'][] = $ical_file_array;
+		unset($GLOBALS['booking_email_ical_attachments']);
 		return $msg;
 	}
 	

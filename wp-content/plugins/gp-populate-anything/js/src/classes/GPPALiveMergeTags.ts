@@ -79,7 +79,7 @@ export default class GPPALiveMergeTags {
 			}
 
 			// eslint-disable-next-line eqeqeq
-			if ( window[ prop ].nestedFormId == this.formId ) {
+			if ( window[ prop ].nestedFormId == this.formId && window[ prop ].initialized ) {
 				return window[ prop ];
 			}
 		}

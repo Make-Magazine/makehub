@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus YouTube WordPress Plugin
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.1.6.1
+  Version: 14.2
   Author: Embed Plus YouTube Plugin Team
   Author URI: https://www.embedplus.com
   Requires at least: 4.5
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.1.6.1';
+    public static $version = '14.2';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -146,8 +146,8 @@ class YouTubePrefs
         'do_shortcode',
         'convert_smilies'
     );
-    public static $get_api_key_msg = 'The ### feature now requires a (free) YouTube API key from Google. Please follow the easy steps <a href="https://www.youtube.com/watch?v=VqML5F8hcRQ" target="_blank">in this video</a> to create and save your API key.';
-    public static $boilerplate_api_error_message = ' Please make sure you performed the <a href="https://www.youtube.com/watch?v=VqML5F8hcRQ" target="_blank">steps in this video</a> to create and save a proper server API key.';
+    public static $get_api_key_msg = 'The ### feature now requires a (free) YouTube API key from Google. Please follow the easy steps <a href="https://www.youtube.com/watch?v=ZCfrNvu6nMc" target="_blank">in this video</a> to create and save your API key.';
+    public static $boilerplate_api_error_message = ' Please make sure you performed the <a href="https://www.youtube.com/watch?v=ZCfrNvu6nMc" target="_blank">steps in this video</a> to create and save a proper server API key.';
     public static $dft_gdpr_consent_message = '<p><strong>Please accept YouTube cookies to play this video.</strong> By accepting you will be accessing content from YouTube, a service provided by an external third party.</p><p><a href="https://policies.google.com/privacy" target="_blank">YouTube privacy policy</a></p><p>If you accept this notice, your choice will be saved and the page will refresh.</p>';
     ///////////////////////////////////////////////////////////////////////////////////////////////////
     public static $vi_default_date = ''; // date('Y-m-d H:i:s', strtotime('2000-01-01'));
@@ -1346,7 +1346,7 @@ class YouTubePrefs
                             ?>
                             <div class="livestream-tabs">
                                 <ul>
-                                    <li><a href="#livestream-tabs-2">Channel-based livestream (recommended)<sup class="orange">new</sup></a></li>
+                                    <li><a href="#livestream-tabs-2">Channel-based livestream (upgrade required)</a></li>
                                     <li><a href="#livestream-tabs-1">Direct link to livestream or premiere video</a></li>
                                 </ul>
                                 <div id="livestream-tabs-1">
@@ -1370,27 +1370,17 @@ class YouTubePrefs
                                     <?php echo $step1_live_errors ? '<p class="orange bold">' . $step1_live_errors . '</p>' : ''; ?>
                                 </div>
                                 <div id="livestream-tabs-2">
-                                    <p>
-                                        <?php _e('This will embed a video that will automatically display the next upcoming live stream from a channel. You have 2 choices:', 'text_domain'); ?>
-                                    </p>
-                                    <ol>
-                                        <li>
-                                            <?php _e('Enter the link to the official channel page below (note the word "channel" should be in the link, with a long ID afterward).<br>Example', 'text_domain'); ?>: https://www.youtube.com/<strong>channel</strong>/UCL0iAkpqV5YaIVG7xkDtS4Q
-                                        </li>
-                                        <li>
-                                            <?php _e('Or, if you do not know where to find the above format, you can enter any single video that is owned by the channel, and the plugin can retrieve the above format for you.<br>Example', 'text_domain'); ?>: https://www.youtube.com/watch?<strong>v=3tXY8YSIxHM</strong>
-                                        </li>
-                                    </ol>
-                                    <form name="wizform_livechannel" method="post" action="" class="wizform" id="wizform_livechannel">
-                                        <?php wp_nonce_field('_epyt_wiz', '_epyt_nonce', true); ?>
-                                        <div class="center txt-button-align">
-                                            <input name="txtUrlLiveChannel" maxlength="200" id="txtUrlLiveChannel" class="ui-widget ui-widget-content ui-corner-all" placeholder="Paste channel link here" type="text"> <button name="wizform_submit" class="ui-button ui-widget ui-corner-all" type="submit" value="step1_livechannel">Get Channel</button>
-                                        </div>                                        
-                                    </form>
+                                    <div class="alert">
+                                        <p>
+                                            Unfortunately, Google has recently removed their YouTube API feature that used to support automatic channel-based live streams. It appears they won't change things back. However, you do have a couple of choices:
+                                        </p>
+                                        <ol>
+                                            <li>Use "Direct link" live streams, as explained in the other tab. The trade-off is that you will have to manually post and take down your future live streams every time they start and when they end, respectively.</li>
+                                            <li>Or <a href="<?php echo self::$epbase ?>/dashboard/pro-easy-video-analytics.aspx" target="_blank">upgrade to Pro</a>, which has a solution that brings back all the "set it and forget it" features of channel-based embeds. We spent a significant amount of time developing a stable, long-term solution around YouTube's limitations, so we are releasing this effort exclusively to our Pro customers.</li>
+                                        </ol>
+
+                                    </div>                                    
                                     <?php echo $step1_livechannel_errors ? '<p class="orange bold">' . $step1_livechannel_errors . '</p>' : ''; ?>
-                                    <p class="smallnote">
-                                        <strong class="orange">New</strong>: The "Not Live" fallback content feature is now available for channel-based embeds! <a href="<?php echo admin_url('admin.php?page=youtube-my-preferences') ?>#not_live_content_scroll" target="_blank">Try it out here</a>.
-                                    </p>
                                 </div>
                             </div>
                             <?php
@@ -2376,9 +2366,9 @@ class YouTubePrefs
                     'THIS IS DEBUG MODE OUTPUT. UNCHECK THE OPTION IN THE SETTINGS PAGE ONCE YOU ARE DONE DEBUGGING TO PUT THINGS BACK TO NORMAL.' . "\n\n" . $redactedEndpoint . "\n\n" . print_r($apiResult, true) . "\n\nActive Plugins\n\n" . print_r($active_plugins, true) . '</pre>';
             return $gallobj;
         }
-
+        
         $jsonResult = json_decode($apiResult['body']);
-
+        
         if (isset($jsonResult->error))
         {
             if (isset($jsonResult->error->message))
@@ -2590,7 +2580,7 @@ class YouTubePrefs
 
         if (isset($linkparams['live']) && $linkparams['live'] == '1')
         {
-            $live_error_msg = ' To embed live videos, please make sure you performed the <a href="https://www.youtube.com/watch?v=VqML5F8hcRQ" target="_blank">steps in this video</a> to create and save a proper server API key.';
+            $live_error_msg = ' To embed live videos, please make sure you performed the <a href="https://www.youtube.com/watch?v=ZCfrNvu6nMc" target="_blank">steps in this video</a> to create and save a proper server API key.';
             if (isset(self::$alloptions[self::$opt_apikey]))
             {
                 if (isset($linkparams['channel']))
@@ -2997,7 +2987,7 @@ class YouTubePrefs
     {
         $handle = fopen(__DIR__ . "\\debug.txt", "a+");
         fwrite($handle, $str);
-        fclose($handle);
+        fclose($handle);            
     }
 
     public static function keyvalue($qry, $includev)
@@ -3234,6 +3224,7 @@ class YouTubePrefs
             {
                 ?>
                         $('<?php echo $array['anchor_id']; ?>').pointer({
+                            pointerClass: 'wp-pointer ytprefs-pointer',
                             content: '<?php echo $array['content']; ?>',
                             position: {
                                 edge: '<?php echo $array['edge']; ?>',
@@ -3268,7 +3259,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update fixes a YouTube API issue that occurs on some hosts, for both free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update gives guidance to YouTube\'s recent API limitations on the <a target=_blank href=\"" . self::$epbase . '/how-to-embed-a-youtube-livestream-in-wordpress.aspx">channel-based automatic live stream detection feature</a>, with a solution available to <a target=_blank href="' . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer">Pro users</a>.';
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -3604,13 +3595,12 @@ class YouTubePrefs
                     <input type="hidden" name="<?php echo $ytprefs_submitted; ?>" value="Y">
                     <?php wp_nonce_field('_epyt_save', '_epyt_nonce', true); ?>
                     <section class="pattern" id="jumpapikey">
-                        <img class="wiztab-screenshots" src="<?php echo plugins_url('images/apikey-server.png', __FILE__) ?>">
                         <h2>
                             YouTube API Key
                         </h2>
                         <p>
-                            Some features (such as galleries, and some wizard features) now require you to create a free YouTube API <strong>Server</strong> key from Google.
-                            Make sure it's a YouTube Data API v3 "Web Server" key as shown in the screenshot (i.e. not web browser or anything else). <a href="https://www.embedplus.com/how-to-create-a-youtube-api-key.aspx" target="_blank">Click this link &raquo;</a> and follow the instructions to get your API key. Don't worry, it's an easy process.
+                            Some features (such as galleries, and some wizard features) now require you to create a free YouTube API key from Google.
+                            The instructions for this are very specific, so we created a video for you that's hopefully easy to follow: <a href="https://www.embedplus.com/how-to-create-a-youtube-api-key.aspx" target="_blank">Click this link</a> and follow the steps on the page. Then save your API key below.
                         </p>
                         <p>
                             <b class="chktitle">YouTube API Key:</b> 
@@ -3982,29 +3972,28 @@ class YouTubePrefs
                             <div id="not_live_content_scroll" class="p">
                                 <p>
                                     <b class="chktitle">Use "Not Live" Fallback Content For Live Streams:</b> (<a href="<?php echo self::$epbase ?>/how-to-embed-a-youtube-livestream-in-wordpress.aspx" target="_blank">More info here</a>)
-                                    This feature lets you display alternate content if your live stream or premiere is not currently active. There are 2 flavors of this feature: one that affects <strong>direct link</strong> live streams, and 
-                                    one that affects <strong>channel</strong> live streams. Each are explained below. They work a little differently, but both use the same "Not Live" Fallback Content that you can edit below.
+                                    This feature lets you display alternate content if your live stream is not currently active. This feature works for <strong>direct link</strong> live streams 
+                                    (more info about channel-based live streams below).
                                 </p>
                                 <div class="ytindent chx">
                                     <input name="<?php echo self::$opt_not_live_on; ?>" id="<?php echo self::$opt_not_live_on; ?>" <?php checked($all[self::$opt_not_live_on], 1); ?> type="checkbox" class="checkbox">
                                     <label for="<?php echo self::$opt_not_live_on; ?>"><span class="chktitle">Turn on for <b>direct link</b> live streams:</span>
-                                        When your direct-link embed is not streaming live or premiering, the YouTube live player usually displays a countdown after the user clicks the play button.
-                                        Instead of showing that player, you can display some "coming soon" content in that space for your visitors to see until your video begins to live stream or premiere. 
-                                        The plugin will automatically switch to your video's live stream or premiere once it's active. In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear until then.
+                                        When your direct-link embed is not streaming live, the YouTube live player usually displays a countdown after the user clicks the play button.
+                                        Instead of showing that player, you can display some "coming soon" content in that space for your visitors to see until your video begins to live stream. 
+                                        The plugin will automatically switch to your video's live stream once it's active. In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear until then.
                                         You can even insert shortcodes from our plugin into the box below (shortcodes from other plugins may or may not work correctly).
                                         If you just want to show the standard countdown player that YouTube provides, don't use this feature.
                                         <strong>NOTE: Turning this on for direct-link live streams uses a significant amount of your YouTube API quota. We suggest unchecking it if your site has high traffic. If you chose to use this feature, do <u>not</u> put another live stream embed below.</strong>
                                     </label>
                                     <br>
                                     <br>
-                                    <input name="<?php echo self::$opt_not_live_on_channel; ?>" id="<?php echo self::$opt_not_live_on_channel; ?>" <?php checked($all[self::$opt_not_live_on_channel], 1); ?> type="checkbox" class="checkbox">
-                                    <label for="<?php echo self::$opt_not_live_on_channel; ?>"><span class="chktitle">Turn on for <b>channel</b> live streams: <sup class="orange">beta</sup></span> 
-                                        If your live stream embed is channel-based, YouTube might show an error message if there is no upcoming or currently streaming video from your channel. 
-                                        Instead of showing an error, you can display some "coming soon" content in that space for your visitors to see until you've scheduled a live stream or premiere 
-                                        (Once you've scheduled something, YouTube will display the usual countdown until the stream happens). 
-                                        In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear when nothing is playing or scheduled to play yet on your channel.
-                                        You can even insert shortcodes from our plugin into the box below (shortcodes from other plugins may or may not work correctly).
-                                        <strong>NOTE: This feature for channel live streams is experimental, but it will preserve your API quota. We recommend trying this instead of the direct-link option, to see if it works for your site. We hope to improve this feature over time. If you chose to use this feature, do <u>not</u> put another live stream embed below.</strong>
+                                    <input disabled id="<?php echo self::$opt_not_live_on_channel; ?>" type="checkbox" class="checkbox">
+                                    <label><span class="chktitle">Turn on for <b>channel</b> live streams: <sup class="orange">upgrade required</sup></span> 
+                                        Unfortunately, Google has recently removed their YouTube API feature that used to support channel-based live streams. It appears they won't change things back. However, you do have a couple of choices:
+                                        <ol>
+                                            <li>Use "Direct link" live streams, as explained above. The trade-off is that you will have to manually post and take down your future live streams every time they start and when they end, respectively.</li>
+                                            <li>Or <a href="<?php echo self::$epbase ?>/dashboard/pro-easy-video-analytics.aspx" target="_blank">upgrade to Pro</a>, which has a solution that brings back all the "set it and forget it" features of channel-based embeds. We spent a significant amount of time developing a stable, long-term solution around YouTube's limitations, so we are releasing this effort exclusively to our Pro customers.</li>
+                                        </ol>
                                     </label>
                                     <div class="p not-live-content">
                                         <p>                                            
@@ -4231,7 +4220,7 @@ class YouTubePrefs
                         <img class="ssgallery" src="<?php echo plugins_url('images/ssgallery.png', __FILE__) ?>">
                         <p>
                             <a target="_blank" href="<?php echo self::$epbase ?>/responsive-youtube-playlist-channel-gallery-for-wordpress.aspx">You can now make playlist embeds (and channel-playlist embeds) have a gallery layout &raquo;</a>. <strong>First, you must obtain your YouTube API key</strong>. 
-                            Don't worry, it's an easy process. Just <a href="https://www.youtube.com/watch?v=VqML5F8hcRQ" target="_blank">click this link &raquo;</a> and follow the video on that page to get your server API key. Since Google updates their API Key generation directions frequently, follow the general steps shown in the video.
+                            Don't worry, it's an easy process. Just <a href="https://www.youtube.com/watch?v=ZCfrNvu6nMc" target="_blank">click this link &raquo;</a> and follow the video on that page to get your server API key. Since Google updates their API Key generation directions frequently, follow the general steps shown in the video.
                             Then paste your API key in the "API Key" tab, and click the "Save Changes" button.
                         </p>
 
@@ -4649,7 +4638,7 @@ class YouTubePrefs
                             <img class="ssaltgallery" src="<?php echo plugins_url('images/ss-live-chat.jpg', __FILE__) ?>" />
                             <input disabled type="checkbox" class="checkbox">
                             <label>
-                                <b class="chktitle"><?php _e('Enable Live Chat:', 'youtube-embed-plus') ?></b> <span class="pronon"><?php _e('(PRO Users)', 'youtube-embed-plus') ?></span>  <?php _e('<sup class="orange">new</sup>') ?> <?php _e('Add more interaction to your site by including the YouTube live chat box as part of each live stream or premiere embed. Note that live chat can also be an option for earning money from your audience by using the Super Chat feature. <a href="https://creatoracademy.youtube.com/page/lesson/superchat" target="_blank">Learn more here</a>.') ?>
+                                <b class="chktitle"><?php _e('Enable Live Chat:', 'youtube-embed-plus') ?></b> <span class="pronon"><?php _e('(PRO Users)', 'youtube-embed-plus') ?></span>  <?php _e('<sup class="orange">new</sup>') ?> <?php _e('Add more interaction to your site by including the YouTube live chat box as part of each live stream embed. Note that live chat can also be an option for earning money from your audience by using the Super Chat feature. <a href="https://creatoracademy.youtube.com/page/lesson/superchat" target="_blank">Learn more here</a>.') ?>
                                 <strong class="check-note"><?php _e('<span class="orange">NOTE:</span> In wide containers, the chat box will appear to the right of the player. It will appear below the player when the container is less than 964px. Also, Google/YouTube disables live chat on mobile devices. So for mobile phones and tablets, the chat box will be hidden.') ?></strong>
                             </label>
                             <br>
@@ -5764,29 +5753,27 @@ class YouTubePrefs
                             <div class="ytprefs-ob-setting yob-live">
                                 <p>
                                     <b class="chktitle">Use "Not Live" Fallback Content For Live Streams:</b> (<a href="<?php echo self::$epbase ?>/how-to-embed-a-youtube-livestream-in-wordpress.aspx" target="_blank">More info here</a>)
-                                    This feature lets you display alternate content if your live stream or premiere is not currently active. There are 2 flavors of this feature: one that affects <strong>direct link</strong> live streams, and 
-                                    one that affects <strong>channel</strong> live streams. Each are explained below. They work a little differently, but both use the same "Not Live" Fallback Content that you can edit below.
+                                    This feature lets you display alternate content if your live stream is not currently active. This feature works for <strong>direct link</strong> live streams (more info about channel-based live streams below).
                                 </p>
                                 <div class="ytindent chx">
                                     <input value="1" name="<?php echo self::$opt_not_live_on; ?>" id="<?php echo self::$opt_not_live_on; ?>" <?php checked($all[self::$opt_not_live_on], 1); ?> type="checkbox" class="checkbox">
                                     <label for="<?php echo self::$opt_not_live_on; ?>"><span class="chktitle">Turn on for <b>direct link</b> live streams:</span>
-                                        When your direct-link embed is not streaming live or premiering, the YouTube live player usually displays a countdown after the user clicks the play button.
-                                        Instead of showing that player, you can display some "coming soon" content in that space for your visitors to see until your video begins to live stream or premiere. 
-                                        The plugin will automatically switch to your video's live stream or premiere once it's active. In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear until then.
+                                        When your direct-link embed is not streaming live, the YouTube live player usually displays a countdown after the user clicks the play button.
+                                        Instead of showing that player, you can display some "coming soon" content in that space for your visitors to see until your video begins to live stream. 
+                                        The plugin will automatically switch to your video's live stream once it's active. In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear until then.
                                         You can even insert shortcodes from our plugin into the box below (shortcodes from other plugins may or may not work correctly).
                                         If you just want to show the standard countdown player that YouTube provides, don't use this feature.
                                         <strong>NOTE: Turning this on for direct-link live streams uses a significant amount of your YouTube API quota. We suggest unchecking it if your site has high traffic. If you chose to use this feature, do not put another live stream embed below.</strong>
                                     </label>
                                     <br>
                                     <br>
-                                    <input value="1" name="<?php echo self::$opt_not_live_on_channel; ?>" id="<?php echo self::$opt_not_live_on_channel; ?>" <?php checked($all[self::$opt_not_live_on_channel], 1); ?> type="checkbox" class="checkbox">
-                                    <label for="<?php echo self::$opt_not_live_on_channel; ?>"><span class="chktitle">Turn on for <b>channel</b> live streams:</span> <sup class="orange">beta</sup>
-                                        If your live stream embed is channel-based, YouTube might show an error message if there is no upcoming or currently streaming video from your channel. 
-                                        Instead of showing an error, you can display some "coming soon" content in that space for your visitors to see until you've scheduled a live stream or premiere 
-                                        (Once you've scheduled something, YouTube will display the usual countdown until the stream happens). 
-                                        In the <em>"Not Live" Fallback Content</em> box below, enter what you would like to appear when nothing is playing or scheduled to play yet on your channel.
-                                        You can even insert shortcodes from our plugin into the box below (shortcodes from other plugins may or may not work correctly).
-                                        <strong>NOTE: This feature for channel live streams is experimental, but it will preserve your API quota. We recommend trying this instead of the direct-link option, to see if it works for your site. We hope to improve this feature over time.</strong>
+                                    <input disabled id="<?php echo self::$opt_not_live_on_channel; ?>" type="checkbox" class="checkbox">
+                                    <label><span class="chktitle">Turn on for <b>channel</b> live streams (<span class="orange">upgrade required</span>) </span> 
+                                        Unfortunately, Google has recently removed their YouTube API feature that used to support channel-based live streams. It appears they won't change things back. However, you do have a couple of choices:
+                                        <ol>
+                                            <li>Use "Direct link" live streams, as explained above. The trade-off is that you will have to manually post and take down your future live streams every time they start and when they end, respectively.</li>
+                                            <li>Or <a href="<?php echo self::$epbase ?>/dashboard/pro-easy-video-analytics.aspx" target="_blank">upgrade to Pro</a>, which has a solution that brings back all the "set it and forget it" features of channel-based embeds. We spent a significant amount of time developing a stable, long-term solution around YouTube's limitations, so we are releasing this effort exclusively to our Pro customers.</li>
+                                        </ol>
                                     </label>
                                     <div class="p not-live-content">
                                         <p>                                            
@@ -5869,15 +5856,13 @@ class YouTubePrefs
                 </div>
                 <div class="ytprefs-ob-step ytprefs-ob-step3">
                     <div class="ytprefs-ob-content">
-                        <img class="wiztab-screenshots" src="<?php echo plugins_url('images/apikey-server.png', __FILE__) ?>">
                         <h2>
                             YouTube API Key
                         </h2>
                         <form id="form-onboarding-apikey">
                             <input type="hidden" name="action" value="my_embedplus_onboarding_save_apikey_ajax"/>
                             <p>
-                                Some features (such as galleries, and some wizard features) now require you to create a free YouTube API <strong>Server</strong> key from Google.
-                                Make sure it's a YouTube Data API v3 "Web Server" key as shown in the screenshot (i.e. not web browser or anything else).
+                                Some features (such as galleries, and some wizard features) now require you to create a free YouTube API key from Google.
                             </p>
                             <?php
                             if (!empty($all[self::$opt_apikey]) && strlen($all[self::$opt_apikey]) > 0)
@@ -5892,7 +5877,7 @@ class YouTubePrefs
                             {
                                 ?>
                                 <p>
-                                    <a href="https://www.youtube.com/watch?v=VqML5F8hcRQ" target="_blank">Click this link &raquo;</a> and follow the video to get your API key. Don't worry, it's an easy process.
+                                    The instructions for this are very specific, so we created a video for you that's hopefully easy to follow: <a href="https://www.embedplus.com/how-to-create-a-youtube-api-key.aspx" target="_blank">Click this link</a> and follow the steps on the page. Then save your API key here.
                                 </p>                            
                                 <?php
                             }

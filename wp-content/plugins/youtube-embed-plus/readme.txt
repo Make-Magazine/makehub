@@ -3,8 +3,8 @@ Contributors: embedplus
 Plugin Name: Embed Plus YouTube WordPress Plugin With YouTube Gallery, Channel, Playlist, Live Stream
 Tags: youtube gallery, youtube wordpress plugin, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live stream, lazy load, facade
 Requires at least: 4.5
-Tested up to: 6.2
-Stable tag: 14.1.6.1
+Tested up to: 6.3
+Stable tag: 14.2
 License: GPLv3 or later
 
 YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube livestream. Defer JavaScript
@@ -21,7 +21,6 @@ https://www.youtube.com/watch?v=QDdvXBqfrzM
 * Privacy and Consent - Improved privacy and GDPR compliance options like YouTube no cookie, YouTube API restrictions, and a customizable GDPR consent message. Note: if you have a full-blown consent plugin installed on your WordPress site, you may not need these particular features of this YouTube plugin.
 * YouTube gallery capability: channel and playlist – The ability to make playlist and channel embeds have a gallery layout. By default, the plugin can generate a grid-based [responsive playlist or channel gallery >>](https://www.embedplus.com/responsive-youtube-playlist-channel-gallery-for-wordpress.aspx). Your visitors can browse through pages of video thumbnails and choose from videos that are pulled from an entire YouTube channel or playlist.
 * YouTube gallery auto continuous play - embed a playlist or channel gallery and allow it to play one video after the next without requiring viewers to click a thumbnail.
-* YouTube Live Stream - Given a link to a YouTube channel, the plugin wizard automatically finds a livestream if one is active in that channel and displays the livestream for you. You can embed a direct link to a livestream too.
 * YouTube Premieres - The plugin provides you the same embedding methods for YouTube live streams as it does for premiere embeds.
 * Simultaneous playback control - you can enable/disable the ability for visitors to have separate videos running at the same time on the same page. This also works with YouTube livestream and gallery embeds that are embedded by our YouTube plugin.
 * Improved accessibility by using title attributes for screen reader support. Hopefully this plugin can help your site pass functional accessibility evaluations (FAE).
@@ -188,6 +187,15 @@ Assuming you already have the EmbedPlus plugin active, you can embed a YouTube s
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 14.2 =
+* This update gives guidance to YouTube's recent API limitations on the [channel-based automatic live stream detection/loading feature](https://www.embedplus.com/how-to-embed-a-youtube-livestream-in-wordpress.aspx), with a solution available to [Pro users](https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx)
+
+= Embed Plus for YouTube WordPress Plugin 14.1.6.3 =
+* Fixes a compatibility issue with Contact Forms 7
+
+= Embed Plus for YouTube WordPress Plugin 14.1.6.2 =
+* Updated API key instructions
 
 = Embed Plus for YouTube WordPress Plugin 14.1.6.1 =
 * Fixes a YouTube API referer issue that occurs on some hosts

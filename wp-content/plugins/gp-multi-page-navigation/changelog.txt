@@ -1,6 +1,22 @@
 
 # Changelog
 
+## 1.2.4
+
+	- Fixed issue where steps would sometimes not be linked.
+
+## 1.2.3
+
+	- Fixed minor visual compatibility issues between GP Page Transitions and GP Multi-page Navigation.
+
+## 1.2.2
+
+	- Fixed an issue where page links could duplicate if using Multi-page Navigation with Page Transitions.
+
+## 1.2.1
+
+	- Fixed margin for step links in forms using the new Gravity Forms Theme Framework.
+
 ## 1.2
 
 	- Added support for using GP Multi-Page Navigation with GP Page Transitions.

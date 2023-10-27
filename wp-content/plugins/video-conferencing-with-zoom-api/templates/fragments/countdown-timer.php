@@ -11,6 +11,10 @@
 
 global $zoom;
 
+if ( ! empty( $zoom['shortcode'] ) && ! empty( $zoom['parameters']['countdown'] ) && $zoom['parameters']['countdown'] == "false" ) {
+	return;
+}
+
 if ( ! vczapi_pro_version_active() && vczapi_pro_check_type( $zoom['api']->type ) || empty( $zoom ) ) {
 	?>
     <div class="dpn-zvc-sidebar-box">
@@ -48,8 +52,12 @@ if ( ! empty( $zoom['api']->start_time ) ) {
 	if ( ! empty( $zoom['shortcode_post_by_id'] ) ) {
 		?>
         <div class="vczapi-show-by-postid-countdown">
-            <h3 class="vczapi-show-by-postid-countdown-title"><?php _e( 'Meeting starts in', 'video-conferencing-with-zoom-api' ); ?>:</h3>
-            <div class="dpn-zvc-timer vczapi-show-by-postid-countdown-timer" id="dpn-zvc-timer" data-date="<?php echo $zoom['api']->start_time; ?>" data-state="<?php echo ! empty( $zoom['api']->state ) ? $zoom['api']->state : false; ?>" data-tz="<?php echo $zoom['api']->timezone; ?>">
+            <h3 class="vczapi-show-by-postid-countdown-title"><?php _e( 'Meeting starts in', 'video-conferencing-with-zoom-api' ); ?>
+                :</h3>
+            <div class="dpn-zvc-timer vczapi-show-by-postid-countdown-timer" id="dpn-zvc-timer"
+                 data-date="<?php echo $zoom['api']->start_time; ?>"
+                 data-state="<?php echo ! empty( $zoom['api']->state ) ? $zoom['api']->state : false; ?>"
+                 data-tz="<?php echo $zoom['api']->timezone; ?>">
 				<?php echo $countdown_html; ?>
             </div>
         </div>
@@ -57,7 +65,9 @@ if ( ! empty( $zoom['api']->start_time ) ) {
 	} else {
 		?>
         <div class="dpn-zvc-sidebar-box">
-            <div class="dpn-zvc-timer" id="dpn-zvc-timer" data-date="<?php echo $zoom['api']->start_time; ?>" data-state="<?php echo ! empty( $zoom['api']->state ) ? $zoom['api']->state : false; ?>" data-tz="<?php echo $zoom['api']->timezone; ?>">
+            <div class="dpn-zvc-timer" id="dpn-zvc-timer" data-date="<?php echo $zoom['api']->start_time; ?>"
+                 data-state="<?php echo ! empty( $zoom['api']->state ) ? $zoom['api']->state : false; ?>"
+                 data-tz="<?php echo $zoom['api']->timezone; ?>">
 				<?php echo $countdown_html; ?>
             </div>
         </div>

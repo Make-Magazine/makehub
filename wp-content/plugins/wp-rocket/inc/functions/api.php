@@ -9,7 +9,7 @@
  * @param  array  $zone (default: array( 'all' )). Deprecated.
  * @return string
  */
-function get_rocket_cdn_url( $url, $zone = [ 'all' ] ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals
+function get_rocket_cdn_url( $url, $zone = [ 'all' ] ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals, Generic.CodeAnalysis.UnusedFunctionParameter.FoundAfterLastUsed
 	$container = apply_filters( 'rocket_container', '' );
 	$cdn       = $container->get( 'cdn' );
 
@@ -138,6 +138,7 @@ function rocket_is_live_site() {
 		'.runcloud.link',
 		'.onrocket.site',
 		'.singlestaging.com',
+		'.myraidbox.de',
 	];
 	foreach ( $staging as $partial_host ) {
 		if ( strpos( $host, $partial_host ) ) {

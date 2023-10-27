@@ -546,10 +546,12 @@ class EM_Form extends EM_Object {
 					//registration fields
 				    if( ($field['type'] != 'user_login' && get_option('dbem_emp_booking_form_reg_input')) || EM_Bookings::$force_registration || !is_user_logged_in() ){
 						?>
-						<input type="text" name="<?php echo $field_name ?>" id="<?php echo $field['fieldid'] ?>" class="input" value="<?php echo $default; ?>"  />
+						<input type="text" name="<?php echo $field_name ?>" id="<?php echo $field['fieldid'] ?>" class="input" value="<?php echo esc_attr($default); ?>"  />
 						<?php
 					}else{
-						echo $default;
+					    ?>
+					    <input type="text" id="<?php echo $field['fieldid'] ?>" class="input" value="<?php echo esc_attr($default); ?>" disabled />
+					    <?php
 					}
 				}
 				break;
@@ -909,7 +911,7 @@ class EM_Form extends EM_Object {
 	}
 
 	public static function validate_reg_fields( $field = false ){
-		if( EM_Gateways::is_manual_booking(true) ) return true; //short circuit if we're on a manual booking for a new user
+		if( emp_is_manual_booking() ) return true; //short circuit if we're on a manual booking for a new user
 		if( !empty($field['type']) && $field['type'] == 'user_login' && is_user_logged_in() ) return false;
 		$validate = is_user_logged_in() ? get_option('dbem_emp_booking_form_reg_show') && get_option('dbem_emp_booking_form_reg_input') : true;
 		return $validate && self::show_reg_fields( $field );

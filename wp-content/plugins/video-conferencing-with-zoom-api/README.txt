@@ -3,8 +3,8 @@ Contributors: j__3rk, digamberpradhan
 Tags: zoom video conference, video conference, zoom, zoom video conferencing, web conferencing, online meetings
 Donate link: https://www.paypal.com/donate?hosted_button_id=2UCQKR868M9WE
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 4.1.9
+Tested up to: 6.3
+Stable tag: 4.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ Search for the plugin -> add new dialog and click install, or download and extra
 
 == Frequently Asked Questions ==
 
+= Migrating from JWT to Server to Server method =
+
+As of June 2023, Zoom will deprecate JWT App type - the plugin has moved to Server-to-Server OAuth App and SDK App type for Join via Browser / Web SDK support. If you face any Zoom connection issues then this might be the issue. Refer to this [Documentation](https://zoomdocs.codemanas.com/migration/ "Documentation") on how to migrate your old JWT method.
+
 = Join via Browser showing Signature Invalid or Timeout =
 
 Please check if you SDK app type is activated and re-check all the app credentials are valid.
@@ -154,6 +158,44 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 9. Shortcode Output
 
 == Changelog ==
+
+= 4.3.2 September 25th 22nd, 2023 =
+* Fixed: Debugger log not working.
+* Added: WebSDK validator.
+* Updated: Websdk to version 2.16.0
+
+= 4.3.1 August 18th, 2023 =
+* Fixed: Timezone issue not showing correctly in backend.
+
+= 4.3.0 July 18th, 2023 =
+* Deprecated: vczapi_encrypt_decrypt() to generate dynamic key when generating value.
+* Added: New Encrypt Decrypt methods
+* Added: Helper functions
+* Updated: WebSDK to version 2.13.0
+* Few updates to Codebase into PSR-4
+
+= 4.2.1 June 19th, 2023 =
+* Updated: Admin SDK text changed to Client ID and Client Secret.
+* Fixed: Timezone Fix
+* Fixed: Spectra plugin blocks template compatibility issue.
+* Added: Join from browser directly without name, email field.
+
+= 4.2.0 May 25th, 2023 =
+* Added: FSE Support
+* Added: End meeting from backend using Zoom status api.
+* Updated: Elementor Modules for shortcode changes related with [zoom_meeting_post]
+* Fixed: Search in host to WP page.
+* Fixed: FSE theme join via browser page not working.
+* Updated: WebSDK to version 2.12.2
+* Fixed: Responsive fixed for shortcode table views.
+* Bug fixes
+
+= 4.1.11 May 3rd, 2023 =
+* Added: Capaibility to only show meeting counter when using [zoom_meeting_post] - See [Documentation https://zoomdocs.codemanas.com/shortcode/#2-show-a-meeting-post-with-countdown].
+* Updated: Embed Post by ID block.
+
+= 4.1.10 Arpil 10th, 2023 =
+* Fixed: Join via Browser password field fix.
 
 = 4.1.9 Arpil 6th, 2023 =
 * Updated: WebSDK to version 2.11.0

@@ -14,6 +14,7 @@ $EM_Event = $EM_Booking->get_event();
 		<?php
 		emp_locate_template('printables/pdf-printable.css', true);
 		emp_locate_template('printables/pdf-booking/pdf-booking.css', true);
+		echo "#content { font-family: ". esc_attr(get_option('dbem_bookings_pdf_font', 'dejavusans')) . ", Helvetica, Arial, sans-serif; }";
 		?>
 	</style>
 </head>

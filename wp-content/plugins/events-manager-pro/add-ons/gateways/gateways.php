@@ -1,49 +1,59 @@
 <?php
-if(!class_exists('EM_Gateways')) {
-class EM_Gateways {
-    static $customer_fields = array();
-	/*
-	 * --------------------------------------------------
-	 * STATIC Functions - functions that don't need to be overriden
-	 * --------------------------------------------------
-	 */
+namespace EM\Payments;
+use EM_Gateways_Transactions, EM_Booking, EM_Multiple_Bookings;
+
+class Gateways {
 	
-	static function init(){
-	    add_filter('em_wp_localize_script', array('EM_Gateways','em_wp_localize_script'),10,1);
+	/**
+	 * Array of registered gateways that can be used on this site.
+	 * @var Gateway[]
+	 */
+	protected static $registered = array();
+	
+    public static $customer_fields = array();
+	
+	
+	public static function init(){
+	    add_filter('em_wp_localize_script', array( static::class, 'em_wp_localize_script'),10,1);
 		//add to booking interface (menu options, booking statuses)
-		add_action('em_bookings_table',array('EM_Gateways','em_bookings_table'),10,1);
+		add_action('em_bookings_table',array( static::class, 'em_bookings_table'),10,1);
 		// Payment return
-		add_action('wp_ajax_em_payment', array('EM_Gateways', 'handle_payment_gateways'), 10 );
-		add_action('wp_ajax_nopriv_em_payment', array('EM_Gateways', 'handle_payment_gateways'), 10 );
-		add_action('init', 'EM_Gateways::wp_init'); //handle cancelled payments via 'back' links on payment gateways
+		add_action('wp_ajax_em_payment', array( static::class, 'handle_payment_gateways'), 10 );
+		add_action('wp_ajax_nopriv_em_payment', array( static::class, 'handle_payment_gateways'), 10 );
+		add_action('init', array( static::class, 'handle_payment_redirections')); //handle successful and cancelled payments via redirection from gateways
 		//Booking Tables UI
-		add_filter('em_bookings_table_rows_col', array('EM_Gateways','em_bookings_table_rows_col'),10,5);
-		add_filter('em_bookings_table_cols_template', array('EM_Gateways','em_bookings_table_cols_template'),10,2);
+		add_filter('em_bookings_table_rows_col', array( static::class, 'em_bookings_table_rows_col'),10,5);
+		add_filter('em_bookings_table_cols_template', array( static::class, 'em_bookings_table_cols_template'),10,2);
 		//Booking interception
 		if( get_option('dbem_multiple_bookings') && empty($_REQUEST['manual_booking']) ){
 		    //Multiple bookings mode (and not doing a manual booking)
-			add_action('em_multiple_booking_add', array('EM_Gateways', 'em_booking_add'), 10, 3);
-			add_filter('em_multiple_booking_get_post',array('EM_Gateways', 'em_booking_get_post'), 10, 2);
-			add_filter('em_action_emp_checkout', array('EM_Gateways','em_action_booking_add'),10,2); //adds gateway var to feedback
+			add_filter('em_multiple_booking_validate', array( static::class, 'em_booking_validate'), 10, 2);
+			add_action('em_multiple_booking_add', array( static::class, 'em_booking_add'), 10, 3);
+			add_filter('em_multiple_booking_get_post',array( static::class, 'em_booking_get_post'), 10, 2);
+			add_filter('em_action_emp_checkout', array( static::class, 'em_action_booking_add'),10,2); //adds gateway var to feedback
 			//Booking Form Modifications
-			add_action('em_checkout_form_footer', array('EM_Gateways','mb_booking_form_footer'),10,2);
+			add_action('em_checkout_form_confirm_footer', array( static::class, 'mb_payment_form'),10,2);
 		}else{
 		    //Normal Bookings mode, or manual booking
-			add_action('em_booking_add', array('EM_Gateways', 'em_booking_add'), 10, 3);
-			add_filter('em_booking_get_post',array('EM_Gateways', 'em_booking_get_post'), 10, 2);
-			add_filter('em_action_booking_add', array('EM_Gateways','em_action_booking_add'),10,2); //adds gateway var to feedback
+			add_filter('em_booking_validate', array( static::class, 'em_booking_validate'), 10, 2);
+			add_action('em_booking_add', array( static::class, 'em_booking_add'), 10, 3);
+			add_filter('em_booking_get_post',array( static::class, 'em_booking_get_post'), 10, 2);
+			add_filter('em_booking_added', array( static::class, 'em_booking_added'), 10, 2);
+			add_filter('em_action_booking_add', array( static::class, 'em_action_booking_add'),10,2); //adds gateway var to feedback
 			//Booking Form Modifications
-				//buttons only way, oudated but still possible, will eventually depreciated this once an API is out, so use the latter pls
-				add_filter('em_booking_form_buttons', array('EM_Gateways','booking_form_buttons'),10,2); //Replace button with booking buttons
 				//new way, with payment selector
-				add_action('em_booking_form_footer', array('EM_Gateways','event_booking_form_footer'),10,2);
+				add_action('em_booking_form_confirm_footer', array( static::class, 'event_booking_payment_form'),10,2);
+				// back-compat for the above action in case templates are overriden but outdated
+				add_action('em_booking_form_footer', function( $EM_Event ){
+					// if firing hook via the back-compat mode then don't proceed, since we'll also likely have the new hook above
+					if( !did_action('em_booking_form_confirm_footer') ){
+						static::event_booking_payment_form( $EM_Event );
+					}
+				},10,2);
+			
 		}
 		//booking gateways JS
-		add_action('em_booking_js', array('EM_Gateways','em_booking_js'));
-		//Gateways and user fields
-		add_action('admin_init',array('EM_Gateways', 'customer_fields_admin_actions'),9); //before bookings
-		add_action('emp_forms_admin_page',array('EM_Gateways', 'customer_fields_admin'),30);
-		self::$customer_fields = array(
+		static::$customer_fields = array(
 			'address' => __('Address','em-pro'),
 			'address_2' => __('Address Line 2','em-pro'),
 			'city' => __('City','em-pro'),
@@ -55,28 +65,35 @@ class EM_Gateways {
 			'company' => __('Company','em-pro')
 		);
 		//data privacy - transaction history
-        add_filter('em_data_privacy_export_bookings_items_after_item', 'EM_Gateways::data_privacy_export', 10, 3);
-	}
-	
-	public static function wp_init(){
-		if( !empty($_REQUEST['payment_cancelled']) && !empty($_REQUEST['booking_id']) && !empty($_REQUEST['n']) && wp_verify_nonce($_REQUEST['n'], 'cancel_booking_'.$_REQUEST['payment_cancelled'].'_'.$_REQUEST['booking_id']) ){
-			global $EM_Notices; /* @var EM_Notices $EM_Notices */
-			$EM_Booking = em_get_booking($_REQUEST['booking_id']);
-			if( $EM_Booking->booking_id && ($EM_Booking->booking_status == 5 || $EM_Booking->booking_status == 4) ){
-				$EM_Booking->delete();
-				$cancellation_message = get_option('em_'.$_REQUEST['payment_cancelled'].'_booking_feedback_cancelled');
-				if( !empty($cancellation_message) ){
-					$EM_Notices->add_confirm($cancellation_message);
-				}
-				if( get_class($EM_Booking) == 'EM_Multiple_Booking' ){
-					// restore booking into session - ids can be preserved since they should all be deleted on auto-increment tables
-					EM_Multiple_Bookings::restore_cart();
-				}
-			}
+        add_filter('em_data_privacy_export_bookings_items_after_item', array( static::class, 'data_privacy_export'), 10, 3);
+		
+		// Now Include things
+		if( is_admin() ){
+			include('gateways-admin.php');
 		}
+		include('gateway.php');
+		include('gateways.transactions.php');
+		include('gateways-legacy.php'); // prevent major errors
+		
+		// load native gateways
+		include('gateway.offline.php');
+		include('paypal-legacy-standard/gateway.paypal.php');
+		include('authorize-aim/gateway.authorize.aim.php');
+		
+		//set up cron
+		$timestamp = wp_next_scheduled('em_gateways_cron');
+		if( absint( get_option('dbem_gateway_payment_timeout', 15)) > 0 && !$timestamp ){
+			$result = wp_schedule_event(time(),'em_minute','em_gateways_cron');
+		}elseif( !$timestamp ){
+			wp_unschedule_event($timestamp, 'em_gateways_cron');
+		}
+		add_action('em_gateways_cron', array( static::class, 'check_timeouts'));
+		
+		// init hook
+		do_action('em_gateways_init');
 	}
 	
-	static function em_wp_localize_script( $vars ){
+	public static function em_wp_localize_script( $vars ){
 		if( is_user_logged_in() && get_option('dbem_rsvp_enabled') ){
 		    $vars['booking_delete'] .= ' '.__('All transactional history associated with this booking will also be deleted.','em-pro');
 		    $vars['transaction_delete'] = __('Are you sure you want to delete? This may make your transaction history out of sync with your payment gateway provider.', 'em-pro');
@@ -84,10 +101,9 @@ class EM_Gateways {
 	    return $vars;
 	}
 	
-	static function em_bookings_table($EM_Bookings_Table){
+	public static function em_bookings_table($EM_Bookings_Table){
 		$EM_Bookings_Table->statuses['awaiting-online'] = array('label'=>__('Awaiting Online Payment','em-pro'), 'search'=>4);
 		$EM_Bookings_Table->statuses['awaiting-payment'] = array('label'=>__('Awaiting Offline Payment','em-pro'), 'search'=>5);
-		$EM_Bookings_Table->statuses['needs-attention']['search'] = array(0,4,5);
 		if( !get_option('dbem_bookings_approval') ){
 			$EM_Bookings_Table->statuses['needs-attention']['search'] = array(5);
 		}else{
@@ -95,19 +111,32 @@ class EM_Gateways {
 		}
 		$EM_Bookings_Table->status = ( !empty($_REQUEST['status']) && array_key_exists($_REQUEST['status'], $EM_Bookings_Table->statuses) ) ? $_REQUEST['status']:get_option('dbem_default_bookings_search','needs-attention');
 	}
-
-	static function register_gateway($gateway, $class) {
-		global $EM_Gateways;
-		if(!is_array($EM_Gateways)) {
-			$EM_Gateways = array();
+	
+  /* ------------------------------------------------------------------------------------------------------------------------------------------------------
+   * REGISTRATON AND UTLITY FUNCTIONS - Registering gateways, deregistering, getting, lists, checking if active etc.
+   * ------------------------------------------------------------------------------------------------------------------------------------------------------ */
+	
+	/**
+	 * Deregister a gateway from being used on site.
+	 * @param Gateway $class
+	 * @return bool
+	 */
+	public static function register( $class ) {
+		if( class_exists($class) ){
+			static::$registered[$class::$gateway] = $class;
+			return true;
 		}
-		$EM_Gateways[$gateway] = new $class;
+		return false;
 	}
 	
-	static function deregister_gateway( $gateway ){
-		global $EM_Gateways;
-		if( !empty($EM_Gateways[$gateway]) ){
-			unset($EM_Gateways[$gateway]);
+	/**
+	 * Deregister a gateway from being used on site.
+	 * @param $gateway
+	 * @return bool
+	 */
+	public static function deregister( $gateway ){
+		if( !empty( static::$registered[$gateway] ) ){
+			unset( static::$registered[$gateway] );
 			return true;
 		}
 		return false;
@@ -115,108 +144,221 @@ class EM_Gateways {
 		
 	/**
 	 * Returns an array of active gateway objects
-	 * @return array
+	 * @return Gateway[]
 	 */
-	static function active_gateways() {
-		global $EM_Gateways;
+	public static function active_gateways( $context = 'bookings', $object = null ) {
+		$active_gateways = get_option('em_payment_gateways', array());
 		$gateways = array();
-		foreach($EM_Gateways as $EM_Gateway){
-			if($EM_Gateway->is_active()){
-				$gateways[$EM_Gateway->gateway] = $EM_Gateway->title;
+		foreach( $active_gateways as $gateway => $active ){
+			if( $active && static::is_registered($gateway) && static::is_active_for( $gateway, $context, $object ) ){
+				$gateways[$gateway] = self::$registered[$gateway];
 			}
 		}
 		return $gateways;
 	}
 	
 	/**
-	 * Returns an array of all registered gateway objects
-	 * @return array
+	 * Returns an array of all registered gateway object names with gateway name/key as keys.
+	 * @return string[]
 	 */
-	static function gateways_list() {
-		global $EM_Gateways;
+	public static function gateways_list() {
 		$gateways = array();
-		foreach($EM_Gateways as $EM_Gateway){
-			$gateways[$EM_Gateway->gateway] = $EM_Gateway->title;
+		foreach( static::$registered as $Gateway){
+			$gateways[$Gateway::$gateway] = $Gateway::$title;
 		}
 		return $gateways;
 	}
 	
-	/**
-	 * Returns the EM Gateway with supplied name
-	 * @param string $gateway
-	 * @return EM_Gateway
-	 */
-	static function get_gateway( $gateway ){
-		global $EM_Gateways;
-		//check for array key first
-		if( !empty($EM_Gateways[$gateway]) && $EM_Gateways[$gateway]->gateway == $gateway ) return $EM_Gateways[$gateway];
-		//otherwise we loop through the gateways array in case the gateway key registered doesn't match the actual gateway name
-		foreach($EM_Gateways as $EM_Gateway){
-			if( $EM_Gateway->gateway == $gateway ) return $EM_Gateway;
-		}
-		return new EM_Gateway(); //returns a blank EM_Gateway regardless to avoid fatal errors
+	public static function list(){
+		return static::$registered;
 	}
-
-	/* 
-	 * --------------------------------------------------
-	 * Booking Interception - functions that modify booking object behaviour
-	 * --------------------------------------------------
+	
+	/**
+	 * Returns the Gateway static class with supplied name
+	 * @param string $gateway
+	 * @return string|Gateway
 	 */
+	public static function get( $gateway ){
+		//check for array key first
+		if( !empty(static::$registered[$gateway]) && static::$registered[$gateway]::$gateway == $gateway ) return static::$registered[$gateway];
+		//otherwise we loop through the gateways array in case the gateway key registered doesn't match the actual gateway name
+		foreach(static::$registered as $Gateway){
+			if( $Gateway::$gateway == $gateway ) return $Gateway;
+		}
+		return Gateway::class; //returns a blank EM\Payments\Gateway regardless to avoid fatal errors
+	}
+	
+	/**
+	 * @deprecated
+	 * @use Gateways::get();
+	 * @see Gateways::get();
+	 * @param $gateway
+	 * @return Gateway|string
+	 */
+	public static function get_gateway( $gateway ){
+		return static::get( $gateway );
+	}
+	
+	/**
+	 * Checks whether supplied gateway key name or class name is registered.
+	 * @param string|Gateway $gateway
+	 *
+	 * @return bool
+	 */
+	public static function is_registered( $gateway ){
+		if( isset( static::$registered[$gateway] ) ){
+			return true;
+		} elseif ( class_exists($gateway) ) {
+			$gateway = $gateway::$gateway;
+			return isset( static::$registered[$gateway] );
+		}
+		return false;
+	}
+	
+	/**
+	 * Checks if a gateway is registered and active.
+	 *
+	 * @param string $gateway   The gateway name/key.
+	 * @param string $context   What context is this gateway active under, e.g. regular bookings, multiple bookings, event registration payments, etc.
+	 * @param mixed $object     The object specifically being checked against, e.g. an event taking bookings (for future implementation of per-event gateways)
+	 *
+	 * @return bool
+	 */
+	public static function is_active( $gateway, $context = null, $object = null ){
+		$active_gateways = get_option('em_payment_gateways', array());
+		$is_active = array_key_exists( $gateway, $active_gateways ) && $active_gateways[$gateway] && static::is_registered( $gateway );
+		if( $context !== null && $is_active ) {
+			$is_active = static::is_active_for( $gateway, $context, $object );
+		}
+		return $is_active;
+	}
+	
+	public static function is_active_for( $gateway, $context = null, $object = null ){
+		if( $context === 'bookings' ){
+			if( get_option('dbem_multiple_bookings') ){
+				return static::get_gateway( $gateway )::$supports_multiple_bookings;
+			}else{
+				return true;
+			}
+		}
+		return $context === null;
+	}
+	
+	
+  /* ------------------------------------------------------------------------------------------------------------------
+   * Booking Interception - functions that modify booking object behaviour
+   * ------------------------------------------------------------------------------------------------------------------ */
+	
 	/**
 	 * Hooks into em_booking_get_post filter and makes sure that if there's an active gateway for new bookings, if no $_REQUEST['gateway'] is supplied (i.e. hacking, spammer, or js problem with booking button mode).
 	 * @param boolean $result
 	 * @param EM_Booking $EM_Booking
 	 * @return boolean
 	 */
-	static function em_booking_get_post($result, $EM_Booking){
-	    if( !empty($_REQUEST['manual_booking']) && wp_verify_nonce($_REQUEST['manual_booking'], 'em_manual_booking_'.$_REQUEST['event_id']) ){
+	public static function em_booking_get_post($result, $EM_Booking){
+	    if( emp_is_manual_booking() ){
 	    	return $result;
 	    }
 	    if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' ){ //we only deal with the EM_Multiple_Booking class if we're in multi booking mode
 	        return $result;	        
 	    }
-	    if( empty($EM_Booking->booking_id) && (empty($_REQUEST['gateway']) || !array_key_exists($_REQUEST['gateway'], self::active_gateways())) && $EM_Booking->get_price() > 0 && count(EM_Gateways::active_gateways()) > 0 ){
+		// hard intercept booking process if gateway not selected or unrecognized
+		if( empty($EM_Booking->booking_id) && (empty($_REQUEST['gateway']) || !static::is_active($_REQUEST['gateway'], 'bookings')) && $EM_Booking->get_price() > 0 && count(static::active_gateways()) > 0 ) {
 	        //spammer or hacker trying to get around no gateway selection
 	    	$error = __('Choice of payment method not recognized. If you are seeing this error and selecting a method of payment, we apologize for the inconvenience. Please contact us and we\'ll help you make a booking as soon as possible.','em-pro');
 	    	$EM_Booking->add_error($error);
 	    	$result = false;
-	    	if( defined('DOING_AJAX') ){
+	    	if( em_constant('DOING_AJAX') ){
 	    		$return = array('result'=>false, 'message'=>$error, 'errors'=>$error);
-	    		echo EM_Object::json_encode($return);
+	    		echo \EM_Object::json_encode($return);
 	    		die();
 	    	}
-	    }
+	    }elseif( !empty($_REQUEST['gateway']) ) {
+			$Gateway = static::get( $_REQUEST['gateway'] );
+			// set booking gateway
+			$EM_Booking->booking_meta['gateway'] = $Gateway::$gateway;
+			// set booking status out the door
+			if ( $EM_Booking->get_price() > 0 ) {
+				$EM_Booking->booking_status = $Gateway::$status; // e.g. status 4 = awaiting online payment
+			}
+		}
 	    return $result;
 	}
 	
 	/**
+	 * Hooks into the em_booking_validate filter and runs optional gateway validation before it is saved, such as card details.
+	 * @param bool $result
+	 * @param EM_Booking $EM_Booking
+	 *
+	 * @return bool
+	 */
+	public static function em_booking_validate( $result, $EM_Booking ){
+		if( emp_is_manual_booking() ){
+			return $result;
+		}
+		if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' ){ //we only deal with the EM_Multiple_Booking class if we're in multi booking mode
+			return $result;
+		}
+		if( !empty($EM_Booking->booking_meta['gateway']) && !empty($_REQUEST['gateway']) && static::is_active($_REQUEST['gateway']) ){
+			$Gateway = static::get($EM_Booking->booking_meta['gateway']);
+			$result = $result && $Gateway::booking_validate( $EM_Booking );
+		}
+		return $result;
+	}
+	
+	/**
 	 * Intercepted when a booking is about to be added and saved, calls the relevant booking gateway action provided gateway is provided in submitted request variables.
-	 * @param EM_Event $EM_Event the event the booking is being added to
+	 * @param \EM_Event $EM_Event the event the booking is being added to
 	 * @param EM_Booking $EM_Booking the new booking to be added
 	 * @param boolean $post_validation
 	 */
 	static function em_booking_add($EM_Event, $EM_Booking, $post_validation = false){
-		global $EM_Gateways;
-		if( !empty($_REQUEST['gateway']) && array_key_exists($_REQUEST['gateway'], $EM_Gateways) ){
-			//we haven't been told which gateway to use, revert to offline payment, since it's closest to pending
-			$EM_Booking->booking_meta['gateway'] = addslashes($_REQUEST['gateway']);
+		if( !empty($EM_Booking->booking_meta['gateway']) && static::is_active($EM_Booking->booking_meta['gateway']) ){
+			$Gateway = static::get($EM_Booking->booking_meta['gateway']);
 			//Individual gateways will hook into this function
-			$EM_Gateways[$_REQUEST['gateway']]->booking_add($EM_Event, $EM_Booking, $post_validation);
+			$Gateway::booking_add($EM_Event, $EM_Booking, $post_validation);
 		}
 	}
 	
-	static function event_booking_form_footer( $EM_Event ){
-		if(!$EM_Event->is_free(true) ){
-		    self::booking_form_footer();
+	/**
+	 * When a booking is added via form submission, this will fire the subsequent booking_added() function of the relevant gateway class, for easier integration.
+	 * @param EM_Booking $EM_Booking the new booking to be added
+	 * @param boolean $post_validation
+	 */
+	static function em_booking_added( $EM_Booking ){
+		if( !empty($_REQUEST['gateway']) && static::is_active($_REQUEST['gateway']) ){
+			$Gateway = static::get_gateway($_REQUEST['gateway']);
+			if( $Gateway::uses_gateway($EM_Booking) ){
+				//Individual gateways will hook into this function
+				$Gateway::booking_added( $EM_Booking );
+			}
 		}
 	}
 	
-	static function mb_booking_form_footer(){
+	public static function event_booking_payment_form( $EM_Event ){
+		if( !$EM_Event->is_free(true) ){
+		    self::payment_form( $EM_Event->event_id );
+		}
+	}
+	
+	public static function mb_payment_form(){
 	    $EM_Multiple_Booking = EM_Multiple_Bookings::get_multiple_booking();
 	    if( $EM_Multiple_Booking->get_price() > 0 ){
-	        self::booking_form_footer();
+	        self::payment_form( 0 );
 	    }
 	}
+	
+	public static function em_action_booking_add($return){
+		if( !empty($_REQUEST['gateway']) ){
+			$return['gateway'] = $_REQUEST['gateway'];
+		}
+		return $return;
+	}
+	
+	
+  /* ------------------------------------------------------------------------------------------------------------------
+   * PAYMENT FORM - Generate a payment form for anything
+   * ------------------------------------------------------------------------------------------------------------------ */
 	
 	/**
 	 * Gets called at the bottom of the form before the submit button. 
@@ -224,107 +366,140 @@ class EM_Gateways {
 	 * By default each gateway is wrapped with a div with id em-booking-gateway-x where x is the gateway for JS to work.
 	 * 
 	 * To prevent this from firing, call this function after the init action:
-	 * remove_action('em_booking_form_footer', array('EM_Gateways','booking_form_footer'),1,2);
+	 * remove_action('em_booking_form_footer', array('\EM\Payments\Gateways','payment_form'),1,2);
 	 * 
 	 * You'll have to ensure a gateway value is submitted in your booking form in order for paid bookings to be processed properly.
 	 */
-	static function booking_form_footer(){
-		global $EM_Gateways;
+	public static function payment_form( $id = null ){
+		$id = $id === null ? rand() : absint($id);
+		$active_gateways = static::active_gateways();
 		//Check if we can user quick pay buttons
 		if( get_option('dbem_gateway_use_buttons', 1) ){ //backward compatability
-			echo EM_Gateways::booking_form_buttons();
-			return;
-		}
-		//Continue with payment gateway selection
-		$active_gateways = self::active_gateways();
-		if( is_array($active_gateways) ){
+			echo static::booking_form_buttons();
+			do_action('em_gateways_payment_form_footer');
+		}else{
+			//Continue with payment gateway selection
+			// add hooks before
+			foreach( $active_gateways as $Gateway ){
+				$Gateway::payment_form_header( $id );
+			}
 			//Add gateway selector
-			if( count($active_gateways) > 1 ){
 			?>
-			<p class="em-booking-gateway" id="em-booking-gateway">
-				<label><?php echo get_option('dbem_gateway_label'); ?></label>
-				<select name="gateway">
+			<div class="em-booking-section em-booking-gateway em-payment-gateways hidden" id="em-payment-gateways-<?php echo $id; ?>" data-id="<?php echo $id; ?>">
 				<?php
-				foreach($active_gateways as $gateway => $active_val){
-					if(array_key_exists($gateway, $EM_Gateways)) {
-						$selected = (!empty($selected)) ? $selected:$gateway;
-						echo '<option value="'.$gateway.'">'.get_option('em_'.$gateway.'_option_name').'</option>';
+				if( count($active_gateways) > 1 ){
+					$payment_form_type = get_option('dbem_gateways_form_selector', 'select');
+					?>
+					<p class="em-payment-gateway-selector">
+						<?php if( $payment_form_type === 'select' ): ?>
+						<label for="em-payment-gateways-<?php echo $id; ?>"><?php echo get_option('dbem_gateway_label'); ?></label>
+						<select id="em-payment-gateways-<?php echo $id; ?>" name="gateway" class="em-payment-gateway-options">
+							<?php
+							foreach($active_gateways as $gateway => $Gateway){
+								echo $Gateway::payment_form_selector( $payment_form_type, $id );
+								$selected = (!empty($selected)) ? $selected:$gateway;
+							}
+							?>
+						</select>
+						<?php elseif( $payment_form_type === 'radio' ): ?>
+						<fieldset id="em-payment-gateways-<?php echo $id; ?>" name="gateway" class="em-payment-gateway-options">
+							<?php
+							foreach($active_gateways as $gateway => $Gateway){
+								echo $Gateway::payment_form_selector( $payment_form_type, $id );
+								$selected = (!empty($selected)) ? $selected:$gateway;
+							}
+							?>
+						</fieldset>
+						<?php endif; ?>
+					</p>
+					<?php
+				}elseif( count($active_gateways) == 1 ){
+					$Gateway = current($active_gateways);
+					$selected = (!empty($selected)) ? $selected: $Gateway::$gateway;
+					echo $Gateway::payment_form_selector( 'hidden', $id );
+				}
+				foreach( $active_gateways as $gateway => $Gateway ){
+					$hidden = ($selected == $gateway) ? '' : ' hidden';
+					$data_hidden = ( empty($Gateway::$payment_flow['loader']) ) ? '' : ' hidden';
+					$skeleton_hidden = $data_hidden ? '' : ' hidden';
+					echo '<div class="em-payment-gateway-form em-payment-gateway-form-' . $gateway . $hidden . '" id="em-payment-gateway-' . $gateway . '-' . $id . '">';
+					echo '<div class="em-payment-gateway-form-info">';
+					$Gateway::payment_form_info( $id );
+					echo "</div>";
+					echo '<div class="em-payment-gateway-form-data ' . $data_hidden . '">';
+					$Gateway::payment_form( $id );
+					echo "</div>";
+					if ( ( !empty($Gateway::$payment_flow['loader']) ) ) {
+						echo '<div class="em-payment-gateway-form-loading">';
+						$Gateway::payment_form_loading( $id );
+						echo "</div>";
+					}
+					echo "</div>";
+				}
+				// add hooks after
+				foreach( $active_gateways as $Gateway ){
+					$Gateway::payment_form_footer( $id );
+				}
+				do_action('em_gateways_payment_form_footer');
+				?>
+			</div>
+			<?php
+		}
+		?>
+		<script type="text/javascript">
+			<?php
+			$gateways_localized = apply_filters('em_gateways_localize_script', array() );
+			foreach( $active_gateways as $Gateway ){
+				$gateway_vars = $Gateway::localize_js( $id );
+				if ( !empty($gateway_vars) ) {
+					if ( !empty($gateways_localized[$Gateway::$js_localize]) ) {
+						$gateways_localized[$Gateway::$js_localize] = array_merge( $gateways_localized[$Gateway::$js_localize], $gateway_vars );
+					} else {
+						$gateways_localized[$Gateway::$js_localize] = $gateway_vars;
 					}
 				}
-				?>
-				</select>
-			</p>
-			<?php
-			}elseif( count($active_gateways) == 1 ){
-				foreach($active_gateways as $gateway => $val){
-					$selected = (!empty($selected)) ? $selected:$gateway;
-					echo '<input type="hidden" name="gateway" value="'.$gateway.'" />';
-				}
 			}
-			foreach($active_gateways as $gateway => $active_val){
-				echo '<div class="em-booking-gateway-form" id="em-booking-gateway-'.$gateway.'"';
-				echo ($selected == $gateway) ? '':' style="display:none;"';
-				echo '>';
-				$EM_Gateways[$gateway]->booking_form();
-				echo "</div>";
+			if( !empty($gateways_localized) ){
+				// output like wp_localize_js
+				echo "EM.Gateways = " . wp_json_encode( $gateways_localized ) . ';';
 			}
-		}
-		return; //for filter compatibility
+			foreach( $active_gateways as $Gateway ){
+				$Gateway::payment_form_js( $id );
+			}
+			include( dirname(__FILE__).'/gateways.js' );
+			?>
+		</script>
+		<?php
+		return $id; //for filter compatibility
 	}
+	
+  /* ------------------------------------------------------------------------------------------------------------------
+   * Payment Notification Listeners e.g. for PayPal IPNs or similar postbacks
+   * ------------------------------------------------------------------------------------------------------------------ */
 	
 	/**
-	 * Deprecated, uses em_bookings_deleted hook instead within the transactions object.
-	 * Cleans up Pro-added features in the database, such as deleting transactions for this booking.
-	 * @param boolean $result
-	 * @param EM_Booking $EM_Booking
-	 * @return boolean
+	 * Gateways that redirect back will be processed here first if using default links
+	 * @return void
 	 */
-	static function em_booking_delete($result, $EM_Booking){
-		if($result){
-			//TODO decouple transaction logic from gateways
-			global $wpdb;
-			$wpdb->query('DELETE FROM '.EM_TRANSACTIONS_TABLE." WHERE booking_id = '".$EM_Booking->booking_id."'");
-		}
-		return $result;
-	}
-	
-	static function em_action_booking_add($return){
-		if( !empty($_REQUEST['gateway']) ){
-			$return['gateway'] = $_REQUEST['gateway'];
-		}
-		return $return;
-	}
-	
-	static function em_booking_js(){
-		include(dirname(__FILE__).'/gateways.js');
-	}
-	
-	/**
-	 * Verification of whether current page load is for a manual booking or not. If $new_registration is true, it will also check whether a new user registration
-	 * is being requested and return true or false depending on both conditions being met. 
-	 * @param boolean $new_registration
-	 * @return boolean
-	 */
-	public static function is_manual_booking( $new_registration = true ){
-		if( !empty($_REQUEST['manual_booking']) && wp_verify_nonce($_REQUEST['manual_booking'], 'em_manual_booking_'.$_REQUEST['event_id']) ){
-			if( $new_registration ){
-				return empty($_REQUEST['person_id']) || $_REQUEST['person_id'] < 0;
+	public static function handle_payment_redirections(){
+		if( !empty($_REQUEST['payment_cancelled']) && !empty($_REQUEST['booking_id']) && !empty($_REQUEST['n']) && wp_verify_nonce($_REQUEST['n'], 'cancel_booking_'.$_REQUEST['payment_cancelled'].'_'.$_REQUEST['booking_id']) ){
+			$EM_Booking = em_get_booking($_REQUEST['booking_id']);
+			if( $EM_Booking->booking_id ) {
+				$Gateway = static::get( $_REQUEST['payment_cancelled'] );
+				$Gateway::handle_cancel_url( $EM_Booking );
 			}
-			return true;
 		}
-		return false;
+		if( !empty($_GET['payment_complete']) && static::is_active($_GET['payment_complete']) ){
+			$Gateway = static::get($_GET['payment_complete']);
+			$Gateway::handle_return_url();
+		}
 	}
-	
-	/*
-	 * ----------------------------------------------------------
-	 * Payment Notification Listeners e.g. for PayPal IPNs or similar postbacks
-	 * ----------------------------------------------------------
-	 */
 
 	/**
 	 * Checks whether em_payment_gateway is passed via WP_Query, GET or POST and fires the appropriate gateway filter.
-	 * 
-	 *  yoursite.com/wp-admin/admin-ajax.php?action=em_payment&em_payment_gateway=gatewayname
+	 * yoursite.com/wp-admin/admin-ajax.php?action=em_payment&em_payment_gateway=gatewayname
+	 *
+	 * @deprecated Use REST APIs instead wherever possible
 	 */
 	public static function handle_payment_gateways() {
 	    //Listen on admin-ajax.php
@@ -334,36 +509,33 @@ class EM_Gateways {
 		}
 	}
 	
-	/*
-	 * ----------------------------------------------------------
-	 * Booking Table and CSV Export
-	 * ----------------------------------------------------------
-	 */
+  /* ----------------------------------------------------------
+   * Booking Table and CSV Export
+   * ---------------------------------------------------------- */
 	
 	public static function em_bookings_table_rows_col($value, $col, $EM_Booking, $EM_Bookings_Table, $csv){
-		global $EM_Event;
 		if( $col == 'gateway' ){
 			//get latest transaction with an ID
-			if( !empty($EM_Booking->booking_meta['gateway']) ){
-				$gateway = EM_Gateways::get_gateway($EM_Booking->booking_meta['gateway']);
-				$value = $gateway->title;
+			if( !empty( $EM_Booking->booking_meta['gateway'] ) ){
+				$Gateway = static::get_gateway( $EM_Booking->booking_meta['gateway'] );
+				$value = $Gateway::$title;
 			}else{
-				$value = __('None','em-pro');
+				$value = __( 'None', 'em-pro' );
 			}
 		}
 		return $value;
 	}
 	
 	public static function em_bookings_table_cols_template($template, $EM_Bookings_Table){
-		$template['gateway'] = __('Gateway Used','em-pro');
+		$template['gateway'] = __( 'Gateway Used', 'em-pro' );
 		return $template;
 	}
 
-	/*
-	 * --------------------------------------------------
-	* USER FIELDS - Adds user details link for use by gateways and options to form editor
-	* --------------------------------------------------
-	*/
+	
+  /* ----------------------------------------------------------------------------------------------------
+   * USER FIELDS - Adds user details link for use by gateways and options to form editor
+   * ---------------------------------------------------------------------------------------------------- */
+	
 	/**
 	 * Returns value of a customer field, which are common fields for payment gateways linked to custom user fields in the forms editor.
 	 * @param string $field_name
@@ -405,88 +577,24 @@ class EM_Gateways {
 		}
 		return '';
 	}
-	
-	static function customer_fields_admin_actions() {
-		global $EM_Notices;
-		$EM_Form = EM_User_Fields::get_form();
-		if( !empty($_REQUEST['page']) && $_REQUEST['page'] == 'events-manager-forms-editor' ){
-			if( !empty($_REQUEST['form_name']) && 'gateway_customer_fields' == $_REQUEST['form_name'] && wp_verify_nonce($_REQUEST['_wpnonce'], 'gateway_customer_fields_'.get_current_user_id()) ){
-				//save values
-				$gateway_fields = array();
-				foreach( self::$customer_fields as $field_key => $field_val ){
-					$gateway_fields[$field_key] = ( !empty($_REQUEST[$field_key]) ) ? $_REQUEST[$field_key]:'';
-				}
-				update_option('emp_gateway_customer_fields',$gateway_fields);
-				$EM_Notices->add_confirm(__('Changes Saved','em-pro'));
-			}
-		}
-		//enable dbem_bookings_tickets_single_form if enabled
-	}
-	
-	static function customer_fields_admin() {
-		//enable dbem_bookings_tickets_single_form if enabled
-		$EM_Form = EM_User_Fields::get_form();
-		$current_values = get_option('emp_gateway_customer_fields');
-		?>
-			<a name="gateway_customer_fields"></a>
-						<div id="em-booking-form-editor" class="postbox">
-							<div class="handlediv" title=""><br></div>
-							<h3>
-								<span><?php _e ( 'Common User Fields for Gateways', 'em-pro' ); ?></span>
-							</h3>
-							<div class="inside">
-								<p><?php _e('In many cases, customer address information is required by gateways for verification. This section connects your custom fields to commonly used customer information fields.', 'em-pro' ); ?></p>
-								<p><?php _e('After creating user fields above, you should link them up in here so some gateways can make use of them when processing payments.', 'em-pro' ); ?></p>
-								<form action="#gateway_customer_fields" method="post">
-									<table class="form-table">
-										<tr><td><?php _e('Name (first/last)','em-pro'); ?></td><td><em><?php _e('Generated accordingly from user first/last name or full name field. If a name field isn\'t provided in your booking form, the username will be used instead.','em-pro')?></em></td></tr>
-										<tr><td><?php _e('Email','em-pro'); ?></td><td><em><?php _e('Uses the WordPress account email associated with the user.', 'em-pro')?></em></td></tr>
-										<?php foreach( self::$customer_fields as $field_key => $field_val ): ?>
-										<tr>
-											<td><?php echo $field_val; ?></td>
-											<td>
-												<select name="<?php echo $field_key; ?>">
-													<option value="0"><?php echo _e('none selected','em-pro'); ?></option>
-													<?php foreach( $EM_Form->user_fields as $field_id => $field_name ): ?>
-													<option value="<?php echo $field_id; ?>" <?php echo ($field_id == $current_values[$field_key]) ?'selected="selected"':''; ?>><?php echo $field_name; ?></option>
-													<?php endforeach; ?>
-												</select>
-											</td>
-										</tr>
-										<?php endforeach; ?>
-									</table>
-									<p>
-										<input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce('gateway_customer_fields_'.get_current_user_id()); ?>">
-										<input type="hidden" name="form_action" value="form_fields">
-										<input type="hidden" name="form_name" value="gateway_customer_fields" />
-										<input type="submit" name="events_update" value="<?php _e('Save Form','em-pro'); ?>" class="button-primary">
-									</p>
-								</form>
-							</div>
-						</div>
-			<?php
-		}
 
-	/*
-	 * --------------------------------------------------
-	 * BUTTONS MODE Functions - i.e. booking doesn't require gateway selection, just button click
-	 * --------------------------------------------------
-	 */
+  /* ----------------------------------------------------------------------------------------------------
+   * BUTTONS MODE Functions - i.e. booking doesn't require gateway selection, just button click
+   * ---------------------------------------------------------------------------------------------------- */
 
 	/**
 	 * This gets called when a booking form created using the old buttons API, and calls subsequent gateways to output their buttons.
 	 * @param string $button
-	 * @param EM_Event $EM_Event
+	 * @param \EM_Event $EM_Event
 	 * @return string
 	 */
-	static function booking_form_buttons($button = ''){
-		global $EM_Gateways;
+	public static function booking_form_buttons($button = ''){
 		$gateway_buttons = array();
-		$active_gateways = self::active_gateways();
-		if( is_array($active_gateways) ){
-			foreach($active_gateways as $gateway => $active_val){
-				if(array_key_exists($gateway, $EM_Gateways) && $EM_Gateways[$gateway]->button_enabled) {
-					$gateway_button = $EM_Gateways[$gateway]->booking_form_button();
+		$active_gateways = static::active_gateways();
+		if( !empty($active_gateways) ){
+			foreach( $active_gateways as $gateway => $Gateway ){
+				if( $Gateway::$button_enabled) {
+					$gateway_button = $Gateway::booking_form_button();
 					if(!empty($gateway_button)){
 						$gateway_buttons[$gateway] = $gateway_button;
 					}
@@ -505,6 +613,10 @@ class EM_Gateways {
 		if($button != '') $button .= '<style type="text/css">input.em-booking-submit { display:none !important; } .em-gateway-button input.em-booking-submit { display:block !important; }</style>'; //hide normal button if we have buttons
 		return apply_filters('em_gateway_booking_form_buttons', $button, $gateway_buttons);
 	}
+	
+	/**
+	 * OTHER FUNCTIONS
+	 */
 
 	/**
 	 * Modifies exported multiple booking items
@@ -550,19 +662,48 @@ class EM_Gateways {
         }
 		return $export_items;
 	}
-
+	
+	/**
+	 * Deletes bookings pending payment that are more than x minutes old, defined by paypal options.
+	 */
+	public static function check_timeouts(){
+		global $wpdb;
+		// Go through each gateway
+		$gateway_timeout_default = absint(get_option('dbem_gateway_payment_timeout', 0)); // minutes
+		foreach ( static::active_gateways() as $Gateway ) {
+			if( $Gateway::$has_timeout === true && get_option('em_'. $Gateway::$gateway . '_booking_timeout_action') !== 'none' ){
+				$minutes_to_subtract = 0;
+				if( $gateway_timeout_default > 0 ) {
+					// adheres to general timeout limit
+					$minutes_to_subtract = $gateway_timeout_default;
+				} elseif( get_option( 'em_' . $Gateway::$gateway . '_booking_timeout', 0 ) > 0 ) {
+					// has a custom timeout limit, add to custom timeout time
+					$minutes_to_subtract = absint($Gateway::$has_timeout);
+				}
+				if( $minutes_to_subtract > 0 ){
+					//get booking IDs without pending transactions
+					$EM_DateTime = new \EM_DateTime();
+					$cut_off_time = $EM_DateTime->sub('PT'.$minutes_to_subtract.'M')->getDateTime(true); //get the time in UTC
+					$sql = '
+						SELECT b.booking_id FROM '.EM_BOOKINGS_TABLE.' b
+						LEFT JOIN ' . EM_TRANSACTIONS_TABLE . ' t ON t.booking_id=b.booking_id
+						LEFT JOIN ' . EM_BOOKINGS_META_TABLE ." m ON m.booking_id=b.booking_id
+						WHERE booking_date < %s AND booking_status=4 AND transaction_id IS NULL AND m.meta_key='gateway' AND m.meta_value=%s";
+					$sql = $wpdb->prepare( $sql, $cut_off_time, $Gateway::$gateway);
+					if( EM_MS_GLOBAL ){
+						$sql .= $wpdb->prepare(' AND b.event_id IN (SELECT event_id FROM '.EM_EVENTS_TABLE.' WHERE blog_id = %d)', get_current_blog_id());
+					}
+					if( get_option('dbem_multiple_bookings') ){ //multiple bookings mode
+						//If we're in MB mode, check that this isn't the main booking, if it isn't then skip it.
+						$sql .= ' AND b.booking_id NOT IN (SELECT booking_id FROM '. EM_BOOKINGS_RELATIONSHIPS_TABLE.')';
+					}
+					$booking_ids = $wpdb->get_col( $sql );
+					if( count($booking_ids) > 0 ){
+						$Gateway::handle_booking_timeout( $booking_ids );
+					}
+				}
+			}
+		}
+	}
 }
-EM_Gateways::init();
-//Menus
-if( is_admin() ){
-	include('gateways-admin.php');
-}
-function emp_register_gateway($gateway, $class) { EM_Gateways::register_gateway($gateway, $class); } //compatibility, use EM_Gateways directly
-}
-
-include('gateway.php');
-include('gateways.transactions.php');
-do_action('em_gateways_init');
-include('gateway.paypal.php');
-include('gateway.offline.php');
-include('gateway.authorize.aim.php');
+Gateways::init();

@@ -63,11 +63,32 @@ add_action( 'plugin_row_meta', 'rocket_plugin_row_meta', 10, 2 );
  * @return array Updated array of row action links
  */
 function rocket_post_row_actions( $actions, $post ) {
+
+	if ( ! rocket_can_display_options() ) {
+		return $actions;
+	}
+
 	if ( ! current_user_can( 'rocket_purge_posts' ) ) {
 		return $actions;
 	}
 
-	if ( apply_filters( 'rocket_skip_post_row_actions', false, $post ) ) {
+	$cpts = get_post_types(
+		[
+			'public' => true,
+		],
+		'objects'
+	);
+
+	/**
+	 * Filters the post type on row actions.
+	 *
+	 * @since 3.11.4
+	 *
+	 * @param array $cpts Post Types.
+	 */
+	$cpts = apply_filters( 'rocket_skip_post_row_actions', $cpts );
+
+	if ( ! isset( $cpts[ $post->post_type ] ) ) {
 		return $actions;
 	}
 
@@ -75,7 +96,6 @@ function rocket_post_row_actions( $actions, $post ) {
 	$actions['rocket_purge'] = sprintf( '<a href="%s">%s</a>', $url, __( 'Clear this cache', 'rocket' ) );
 
 	return $actions;
-
 }
 add_filter( 'page_row_actions', 'rocket_post_row_actions', 10, 2 );
 add_filter( 'post_row_actions', 'rocket_post_row_actions', 10, 2 );
@@ -128,6 +148,10 @@ function rocket_dismiss_boxes( $args = [] ) {
 		return;
 	}
 
+	if ( ! current_user_can( 'rocket_manage_options' ) ) {
+		wp_nonce_ays( '' );
+	}
+
 	rocket_dismiss_box( $args['box'] );
 
 	if ( 'admin-post.php' === $pagenow ) {
@@ -170,6 +194,10 @@ function rocket_deactivate_plugin() {
 		wp_nonce_ays( '' );
 	}
 
+	if ( ! current_user_can( 'rocket_manage_options' ) ) {
+		wp_nonce_ays( '' );
+	}
+
 	deactivate_plugins( sanitize_text_field( wp_unslash( $_GET['plugin'] ) ) );
 
 	wp_safe_redirect( wp_get_referer() );
@@ -187,11 +215,11 @@ function rocket_do_options_export() {
 		wp_nonce_ays( '' );
 	}
 
-	$site_name = get_rocket_parse_url( get_home_url() );
-	$site_name = $site_name['host'] . $site_name['path'];
-	$filename  = sprintf( 'wp-rocket-settings-%s-%s-%s.json', $site_name, date( 'Y-m-d' ), uniqid() ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
-	$gz        = 'gz' . strrev( 'etalfed' );
-	$options   = wp_json_encode( get_option( WP_ROCKET_SLUG ), JSON_PRETTY_PRINT ); // do not use get_rocket_option() here.
+	if ( ! current_user_can( 'rocket_manage_options' ) ) {
+		wp_nonce_ays( '' );
+	}
+
+	list( $filename, $options ) = rocket_export_options();
 	nocache_headers();
 	@header( 'Content-Type: application/json' );
 	@header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
@@ -234,67 +262,6 @@ function rocket_maybe_generate_config_files() {
 		rocket_generate_config_file();
 	}
 }
-
-/**
- * Filter plugin fetching API results to inject Imagify
- *
- * @since 2.10.7
- * @author Remy Perona
- *
- * @param object|WP_Error $result Response object or WP_Error.
- * @param string          $action The type of information being requested from the Plugin Install API.
- * @param object          $args   Plugin API arguments.
- *
- * @return array Updated array of results
- */
-function rocket_add_imagify_api_result( $result, $action, $args ) {
-	if ( empty( $args->browse ) ) {
-		return $result;
-	}
-
-	if ( 'featured' !== $args->browse && 'recommended' !== $args->browse && 'popular' !== $args->browse ) {
-		return $result;
-	}
-
-	if ( ! isset( $result->info['page'] ) || 1 < $result->info['page'] ) {
-		return $result;
-	}
-
-	if ( is_plugin_active( 'imagify/imagify.php' ) || is_plugin_active_for_network( 'imagify/imagify.php' ) ) {
-		return $result;
-	}
-
-	// grab all slugs from the api results.
-	$result_slugs = wp_list_pluck( $result->plugins, 'slug' );
-
-	if ( in_array( 'imagify', $result_slugs, true ) ) {
-		return $result;
-	}
-
-	$query_args   = [
-		'slug'   => 'imagify',
-		'fields' => [
-			'icons'             => true,
-			'active_installs'   => true,
-			'short_description' => true,
-			'group'             => true,
-		],
-	];
-	$imagify_data = plugins_api( 'plugin_information', $query_args );
-
-	if ( is_wp_error( $imagify_data ) ) {
-		return $result;
-	}
-
-	if ( 'featured' === $args->browse ) {
-		array_push( $result->plugins, $imagify_data );
-	} else {
-		array_unshift( $result->plugins, $imagify_data );
-	}
-
-	return $result;
-}
-add_filter( 'plugins_api_result', 'rocket_add_imagify_api_result', 11, 3 );
 
 /**
  * Gets all data to send to the analytics system
@@ -356,6 +323,12 @@ function rocket_analytics_data() {
 		$data['cdn_cnames'] = 0;
 	}
 
+	$customer_data        = get_transient( 'wp_rocket_customer_data' );
+	$data['license_type'] = '';
+	if ( false !== $customer_data ) {
+		$data['license_type'] = rocket_get_license_type( $customer_data );
+	}
+
 	return $data;
 }
 
@@ -372,7 +345,7 @@ function rocket_send_analytics_data() {
 		return false;
 	}
 
-	if ( ! current_user_can( 'administrator' ) ) {
+	if ( ! current_user_can( 'rocket_manage_options' ) ) {
 		return false;
 	}
 
@@ -395,7 +368,7 @@ function rocket_analytics_optin() {
 		wp_nonce_ays( '' );
 	}
 
-	if ( ! current_user_can( 'administrator' ) ) {
+	if ( ! current_user_can( 'rocket_manage_options' ) ) {
 		wp_safe_redirect( wp_get_referer() );
 		die();
 	}

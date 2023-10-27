@@ -286,6 +286,10 @@ iframe#gdpr_consent_message_ifr {
     content: url('../images/adstxt-valid.png');
 }
 
+input.checkbox[disabled], input[type=radio][disabled] {
+    border: 1px dashed #444444;
+}
+
 input[type="checkbox"] + label .check-note {
     display: none;
 }

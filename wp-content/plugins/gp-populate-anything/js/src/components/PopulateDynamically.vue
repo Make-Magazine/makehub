@@ -630,9 +630,9 @@ export default Vue.extend({
 							{{ i18nStrings.filters }}
 						</label>
 
-						<div class="gppa-filter-groups">
+						<div class="gppa-filter-groups" :aria-label="i18nStrings.filterGroups" aria-role="group">
 							<template v-for="(filters, filterGroupIndex) in filterGroups">
-								<div class="gppa-filter-group">
+								<div class="gppa-filter-group" :aria-label="i18nStrings.filterGroupAriaLabel.format( filterGroupIndex + 1 )" aria-role="group">
 									<gppa-filter v-for="(filter, filterIndex) in filters"
 												 :field="field"
 												 :filter="filter"
@@ -653,14 +653,14 @@ export default Vue.extend({
 
 								<div
 									v-if="filterGroups.length > 1 && filterGroupIndex !== filterGroups.length - 1"
-									class="gppa-filter-group-or">
-									&mdash; OR &mdash;
+									class="gppa-filter-group-or" :aria-label="i18nStrings.or">
+									&mdash; {{ i18nStrings.or }} &mdash;
 								</div>
 							</template>
 
 							<button class="gppa-add-filter-group button button-secondary"
 									@click="addFilterGroup" :disabled="!propertiesLoaded">
-								<i class="gficon-add"></i> Add Filter Group
+								<i class="gficon-add"></i> {{ i18nStrings.addFilterGroup }}
 							</button>
 						</div>
 

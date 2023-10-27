@@ -42,13 +42,18 @@ class Subscriber implements Subscriber_Interface {
 	public static function get_subscribed_events(): array {
 		return [
 			'rocket_rucss_pending_jobs'          => 'process_pending_jobs',
+			'rocket_rucss_on_submit_jobs'        => 'process_on_submit_jobs',
 			'rocket_rucss_job_check_status'      => 'check_job_status',
 			'rocket_rucss_clean_rows_time_event' => 'cron_clean_rows',
 			'cron_schedules'                     => 'add_interval',
+			'rocket_deactivation'                => 'on_deactivation',
+			'rocket_remove_rucss_failed_jobs'    => 'cron_remove_failed_jobs',
 			'init'                               => [
 				[ 'schedule_clean_not_commonly_used_rows' ],
 				[ 'schedule_pending_jobs' ],
 				[ 'initialize_rucss_queue_runner' ],
+				[ 'schedule_removing_failed_jobs' ],
+				[ 'schedule_on_submit_jobs' ],
 			],
 		];
 	}
@@ -95,6 +100,15 @@ class Subscriber implements Subscriber_Interface {
 	}
 
 	/**
+	 * Process on submit jobs with Cron iteration.
+	 *
+	 * @return void
+	 */
+	public function process_on_submit_jobs() {
+		$this->used_css->process_on_submit_jobs();
+	}
+
+	/**
 	 * Cron callback for deleting old rows in both table databases.
 	 *
 	 * @since 3.9
@@ -102,7 +116,20 @@ class Subscriber implements Subscriber_Interface {
 	 * @return void
 	 */
 	public function cron_clean_rows() {
+		if ( ! $this->is_deletion_enabled() ) {
+			return;
+		}
+
 		$this->database->delete_old_used_css();
+	}
+
+	/**
+	 * Cron callback for removing failed jobs.
+	 *
+	 * @return void
+	 */
+	public function cron_remove_failed_jobs() {
+		$this->used_css->clear_failed_urls();
 	}
 
 	/**
@@ -144,7 +171,60 @@ class Subscriber implements Subscriber_Interface {
 			'display'  => esc_html__( 'WP Rocket Remove Unused CSS pending jobs', 'rocket' ),
 		];
 
+		$default_interval = 3 * rocket_get_constant( 'DAY_IN_SECONDS', 86400 );
+		/**
+		 * Filters the cron interval for clearing failed jobs.
+		 *
+		 * @param int $interval Interval in seconds.
+		 */
+		$interval = apply_filters( 'rocket_remove_rucss_failed_jobs_cron_interval', $default_interval );
+		$interval = (bool) $interval ? $interval : $default_interval;
+
+		$schedules['rocket_remove_rucss_failed_jobs'] = [
+			'interval' => $interval,
+			'display'  => esc_html__( 'WP Rocket clear Remove Unused CSS failed jobs', 'rocket' ),
+		];
+
+		/**
+		 * Filters the cron interval for processing on submit jobs.
+		 *
+		 * @param int $interval Interval in seconds.
+		 */
+		$interval = (int) apply_filters( 'rocket_remove_rucss_on_submit_jobs_cron_interval', 1 * rocket_get_constant( 'MINUTE_IN_SECONDS', 60 ) );
+
+		$schedules['rocket_rucss_on_submit_jobs'] = [
+			'interval' => $interval,
+			'display'  => esc_html__( 'WP Rocket procees on submit jobs', 'rocket' ),
+		];
+
 		return $schedules;
+	}
+
+	/**
+	 * Schedule on submit jobs.
+	 *
+	 * @return void
+	 */
+	public function schedule_on_submit_jobs() {
+		if (
+			! $this->used_css->is_enabled()
+			&&
+			wp_next_scheduled( 'rocket_rucss_on_submit_jobs' )
+		) {
+			wp_clear_scheduled_hook( 'rocket_rucss_on_submit_jobs' );
+
+			return;
+		}
+
+		if ( ! $this->used_css->is_enabled() ) {
+			return;
+		}
+
+		if ( wp_next_scheduled( 'rocket_rucss_on_submit_jobs' ) ) {
+			return;
+		}
+
+		wp_schedule_event( time(), 'rocket_rucss_on_submit_jobs', 'rocket_rucss_on_submit_jobs' );
 	}
 
 	/**
@@ -174,5 +254,55 @@ class Subscriber implements Subscriber_Interface {
 		}
 
 		wp_schedule_event( time(), 'rocket_rucss_pending_jobs', 'rocket_rucss_pending_jobs' );
+	}
+
+	/**
+	 * Schedules cron to remove failed jobs.
+	 *
+	 * @return void
+	 */
+	public function schedule_removing_failed_jobs() {
+		if (
+			! $this->used_css->is_enabled()
+			&&
+			wp_next_scheduled( 'rocket_remove_rucss_failed_jobs' )
+		) {
+			wp_clear_scheduled_hook( 'rocket_remove_rucss_failed_jobs' );
+
+			return;
+		}
+
+		if ( ! $this->used_css->is_enabled() ) {
+			return;
+		}
+
+		if ( wp_next_scheduled( 'rocket_remove_rucss_failed_jobs' ) ) {
+			return;
+		}
+
+		wp_schedule_event( time(), 'rocket_remove_rucss_failed_jobs', 'rocket_remove_rucss_failed_jobs' );
+	}
+
+	/**
+	 * Clear schedule of RUCSS CRONs on deactivation.
+	 *
+	 * @return void
+	 */
+	public function on_deactivation() {
+		wp_clear_scheduled_hook( 'action_scheduler_run_queue_rucss', [ 'WP Cron' ] );
+	}
+
+	/**
+	 * Checks if the RUCSS deletion is enabled.
+	 *
+	 * @return bool
+	 */
+	protected function is_deletion_enabled(): bool {
+		/**
+		 * Filters the enable RUCSS deletion value
+		 *
+		 * @param bool $delete_rucss True to enable deletion, false otherwise.
+		 */
+		return (bool) apply_filters( 'rocket_rucss_deletion_enabled', true );
 	}
 }

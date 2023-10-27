@@ -46,8 +46,7 @@ var em_setup_attendee_forms = function( spaces, fieldset = null, fieldset_contai
 	form.remove();
 	return true;
 };
-$('.em-booking-form .em-ticket-select').on('change', function(e){
-	var el = $(this);
+let booking_form_attendees_listener = function( el ) {
 	var spaces = el.val();
 	var ticket_id = el.attr('data-ticket-id')
 	var fieldset_container = el.closest('.em-booking-form').find('.em-ticket-bookings-'+ticket_id);
@@ -58,11 +57,15 @@ $('.em-booking-form .em-ticket-select').on('change', function(e){
 	}else{
 		fieldset_container.hide().addClass('hidden');
 	}
+}
+$('.em-booking-form .em-ticket-select').on('change', function(e){
+	var el = $(this);
+	booking_form_attendees_listener( el );
 });
 //(re)load attendee forms for fields with spaces pre-selected
 $('.em-booking-form .em-ticket-select').each( function(){
 	var el = $(this);
-	if( el.val() != 0 ) el.trigger('change');
+	if( el.val() != 0 ) booking_form_attendees_listener(el);
 });
 
 $('.em-booking-form .em-ticket-booking .em-ticket-booking-remove-trigger').on('click', function(){

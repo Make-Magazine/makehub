@@ -3,9 +3,9 @@ Contributors: mateuszgbiorczyk
 Donate link: https://ko-fi.com/gbiorczyk/?utm_source=acf-better-search&utm_medium=readme-donate
 Tags: acf search, advanced custom fields, better search, extended search, search
 Requires at least: 5.0
-Tested up to: 6.2
+Tested up to: 6.4
 Requires PHP: 7.0
-Stable tag: 4.1.0
+Stable tag: 4.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -94,6 +94,12 @@ This is all very important to us and allows us to do even better things for you!
 1. Screenshot of the options panel
 
 == Changelog ==
+
+= 4.2.0 (2023-09-11) =
+* `[Fixed]` Duplicated search results for modified SQL query
+
+= 4.1.1 (2023-06-29) =
+* `[Added]` Filter `acfbs_field_types` to add new supported field types
 
 = 4.1.0 (2023-03-02) =
 * `[Changed]` Appearance of plugin settings page

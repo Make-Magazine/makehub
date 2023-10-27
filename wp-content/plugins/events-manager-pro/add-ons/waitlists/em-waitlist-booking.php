@@ -165,7 +165,7 @@ class Booking extends EM_Booking {
 		$url = em_get_my_bookings_url();
 		$query_args = array('pno' => null, 'uuid' => $this->booking_uuid, 'waitlist_booking' => 1);
 		if( $this->person_id == 0 ){
-			$query_args['email'] = $this->booking_meta['registration']['user_email'];
+			$query_args['email'] = urlencode($this->booking_meta['registration']['user_email']);
 		}
 		return add_query_arg( $query_args, $url );
 	}
@@ -244,6 +244,8 @@ class Booking extends EM_Booking {
 	 * @return bool
 	 */
 	public function set_status( $status, $email = true, $ignore_spaces = false ){
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[3]) ? $func_args[3] : array();
 		if( $status == 1 ) $status = 7;
 		if( $status == 7 ){
 			// reset the expiry if re-approved, before setting status so emails get correct placeholders for expiry times
@@ -254,15 +256,24 @@ class Booking extends EM_Booking {
 			// delete expiry record, not relevant anymore
 			$this->update_meta('waitlist_expiry', null);
 		}
-		return parent::set_status($status, $email, $ignore_spaces);
+		return parent::set_status($status, $email, $ignore_spaces, $email_args);
 	}
 	
 	// helper static functions
 	
+	/**
+	 * @param \EM_Event $EM_Event
+	 *
+	 * @return int|mixed
+	 */
 	public static function get_max_spaces( $EM_Event ){
+		// get limits imposed by waitlists (current WL bookings, space limits)
 		$limits['limit'] = Events::get_var('limit', $EM_Event);
 		$limits['booking_limit'] = Events::get_var('booking_limit', $EM_Event);
 		$limits['spaces'] = Events::get_available_spaces( $EM_Event );
+		// event spaces
+		$limits['event_spaces'] = $EM_Event->get_spaces();
+		// determine max amount possible based on lowest number we've gathered
 		foreach( $limits as $k => $limit ){
 			if( $limit == 0 || ($k == 'spaces' && $limit === true) ) unset($limits[$k]);
 		}

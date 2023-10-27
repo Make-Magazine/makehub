@@ -31,10 +31,10 @@ class LicensingManager
 
             // Call the custom API.
             $response = wp_remote_get(
-                add_query_arg(
+                esc_url_raw(add_query_arg(
                     $api_params,
                     $this->getInfoApiUrl()
-                ),
+                )),
                 array(
                     'timeout' => 15,
                     'sslverify' => true
@@ -73,7 +73,7 @@ class LicensingManager
     public function getInfoApiUrl()
     {
         $options = $this->getOptions();
-        return $options['info_api_url'];
+        return $options['info_api_url_new'].'/check_license';
     }
 
     /**

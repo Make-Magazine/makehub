@@ -336,9 +336,15 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 			// Parse date_created and date_updated as a date value in filters
 			$source_is_date = ! $is_field && in_array( $field_id, array( 'date_created', 'date_updated' ), true );
-			if ( $is_field && $source_field->type === 'number' ) {
+
+			/*
+			 * Cast numeric values to float to allow for numeric comparisons. Exclude those that start with 0 as they
+			 * could be other things like zip codes.
+			 */
+			if ( is_numeric( $filter_value ) && strpos( $filter_value, '0' ) !== 0 ) {
 				$filter_value = floatval( $filter_value );
 			}
+
 			/**
 			 * Force a value to be parsed as a date to enable date comparison using operators such as >, <, <=, etc.
 			 *
@@ -498,9 +504,13 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$has_status_filter = false;
 		foreach ( $gf_query_where_groups as $gf_query_where_index => $gf_query_where_group ) {
-			if ( $gf_query_where_group[0]->get_columns()[0]->field_id === 'status' ) {
+			if (
+				! empty( $gf_query_where_group[0]->get_columns() )
+				&& $gf_query_where_group[0]->get_columns()[0]->field_id === 'status'
+			) {
 				$has_status_filter = true;
 			}
+
 			$gf_query_where_groups[ $gf_query_where_index ] = call_user_func_array( array( 'GF_Query_Condition', '_and' ), $gf_query_where_group );
 		}
 

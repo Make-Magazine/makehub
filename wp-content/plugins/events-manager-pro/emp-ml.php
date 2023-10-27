@@ -55,14 +55,13 @@ class EMP_ML {
 		$options[] = 'dbem_gateway_label';
         //gateway translateable options
         if( get_option('dbem_rsvp_enabled') ){ 
-			foreach ( EM_Gateways::gateways_list() as $gateway => $gateway_name ){
-			    $EM_Gateway = EM_Gateways::get_gateway($gateway);
+			foreach ( \EM\Payments\Gateways::list() as $gateway => $Gateway ){
 			    $options[] = 'em_'.$gateway.'_option_name';
 			    $options[] = 'em_'.$gateway.'_booking_feedback';
 			    $options[] = 'em_'.$gateway.'_booking_feedback_free';
 			    $options[] = 'em_'.$gateway.'_booking_feedback_completed';
 			    $options[] = 'em_'.$gateway.'_form';
-			    if( $EM_Gateway->button_enabled ){
+			    if( $Gateway::$button_enabled ){
 			        $options[] = 'em_'.$gateway.'_button';
 			    }
 			}

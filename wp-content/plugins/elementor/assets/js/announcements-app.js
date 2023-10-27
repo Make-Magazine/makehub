@@ -1,4 +1,4 @@
-/*! elementor - v3.13.2 - 11-05-2023 */
+/*! elementor - v3.17.0 - 25-10-2023 */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -304,7 +304,7 @@ function AnnouncementsHeader(props) {
     "aria-hidden": "true"
   }), /*#__PURE__*/_react.default.createElement("span", {
     className: "heading-title"
-  }, __('What’s New', 'elementor')), /*#__PURE__*/_react.default.createElement("button", {
+  }, __('Notifications', 'elementor')), /*#__PURE__*/_react.default.createElement("button", {
     className: "close-button",
     onClick: function onClick() {
       return onClose('close');

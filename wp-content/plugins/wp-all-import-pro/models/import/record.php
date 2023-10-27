@@ -88,8 +88,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 	/**
 	 * Import all files matched by path
+	 *
 	 * @param callback[optional] $logger Method where progress messages are submmitted
-	 * @return PMXI_Import_Record
+	 *
+	 * @return array|PMXI_Import_Record
 	 * @chainable
 	 */
 	public function execute($logger = NULL, $cron = true, $history_log_id = false) {
@@ -222,6 +224,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 								'updated' => 0,
 								'skipped' => 0,
 								'deleted' => 0,
+								'changed_missing' => 0,
 								'triggered' => 0,
 								'registered_on' => date('Y-m-d H:i:s')
 							))->update();
@@ -303,7 +306,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                         $start_processing_time = time();
                         $progress = NULL;
                         if (PMXI_Plugin::getInstance()->isCli() && class_exists('WP_CLI')) {
-                            $custom_type = get_post_type_object( $this->options['custom_type'] );
+                            $custom_type = wp_all_import_custom_type_labels($this->options['custom_type'], $this->options['taxonomy_type']);
                             $progress = \WP_CLI\Utils\make_progress_bar( 'Importing ' . $custom_type->labels->name, $records_to_import );
                         }
 						if ( (int) $this->imported + (int) $this->skipped <= (int) $records_to_import ) {
@@ -328,7 +331,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 									unset($dom, $xpath, $elements);
 							    }
 
-							    if ( $loop > 0 and ( $loop == (int) $this->options['records_per_request'] or $records_to_import == (int) $this->imported + (int) $this->skipped or $records_to_import == $loop + (int) $this->imported + (int) $this->skipped or $records_to_import == $chunk_number) ) { // skipping scheduled imports if any for the next hit
+								// The $loop variable only counts records that should be processed. If it matches the number of records to import then we should stop there and process them.
+							    if ( $loop > 0 and ( $loop == (int) $this->options['records_per_request'] or $records_to_import == (int) $this->imported + (int) $this->skipped or $records_to_import == $loop + (int) $this->imported + (int) $this->skipped or $records_to_import == $loop) ) { // skipping scheduled imports if any for the next hit
 							    	$feed .= "</pmxi_records>";
                                     $this->process($feed, $logger, $chunk_number, $cron, '/pmxi_records', $loop, $progress);
 
@@ -356,19 +360,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							$this->delete_source( $logger );
 
 							// Delete posts that are no longer present in your file
-							if (! empty($this->options['is_delete_missing']) and $this->options['duplicate_matching'] == 'auto'){
+							if ( ! empty($this->options['is_delete_missing']) ){
 
-								$postList = new PMXI_Post_List();
-								$args = array('import_id' => $this->id, 'iteration !=' => $this->iteration);
-								if ( ! empty($this->options['is_import_specified']) ) $args['specified'] = 1;
-								$missing_ids = array();
-								$missingPosts = $postList->getBy($args);
-
-								if (!$missingPosts->isEmpty()) {
-                                    foreach ($missingPosts as $missingPost) {
-                                        $missing_ids[] = $missingPost;
-                                    }
-                                }
+                                $missing_ids = $this->get_missing_records($this->iteration);
 
 								// Delete posts from database.
 								if (!empty($missing_ids) && is_array($missing_ids)) {
@@ -377,77 +371,194 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     $count_deleted_missing_records = 0;
 									foreach ($missing_ids_arr as $key => $missingPostRecords) {
 										if (!empty($missingPostRecords)){
+                                            $changed_ids = [];
 											foreach ( $missingPostRecords as $k => $missingPostRecord ) {
 
 												// Invalidate hash for records even if they're not deleted
 												$this->invalidateHash( $missingPostRecord['post_id']);
 
 												$to_delete = true;
-												// Instead of deletion, set Custom Field.
-												if ($this->options['is_update_missing_cf']){
-                                                    switch ($this->options['custom_type']){
-                                                        case 'import_users':
-                                                            update_user_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                                            $logger and call_user_func($logger, sprintf(__('Instead of deletion user with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                                            break;
-														case 'shop_customer':
-                                                            update_user_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-															$logger and call_user_func($logger, sprintf(__('Instead of deletion customer with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-															break;
-                                                        case 'taxonomies':
-                                                            update_term_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                                            $logger and call_user_func($logger, sprintf(__('Instead of deletion taxonomy term with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                                            break;
-                                                        case 'woo_reviews':
-                                                        case 'comments':
-                                                            update_comment_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                                            $logger and call_user_func($logger, sprintf(__('Instead of deletion comment with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                                            break;
-                                                        default:
-                                                            update_post_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                                            $logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                                            break;
+
+                                                if (empty($this->options['delete_missing_action']) || $this->options['delete_missing_action'] != 'remove') {
+                                                    // Instead of deletion, set Custom Field.
+                                                    if ($this->options['is_update_missing_cf']){
+                                                        $update_missing_cf_name = $this->options['update_missing_cf_name'];
+                                                        if (!is_array($update_missing_cf_name)) {
+                                                            $update_missing_cf_name = [$update_missing_cf_name];
+                                                        }
+                                                        $update_missing_cf_value = $this->options['update_missing_cf_value'];
+                                                        if (!is_array($update_missing_cf_value)) {
+                                                            $update_missing_cf_value = [$update_missing_cf_value];
+                                                        }
+                                                        foreach ($update_missing_cf_name as $cf_i => $cf_name) {
+                                                            if (empty($cf_name)) {
+                                                                continue;
+                                                            }
+                                                            switch ($this->options['custom_type']){
+                                                                case 'import_users':
+                                                                    update_user_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion user with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                                    break;
+                                                                case 'shop_customer':
+                                                                    update_user_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion customer with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                                    break;
+                                                                case 'taxonomies':
+                                                                    update_term_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion taxonomy term with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                                    break;
+                                                                case 'gf_entries':
+                                                                    // No actions required.
+                                                                    break;
+                                                                case 'woo_reviews':
+                                                                case 'comments':
+                                                                    update_comment_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion comment with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                                    break;
+                                                                default:
+                                                                    update_post_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                                    break;
+                                                            }
+                                                        }
+                                                        $to_delete = false;
                                                     }
-													$to_delete = false;
-												}
 
-												// Instead of deletion, change post status to Draft
-												$final_post_type = get_post_type($missingPostRecord['post_id']);
-												if ($this->options['set_missing_to_draft']){
-													if ($final_post_type != 'product_variation' and 'draft' != get_post_status($missingPostRecord['post_id'])){
-                                                        $this->wpdb->update( $this->wpdb->posts, array('post_status' => 'draft'), array('ID' => $missingPostRecord['post_id']) );
-                                                        $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
+                                                    // Instead of deletion, send missing records to trash.
+                                                    if ($this->options['is_send_removed_to_trash']) {
+                                                        switch ($this->options['custom_type']){
+                                                            case 'import_users':
+                                                            case 'shop_customer':
+                                                            case 'taxonomies':
+                                                                // No actions required.
+                                                                break;
+                                                            case 'gf_entries':
+                                                                GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'trash' );
+                                                                break;
+                                                            case 'woo_reviews':
+                                                            case 'comments':
+                                                                wp_trash_comment($missingPostRecord['post_id']);
+                                                                break;
+                                                            case 'shop_order':
+                                                                $order = wc_get_order($missingPostRecord['post_id']);
+                                                                if ($order && !is_wp_error($order)) {
+                                                                    $order->delete();
+                                                                }
+                                                                break;
+                                                            default:
+                                                                if ($final_post_type = get_post_type($missingPostRecord['post_id']) and 'trash' != get_post_status($missingPostRecord['post_id'])) {
+                                                                    wp_trash_post($missingPostRecord['post_id']);
+                                                                    $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion, change post with ID `%s` status to trash', 'wp_all_import_plugin'), $missingPostRecord['post_id']));
+                                                                }
+                                                                break;
+                                                        }
+                                                        $to_delete = false;
                                                     }
-													$to_delete = false;
-												}
-
-                                                if (!empty($this->options['missing_records_stock_status']) && class_exists('PMWI_Plugin') && $this->options['custom_type'] == "product") {
-                                                    update_post_meta( $missingPostRecord['post_id'], '_stock_status', 'outofstock' );
-                                                    update_post_meta( $missingPostRecord['post_id'], '_stock', 0 );
-
-                                                    $term_ids = wp_get_object_terms($missingPostRecord['post_id'], 'product_visibility', array('fields' => 'ids'));
-
-                                                    if (!empty($outofstock_term) && !is_wp_error($outofstock_term) && !in_array($outofstock_term->term_taxonomy_id, $term_ids)){
-                                                        $term_ids[] = $outofstock_term->term_taxonomy_id;
+                                                    // Instead of deletion, change post status to Draft
+                                                    elseif ($this->options['is_change_post_status_of_removed']){
+                                                        switch ($this->options['custom_type']){
+                                                            case 'import_users':
+                                                            case 'shop_customer':
+                                                            case 'taxonomies':
+                                                                // No actions required.
+                                                                break;
+                                                            case 'gf_entries':
+                                                                switch ($this->options['status_of_removed']) {
+                                                                    case 'restore':
+                                                                    case 'unspam':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'active' );
+                                                                        break;
+                                                                    case 'spam':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'spam' );
+                                                                        break;
+                                                                    case 'mark_read':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_read', 1 );
+                                                                        break;
+                                                                    case 'mark_unread':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_read', 0 );
+                                                                        break;
+                                                                    case 'add_star':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_starred', 1 );
+                                                                        break;
+                                                                    case 'remove_star':
+                                                                        GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_starred', 0 );
+                                                                        break;
+                                                                }
+                                                                break;
+                                                            case 'woo_reviews':
+                                                            case 'comments':
+                                                                wp_set_comment_status($missingPostRecord['post_id'], $this->options['status_of_removed']);
+                                                                break;
+                                                            default:
+                                                                if ($final_post_type = get_post_type($missingPostRecord['post_id']) and $this->options['status_of_removed'] != get_post_status($missingPostRecord['post_id'])) {
+                                                                    $this->wpdb->update( $this->wpdb->posts, array('post_status' => $this->options['status_of_removed']), array('ID' => $missingPostRecord['post_id']) );
+                                                                    $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
+                                                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion, change post with ID `%s` status to %s', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['status_of_removed']));
+                                                                }
+                                                                break;
+                                                        }
+                                                        $to_delete = false;
                                                     }
-                                                    $this->associate_terms( $missingPostRecord['post_id'], $term_ids, 'product_visibility', $logger );
-                                                    $to_delete = false;
+
+                                                    if (!empty($this->options['missing_records_stock_status']) && class_exists('PMWI_Plugin') && $this->options['custom_type'] == "product") {
+                                                        update_post_meta( $missingPostRecord['post_id'], '_stock_status', 'outofstock' );
+                                                        update_post_meta( $missingPostRecord['post_id'], '_stock', 0 );
+
+                                                        $term_ids = wp_get_object_terms($missingPostRecord['post_id'], 'product_visibility', array('fields' => 'ids'));
+
+                                                        if (!empty($outofstock_term) && !is_wp_error($outofstock_term) && !in_array($outofstock_term->term_taxonomy_id, $term_ids)){
+                                                            $term_ids[] = $outofstock_term->term_taxonomy_id;
+                                                        }
+                                                        $this->associate_terms( $missingPostRecord['post_id'], $term_ids, 'product_visibility', $logger );
+                                                        $to_delete = false;
+                                                    }
+
+                                                    if (empty($this->options['is_update_missing_cf']) && empty($this->options['is_send_removed_to_trash']) && empty($this->options['is_change_post_status_of_removed']) && empty($this->options['missing_records_stock_status'])) {
+                                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion: change %s with ID `%s` - no action selected, skipping', 'wp_all_import_plugin'), $custom_type->labels->name, $missingPostRecord['post_id']));
+                                                        $to_delete = false;
+                                                    }
                                                 }
 
 												$to_delete = apply_filters('wp_all_import_is_post_to_delete', $to_delete, $missingPostRecord['post_id'], $this);
 
 												// Delete posts that are no longer present in your file
 												if ($to_delete) {
-                                                    if (!in_array($this->options['custom_type'], array("import_users", "taxonomies", "shop_customer"))) {
-                                                        // Remove attachments
-                                                        empty($this->options['is_keep_attachments']) and wp_delete_attachments($missingPostRecord['post_id'], true, 'files');
-                                                        // Remove images
-                                                        empty($this->options['is_keep_imgs']) and wp_delete_attachments($missingPostRecord['post_id'], true, 'images');
-                                                        // Clear post's relationships
-                                                        wp_delete_object_term_relationships($missingPostRecord['post_id'], get_object_taxonomies('' != $this->options['custom_type'] ? $this->options['custom_type'] : 'post'));
+                                                    switch ($this->options['custom_type']) {
+                                                        case 'import_users':
+                                                        case 'shop_customer':
+                                                        case 'gf_entries':
+                                                        case 'woo_reviews':
+                                                        case 'comments':
+                                                            // No action needed;
+                                                            break;
+                                                        case 'taxonomies':
+                                                            // Remove images
+                                                            if (!empty($this->options['is_delete_imgs'])) {
+                                                                $term_thumbnail = get_term_meta($missingPostRecord['post_id'], 'thumbnail_id', true);
+                                                                if (!empty($term_thumbnail)) {
+                                                                    wp_delete_attachment($term_thumbnail, TRUE);
+                                                                }
+                                                            }
+                                                            break;
+                                                        default:
+															// Trigger pre delete hook.
+	                                                        do_action('pmxi_before_delete_post', $missingPostRecord['post_id'], $this);
+
+                                                            // Remove attachments
+                                                            if (!empty($this->options['is_delete_attachments'])) {
+                                                                wp_delete_attachments($missingPostRecord['post_id'], true, 'files');
+                                                            }
+                                                            // Remove images
+                                                            if (!empty($this->options['is_delete_imgs'])) {
+                                                                wp_delete_attachments($missingPostRecord['post_id'], true, 'images');
+                                                            }
+                                                            // Clear post's relationships
+                                                            wp_delete_object_term_relationships($missingPostRecord['post_id'], get_object_taxonomies('' != $this->options['custom_type'] ? $this->options['custom_type'] : 'post'));
+                                                            break;
                                                     }
-												}
-												else {
+
+												} else {
                                                     $postRecord = new PMXI_Post_Record();
                                                     $postRecord->getBy(array(
                                                         'post_id' => $missingPostRecord['post_id'],
@@ -458,17 +569,21 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                                         $is_unlink_missing_posts = apply_filters('wp_all_import_is_unlink_missing_posts', false, $this->id, $missingPostRecord['post_id']);
                                                         if ( $is_unlink_missing_posts ){
                                                             $postRecord->delete();
-                                                        }
-                                                        else {
+                                                        } else {
                                                             $postRecord->set(array(
                                                                 'iteration' => $this->iteration
                                                             ))->save();
                                                         }
                                                     }
 													do_action('pmxi_missing_post', $missingPostRecord['post_id']);
+                                                    $changed_ids[] = $missingPostRecord['post_id'];
 													unset($missingPostRecords[$k]);
 												}
 											}
+
+                                            if (!empty($changed_ids)) {
+                                                $this->set(array('changed_missing' => $this->changed_missing + count($changed_ids)))->update();
+                                            }
 
 											$ids = array();
 
@@ -480,14 +595,22 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                                 switch ($this->options['custom_type']) {
 													case 'import_users':
 													case 'shop_customer':
+                                                        foreach( $ids as $k => $id) {
+                                                            $user_meta = get_userdata($id);
+                                                            $user_roles = $user_meta->roles;
+                                                            if (!empty($user_roles) && in_array('administrator', $user_roles)) {
+                                                                unset($ids[$k]);
+                                                            }
+                                                        }
                                                         do_action('pmxi_delete_post', $ids, $this);
 														// delete_user action
 														foreach( $ids as $id) {
 															do_action( 'delete_user', $id, $reassign = null, new WP_User($id) );
 														}
+
                                                         $sql = "delete a,b
                                                         FROM ".$this->wpdb->users." a
-                                                        LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )										
+                                                        LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )
                                                         WHERE a.ID IN (" . implode(',', $ids) . ");";
 														// deleted_user action
 														foreach( $ids as $id) {
@@ -508,6 +631,21 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                                             wp_delete_comment( $comment_id, TRUE );
                                                         }
                                                         break;
+                                                    case 'gf_entries':
+                                                        do_action('pmxi_delete_gf_entries', $ids, $this);
+                                                        foreach ($ids as $entry_id) {
+                                                            GFAPI::delete_entry($entry_id);
+                                                        }
+                                                        break;
+                                                    case 'shop_order':
+                                                        do_action('pmxi_delete_shop_orders', $ids, $this);
+                                                        foreach ($ids as $order_id) {
+                                                            $order = wc_get_order($order_id);
+                                                            if ($order && !is_wp_error($order)) {
+                                                                $order->delete(true);
+                                                            }
+                                                        }
+                                                        break;
                                                     default:
                                                         do_action('pmxi_delete_post', $ids, $this);
                                                         foreach ($ids as $id) {
@@ -517,9 +655,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                                 }
 
 												// Delete record form pmxi_posts
-												$sql = "DELETE FROM " . PMXI_Plugin::getInstance()->getTablePrefix() . "posts WHERE post_id IN (".implode(',', $ids).") AND import_id = %d";
+												$sql = "DELETE FROM " . PMXI_Plugin::getInstance()->getTablePrefix() . "posts WHERE post_id IN (".implode(',', $ids).")";
 												$this->wpdb->query(
-													$this->wpdb->prepare($sql, $this->id)
+													$sql
 												);
 
 												$this->set(array('deleted' => $this->deleted + count($ids)))->update();
@@ -561,10 +699,18 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 								$history_log = new PMXI_History_Record();
 								$history_log->getById( $history_log_id );
 								if ( ! $history_log->isEmpty() ){
-									$custom_type = get_post_type_object( $this->options['custom_type'] );
+                                    $custom_type = wp_all_import_custom_type_labels($this->options['custom_type'], $this->options['taxonomy_type']);
+                                    $log_msg = sprintf(__("import finished & cron un-triggered<br>%s %s created %s updated %s skipped", "pmxi_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->skipped);
+                                    if ($this->options['is_delete_missing']) {
+                                        if (empty($this->options['delete_missing_action']) || $this->options['delete_missing_action'] != 'remove') {
+                                            $log_msg = sprintf(__("import finished & cron un-triggered<br>%s %s created %s updated %s changed missing %s skipped", "pmxi_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->changed_missing, $this->skipped);
+                                        } else {
+                                            $log_msg = sprintf(__("%d %s created %d updated %d deleted %d skipped", "wp_all_import_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->deleted, $this->skipped);
+                                        }
+                                    }
 									$history_log->set(array(
 										'time_run' => time() - strtotime($history_log->date),
-										'summary' => sprintf(__("import finished & cron un-triggered<br>%s %s created %s updated %s deleted %s skipped", "pmxi_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->deleted, $this->skipped)
+										'summary' => $log_msg
 									))->save();
 								}
 							}
@@ -582,10 +728,18 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 								$history_log = new PMXI_History_Record();
 								$history_log->getById( $history_log_id );
 								if ( ! $history_log->isEmpty() ){
-									$custom_type = get_post_type_object( $this->options['custom_type'] );
+                                    $custom_type = wp_all_import_custom_type_labels($this->options['custom_type'], $this->options['taxonomy_type']);
+                                    $log_msg = sprintf(__("%d %s created %d updated %d skipped", "wp_all_import_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->skipped);
+                                    if ($this->options['is_delete_missing']) {
+                                        if (empty($this->options['delete_missing_action']) || $this->options['delete_missing_action'] != 'remove') {
+                                            $log_msg = sprintf(__("%d %s created %d updated %d changed missing %d skipped", "wp_all_import_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->changed_missing, $this->skipped);
+                                        } else {
+                                            $log_msg = sprintf(__("%d %s created %d updated %d deleted %d skipped", "wp_all_import_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->deleted, $this->skipped);
+                                        }
+                                    }
 									$history_log->set(array(
 										'time_run' => time() - strtotime($history_log->date),
-										'summary' => sprintf(__("%d %s created %d updated %d deleted %d skipped", "pmxi_plugin"), $this->created, ( ($this->created == 1) ? $custom_type->labels->singular_name : $custom_type->labels->name ), $this->updated, $this->deleted, $this->skipped)
+										'summary' => $log_msg
 									))->save();
 								}
 							}
@@ -606,6 +760,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						'updated' => 0,
 						'skipped' => 0,
 						'deleted' => 0,
+						'changed_missing' => 0,
 						'registered_on' => date('Y-m-d H:i:s'), // update registered_on to indicated that job has been executed even if no files are going to be imported by the rest of the method
 					))->update();
 
@@ -1663,31 +1818,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                     $progress->tick();
                 }
 
-                switch ($this->options['custom_type']) {
-                    case 'taxonomies':
-                        $custom_type_details = new stdClass();
-                        $custom_type_details->labels = new stdClass();
-                        $custom_type_details->labels->singular_name = __('Taxonomy Term', 'wp_all_import_plugin');
-                        break;
-                    case 'comments':
-                        $custom_type_details = new stdClass();
-                        $custom_type_details->labels = new stdClass();
-                        $custom_type_details->labels->singular_name = __('Comment', 'wp_all_import_plugin');
-                        break;
-                    case 'woo_reviews':
-                        $custom_type_details = new stdClass();
-                        $custom_type_details->labels = new stdClass();
-                        $custom_type_details->labels->singular_name = __('Review', 'wp_all_import_plugin');
-                        break;
-	                case 'gf_entries':
-		                $custom_type_details = new stdClass();
-		                $custom_type_details->labels = new stdClass();
-		                $custom_type_details->labels->singular_name = __('Gravity Forms Entry', 'wp_all_import_plugin');
-		                break;
-                    default:
-                        $custom_type_details = get_post_type_object($post_type[$i]);
-                        break;
-                }
+                $custom_type_details = wp_all_import_custom_type_labels($this->options['custom_type'], $this->options['taxonomy_type']);
 
 				if ($is_cron and $cron_sleep) sleep($cron_sleep);
 
@@ -1746,14 +1877,31 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     $comment_post_found = true;
                                 }
                             }
+
+                            if ( $comment_post_found === false ) {
+                                $product = wp_all_import_get_page_by_title( $comment_post[ $i ], 'product' );
+
+                                if ( $product && ! is_wp_error( $product ) ) {
+                                    // Do not allow import comments for products
+                                    if ($this->options['custom_type'] == 'comments' && $comment_posts[0] && $comment_posts[0]->post_type === 'product') {
+                                        $comment_post_found = false;
+                                    } else {
+                                        $comment_post[$i]   = $product->ID;
+                                        $comment_post_found = true;
+                                    }
+                                }
+                                
+                            }
                         }
                     }
                     if (empty($comment_post_found) || is_wp_error($comment_post[$i])){
                         $skipped++;
                         if($this->options['custom_type'] == 'woo_reviews'){
-                            $logger and call_user_func($logger, sprintf(__('<b>SKIPPED</b>: Review product not found by id `%s`', 'wp_all_import_plugin'), $comment_post[$i]));
+							/* translators: 1: Post Title, Slug, or ID */
+                            $logger and call_user_func($logger, sprintf(__('<b>SKIPPED</b>: Review product not found for `%s`', 'wp_all_import_plugin'), $comment_post[$i]));
                         }else {
-                            $logger and call_user_func($logger, sprintf(__('<b>SKIPPED</b>: Comment post not found by id `%s`', 'wp_all_import_plugin'), $comment_post[$i]));
+	                        /* translators: 1: Post Title, Slug, or ID */
+                            $logger and call_user_func($logger, sprintf(__('<b>SKIPPED</b>: Comment post not found for `%s`', 'wp_all_import_plugin'), $comment_post[$i]));
                         }
                         $logger and !$is_cron and PMXI_Plugin::$session->warnings++;
                         $logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
@@ -1938,6 +2086,13 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 						), $this->options['custom_type'], $this->id, $i);
 						$logger and call_user_func($logger, __('Combine all data for gravity form entries ...', 'wp_all_import_plugin'));
 						break;
+                    case 'shop_order':
+                        $articleData = apply_filters('wp_all_import_combine_article_data', array(
+                            'date_created' => $addons_data['PMWI_Plugin']['pmwi_order']['date'][$i],
+                            'status' => ("xpath" == $this->options['pmwi_order']['status']) ? $addons_data['PMWI_Plugin']['pmwi_order']['status'][$i] : $this->options['pmwi_order']['status'],
+                        ), $this->options['custom_type'], $this->id, $i);
+                        $logger and call_user_func($logger, __('Combine all data for orders ...', 'wp_all_import_plugin'));
+                        break;
                     default:
                         $articleData = apply_filters('wp_all_import_combine_article_data', array(
                             'post_type' => $post_type[$i],
@@ -2030,6 +2185,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					// if Manual Matching re-import option seleted
 					} else {
 
+                        $postRecord->clear();
+
 						if ('custom field' == $this->options['duplicate_indicator']) {
 							$custom_duplicate_value = XmlImportParser::factory($xml, $cxpath, $this->options['custom_duplicate_value'], $file)->parse($records); $tmp_files[] = $file;
 							$custom_duplicate_name = XmlImportParser::factory($xml, $cxpath, $this->options['custom_duplicate_name'], $file)->parse($records); $tmp_files[] = $file;
@@ -2042,7 +2199,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                         $duplicates = array();
 						if ('pid' == $this->options['duplicate_indicator']) {
 							$duplicate_id = $duplicate_indicator_values[$i];
-							if ($duplicate_id && !in_array($this->options['custom_type'], array('import_users', 'shop_customer', 'taxonomies', 'comments', 'woo_reviews', 'gf_entries'))) {
+							if ($duplicate_id && !in_array($this->options['custom_type'], array('import_users', 'shop_customer', 'taxonomies', 'comments', 'woo_reviews', 'gf_entries', 'shop_order'))) {
                                 $duplicate_post_type = get_post_type($duplicate_id);
                                 if ($articleData['post_type'] == 'product' && $duplicate_post_type == 'product_variation') {
                                     $duplicate_post_type = 'product';
@@ -2053,7 +2210,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                             }
 						// handle duplicates according to import settings
 						} else {
-							$duplicates = pmxi_findDuplicates($articleData, $custom_duplicate_name[$i], $custom_duplicate_value[$i], $this->options['duplicate_indicator'], $duplicate_indicator_values[$i]);
+							$duplicates = pmxi_findDuplicates($articleData, $custom_duplicate_name[$i], $custom_duplicate_value[$i], $this->options['duplicate_indicator'], $duplicate_indicator_values[$i], $this->options['custom_type']);
 							$duplicate_id = ( ! empty($duplicates)) ? array_shift($duplicates) : false;
 						}
 
@@ -2079,6 +2236,15 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     }
                                     $post_to_update = get_term_by('id', $post_to_update_id = $duplicate_id, $this->options['taxonomy_type']);
                                     break;
+                                case 'shop_order':
+                                    $post_to_update_id = $duplicate_id;
+                                    $post_to_update = wc_get_order($post_to_update_id);
+                                    if (is_wp_error($post_to_update) || !$post_to_update instanceof \WC_Order) {
+                                        $post_to_update = FALSE;
+                                        $post_to_update_id = FALSE;
+                                        $logger and call_user_func($logger, sprintf(__('Duplicate order wasn\'t found for `%s`...', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
+                                    }
+                                    break;
 	                            case 'gf_entries':
 		                            $post_to_update = GFAPI::get_entry($post_to_update_id = $duplicate_id);
 		                            // Compare entry form ID.
@@ -2095,6 +2261,24 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     }
                                     $post_to_update = get_post($post_to_update_id = $duplicate_id);
                                     break;
+                            }
+                            if ($post_to_update_id) {
+                                $postRecord->getBy([
+                                    'import_id' => $this->id,
+                                    'post_id' => $post_to_update_id
+                                ]);
+                                // Assign post with current import.
+                                $recordData = array(
+                                    'post_id' => $post_to_update_id,
+                                    'import_id' => $this->id,
+                                    'unique_key' => $unique_keys[$i]
+                                );
+                                $product_key = (($post_type[$i] == "product" and PMXI_Admin_Addons::get_addon('PMWI_Plugin')) ? $addons_data['PMWI_Plugin']['single_product_ID'][$i] : '');
+                                if ($post_type[$i] == "taxonomies"){
+                                    $product_key = 'taxonomy_term';
+                                }
+                                $recordData['product_key'] = $product_key;
+                                $postRecord->isEmpty() and $postRecord->set($recordData)->insert();
                             }
 						} else {
 							$logger and call_user_func($logger, sprintf(__('Duplicate post wasn\'t found for post `%s`...', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
@@ -2153,7 +2337,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					'ftp_port'                 => '',
 					'ftp_root'                 => '',
 					'ftp_path'                 => '',
-					'ftp_host'                 => ''
+					'ftp_host'                 => '',
+                    'security'                 => ''
 				);
 
                 // Added Add-On options to ignore hash invalidation options.
@@ -2166,6 +2351,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                         $hash_ignore_options[] = $slug . 'do_not_remove_images';
                     }
                 }
+
+                $hash_ignore_options = apply_filters('wp_all_import_hash_ignore_options', $hash_ignore_options, $this->id);
 
 				$missing_images = array();
 				// Duplicate record is found
@@ -2299,6 +2486,21 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                 if ( ! $this->options['is_update_url'] ) $articleData['user_url'] = $post_to_update->user_url;
 
 								break;
+
+                            case 'shop_order':
+                                if ( ! $this->options['is_update_status']) { // preserve status and trashed flag
+                                    $articleData['status'] = $post_to_update->get_status();
+                                    $logger and call_user_func($logger, sprintf(__('Preserve status of already existing order for `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
+                                }
+                                if ( ! $this->options['is_update_excerpt']){
+                                    $articleData['customer_note'] = $post_to_update->get_customer_note();
+                                    $logger and call_user_func($logger, sprintf(__('Preserve order customer note of already existing order for `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
+                                }
+                                if ( ! $this->options['is_update_dates']) { // preserve date of already existing article when duplicate is found
+                                    $articleData['date_created'] = $post_to_update->get_date_created();
+                                    $logger and call_user_func($logger, sprintf(__('Preserve date of already existing order for `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
+                                }
+                                break;
 
                             case 'taxonomies':
                                 if ( ! $this->options['is_update_content']){
@@ -2619,7 +2821,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 					if ( ! $postRecord->isEmpty() ) $postRecord->set(array('iteration' => $this->iteration))->update();
 
-					$logger and call_user_func($logger, __('<b>SKIPPED</b>: The option \'Create new posts from records newly present in your file\' is disabled in your import settings.', 'wp_all_import_plugin'));
+					$logger and call_user_func($logger, __('<b>SKIPPED</b>: The option \'Create new posts from records newly present in this import file\' is disabled in your import settings.', 'wp_all_import_plugin'));
 					$logger and !$is_cron and PMXI_Plugin::$session->warnings++;
 					$logger and !$is_cron and PMXI_Plugin::$session->chunk_number++;
 					$skipped++;
@@ -2847,12 +3049,12 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                         $term = (empty($articleData['ID'])) ? wp_insert_term($articleData['post_title'], $this->options['taxonomy_type'], array(
                             'parent'      => empty($articleData['post_parent']) ? 0 : $articleData['post_parent'],
                             'slug'        => $articleData['slug'],
-                            'description' => $articleData['post_content']
+                            'description' => esc_html($articleData['post_content'])
                         )) : wp_update_term($articleData['ID'], $this->options['taxonomy_type'], array(
                             'name'        => $articleData['post_title'],
                             'parent'      => empty($articleData['post_parent']) ? 0 : $articleData['post_parent'],
                             'slug'        => $articleData['slug'],
-                            'description' => $articleData['post_content']
+                            'description' => esc_html($articleData['post_content'])
                         ));
                         if (is_wp_error($term)){
                             $pid = $term;
@@ -2895,6 +3097,26 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 			                }
 		                }
 	                	break;
+                    case 'shop_order':
+                        if (empty($articleData['ID'])) {
+                            $logger and call_user_func($logger, sprintf(__('<b>CREATING</b> `%s` `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData), $custom_type_details->labels->singular_name));
+                        } else {
+                            $logger and call_user_func($logger, sprintf(__('<b>UPDATING</b> `%s` `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData), $custom_type_details->labels->singular_name));
+                            $articleData['order_id'] = $articleData['ID'];
+                        }
+	                    // Ensure that no automated order status notes are added unless explicitly allowed.
+                        if( empty( $this->options['pmwi_order']['notes_add_auto_order_status_notes'] )){
+	                        $logger and call_user_func($logger, __('<b>Note:</b> blocking automatic order status change notes', 'wp_all_import_plugin'));
+	                        add_filter('woocommerce_new_order_note_data', [$this, 'woocommerce_new_order_note_data'], 10, 2);
+						}
+                        $order = (empty($articleData['ID'])) ? wc_create_order($articleData) : wc_update_order($articleData);
+	                    remove_filter('woocommerce_new_order_note_data', [$this, 'woocommerce_new_order_note_data']);
+                        if ( is_wp_error($order) ) {
+                            $logger and call_user_func($logger, sprintf(__('<b>ERROR</b> %s', 'wp_all_import_plugin'), $order->get_error_message()));
+                        } elseif ( ! empty($order) ) {
+                            $pid = $order->get_id();
+                        }
+                        break;
                     default:
                         if (empty($articleData['ID'])) {
                             $logger and call_user_func($logger, sprintf(__('<b>CREATING</b> `%s` `%s`', 'wp_all_import_plugin'), $this->getRecordTitle($articleData), $custom_type_details->labels->singular_name));
@@ -2932,32 +3154,30 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
                     $is_images_to_update = apply_filters('pmxi_is_images_to_update', true, $articleData, $current_xml_node, $pid);
 
-					if ("manual" != $this->options['duplicate_matching'] or empty($articleData['ID'])){
-						// associate post with import
-						$product_key = (($post_type[$i] == "product" and PMXI_Admin_Addons::get_addon('PMWI_Plugin')) ? $addons_data['PMWI_Plugin']['single_product_ID'][$i] : '');
-                        if ($post_type[$i] == "taxonomies"){
-                            $product_key = 'taxonomy_term';
-                        }
-                        $postRecord->isEmpty() and $postRecord->set(array(
-							'post_id' => $pid,
-							'import_id' => $this->id,
-							'unique_key' => $unique_keys[$i],
-							'product_key' => $product_key
-						))->insert();
+                    // associate post with import
+                    $product_key = (($post_type[$i] == "product" and PMXI_Admin_Addons::get_addon('PMWI_Plugin')) ? $addons_data['PMWI_Plugin']['single_product_ID'][$i] : '');
+                    if ($post_type[$i] == "taxonomies"){
+                        $product_key = 'taxonomy_term';
+                    }
+                    $postRecord->isEmpty() and $postRecord->set(array(
+                        'post_id' => $pid,
+                        'import_id' => $this->id,
+                        'unique_key' => $unique_keys[$i],
+                        'product_key' => $product_key
+                    ))->insert();
 
-                        $postRecordData = array(
-                            'iteration' => $this->iteration,
-                            'specified' => empty($specified_records) ? 0 : 1
-                        );
+                    $postRecordData = array(
+                        'iteration' => $this->iteration,
+                        'specified' => empty($specified_records) ? 0 : 1
+                    );
 
-                        if ( ! empty($product_key) ){
-                            $postRecordData['product_key'] = $product_key;
-                        }
+                    if ( ! empty($product_key) ){
+                        $postRecordData['product_key'] = $product_key;
+                    }
 
-						$postRecord->set($postRecordData)->update();
+                    $postRecord->set($postRecordData)->update();
 
-						$logger and call_user_func($logger, sprintf(__('Associate post `%s` with current import ...', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
-					}
+                    $logger and call_user_func($logger, sprintf(__('Associate post `%s` with current import ...', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
 
 					// [post format]
 					if ( current_theme_supports( 'post-formats' ) && post_type_supports( $post_type[$i], 'post-formats' ) ) {
@@ -2992,6 +3212,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 									case 'comments':
 										delete_comment_meta( $pid, $image_custom_field );
 										break;
+                                    case 'shop_order':
+                                        $order->delete_meta_data($image_custom_field);
+                                        break;
 									case 'gf_entries':
 										// No actions required.
 										break;
@@ -3027,6 +3250,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 	                            case 'gf_entries':
 		                            // No actions required.
 		                            break;
+                                case 'shop_order':
+                                    $existing_meta_keys = $order->get_meta_data();
+                                    break;
                                 default:
 	                                $existing_meta_keys = get_post_meta($pid, '');
                                 break;
@@ -3096,6 +3322,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                         case 'comments':
                                             delete_comment_meta($pid, $cur_meta_key);
                                             break;
+                                        case 'shop_order':
+                                            $order->delete_meta_data($cur_meta_key);
+                                            break;
 	                                    case 'gf_entries':
 		                                    // No actions required.
 		                                    break;
@@ -3120,6 +3349,9 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                             case 'woo_reviews':
                                             case 'comments':
                                                 delete_comment_meta($pid, $cur_meta_key);
+                                                break;
+                                            case 'shop_order':
+                                                $order->delete_meta_data($cur_meta_key);
                                                 break;
 	                                        case 'gf_entries':
 		                                        // No actions required.
@@ -3160,6 +3392,11 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 							break;
 					}
 
+                    // Save order object before add-ons import proccess.
+                    if ($this->options['custom_type'] == 'shop_order') {
+                        $order->save();
+                    }
+
 					// [addons import]
 
 					// prepare data for import
@@ -3192,6 +3429,11 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					}
 
 					// [/addons import]
+
+                    // Load order object after add-ons import proccess.
+                    if ($this->options['custom_type'] == 'shop_order') {
+                        $order = wc_get_order($pid);
+                    }
 
 					if (empty($articleData['ID']) or $this->options['update_all_data'] == 'yes' or ($this->options['update_all_data'] == 'no' and $this->options['is_update_custom_fields']) or ($this->options['update_all_data'] == 'no' and !empty($this->options['is_update_attributes']) and $post_type[$i] == "product" and class_exists('PMWI_Plugin'))) {
 
@@ -3230,6 +3472,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                 case 'comments':
                                     $meta_type = 'comment';
                                     $existing_meta_keys = get_comment_meta($pid, '');
+                                    break;
+                                case 'shop_order':
+                                    $meta_type = 'shop_order';
+                                    $existing_meta_keys = $order->get_meta_data();
                                     break;
 	                            case 'gf_entries':
 		                            // No actions required.
@@ -3339,31 +3585,55 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                 }
 							}
 
-							$add_meta_data    = array_chunk( $meta_data['add'][ $meta_type ], 20 );
-							$update_meta_data = $meta_data['update'][ $meta_type ];
-							$table            = _get_meta_table( $meta_type );
-							$meta_id          = $meta_type . '_id';
+                            switch ($this->options['custom_type']){
+                                case 'shop_order':
 
-                            // Add meta data.
-							foreach ( $add_meta_data as $meta ) {
-								$this->wpdb->query( "INSERT INTO {$table} ({$meta_id}, meta_key, meta_value) VALUES " . join( ',', $meta ) );
-							}
+                                    foreach ($meta_fields as $meta_key => $meta_value) {
+                                        $internal_meta_key = ! empty( $meta_key ) && $order->get_data_store() && in_array( $meta_key, $order->get_data_store()->get_internal_meta_keys(), true );
+                                        if (!$internal_meta_key) {
+											$meta_value = maybe_unserialize($meta_value);
+                                            $order->update_meta_data($meta_key, $meta_value);
+                                            // Trigger actions for updated meta fields.
+                                            do_action( 'pmxi_update_post_meta', $pid, $meta_key, $meta_value); // hook that was triggered after post meta data updated
+                                        }
+                                    }
 
-							// Update meta data.
-							foreach ( $update_meta_data as $meta_key => $meta_value ) {
-								$this->wpdb->query( $this->wpdb->prepare("UPDATE {$table} SET meta_value = %s WHERE meta_key = '{$meta_key}' and {$meta_id} = {$pid}", $meta_value) );
-							}
+                                    break;
+                                default:
 
-							// Trigger actions for updated meta fields.
-							foreach ($meta_fields as $meta_key => $meta_value) {
-                                do_action( 'pmxi_update_post_meta', $pid, $meta_key, maybe_unserialize($meta_value)); // hook that was triggered after post meta data updated
+                                    $add_meta_data    = array_chunk( $meta_data['add'][ $meta_type ], 20 );
+                                    $update_meta_data = $meta_data['update'][ $meta_type ];
+                                    $table            = _get_meta_table( $meta_type );
+                                    $meta_id          = $meta_type . '_id';
+
+                                    // Add meta data.
+                                    foreach ( $add_meta_data as $meta ) {
+                                        $this->wpdb->query( "INSERT INTO {$table} ({$meta_id}, meta_key, meta_value) VALUES " . join( ',', $meta ) );
+                                    }
+
+                                    // Update meta data.
+                                    foreach ( $update_meta_data as $meta_key => $meta_value ) {
+                                        $this->wpdb->query( $this->wpdb->prepare("UPDATE {$table} SET meta_value = %s WHERE meta_key = '{$meta_key}' and {$meta_id} = {$pid}", $meta_value) );
+                                    }
+
+                                    // Trigger actions for updated meta fields.
+                                    foreach ($meta_fields as $meta_key => $meta_value) {
+                                        do_action( 'pmxi_update_post_meta', $pid, $meta_key, maybe_unserialize($meta_value)); // hook that was triggered after post meta data updated
+                                    }
+
+                                    wp_cache_delete($pid, $meta_type . '_meta');
+                                    //$this->executeSQL();
+
+                                    break;
                             }
-
-                            wp_cache_delete($pid, $meta_type . '_meta');
-							//$this->executeSQL();
 						}
 					}
 					// [/custom fields]
+
+                    // Save order object after custom fields import.
+                    if ($this->options['custom_type'] == 'shop_order') {
+                        $order->save();
+                    }
 
 					// Page Template
                     global $wp_version;
@@ -3479,7 +3749,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     }
                                 }
 
-                                if (empty($image) || !preg_match('%\W(jpg|jpeg|png|gif|webp|svg)$%i', trim(basename($image)))) continue;
+                                if (empty($image)) continue;
 
                                 $attid = false;
 
@@ -3504,8 +3774,8 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 	                                }
                                 }
 
-                                // exisitng image founded
-                                if ($attch) {
+                                // Existing image found.
+                                if (!empty($attch)) {
                                     $attid = $attch->ID;
                                     $logger and call_user_func($logger, sprintf(__('- Existing image was found for post content `%s`...', 'wp_all_import_plugin'), rawurldecode($image)));
                                 } else {
@@ -3545,7 +3815,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                             'url'  => $targetUrl . '/' . $image_filename,
                                             'type' => $file_mime_type
                                         );
-                                        $attid = $this->createAttachment($pid, $handle_image, $image_name, $post_author[$i], $post_type[$i], $is_cron, $logger, $bundle_data['type']);
+                                        $attid = $this->createAttachment($pid, $handle_image, $image_name, $post_author[$i], $post_type[$i], $is_cron, $logger);
                                     }
                                 }
 
@@ -3604,11 +3874,33 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     }
                                 }
                             }
-                            // Update post content
-                            wp_update_post( [
-                                'ID' => $pid,
-                                'post_content' => $articleData['post_content']
-                            ] );
+                            switch ($this->options['custom_type']){
+                                case 'import_users':
+                                case 'shop_customer':
+                                case 'shop_order':
+                                case 'gf_entries':
+                                    // No action needed.
+                                    break;
+                                case 'comments':
+                                case 'woo_reviews':
+                                    wp_update_comment([
+                                        'comment_ID' => $pid,
+                                        'comment_content' => $articleData['post_content']
+                                    ]);
+                                    break;
+                                case 'taxonomies':
+                                    wp_update_term($pid, $this->options['taxonomy_type'], [
+                                        'description' => esc_html($articleData['post_content'])
+                                    ]);
+                                    break;
+                                default:
+                                    // Update post content
+                                    wp_update_post( [
+                                        'ID' => $pid,
+                                        'post_content' => $articleData['post_content']
+                                    ] );
+                                    break;
+                            }
                         }
                     }
 
@@ -3925,8 +4217,12 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 														// do not download images
 														if ( "no" == $this->options[$option_slug . 'download_images'] ){
 
-                                                            $image_filename = wp_unique_filename($targetDir, $image_name);
-															$image_filepath = $targetDir . '/' . $image_filename;
+                                                            $image_filename = $image_name;
+                                                            $image_filepath = $targetDir . '/' . $image_filename;
+                                                            if ( @file_exists($image_filepath) ) {
+                                                                $image_filename = wp_unique_filename($targetDir, $image_name);
+                                                                $image_filepath = $targetDir . '/' . $image_filename;
+                                                            }
 
 															$wpai_uploads = $uploads['basedir'] . DIRECTORY_SEPARATOR . PMXI_Plugin::FILES_DIRECTORY . DIRECTORY_SEPARATOR;
 															$wpai_image_path = $wpai_uploads . str_replace('%20', ' ', $url);
@@ -4109,7 +4405,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 										// Create entry as Draft if no images are downloaded successfully
 										$final_post_type = get_post_type($pid);
-										if ( ! $success_images and "yes" == $this->options[$option_slug . 'create_draft'] and $final_post_type != 'product_variation' and ! in_array($post_type[$i], array('taxonomies', 'comments', 'woo_reviews'))) {
+										if ( ! $success_images and "yes" == $this->options[$option_slug . 'create_draft'] and ! in_array($post_type[$i], array('taxonomies', 'comments', 'woo_reviews'))) {
 											$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'draft'), array('ID' => $pid) );
 											$logger and call_user_func($logger, sprintf(__('- Post `%s` saved as Draft, because no images are downloaded successfully', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
 										}
@@ -4118,7 +4414,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 								else{
 									// Create entry as Draft if no images are downloaded successfully
 									$final_post_type = get_post_type($pid);
-									if ( "yes" == $this->options[$option_slug . 'create_draft'] and $final_post_type != 'product_variation' and ! in_array($post_type[$i], array('taxonomies', 'comments', 'woo_reviews'))){
+									if ( "yes" == $this->options[$option_slug . 'create_draft'] and ! in_array($post_type[$i], array('taxonomies', 'comments', 'woo_reviews'))){
 										$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'draft'), array('ID' => $pid) );
 										$logger and call_user_func($logger, sprintf(__('Post `%s` saved as Draft, because no images are downloaded successfully', 'wp_all_import_plugin'), $this->getRecordTitle($articleData)));
 									}
@@ -4129,6 +4425,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                 }
 							}
 						}
+
 					} else {
 
 						if ( ! empty($images_bundle) ) {
@@ -4189,6 +4486,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                             // you must first include the image.php file
                             // for the function wp_generate_attachment_metadata() to work
                             require_once(ABSPATH . 'wp-admin/includes/image.php');
+                            require_once(ABSPATH . 'wp-admin/includes/media.php');
 
                             if ( ! is_array($attachments[$i]) ) $attachments[$i] = array($attachments[$i]);
 
@@ -4228,6 +4526,18 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                         $atch_url = str_replace(" ", "%20", trim($atch_url));
 
                                         $attachment_filename = urldecode(wp_all_import_basename(parse_url(trim($atch_url), PHP_URL_PATH)));
+
+                                        // If there is no file extension try to detect it.
+                                        $ext = pmxi_getExtension($attachment_filename);
+
+                                        if( empty($ext) ){
+                                        	$ext = pmxi_getExtension($atch_url);
+
+                                        	if( !empty($ext) ){
+                                        		$attachment_filename .= '.' . $ext;
+	                                        }
+                                        }
+
                                         $attachment_filepath = $targetDir . '/' . sanitize_file_name($attachment_filename);
 
                                         if ($this->options['is_search_existing_attach']){
@@ -4430,12 +4740,14 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 									unset($existing_taxonomies[$tx_name][$i]);
 								}
 
-								// create term if not exists
+								// Create terms if they don't exist on the site unless set to not create terms.
+								!empty($txes[$i]) && !empty($this->options['do_not_create_terms']) && $logger and call_user_func($logger, __('- <b>Note</b>: No new terms will be created due to `Do not create new terms` setting.', 'wp_all_import_plugin'));
+
 								if ( ! empty($txes[$i]) ):
 									foreach ($txes[$i] as $key => $single_tax) {
 										$is_created_term = false;
 										if (is_array($single_tax) and isset($single_tax['name']) and $single_tax['name'] != "") {
-											$parent_id = ( ! empty($single_tax['parent'])) ? pmxi_recursion_taxes($single_tax['parent'], $tx_name, $txes[$i], $key) : '';
+											$parent_id = ( ! empty($single_tax['parent'])) ? pmxi_recursion_taxes($single_tax['parent'], $tx_name, $txes[$i], $key, $this->options['do_not_create_terms']) : '';
 											$term = (empty($this->options['tax_is_full_search_' . $this->options['tax_logic'][$tx_name]][$tx_name])) ? is_exists_term($single_tax['name'], $tx_name, (int)$parent_id) : is_exists_term($single_tax['name'], $tx_name);
 											if ( empty($term) and !is_wp_error($term) ){
 												$term = (empty($this->options['tax_is_full_search_' . $this->options['tax_logic'][$tx_name]][$tx_name])) ? is_exists_term(htmlspecialchars($single_tax['name']), $tx_name, (int)$parent_id) : is_exists_term(htmlspecialchars($single_tax['name']), $tx_name);
@@ -4449,7 +4761,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                                     $term_name = wp_unslash( $term_args['name'] );
                                                     $term_slug = sanitize_title( $term_name );
                                                     $term = (empty($this->options['tax_is_full_search_' . $this->options['tax_logic'][$tx_name]][$tx_name])) ? is_exists_term($term_slug, $tx_name, (int)$parent_id) : is_exists_term($term_slug, $tx_name);
-                                                    if ( empty($term) and !is_wp_error($term) ) {
+                                                    if( empty($this->options['do_not_create_terms']) && empty($term) && !is_wp_error($term) ) {
                                                         $term_attr = array('parent' => (!empty($parent_id)) ? $parent_id : 0);
                                                         $term = wp_insert_term(
                                                             $single_tax['name'], // the term
@@ -4487,11 +4799,17 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 													}
 													if (!in_array($term->term_taxonomy_id, $assign_taxes)) $assign_taxes[] = $term->term_taxonomy_id;
 													if (!$is_created_term){
-														if ( empty($parent_id) ){
-															$logger and call_user_func($logger, sprintf(__('- Attempted to create parent %s %s `%s`, duplicate detected. Importing %s to existing `%s` %s, ID %d, slug `%s` ...', 'wp_all_import_plugin'), $custom_type_details->labels->singular_name, $tx_name, $single_tax['name'], $custom_type_details->labels->singular_name, $term->name, $tx_name, $term->term_id, $term->slug));
-														}
-														else{
-															$logger and call_user_func($logger, sprintf(__('- Attempted to create child %s %s `%s`, duplicate detected. Importing %s to existing `%s` %s, ID %d, slug `%s` ...', 'wp_all_import_plugin'), $custom_type_details->labels->singular_name, $tx_name, $single_tax['name'], $custom_type_details->labels->singular_name, $term->name, $tx_name, $term->term_id, $term->slug));
+														if(empty($this->options['do_not_create_terms'])){
+															if ( empty($parent_id) ){
+																$logger and call_user_func($logger, sprintf(__('- Attempted to create parent %s %s `%s`, duplicate detected. Importing %s to existing `%s` %s, ID %d, slug `%s` ...', 'wp_all_import_plugin'), $custom_type_details->labels->singular_name, $tx_name, $single_tax['name'], $custom_type_details->labels->singular_name, $term->name, $tx_name, $term->term_id, $term->slug));
+															}
+															else{
+																$logger and call_user_func($logger, sprintf(__('- Attempted to create child %s %s `%s`, duplicate detected. Importing %s to existing `%s` %s, ID %d, slug `%s` ...', 'wp_all_import_plugin'), $custom_type_details->labels->singular_name, $tx_name, $single_tax['name'], $custom_type_details->labels->singular_name, $term->name, $tx_name, $term->term_id, $term->slug));
+															}
+														}else{
+
+															$logger and call_user_func($logger, sprintf(__('- Importing %s to existing `%s` %s, ID %d, slug `%s` ...', 'wp_all_import_plugin'), $custom_type_details->labels->singular_name, $tx_name, $single_tax['name'], $custom_type_details->labels->singular_name, $term->name, $tx_name, $term->term_id, $term->slug));
+
 														}
 													}
 												}
@@ -4531,13 +4849,15 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 					$is_update = ! empty($articleData['ID']);
 
 					// fire important hooks after custom fields are added
-					if ( ! $this->options['is_fast_mode'] and ! in_array($this->options['custom_type'], array('import_users', 'shop_customer', 'taxonomies', 'comments', 'woo_reviews', 'gf_entries'))){
+					if ( ! $this->options['is_fast_mode'] and ! in_array($this->options['custom_type'], array('import_users', 'shop_customer', 'taxonomies', 'comments', 'woo_reviews', 'gf_entries', 'shop_order'))){
                         $_post = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->wpdb->posts} WHERE ID = %d LIMIT 1", $pid ) );
-                        $_post = sanitize_post( $_post, 'raw' );
-                        $post_object = new WP_Post( $_post );
-                        do_action( "save_post_" . $articleData['post_type'], $pid, $post_object, $is_update );
-						do_action( 'save_post', $pid, $post_object, $is_update );
-						do_action( 'wp_insert_post', $pid, $post_object, $is_update );
+                        if (!empty($_post)) {
+                            $_post = sanitize_post( $_post, 'raw' );
+                            $post_object = new WP_Post( $_post );
+                            do_action( "save_post_" . $articleData['post_type'], $pid, $post_object, $is_update );
+                            do_action( 'save_post', $pid, $post_object, $is_update );
+                            do_action( 'wp_insert_post', $pid, $post_object, $is_update );
+                        }
 					}
 
 					// [addons import]
@@ -4621,36 +4941,27 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				$is_import_complete = ($records_count == $records_to_import);
 
 				// Set out of stock status for missing records [Woocommerce add-on option]
-				if ( $is_import_complete && !empty($this->options['is_delete_missing']) && $this->options['custom_type'] == "product" && class_exists('PMWI_Plugin') && !empty($this->options['missing_records_stock_status']) && "manual" != $this->options['duplicate_matching']) {
+				if ( $is_import_complete && !empty($this->options['is_delete_missing']) && $this->options['delete_missing_action'] == 'keep' && $this->options['custom_type'] == "product" && class_exists('PMWI_Plugin') && !empty($this->options['missing_records_stock_status']) ) {
 
 					$logger and call_user_func($logger, __('Update stock status previously imported posts which are no longer actual...', 'wp_all_import_plugin'));
-					$args = array('import_id' => $this->id, 'iteration !=' => $this->iteration);
-					if (!empty($this->options['is_import_specified'])) $args['specified'] = 1;
-					$postList = new PMXI_Post_List();
-					$missingPosts = $postList->getBy($args);
-					if ( ! $missingPosts->isEmpty() ){
-						foreach ($missingPosts as $missingPost) {
-							update_post_meta( $missingPost['post_id'], '_stock_status', 'outofstock' );
-							update_post_meta( $missingPost['post_id'], '_stock', 0 );
 
-                            $term_ids = wp_get_object_terms($missingPost['post_id'], 'product_visibility', array('fields' => 'ids'));
+                    $missing_ids = $this->get_missing_records($this->iteration);
+
+					if ( ! $missing_ids ){
+						foreach ($missing_ids as $missingPostRecord) {
+							update_post_meta( $missingPostRecord['post_id'], '_stock_status', 'outofstock' );
+							update_post_meta( $missingPostRecord['post_id'], '_stock', 0 );
+
+                            $term_ids = wp_get_object_terms($missingPostRecord['post_id'], 'product_visibility', array('fields' => 'ids'));
                             $outofstock_term = get_term_by( 'name', 'outofstock', 'product_visibility' );
                             if (!empty($outofstock_term) && !is_wp_error($outofstock_term) && !in_array($outofstock_term->term_taxonomy_id, $term_ids)){
                                 $term_ids[] = $outofstock_term->term_taxonomy_id;
                             }
-                            $this->associate_terms( $missingPost['post_id'], $term_ids, 'product_visibility', $logger );
-
-							$missingPostRecord = new PMXI_Post_Record();
-							$missingPostRecord->getBy('id', $missingPost['id']);
-							if ( ! $missingPostRecord->isEmpty() && empty($this->options['is_delete_missing'])) {
-								$missingPostRecord->set(array('iteration' => $this->iteration))->update();
-							}
-							unset($missingPostRecord);
+                            $this->associate_terms( $missingPostRecord['post_id'], $term_ids, 'product_visibility', $logger );
 						}
 					}
 				}
 			}
-
 		} catch (XmlImportException $e) {
 			$logger and call_user_func($logger, __('<b>ERROR</b>', 'wp_all_import_plugin') . ': ' . $e->getMessage());
 			$logger and !$is_cron and PMXI_Plugin::$session->errors++;
@@ -4676,6 +4987,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
             case 'woo_reviews':
                 $title = wp_trim_words($articleData['comment_content'], 10);
                 break;
+            case 'shop_order':
 	        case 'gf_entries':
 	        	$title = $articleData['date_created'];
 	        	break;
@@ -4804,170 +5116,572 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 		}
 	}
 
-	public function delete_missing_records($logger, $iteration)
-	{
-		if ( ! empty($this->options['is_delete_missing']) and $this->options['duplicate_matching'] == 'auto') {
+    protected function get_missing_records_from_imported( $iteration ) {
 
-			empty($this->deleted) and $logger and call_user_func($logger, __('Removing previously imported posts which are no longer actual...', 'wp_all_import_plugin'));
-			$postList = new PMXI_Post_List();
+        $postList = new PMXI_Post_List();
 
-			$args = array('import_id' => $this->id, 'iteration !=' => $iteration);
-			if ( ! empty($this->options['is_import_specified']) ) $args['specified'] = 1;
+        $args = [ 'import_id' => $this->id, 'iteration !=' => $iteration ];
 
-			$missing_ids = array();
-			$missingPosts = $postList->getBy($args);
+        if ( $this->options['custom_type'] !== "product" && $this->options['custom_type'] !== "taxonomies" ) {
+            $args['product_key'] = '';
+        }
 
-			if ( ! $missingPosts->isEmpty() ):
+        if ( ! empty($this->options['is_import_specified']) ) $args['specified'] = 1;
 
-				foreach ($missingPosts as $missingPost) {
+        $missing_ids = [];
+        $missingPosts = $postList->getBy($args);
 
-					$missing_ids[] = $missingPost;
+        if ( ! $missingPosts->isEmpty() ) {
+            foreach ($missingPosts as $missingPost) {
+                $missing_ids[] = $missingPost;
+            }
+        }
+        return $missing_ids;
+    }
 
-				}
+    protected function get_missing_records_from_all( $iteration ) {
 
-			endif;
+        $ids = [];
+        $postList = new PMXI_Post_List();
+        $args = [ 'import_id' => $this->id, 'iteration' => $iteration ];
 
-			// Delete posts from database
-			if ( ! empty($missing_ids) && is_array($missing_ids) ){
+        if ( $this->options['custom_type'] !== "product" && $this->options['custom_type'] !== "taxonomies" ) {
+            $args['product_key'] = '';
+        }
 
-				$logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_delete_post', 'wp_all_import_plugin'));
+        if ( ! empty($this->options['is_import_specified']) ) $args['specified'] = 1;
 
-				$logger and call_user_func($logger, __('Deleting posts from database', 'wp_all_import_plugin'));
+        $posts = $postList->getBy($args);
+        if ( ! $posts->isEmpty() ) {
+            foreach ($posts as $post) {
+                $ids[] = $post['post_id'];
+            }
+        }
 
-				$missing_ids_arr = array_chunk($missing_ids, $this->options['records_per_request']);
+        $missing_status = false;
+        if ($this->options['delete_missing_action'] == 'keep') {
+            if ($this->options['is_send_removed_to_trash']) {
+                $missing_status = 'trash';
+            } elseif ($this->options['is_change_post_status_of_removed']) {
+                $missing_status = $this->options['status_of_removed'];
+            }
+
+            if ($this->options['missing_records_stock_status']) {
+                $missing_cf[] = [
+                    'name' => '_stock_status',
+                    'value' => 'outofstock'
+                ];
+            }
+
+            if ($this->options['is_update_missing_cf']) {
+                $update_missing_cf_name = $this->options['update_missing_cf_name'];
+                if (!is_array($update_missing_cf_name)) {
+                    $update_missing_cf_name = [$update_missing_cf_name];
+                }
+                $update_missing_cf_value = $this->options['update_missing_cf_value'];
+                if (!is_array($update_missing_cf_value)) {
+                    $update_missing_cf_value = [$update_missing_cf_value];
+                }
+                foreach ($update_missing_cf_name as $i => $cf_name) {
+                    $missing_cf[] = [
+                        'name' => $cf_name,
+                        'value' => $update_missing_cf_value[$i]
+                    ];
+                }
+            }
+        }
+
+        switch ($this->options['custom_type']){
+            case 'import_users':
+            case 'shop_customer':
+                $query = "SELECT ID as post_id FROM " . $this->wpdb->prefix . "users";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "usermeta AS pm". $key . " ON (". $this->wpdb->prefix ."users.ID = pm". $key .".user_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                $query .= " WHERE ID NOT IN (" . implode(",", $ids) . ")";
+
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+            case 'taxonomies':
+                $query = "SELECT term_id as post_id FROM " . $this->wpdb->prefix . "term_taxonomy";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "termmeta AS pm". $key . " ON (". $this->wpdb->prefix ."term_taxonomy.term_id = pm". $key .".term_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                $query .= " WHERE taxonomy = '" . $this->options['taxonomy_type'] . "' AND term_id NOT IN (" . implode(",", $ids) . ")";
+
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+            case 'comments':
+                $query = "SELECT comment_ID as post_id FROM " . $this->wpdb->prefix . "comments";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "commentmeta AS pm". $key . " ON (". $this->wpdb->prefix ."comments.comment_ID = pm". $key .".comment_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                $query .= " WHERE comment_type = 'comment' AND comment_ID NOT IN (" . implode(",", $ids) . ")";
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_status)) {
+                    $query .= " comment_approved != '" . $missing_status . "'";
+                    if (!empty($missing_cf)) {
+                        $query .= " OR ";
+                    }
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+            case 'woo_reviews':
+                $query = "SELECT comment_ID as post_id FROM " . $this->wpdb->prefix . "comments";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "commentmeta AS pm". $key . " ON (". $this->wpdb->prefix ."comments.comment_ID = pm". $key .".comment_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                $query .= " WHERE comment_type = 'review' AND comment_ID NOT IN (" . implode(",", $ids) . ")";
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_status)) {
+                    $query .= " comment_approved != '" . $missing_status . "'";
+                    if (!empty($missing_cf)) {
+                        $query .= " OR ";
+                    }
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+            case 'gf_entries':
+                $query = "SELECT id as post_id FROM " . $this->wpdb->prefix . "gf_entry";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "gf_entry_meta AS pm". $key . " ON (". $this->wpdb->prefix ."gf_entry.id = pm". $key .".entry_id AND ". $this->wpdb->prefix ."gf_entry.form_id = pm". $key .".form_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                $query .= " WHERE id NOT IN (" . implode(",", $ids) . ")";
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_status)) {
+                    $query .= " status != '" . $missing_status . "'";
+                    if (!empty($missing_cf)) {
+                        $query .= " OR ";
+                    }
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+            default:
+                $query = "SELECT ID as post_id FROM " . $this->wpdb->prefix . "posts";
+                if (!empty($missing_cf)) {
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $query .= " LEFT JOIN " . $this->wpdb->prefix . "postmeta AS pm". $key . " ON (". $this->wpdb->prefix ."posts.ID = pm". $key .".post_id AND pm". $key .".meta_key='". $cf['name'] ."')";
+                        }
+                    }
+                }
+                if ($this->options['custom_type'] == 'product') {
+                    $query .= " WHERE post_type IN (\"product\", \"product_variation\") AND ID NOT IN (" . implode(",", $ids) . ")";
+                } else {
+                    $query .= " WHERE post_type = '" . $this->options['custom_type'] . "' AND ID NOT IN (" . implode(",", $ids) . ")";
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= " AND (";
+                }
+                if (!empty($missing_status)) {
+                    $query .= " post_status != '" . $missing_status . "'";
+                    if (!empty($missing_cf)) {
+                        $query .= " OR ";
+                    }
+                }
+                if (!empty($missing_cf)) {
+                    $cf_conditions = [];
+                    foreach ($missing_cf as $key => $cf) {
+                        if (!empty($cf['name'])) {
+                            $cf_conditions[] = "pm" . $key . ".meta_value != '" . $cf['value'] . "'";
+                        }
+                    }
+                    $query .= implode(" OR ", $cf_conditions);
+                }
+                if (!empty($missing_status) || !empty($missing_cf)) {
+                    $query .= ")";
+                }
+                $missing_ids = $this->wpdb->get_results($query, ARRAY_A);
+                break;
+        }
+
+        if (!empty($missing_ids) && $this->options['delete_missing_action'] != 'keep') {
+            foreach ($missing_ids as $key => $missing) {
+                $to_delete = apply_filters('wp_all_import_is_post_to_delete', TRUE, $missing['post_id'], $this);
+                if (!$to_delete) {
+                    unset($missing_ids[$key]);
+                }
+            }
+        }
+
+        return $missing_ids;
+    }
+
+    protected function get_missing_records($iteration) {
+        if ($this->options['delete_missing_logic'] == 'all') {
+            $missing_ids = $this->get_missing_records_from_all($iteration);
+        } else {
+            $missing_ids = $this->get_missing_records_from_imported($iteration);
+        }
+        return $missing_ids;
+    }
+
+	public function delete_missing_records( $logger, $iteration ) {
+
+        if ( ! empty($this->options['is_delete_missing']) ) {
+
+            empty($this->deleted) and $logger and call_user_func($logger, __('Removing previously imported posts which are no longer actual...', 'wp_all_import_plugin'));
+
+            $missing_ids = $this->get_missing_records($iteration);
+
+            // Delete posts from database
+            if ( ! empty($missing_ids) && is_array($missing_ids) ){
+
+                $logger and call_user_func($logger, __('<b>ACTION</b>: pmxi_delete_post', 'wp_all_import_plugin'));
+
+                $logger and call_user_func($logger, __('Deleting posts from database', 'wp_all_import_plugin'));
+
+                $missing_ids_arr = array_chunk($missing_ids, $this->options['records_per_request']);
 
                 $skipp_from_deletion = array();
 
                 $outofstock_term = get_term_by( 'name', 'outofstock', 'product_visibility' );
 
-				foreach ($missing_ids_arr as $key => $missingPostRecords) {
+                foreach ($missing_ids_arr as $key => $missingPostRecords) {
 
-					if ( ! empty($missingPostRecords) ) {
+                    if ( ! empty($missingPostRecords) ) {
 
-						foreach ( $missingPostRecords as $k => $missingPostRecord ) {
+                        $changed_ids = [];
 
-							// Invalidate hash for records even if they're not deleted
-							$this->invalidateHash( $missingPostRecord['post_id']);
+                        foreach ( $missingPostRecords as $k => $missingPostRecord ) {
 
-							$to_delete = true;
+                            // Invalidate hash for records even if they're not deleted
+                            $this->invalidateHash( $missingPostRecord['post_id']);
 
-							// Instead of deletion, set Custom Field
-							if ($this->options['is_update_missing_cf']){
-                                switch ($this->options['custom_type']){
-                                    case 'import_users':
-                                        update_user_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion user with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                        break;
-									case 'shop_customer':
-                                        update_user_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion customer with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                        break;
-                                    case 'taxonomies':
-                                        update_term_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion taxonomy term with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                        break;
-                                    case 'woo_reviews':
-                                    case 'comments':
-                                        update_comment_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion comment with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                        break;
-	                                case 'gf_entries':
-		                                // No actions required.
-		                                break;
-                                    default:
-                                        update_post_meta( $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value'] );
-                                        $logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['update_missing_cf_name'], $this->options['update_missing_cf_value']));
-                                        break;
+                            $to_delete = true;
+
+                            if (empty($this->options['delete_missing_action']) || $this->options['delete_missing_action'] != 'remove') {
+                                // Instead of deletion, set Custom Field
+                                if ($this->options['is_update_missing_cf']){
+                                    $update_missing_cf_name = $this->options['update_missing_cf_name'];
+                                    if (!is_array($update_missing_cf_name)) {
+                                        $update_missing_cf_name = [$update_missing_cf_name];
+                                    }
+                                    $update_missing_cf_value = $this->options['update_missing_cf_value'];
+                                    if (!is_array($update_missing_cf_value)) {
+                                        $update_missing_cf_value = [$update_missing_cf_value];
+                                    }
+                                    foreach ($update_missing_cf_name as $cf_i => $cf_name) {
+                                        if (empty($cf_name)) {
+                                            continue;
+                                        }
+                                        switch ($this->options['custom_type']){
+                                            case 'import_users':
+                                                update_user_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion user with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                break;
+                                            case 'shop_customer':
+                                                update_user_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion customer with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                break;
+                                            case 'taxonomies':
+                                                update_term_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion taxonomy term with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                break;
+                                            case 'woo_reviews':
+                                            case 'comments':
+                                                update_comment_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion comment with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                break;
+                                            case 'gf_entries':
+                                                // No actions required.
+                                                break;
+                                            default:
+                                                update_post_meta( $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i] );
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion post with ID `%s`, set Custom Field `%s` to value `%s`', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $cf_name, $update_missing_cf_value[$cf_i]));
+                                                break;
+                                        }
+                                    }
+
+                                    $to_delete = false;
                                 }
 
-								$to_delete = false;
-							}
-
-							// Instead of deletion, change post status to Draft
-							if ($this->options['set_missing_to_draft']){
-								if ($final_post_type = get_post_type($missingPostRecord['post_id']) and $final_post_type != 'product_variation' and 'draft' != get_post_status($missingPostRecord['post_id']))
-								{
-									$this->wpdb->update( $this->wpdb->posts, array('post_status' => 'draft'), array('ID' => $missingPostRecord['post_id']) );
-                                    $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
-									$logger and call_user_func($logger, sprintf(__('Instead of deletion, change post with ID `%s` status to Draft', 'wp_all_import_plugin'), $missingPostRecord['post_id']));
-								}
-								$to_delete = false;
-							}
-
-                            if (!empty($this->options['missing_records_stock_status']) && class_exists('PMWI_Plugin') && $this->options['custom_type'] == "product") {
-                                update_post_meta( $missingPostRecord['post_id'], '_stock_status', 'outofstock' );
-                                update_post_meta( $missingPostRecord['post_id'], '_stock', 0 );
-
-                                $term_ids = wp_get_object_terms($missingPostRecord['post_id'], 'product_visibility', array('fields' => 'ids'));
-
-                                if (!empty($outofstock_term) && !is_wp_error($outofstock_term) && !in_array($outofstock_term->term_taxonomy_id, $term_ids)){
-                                    $term_ids[] = $outofstock_term->term_taxonomy_id;
+                                // Instead of deletion, send missing records to trash.
+                                if ($this->options['is_send_removed_to_trash']) {
+                                    switch ($this->options['custom_type']){
+                                        case 'import_users':
+                                        case 'shop_customer':
+                                        case 'taxonomies':
+                                            // No actions required.
+                                            break;
+                                        case 'gf_entries':
+                                            GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'trash' );
+                                            break;
+                                        case 'woo_reviews':
+                                        case 'comments':
+                                            wp_trash_comment($missingPostRecord['post_id']);
+                                            break;
+                                        case 'shop_order':
+                                            $order = wc_get_order($missingPostRecord['post_id']);
+                                            if ($order && !is_wp_error($order)) {
+                                                $order->delete();
+                                            }
+                                            break;
+                                        default:
+                                            if ($final_post_type = get_post_type($missingPostRecord['post_id']) and 'trash' != get_post_status($missingPostRecord['post_id'])) {
+                                                wp_trash_post($missingPostRecord['post_id']);
+                                                $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion, change post with ID `%s` status to trash', 'wp_all_import_plugin'), $missingPostRecord['post_id']));
+                                            }
+                                            break;
+                                    }
+                                    $to_delete = false;
                                 }
-                                $this->associate_terms( $missingPostRecord['post_id'], $term_ids, 'product_visibility', $logger );
-                                $to_delete = false;
+                                // Instead of deletion, change post status to Draft
+                                elseif ($this->options['is_change_post_status_of_removed']){
+                                    switch ($this->options['custom_type']){
+                                        case 'import_users':
+                                        case 'shop_customer':
+                                        case 'taxonomies':
+                                            // No actions required.
+                                            break;
+                                        case 'gf_entries':
+                                            switch ($this->options['status_of_removed']) {
+                                                case 'restore':
+                                                case 'unspam':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'active' );
+                                                    break;
+                                                case 'spam':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'status', 'spam' );
+                                                    break;
+                                                case 'mark_read':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_read', 1 );
+                                                    break;
+                                                case 'mark_unread':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_read', 0 );
+                                                    break;
+                                                case 'add_star':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_starred', 1 );
+                                                    break;
+                                                case 'remove_star':
+                                                    GFFormsModel::update_entry_property( $missingPostRecord['post_id'], 'is_starred', 0 );
+                                                    break;
+                                            }
+                                            break;
+                                        case 'woo_reviews':
+                                        case 'comments':
+                                            wp_set_comment_status($missingPostRecord['post_id'], $this->options['status_of_removed']);
+                                            break;
+                                        default:
+                                            if ($final_post_type = get_post_type($missingPostRecord['post_id']) and $this->options['status_of_removed'] != get_post_status($missingPostRecord['post_id'])) {
+                                                $this->wpdb->update( $this->wpdb->posts, array('post_status' => $this->options['status_of_removed']), array('ID' => $missingPostRecord['post_id']) );
+                                                $this->recount_terms($missingPostRecord['post_id'], $final_post_type);
+                                                $logger and call_user_func($logger, sprintf(__('Instead of deletion, change post with ID `%s` status to %s', 'wp_all_import_plugin'), $missingPostRecord['post_id'], $this->options['status_of_removed']));
+                                            }
+                                            break;
+                                    }
+                                    $to_delete = false;
+                                }
+
+                                if (!empty($this->options['missing_records_stock_status']) && class_exists('PMWI_Plugin') && $this->options['custom_type'] == "product") {
+
+									// WooCo doesn't play nice when changing status to 'outofstock' if backorders are enabled.
+	                                update_post_meta( $missingPostRecord['post_id'], '_backorders', 'no');
+                                    update_post_meta( $missingPostRecord['post_id'], '_stock_status', 'outofstock' );
+                                    update_post_meta( $missingPostRecord['post_id'], '_stock', 0 );
+
+                                    $term_ids = wp_get_object_terms($missingPostRecord['post_id'], 'product_visibility', array('fields' => 'ids'));
+
+                                    if (!empty($outofstock_term) && !is_wp_error($outofstock_term) && !in_array($outofstock_term->term_taxonomy_id, $term_ids)){
+                                        $term_ids[] = $outofstock_term->term_taxonomy_id;
+                                    }
+                                    $this->associate_terms( $missingPostRecord['post_id'], $term_ids, 'product_visibility', $logger );
+	                                $logger and call_user_func($logger, sprintf(__('Instead of deletion: change Product with ID `%s` - mark as Out of Stock', 'wp_all_import_plugin'), $missingPostRecord['post_id']));
+                                    $to_delete = false;
+                                }
+
+                                if (empty($this->options['is_update_missing_cf']) && empty($this->options['is_send_removed_to_trash']) && empty($this->options['is_change_post_status_of_removed']) && empty($this->options['missing_records_stock_status'])) {
+                                    $logger and call_user_func($logger, sprintf(__('Instead of deletion: change %s with ID `%s` - no action selected, skipping', 'wp_all_import_plugin'), $custom_type->labels->name, $missingPostRecord['post_id']));
+                                    $to_delete = false;
+                                }
                             }
 
-							$to_delete = apply_filters('wp_all_import_is_post_to_delete', $to_delete, $missingPostRecord['post_id'], $this);
+                            $to_delete = apply_filters('wp_all_import_is_post_to_delete', $to_delete, $missingPostRecord['post_id'], $this);
 
-							if ($to_delete) {
-                                if ( ! in_array($this->options['custom_type'], array("import_users", "taxonomies", "shop_customer")) ){
-                                    do_action('pmxi_before_delete_post', $missingPostRecord['post_id'], $this);
-                                    // Remove attachments
-                                    empty($this->options['is_keep_attachments']) and wp_delete_attachments($missingPostRecord['post_id'], true, 'files');
-                                    // Remove images
-                                    empty($this->options['is_keep_imgs']) and wp_delete_attachments($missingPostRecord['post_id'], true, 'images');
-                                    // Clear post's relationships
-                                    wp_delete_object_term_relationships($missingPostRecord['post_id'], get_object_taxonomies('' != $this->options['custom_type'] ? $this->options['custom_type'] : 'post'));
+                            if ($to_delete) {
+                                switch ($this->options['custom_type']) {
+                                    case 'import_users':
+                                    case 'shop_customer':
+                                    case 'woo_reviews':
+                                    case 'comments':
+                                    case 'gf_entries':
+                                        // No action needed.
+                                        break;
+                                    case 'taxonomies':
+                                        // Remove images.
+                                        if (!empty($this->options['is_delete_imgs'])) {
+                                            $term_thumbnail = get_term_meta($missingPostRecord['post_id'], 'thumbnail_id', true);
+                                            if (!empty($term_thumbnail)) {
+                                                wp_delete_attachment($term_thumbnail, TRUE);
+                                            }
+                                        }
+                                        break;
+                                    default:
+                                        do_action('pmxi_before_delete_post', $missingPostRecord['post_id'], $this);
+                                        // Remove attachments
+                                        if (!empty($this->options['is_delete_attachments'])) {
+                                            wp_delete_attachments($missingPostRecord['post_id'], true, 'files');
+                                        }
+                                        // Remove images
+                                        if (!empty($this->options['is_delete_imgs'])) {
+                                            wp_delete_attachments($missingPostRecord['post_id'], true, 'images');
+                                        }
+                                        // Clear post's relationships
+                                        wp_delete_object_term_relationships($missingPostRecord['post_id'], get_object_taxonomies('' != $this->options['custom_type'] ? $this->options['custom_type'] : 'post'));
+                                        break;
                                 }
-							}
-							else {
+
+                            } else {
                                 $skipp_from_deletion[] = $missingPostRecord['post_id'];
-								$postRecord = new PMXI_Post_Record();
-								$postRecord->getBy(array(
-									'post_id' => $missingPostRecord['post_id'],
-									'import_id' => $this->id,
-								));
-                                if ( ! $postRecord->isEmpty() )
-                                {
+                                $postRecord = new PMXI_Post_Record();
+                                $postRecord->getBy(array(
+                                    'post_id' => $missingPostRecord['post_id'],
+                                    'import_id' => $this->id,
+                                ));
+                                if ( ! $postRecord->isEmpty() ) {
                                     $is_unlink_missing_posts = apply_filters('wp_all_import_is_unlink_missing_posts', false, $this->id, $missingPostRecord['post_id']);
                                     if ( $is_unlink_missing_posts ){
                                         $postRecord->delete();
-                                    }
-                                    else {
+                                    } else {
                                         $postRecord->set(array(
                                             'iteration' => $iteration
                                         ))->save();
                                     }
                                 }
 
-								do_action('pmxi_missing_post', $missingPostRecord['post_id']);
+                                do_action('pmxi_missing_post', $missingPostRecord['post_id']);
 
-								unset($missingPostRecords[$k]);
-							}
-						}
+                                $changed_ids[] = $missingPostRecord['post_id'];
 
-                        $ids = array();
+                                unset($missingPostRecords[$k]);
+                            }
+                        }
 
-						if ( ! empty($missingPostRecords) ){
+                        if ( ! empty($changed_ids) ) {
+                            $this->set(array('changed_missing' => $this->changed_missing + count($changed_ids)))->update();
+                        }
 
-							foreach ($missingPostRecords as $k => $missingPostRecord) {
-								$ids[] = $missingPostRecord['post_id'];
-							}
+                        if ( ! empty($missingPostRecords) ){
+
+                            $ids = array();
+
+                            foreach ($missingPostRecords as $k => $missingPostRecord) {
+                                $ids[] = intval($missingPostRecord['post_id']);
+                            }
 
                             switch ($this->options['custom_type']){
-								case 'import_users':
-								case 'shop_customer':
+                                case 'import_users':
+                                case 'shop_customer':
+                                    foreach( $ids as $k => $id) {
+                                        $user_meta = get_userdata($id);
+                                        $user_roles = $user_meta->roles;
+                                        if (!empty($user_roles) && in_array('administrator', $user_roles)) {
+                                            unset($ids[$k]);
+                                        }
+                                    }
                                     do_action('pmxi_delete_post', $ids, $this);
-									// delete_user action
-									foreach( $ids as $id) {
+                                    // delete_user action
+                                    foreach( $ids as $id) {
                                         do_action( 'delete_user', $id, $reassign = null, new WP_User($id) );
                                     }
                                     $sql = "delete a,b
                                       FROM ".$this->wpdb->users." a
-                                      LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )										
+                                      LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )
                                       WHERE a.ID IN (" . implode(',', $ids) . ");";
-									// deleted_user action
-									foreach( $ids as $id) {
+                                    // deleted_user action
+                                    foreach( $ids as $id) {
                                         do_action( 'deleted_user', $id, $reassign = null, new WP_User($id) );
                                     }
                                     $this->wpdb->query( $sql );
@@ -4985,12 +5699,21 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                         wp_delete_comment( $comment_id, true );
                                     }
                                     break;
-	                            case 'gf_entries':
-		                            do_action('pmxi_delete_gr_entries', $ids, $this);
-		                            foreach ($ids as $post_id) {
-			                            GFAPI::delete_entry($post_id);
-		                            }
-		                            break;
+                                case 'gf_entries':
+                                    do_action('pmxi_delete_gf_entries', $ids, $this);
+                                    foreach ($ids as $post_id) {
+                                        GFAPI::delete_entry($post_id);
+                                    }
+                                    break;
+                                case 'shop_order':
+                                    do_action('pmxi_delete_shop_orders', $ids, $this);
+                                    foreach ($ids as $order_id) {
+                                        $order = wc_get_order($order_id);
+                                        if ($order && !is_wp_error($order)) {
+                                            $order->delete(true);
+                                        }
+                                    }
+                                    break;
                                 default:
                                     do_action('pmxi_delete_post', $ids, $this);
                                     foreach ($ids as $post_id){
@@ -4999,26 +5722,26 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                                     break;
                             }
 
-							// Delete record form pmxi_posts
-							$sql = "DELETE FROM " . PMXI_Plugin::getInstance()->getTablePrefix() . "posts WHERE post_id IN (".implode(',', $ids).") AND import_id = %d";
-							$this->wpdb->query(
-								$this->wpdb->prepare($sql, $this->id)
-							);
+                            // Delete record form pmxi_posts
+                            $sql = "DELETE FROM " . PMXI_Plugin::getInstance()->getTablePrefix() . "posts WHERE post_id IN (".implode(',', $ids ).")";
+                            $this->wpdb->query( $sql );
 
-							$this->set(array('deleted' => $this->deleted + count($ids)))->update();
+                            $this->set(array('deleted' => $this->deleted + count($ids)))->update();
 
-							$logger and call_user_func($logger, sprintf(__('%d Posts deleted from database. IDs (%s)', 'wp_all_import_plugin'), $this->deleted, implode(",", $ids)));
-						}
-					}
+                            $logger and call_user_func($logger, sprintf(__('%d Posts deleted from database. IDs (%s)', 'wp_all_import_plugin'), $this->deleted, implode(",", $ids)));
+                        }
+                    }
 
-					if ( PMXI_Plugin::is_ajax() ) break;
-				}
+                    if ( PMXI_Plugin::is_ajax() ) break;
+
+                }
 
                 do_action('wp_all_import_skipped_from_deleted', $skipp_from_deletion, $this);
 
-				return (count($missing_ids_arr) > 1) ? false : true;
-			}
-		}
+                return (count($missing_ids_arr) > 1) ? false : true;
+            }
+
+        }
 
 		return true;
 	}
@@ -5096,7 +5819,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
             return wp_set_object_terms($pid, $term_ids, $tx_name);
         }
 
-	    $term_ids = wp_get_object_terms( $pid, $tx_name, array( 'fields' => 'ids' ) );
+	    $term_ids = wp_get_object_terms( $pid, $tx_name, array( 'fields' => 'tt_ids' ) );
 
 		$assign_taxes = ( is_array( $assign_taxes ) ) ? array_filter( $assign_taxes ) : false;
 
@@ -5138,8 +5861,10 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 	/**
 	 * Clear associations with posts via Ajax
+	 *
 	 * @param bool[optional] $keepPosts When set to false associated wordpress posts will be deleted as well
-	 * @return PMXI_Import_Record
+	 *
+	 * @return bool
 	 * @chainable
 	 */
 	public function deletePostsAjax($keepPosts = TRUE, $is_deleted_images = 'auto', $is_delete_attachments = 'auto') {
@@ -5159,7 +5884,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				$missing_ids_arr = array_chunk($missing_ids, $this->options['records_per_request']);
 				foreach ($missing_ids_arr as $key => $ids) {
 					if ( ! empty($ids) ) {
-						$this->deleteRecords($is_delete_attachments, $is_deleted_images, $ids);
+                        $ids = $this->deleteRecords($is_delete_attachments, $is_deleted_images, $ids);
 						// Delete record form pmxi_posts
 						$sql = "DELETE FROM " . PMXI_Plugin::getInstance()->getTablePrefix() . "posts WHERE post_id IN (".implode(',', $ids).") AND import_id = %d";
 						$this->wpdb->query(
@@ -5189,7 +5914,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 				$ids[] = $p->post_id;
 			}
 			if ( ! empty($ids) ){
-				$this->deleteRecords($is_delete_attachments, $is_deleted_images, $ids);
+                $this->deleteRecords($is_delete_attachments, $is_deleted_images, $ids);
 			}
 		}
 		$this->wpdb->query($this->wpdb->prepare('DELETE FROM ' . $post->getTable() . ' WHERE import_id = %s', $this->id));
@@ -5201,14 +5926,14 @@ class PMXI_Import_Record extends PMXI_Model_Record {
             if ( ! in_array($this->options['custom_type'], array('import_users', 'taxonomies', 'shop_customer', 'comments', 'woo_reviews')) ){
                 do_action('pmxi_before_delete_post', $id, $this);
                 // Remove attachments.
-                if ($is_delete_attachments == 'yes' or $is_delete_attachments == 'auto' and empty($this->options['is_keep_attachments'])) {
+                if ($is_delete_attachments == 'yes' or $is_delete_attachments == 'auto' and !empty($this->options['is_delete_attachments'])) {
                     wp_delete_attachments($id, true, 'files');
                 }
                 else {
                     wp_delete_attachments($id, false, 'files');
                 }
                 // Remove images.
-                if ($is_deleted_images == 'yes' or $is_deleted_images == 'auto' and empty($this->options['is_keep_imgs'])) {
+                if ($is_deleted_images == 'yes' or $is_deleted_images == 'auto' and !empty($this->options['is_delete_imgs'])) {
                     wp_delete_attachments($id, true, 'images');
                 }
                 else {
@@ -5221,6 +5946,13 @@ class PMXI_Import_Record extends PMXI_Model_Record {
         switch ($this->options['custom_type']){
 			case 'import_users':
 			case 'shop_customer':
+                foreach( $ids as $k => $id) {
+                    $user_meta = get_userdata($id);
+                    $user_roles = $user_meta->roles;
+                    if (!empty($user_roles) && in_array('administrator', $user_roles)) {
+                        unset($ids[$k]);
+                    }
+                }
                 do_action('pmxi_delete_post', $ids, $this);
                 // delete_user action
                 foreach( $ids as $id) {
@@ -5228,7 +5960,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                 }
                 $sql = "delete a,b
                 FROM ".$this->wpdb->users." a
-                LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )					
+                LEFT JOIN ".$this->wpdb->usermeta." b ON ( a.ID = b.user_id )
                 WHERE a.ID IN (".implode(',', $ids).");";
                 // deleted_user action
                 foreach( $ids as $id) {
@@ -5255,6 +5987,15 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 			        GFAPI::delete_entry($id);
 		        }
 	        	break;
+            case 'shop_order':
+                do_action('pmxi_delete_shop_orders', $ids, $this);
+                foreach ($ids as $order_id) {
+                    $order = wc_get_order($order_id);
+                    if ($order && !is_wp_error($order)) {
+                        $order->delete(true);
+                    }
+                }
+                break;
             default:
                 do_action('pmxi_delete_post', $ids, $this);
                 foreach ($ids as $id) {
@@ -5262,6 +6003,7 @@ class PMXI_Import_Record extends PMXI_Model_Record {
                 }
                 break;
         }
+        return $ids;
 	}
 
 	/**
@@ -5353,5 +6095,17 @@ class PMXI_Import_Record extends PMXI_Model_Record {
 
 	    }
     }
+
+	/**
+	 * Do not add system generated notes during import process.
+	 *
+	 * @param $note_data
+	 * @param $order_data
+	 *
+	 * @return array
+	 */
+	public function woocommerce_new_order_note_data($note_data, $order_data) {
+		return [];
+	}
 
 }

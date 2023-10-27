@@ -1,3 +1,49 @@
+v3.4.4 - 02-October-2023
+- Fix: Fixed an issue where the Free Images feature was missing in the Premium Starter Templates plugin.
+
+v3.4.3 - 26-September-2023
+- Fix: Fixed a fatal error issue with widgets import in the process.
+
+v3.4.2 - 20-September-2023
+- Fix: Plugin causes redirect URL related warnings with WP CLI plugin activate command.
+
+v3.4.1 - 13-September-2023
+- Improvement: Improved the Starter Template Modal for users using Elementor in Dark Mode.
+- Fix: Addressed broken links and alignment issues in the welcome banner, especially on different resolutions.
+- Fix: Fixed the issue of displaying HTML Markup in the notice when a block is not found in Elementor.
+
+
+v3.4.0 - 11-August-2023
+- New: Added SureCart variation for every eCommerce based template.
+- Fix: Resolved an issue where the import progress percentage would overflow the limit.
+
+v3.3.0 - 02-August-2023
+- New: Added compatibility to FSE based Spectra One theme.
+- Improvement: Added Plugin Name in a few admin notices in order to make it better readable and understandable.
+- Improvement: Improved code to match the WordPress coding standards.
+- Improvement: Optimised the onboarding screens for streamlined experience.
+- Fix: Fixed an issue with the import process sequence to avoid overflow in the progress percent.
+
+v3.2.6 - 16-June-2023
+- Fix: An issue that occurred as a regression from v3.2.4, where CartFlows flows were not being imported.
+
+v3.2.5 - 15-June-2023
+- Improvement: Removed redundant functions to improve code efficiency.
+- Improvement: Improved the synchronisation process.
+- Fix: Resolved a console error issue while importing Elementor blocks that contain WPForms integration.
+
+v3.2.4 - 14-June-2023
+- Fix: Tighten the security of the plugin
+
+v3.2.3 - 22-May-2023
+- Improvement: Updated the Block Editor Template Library
+
+v3.2.2 - 15-May-2023
+- Improvement: Added Premium Templates for Block Editor.
+
+v3.2.1 - 13-April-2023
+- Fix: Template is not importing using the WP-CLI command.
+
 v3.2.0 - 04-April-2023
 - Fix: Backup file not created for existing customizer settings.
 - Fix: Icon for Starter Templates plugin isn’t appropriately distributed within the Elementor Editor.

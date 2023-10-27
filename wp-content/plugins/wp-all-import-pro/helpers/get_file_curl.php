@@ -23,11 +23,17 @@ if ( ! function_exists('get_file_curl') ):
 				return $result;
 			}
 
+			// Ensure we don't have a .php extension as it's often blocked on hosts in the uploads folder.
+			$fullpath = str_replace('.php','.tmp', $fullpath);
+
 			if ( ! @file_put_contents($fullpath, $rawdata) ) 
 			{
 				$fp = fopen($fullpath,'w');
-			    fwrite($fp, $rawdata);
-			    fclose($fp);
+				// Ensure the file is actually open before trying to write.
+				if ( false !== $fp ) {
+			        fwrite($fp, $rawdata);
+			        fclose($fp);
+				}
 			}													
 
 		    if ( preg_match('%\W(svg)$%i', basename($fullpath)) or preg_match('%\W(jpg|jpeg|gif|png|webp)$%i', basename($fullpath)) and ( ! ($image_info = apply_filters('pmxi_getimagesize', @getimagesize($fullpath), $fullpath)) or ! in_array($image_info[2], wp_all_import_supported_image_types()) ) )

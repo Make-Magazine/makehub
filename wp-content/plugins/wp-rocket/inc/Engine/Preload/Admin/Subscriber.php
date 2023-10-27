@@ -8,6 +8,7 @@ use WP_Rocket\Engine\Preload\Controller\ClearCache;
 
 use WP_Rocket\Event_Management\Subscriber_Interface;
 use WP_Rocket\Logger\Logger;
+use WP_Rocket\Engine\Admin\Settings\Settings as AdminSettings;
 
 class Subscriber implements Subscriber_Interface {
 
@@ -43,10 +44,15 @@ class Subscriber implements Subscriber_Interface {
 	 */
 	public static function get_subscribed_events() {
 		return [
-			'admin_notices' => [
+			'admin_notices'                 => [
 				[ 'maybe_display_preload_notice' ],
-				[ 'maybe_display_as_missed_tables_notice' ],
 			],
+			'rocket_options_changed'        => 'preload_homepage',
+			'switch_theme'                  => 'preload_homepage',
+			'rocket_after_clean_used_css'   => 'preload_homepage',
+			'rocket_domain_options_changed' => 'preload_homepage',
+			'rocket_input_sanitize'         => 'sanitize_options',
+			'wp_rocket_upgrade'             => [ 'maybe_clean_cron', 15, 2 ],
 		];
 	}
 
@@ -60,11 +66,44 @@ class Subscriber implements Subscriber_Interface {
 	}
 
 	/**
-	 * Display a notice when Action Scheduler tables are missing.
+	 * Preload the homepage after changing the settings
 	 *
 	 * @return void
 	 */
-	public function maybe_display_as_missed_tables_notice() {
-		$this->settings->maybe_display_as_missed_tables_notice();
+	public function preload_homepage() {
+		$this->settings->preload_homepage();
+	}
+
+	/**
+	 * Sanitizes Preload Excluded URI option when saving the settings
+	 *
+	 * @param array $input Array of values submitted from the form.
+	 *
+	 * @return array
+	 */
+	public function sanitize_options( $input ): array {
+		if ( empty( $input['preload_excluded_uri'] ) ) {
+			$input['preload_excluded_uri'] = [];
+
+			return $input;
+		}
+
+		$input['preload_excluded_uri'] = rocket_sanitize_textarea_field( 'preload_excluded_uri', $input['preload_excluded_uri'] );
+
+		return $input;
+	}
+
+	/**
+	 * Unlock all preload URL on update.
+	 *
+	 * @param string $wp_rocket_version Latest WP Rocket version.
+	 * @param string $actual_version Installed WP Rocket version.
+	 */
+	public function maybe_clean_cron( $wp_rocket_version, $actual_version ) {
+		if ( version_compare( $actual_version, '3.12.5', '<' ) ) {
+			return;
+		}
+
+		wp_clear_scheduled_hook( 'rocket_preload_revert_old_in_progress_rows' );
 	}
 }

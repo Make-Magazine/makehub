@@ -13,7 +13,7 @@ if ( ! empty($post_taxonomies)):
 				<h3><?php _e('Taxonomies, Categories, Tags','wp_all_import_plugin');?></h3>	
 			</div>
 			<div class="wpallimport-collapsed-content" style="padding: 0;">
-				<div class="wpallimport-collapsed-content-inner">
+				<div class="wpallimport-collapsed-content-inner" style="padding-bottom:0;">
 					<input type="button" rel="taxonomies_hints" value="<?php _e('Show Hints', 'wp_all_import_plugin');?>" class="show_hints">
 					<table class="form-table" style="max-width:none;">
 					
@@ -308,23 +308,47 @@ if ( ! empty($post_taxonomies)):
 										</td>
 									</tr>
 								</table>					
-								<?php endforeach; ?>	
-								<?php if ($private_ctx): ?>						
-								<hr/>			
-								<div class="input">
-									<input type="checkbox" id="show_hidden_ctx"/>
-									<label for="show_hidden_ctx"><?php _e('Show "private" taxonomies', 'wp_all_import_plugin'); ?></label>					
-								</div>
-								<?php endif;?>
+								<?php endforeach; ?>
+
 							</td>
 						</tr>												
 					</table>
 				</div>
-			</div>
-		</div>
+                <div class="wpallimport-collapsed closed wpallimport-section">
+                    <div class="wpallimport-content-section rad0" style="margin:0; border-top:1px solid #ddd; border-bottom: none; border-right: none; border-left: none; background: #f1f2f2; position:relative; bottom:-15px;">
+                        <div class="wpallimport-collapsed-header">
+                            <h3 style="color:#40acad;"><?php _e('Advanced Options','wp_all_import_plugin');?></h3>
+                        </div>
+                        <div class="wpallimport-collapsed-content" style="padding: 0;">
+                            <div class="wpallimport-collapsed-content-inner">
+                                <hr>
+                                <table class="form-table" style="max-width:none;margin-top:1.5em;">
+                                    <tr>
+                                        <td>
+                                    <div class="input">
+                                        <input type="hidden" name="do_not_create_terms" value="0"/>
+                                        <input type="checkbox" id="do_not_create_terms" name="do_not_create_terms" value="1" class="assign_post switcher" <?php echo !empty($post['do_not_create_terms']) ? 'checked="checked"': '' ?> />
+                                        <label for="do_not_create_terms"><?php _e('Do not create new terms', 'wp_all_import_plugin'); ?></label><a href="#help" class="wpallimport-help" style="position: relative; top: -2px;" title="<?php _e('When this box is checked WP All Import will not create any terms and will only match existing terms on your site.</b>', 'wp_all_import_plugin') ?>">?</a>
+                                    </div>
+	                                <?php if ($private_ctx): ?>
+                                        <div class="input">
+                                            <input type="checkbox" id="show_hidden_ctx"/>
+                                            <label for="show_hidden_ctx"><?php _e('Show "private" taxonomies', 'wp_all_import_plugin'); ?></label>
+                                        </div>
+	                                <?php endif;?>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 		<div id="taxonomies_hints" style="display:none;">	
 			<ul>
-				<li><?php _e('Taxonomies that don\'t already exist on your site will be created.', 'wp_all_import_plugin'); ?></li>
+				<li><?php _e('Taxonomies that don\'t already exist on your site will be created unless the \'Do not create new terms\' option is checked.', 'wp_all_import_plugin'); ?></li>
 				<li><?php _e('To import to existing parent taxonomies, use the existing taxonomy name or slug.', 'wp_all_import_plugin'); ?></li>
 				<li><?php _e('To import to existing hierarchical taxonomies, create the entire hierarchy using the taxonomy names or slugs.', 'wp_all_import_plugin'); ?></li>			
 			</ul>

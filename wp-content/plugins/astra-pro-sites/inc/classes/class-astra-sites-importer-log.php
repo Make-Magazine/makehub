@@ -56,7 +56,9 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 		private function __construct() {
 
 			// Check file read/write permissions.
-			add_action( 'admin_init', array( $this, 'has_file_read_write' ) );
+			if ( current_user_can( 'edit_posts' ) ) {
+				add_action( 'admin_init', array( $this, 'has_file_read_write' ) );
+			}
 
 		}
 
@@ -91,9 +93,16 @@ if ( ! class_exists( 'Astra_Sites_Importer_Log' ) ) :
 		 */
 		public function file_permission_notice() {
 			$upload_dir = self::log_dir();
+			$plugin_name = ASTRA_SITES_NAME;
+			if ( is_callable( 'Astra_Sites_White_Label::get_instance' ) ) {
+				$is_white_label = Astra_Sites_White_Label::get_instance()->is_white_labeled();
+				$plugin_name = $is_white_label ? Astra_Sites_White_Label::get_instance()->get_white_label_name() : ASTRA_SITES_NAME;
+			}
+			/* translators: %1$s refers to the plugin name */
+			$notice = sprintf( __( 'Required File Permissions to import the templates from %s are missing.', 'astra-sites' ), $plugin_name );
 			?>
 			<div class="notice notice-error astra-sites-must-notices astra-sites-file-permission-issue">
-				<p><?php esc_html_e( 'Required File Permissions to import the templates are missing.', 'astra-sites' ); ?></p>
+				<p><?php echo esc_html( $notice ); ?></p>
 				<?php if ( defined( 'FS_METHOD' ) ) { ?>
 					<p><?php esc_html_e( 'This is usually due to inconsistent file permissions.', 'astra-sites' ); ?></p>
 					<p><code><?php echo esc_html( $upload_dir['path'] ); ?></code></p>

@@ -3,8 +3,8 @@ namespace WP_Rocket\Engine\Plugin;
 
 use Plugin_Upgrader;
 use Plugin_Upgrader_Skin;
-use WP_Rocket\Event_Management\Event_Manager;
-use WP_Rocket\Event_Management\Event_Manager_Aware_Subscriber_Interface;
+use WP_Error;
+use WP_Rocket\Event_Management\{Event_Manager, Event_Manager_Aware_Subscriber_Interface};
 
 /**
  * Manages the plugin updates.
@@ -69,14 +69,22 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 	/**
 	 * The WordPress Event Manager
 	 *
-	 * @var Event_Manager;
+	 * @var Event_Manager
 	 */
 	protected $event_manager;
 
 	/**
+	 * RenewalNotice instance
+	 *
+	 * @var RenewalNotice
+	 */
+	private $renewal_notice;
+
+	/**
 	 * Constructor
 	 *
-	 * @param array $args {
+	 * @param RenewalNotice $renewal_notice RenewalNotice instance.
+	 * @param array         $args {
 	 *     Required arguments to populate the class properties.
 	 *
 	 *     @type string $plugin_file    Full path to the plugin.
@@ -85,12 +93,14 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 	 *     @type string $api_url        URL to contact to get update info.
 	 * }
 	 */
-	public function __construct( $args ) {
+	public function __construct( RenewalNotice $renewal_notice, $args ) {
 		foreach ( [ 'plugin_file', 'plugin_version', 'vendor_url', 'api_url', 'icons' ] as $setting ) {
 			if ( isset( $args[ $setting ] ) ) {
 				$this->$setting = $args[ $setting ];
 			}
 		}
+
+		$this->renewal_notice = $renewal_notice;
 	}
 
 	/**
@@ -107,12 +117,16 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 	 */
 	public static function get_subscribed_events() {
 		return [
-			'http_request_args'                     => [ 'exclude_rocket_from_wp_updates', 5, 2 ],
-			'pre_set_site_transient_update_plugins' => 'maybe_add_rocket_update_data',
-			'deleted_site_transient'                => 'maybe_delete_rocket_update_data_cache',
-			'wp_rocket_loaded'                      => 'maybe_force_check',
-			'auto_update_plugin'                    => [ 'disable_auto_updates', 10, 2 ],
-			'admin_post_rocket_rollback'            => 'rollback',
+			'http_request_args'                        => [ 'exclude_rocket_from_wp_updates', 5, 2 ],
+			'pre_set_site_transient_update_plugins'    => 'maybe_add_rocket_update_data',
+			'deleted_site_transient'                   => 'maybe_delete_rocket_update_data_cache',
+			'wp_rocket_loaded'                         => 'maybe_force_check',
+			'auto_update_plugin'                       => [ 'disable_auto_updates', 10, 2 ],
+			'admin_post_rocket_rollback'               => 'rollback',
+			'upgrader_pre_install'                     => [ 'upgrade_pre_install_option', 10, 2 ],
+			'upgrader_post_install'                    => [ 'upgrade_post_install_option', 10, 2 ],
+			'after_plugin_row_wp-rocket/wp-rocket.php' => 'display_renewal_notice',
+			'admin_print_styles-plugins.php'           => 'add_expired_styles',
 		];
 	}
 
@@ -336,11 +350,12 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 
 		$obj = new \stdClass();
 
-		$obj->slug        = $this->get_plugin_slug( $this->plugin_file );
-		$obj->plugin      = plugin_basename( $this->plugin_file );
-		$obj->new_version = $match['user_version'];
-		$obj->url         = $this->vendor_url;
-		$obj->package     = $match['package'];
+		$obj->slug           = $this->get_plugin_slug( $this->plugin_file );
+		$obj->plugin         = plugin_basename( $this->plugin_file );
+		$obj->new_version    = $match['user_version'];
+		$obj->url            = $this->vendor_url;
+		$obj->package        = $match['package'];
+		$obj->stable_version = $match['stable_version'];
 
 		/**
 		 * Filters the WP tested version value
@@ -426,6 +441,8 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 		delete_site_transient( $this->cache_transient_name );
 	}
 
+
+
 	/**
 	 * Do the rollback
 	 *
@@ -433,6 +450,10 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 	 */
 	public function rollback() {
 		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'rocket_rollback' ) ) {
+			wp_nonce_ays( '' );
+		}
+
+		if ( ! current_user_can( 'rocket_manage_options' ) ) {
 			wp_nonce_ays( '' );
 		}
 
@@ -503,5 +524,91 @@ class UpdaterSubscriber implements Event_Manager_Aware_Subscriber_Interface {
 		);
 
 		return $update_actions;
+	}
+
+	/**
+	 * Set plugin option before upgrade.
+	 *
+	 * @param mixed $return    The result of the upgrade process.
+	 * @param array $plugin    The plugin data.
+	 *
+	 * @return mixed|WP_Error
+	 */
+	public function upgrade_pre_install_option( $return, $plugin = [] ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.returnFound
+
+		if ( is_wp_error( $return ) || ! $plugin ) {
+			return $return;
+		}
+
+		$plugin = isset( $plugin['plugin'] ) ? $plugin['plugin'] : '';
+
+		if ( empty( $plugin ) || 'wp-rocket/wp-rocket.php' !== $plugin ) {
+			return $return;
+		}
+
+		set_transient( 'wp_rocket_updating', true, MINUTE_IN_SECONDS );
+
+		return $return;
+	}
+
+	/**
+	 * Update plugin option after upgrade.
+	 *
+	 * @param mixed $return    The result of the upgrade process.
+	 * @param array $plugin    The plugin data.
+	 *
+	 * @return mixed|string|WP_Error
+	 */
+	public function upgrade_post_install_option( $return, $plugin = [] ) { // phpcs:ignore Universal.NamingConventions.NoReservedKeywordParameterNames.returnFound
+		if ( is_wp_error( $return ) || ! $plugin ) {
+			return $return;
+		}
+
+		$plugin = isset( $plugin['plugin'] ) ? $plugin['plugin'] : '';
+		if ( empty( $plugin ) || 'wp-rocket/wp-rocket.php' !== $plugin ) {
+			return $return;
+		}
+
+		delete_transient( 'wp_rocket_updating' );
+
+		return $return;
+	}
+
+	/**
+	 * Displays Renewal notice on the plugins page
+	 *
+	 * @return void
+	 */
+	public function display_renewal_notice() {
+		$latest_version_data = $this->get_cached_latest_version_data();
+
+		if ( is_wp_error( $latest_version_data ) ) {
+			return;
+		}
+
+		if ( ! isset( $latest_version_data->stable_version ) ) {
+			return;
+		}
+
+		$this->renewal_notice->renewal_notice( $latest_version_data->stable_version );
+	}
+
+	/**
+	 * Adds styles for expired banner
+	 *
+	 * @return void
+	 */
+	public function add_expired_styles() {
+		$latest_version_data = $this->get_cached_latest_version_data();
+
+		if ( is_wp_error( $latest_version_data ) ) {
+			return;
+		}
+
+		if ( ! isset( $latest_version_data->stable_version ) ) {
+			return;
+		}
+
+		$this->renewal_notice->add_expired_styles( $latest_version_data->stable_version );
 	}
 }

@@ -5,6 +5,7 @@
  */
 $config = array(
     "info_api_url" => "https://www.wpallimport.com",
+	"info_api_url_new" => "https://update.wpallimport.com",
 	"history_file_count" => 10000,
 	"history_file_age" => 365,
 	"highlight_limit" => 10000,
@@ -19,11 +20,12 @@ $config = array(
 	"cron_job_key" => wp_all_import_url_title(wp_all_import_rand_char(12)),
 	"chunk_size" => 32,
 	"pingbacks" => 1,
+	"backups_prompt" => 1,
 	"legacy_special_character_handling" => 1,
 	"case_sensitive" => 1,
 	"session_mode" => 'default',
 	"enable_ftp_import" => 0,
-	"large_feed_limit" => 1000,	
+	"large_feed_limit" => 1000,
 	"cron_processing_time_limit" => 59,
 	"secure" => 1,
 	"log_storage" => 5,

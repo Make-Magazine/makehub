@@ -59,6 +59,27 @@ class UsedCSS extends Schema {
 			'sortable'   => true,
 		],
 
+		// error_code column.
+		[
+			'name'       => 'error_code',
+			'type'       => 'varchar',
+			'length'     => '32',
+			'default'    => null,
+			'cache_key'  => false,
+			'searchable' => true,
+			'sortable'   => true,
+		],
+
+		// error_message column.
+		[
+			'name'       => 'error_message',
+			'type'       => 'longtext',
+			'default'    => null,
+			'cache_key'  => false,
+			'searchable' => true,
+			'sortable'   => true,
+		],
+
 		// RETRIES column.
 		[
 			'name'       => 'retries',
@@ -129,6 +150,16 @@ class UsedCSS extends Schema {
 			'name'       => 'last_accessed',
 			'type'       => 'timestamp',
 			'default'    => '0000-00-00 00:00:00',
+			'created'    => true,
+			'date_query' => true,
+			'sortable'   => true,
+		],
+
+		// SUBMITTED_AT column.
+		[
+			'name'       => 'submitted_at',
+			'type'       => 'timestamp',
+			'default'    => null,
 			'created'    => true,
 			'date_query' => true,
 			'sortable'   => true,

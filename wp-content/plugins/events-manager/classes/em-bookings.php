@@ -188,6 +188,50 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	}
 	
 	/**
+	 * Gets an initial booking intent object, not saved to DB but containing the minimum information required to make a booking, including required spaces already selected (if set by event owner).
+	 * If the booking intent has no value, i.e. no spaces to be booked initially, then the sapces will be 0
+	 * @return EM_Booking
+	 */
+	public function get_intent_default(){
+		// calculate minimum number of spaces booked required (i.e. non-optional tickets) and create a booking if there is one, otherwise return null as no booking necessary yet
+		$EM_Event = $this->get_event();
+		$EM_Booking = new EM_Booking();
+		$EM_Booking->booking_status = 10; // booking intent status
+		if( $EM_Event->event_id ){
+			$EM_Booking->event_id = $EM_Event->event_id;
+			$EM_Tickets = $this->get_available_tickets();
+			$is_single_ticket = $EM_Tickets->count() == 1;
+			foreach( $EM_Tickets as $EM_Ticket ){
+				$spaces = !empty($_REQUEST['em_tickets'][$EM_Ticket->ticket_id]['spaces']) ? $_REQUEST['em_tickets'][$EM_Ticket->ticket_id]['spaces']:0;
+				$min_spaces = $EM_Ticket->get_spaces_minimum();
+				// if ticket spaces defined by post, or if a ticket selection is required (by being only ticket or required)
+				if( $spaces > 0 ||  $is_single_ticket || $EM_Ticket->ticket_required ) {
+					// make sure we meet the minimum
+					$spaces = $min_spaces > $spaces ? $min_spaces : $spaces;
+				}
+				// impose ticket spaces if required
+				if( $spaces > 0 ){
+					$EM_Ticket_Bookings = $EM_Booking->get_tickets_bookings()->get_ticket_bookings($EM_Ticket->ticket_id);
+					for( $i = 0; $i < $spaces; $i++ ){
+						$ticket_booking = array(
+							'ticket' => $EM_Ticket,
+							'booking' => $EM_Booking,
+							'ticket_booking_spaces' => 1,
+						);
+						$EM_Ticket_Booking = new EM_Ticket_Booking($ticket_booking);
+						$EM_Ticket_Booking->calculate_price( true );
+						$EM_Ticket_Bookings->tickets_bookings[ $EM_Ticket_Booking->ticket_uuid ] = $EM_Ticket_Booking;
+					}
+				}
+			}
+			if( $EM_Booking->get_spaces(true) > 0 ){
+				$EM_Booking->get_price();
+			}
+		}
+		return apply_filters('em_bookings_get_intent_default', $EM_Booking);
+	}
+	
+	/**
 	 * Smart event locator, saves a database read if possible. Note that if an event doesn't exist, a blank object will be created to prevent duplicates.
 	 */
 	function get_event(){
@@ -312,9 +356,11 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	function has_open_time(){
 	    $return = false;
 	    $EM_Event = $this->get_event();
-	    if( $EM_Event->rsvp_end()->getTimestamp() > time()){
-	    	$return = true;
-	    }
+		if( $EM_Event->event_active_status !== 0 ){
+		    if( $EM_Event->rsvp_end()->getTimestamp() > time()){
+		    	$return = true;
+	        }
+		}
 	    return $return;
 	}
 	
@@ -438,11 +484,17 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	 * @return int
 	 */
 	function get_spaces( $force_refresh=false ){
-		if($force_refresh || $this->spaces == 0){
-			$this->spaces = $this->get_tickets()->get_spaces();
+		if ( $this->get_event()->event_active_status === 0 ) {
+			$this->spaces = 0;
+		} else {
+			if ( $force_refresh || $this->spaces == 0 ) {
+				$this->spaces = $this->get_tickets()->get_spaces();
+			}
+			//check overall events cap
+			if ( ! empty( $this->get_event()->event_spaces ) && $this->get_event()->event_spaces < $this->spaces ) {
+				$this->spaces = $this->get_event()->event_spaces;
+			}
 		}
-		//check overall events cap
-		if(!empty($this->get_event()->event_spaces) && $this->get_event()->event_spaces < $this->spaces) $this->spaces = $this->get_event()->event_spaces;
 		return apply_filters('em_booking_get_spaces',$this->spaces,$this);
 	}
 	
@@ -451,12 +503,18 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	 * @return int
 	 */
 	function get_available_spaces( $force_refresh = false ){
-		$spaces = $this->get_spaces($force_refresh);
-		$available_spaces = $spaces - $this->get_booked_spaces($force_refresh);
-		if( get_option('dbem_bookings_approval_reserved') ){ //deduct reserved/pending spaces from available spaces 
-			$available_spaces -= $this->get_pending_spaces($force_refresh);
+		if ( $this->get_event()->event_active_status === 0 ) {
+			$available_spaces = 0;
+		}else{
+			$spaces = $this->get_spaces($force_refresh);
+			$available_spaces = $spaces - $this->get_booked_spaces($force_refresh);
+			if( get_option('dbem_bookings_approval_reserved') ){ //deduct reserved/pending spaces from available spaces
+				$available_spaces -= $this->get_pending_spaces($force_refresh);
+			}
 		}
-		return apply_filters('em_booking_get_available_spaces', $available_spaces, $this);
+		// @deprecated use em_bookings_get_available_spaces instead
+		$available_spaces = apply_filters('em_booking_get_available_spaces', $available_spaces, $this);
+		return apply_filters('em_bookings_get_available_spaces', $available_spaces, $this, $force_refresh);
 	}
 
 	/**
@@ -769,11 +827,13 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	static function em_booking_js_footer(){
 		?>		
 		<script type="text/javascript">
+			<?php
+			$include_path = dirname(dirname(__FILE__)); //get path to parent directory
+			include($include_path.'/includes/js/bookingsform.js');
+			?>
 			jQuery(document).ready( function($){	
 				<?php
 					//we call the segmented JS files and include them here
-					$include_path = dirname(dirname(__FILE__)); //get path to parent directory
-					include($include_path.'/includes/js/bookingsform.js'); 
 					do_action('em_gateway_js'); //deprecated use em_booking_js below instead
 					do_action('em_booking_js'); //use this instead
 				?>							
@@ -942,6 +1002,19 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 		}elseif( !is_array($args['status']) && preg_match('/^([0-9],?)+$/', $args['status']) ){
 			$conditions['status'] = 'booking_status IN ('.$args['status'].')';
 		}
+		// RSVP status
+		if( $args['rsvp_status'] !== false ){
+			if( is_numeric($args['rsvp_status']) ){
+				$conditions['rsvp_status'] = 'booking_rsvp_status='.$args['rsvp_status'];
+			}elseif( $args['rsvp_status'] === null || $args['rsvp_status'] === 'null' ){
+				$conditions['rsvp_status'] = 'booking_rsvp_status IS NULL';
+			}elseif( self::array_is_numeric($args['rsvp_status']) && count($args['rsvp_status']) > 0 ){
+				$conditions['rsvp_status'] = 'booking_status IN ('.implode(',',$args['rsvp_status']).')';
+			}elseif( !is_array($args['rsvp_status']) && preg_match('/^(([0-9]|null),?)+$/i', $args['rsvp_status']) ){
+				$conditions['rsvp_status'] = 'booking_rsvp_status IN ('.$args['rsvp_status'].')';
+			}
+		}
+		// person/owner
 		if( is_numeric($args['person']) ){
 			$conditions['person'] = EM_BOOKINGS_TABLE.'.person_id='.$args['person'];
 		}
@@ -979,6 +1052,7 @@ class EM_Bookings extends EM_Object implements Iterator, ArrayAccess {
 	public static function get_default_search( $array_or_defaults = array(), $array = array() ){
 		$defaults = array(
 			'status' => false,
+			'rsvp_status' => false,
 			'person' => true, //to add later, search by person's bookings...
 			'blog' => get_current_blog_id(),
 			'ticket_id' => false,

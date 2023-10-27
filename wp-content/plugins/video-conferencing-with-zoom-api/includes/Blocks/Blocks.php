@@ -2,6 +2,8 @@
 
 namespace Codemanas\VczApi\Blocks;
 
+use function Composer\Autoload\includeFile;
+
 /**
  * Class Blocks
  *
@@ -77,6 +79,7 @@ class Blocks {
 				'list_host_meetings_preview_image' => ZVC_PLUGIN_IMAGES_PATH . '/block-previews/list-host-meetings.png',
 				'embed_post_preview'               => ZVC_PLUGIN_IMAGES_PATH . '/block-previews/embed_post_preview.png',
 				'join_via_browser'                 => ZVC_PLUGIN_IMAGES_PATH . '/block-previews/join-via-browser.png',
+				'single_zoom_meeting_page'         => ZVC_PLUGIN_IMAGES_PATH . '/skeleton.png'
 			]
 		);
 	}
@@ -195,13 +198,29 @@ class Blocks {
 		register_block_type( 'vczapi/show-meeting-post', [
 			"title"           => "Embed Zoom Post",
 			"attributes"      => [
-				"preview" => [
+				"preview"     => [
 					"type"    => "boolean",
 					"default" => false
 				],
-				"postID"  => [
+				"postID"      => [
 					"type"    => "number",
 					"default" => 0
+				],
+				"template"    => [
+					"type"    => "string",
+					"default" => "none"
+				],
+				"description" => [
+					"type"    => "boolean",
+					"default" => true
+				],
+				"countdown"   => [
+					"type"    => "boolean",
+					"default" => true
+				],
+				"details"     => [
+					"type"    => "boolean",
+					"default" => true
 				]
 			],
 			"category"        => "vczapi-blocks",
@@ -330,6 +349,34 @@ class Blocks {
 			'editor_style'    => 'vczapi-blocks-style',
 			'render_callback' => [ $this, 'render_recordings' ]
 		] );
+
+		register_block_type( 'vczapi/single-zoom-meeting', [
+			"title"           => "Zoom - Single Meeting Page",
+			"category"        => "vczapi-blocks",
+			"icon"            => "dashicons-text-page",
+			"description"     => "Single Zoom Meeting Page",
+			"textdomain"      => "video-conferencing-with-zoom-api",
+			'editor_script'   => 'vczapi-blocks',
+			'editor_style'    => 'vczapi-blocks-style',
+			'render_callback' => [ $this, 'render_single_meeting' ]
+		] );
+	}
+
+	/**
+	 * Render block template from here
+	 *
+	 * @return false|string|void
+	 */
+	public function render_single_meeting() {
+		global $post;
+		if ( ! empty( $post ) && $post->post_type == 'zoom-meetings' ) {
+			$template = vczapi_get_single_or_zoom_template( $post );
+
+			ob_start();
+			include $template;
+
+			return ob_get_clean();
+		}
 	}
 
 	/**
@@ -500,6 +547,19 @@ class Blocks {
 		if ( isset( $attributes['postID'] ) && ! empty( $attributes['postID'] ) ) {
 			$shortcode .= ' post_id="' . $attributes['postID'] . '"';
 		}
+
+		if ( isset( $attributes['template'] ) && ! empty( $attributes['template'] ) ) {
+			$shortcode .= ' template="' . $attributes['template'] . '"';
+		}
+
+		$description = $attributes['description'] ? "true" : "false";
+		$shortcode   .= ' description="' . $description . '"';
+
+		$countdown = $attributes['countdown'] ? "true" : "false";
+		$shortcode .= ' countdown="' . $countdown . '"';
+
+		$details   = $attributes['details'] ? "true" : "false";
+		$shortcode .= ' details="' . $details . '"';
 
 		ob_start();
 		echo do_shortcode( '[' . $shortcode . ']' );

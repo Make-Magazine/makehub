@@ -80,6 +80,7 @@
 	margin: 0;
 	text-align: center;
 	color: #aaa;
+	text-transform: uppercase;
 }
 
 .gf-legacy-ui .gppa-filter-and {
@@ -93,6 +94,7 @@
 	background: #f6f9fc;
 	line-height: 30px;
 	color: #AEB5D4;
+	text-transform: uppercase;
 }
 
 .gppa-filter-group + .gppa-add-filter-group {

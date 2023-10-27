@@ -1,9 +1,10 @@
 <template>
-	<div class="gppa-filter">
+	<div class="gppa-filter" :aria-label="i18nStrings.filterAriaLabel.format( index + 1 )" aria-role="group">
 		<select :disabled="loadingProperties"
 				class="gppa-filter-property"
 				v-model="filterPropertyModel"
-				@change="resetFilter">
+				@change="resetFilter"
+				ref="propertySelect">
 			<option v-if="loadingProperties" value="" selected disabled hidden>{{ i18nStrings.loadingEllipsis }}</option>
 
 			<option v-for="option in filterPropertiesUngrouped" v-bind:value="option.value">
@@ -62,13 +63,13 @@
 
 		<div class="repeater-buttons">
 			<button class="add-item gform-st-icon gform-st-icon--circle-plus" @click="$emit('add-filter')" :title="i18nStrings.addFilter" />
-			<button class="remove-item gform-st-icon gform-st-icon--circle-minus" @click="$emit('remove-filter')" :title="i18nStrings.removeFilter" />
+			<button class="remove-item gform-st-icon gform-st-icon--circle-minus" @click="$emit('remove-filter')" :title="i18nStrings.removeFilter" :aria-label="i18nStrings.removeFilterAriaLabel.format( index + 1 )" />
 		</div>
 
 		<div
 			v-if="filters.length > 1 && index !== filters.length - 1"
-			class="gppa-filter-and">
-			AND
+			class="gppa-filter-and" :aria-label="i18nStrings.and">
+			{{ i18nStrings.and }}
 		</div>
 	</div>
 </template>
@@ -94,6 +95,10 @@
 		],
 		components: {
 			'gppa-select-with-custom': SelectWithCustom,
+		},
+		mounted() {
+			// @ts-ignore
+			this.$refs.propertySelect?.focus();
 		},
 		created: function () {
 			if (this.filter.property) {

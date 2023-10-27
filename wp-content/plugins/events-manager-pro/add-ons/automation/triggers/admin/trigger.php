@@ -73,6 +73,7 @@ class Trigger {
 		$trigger->action_data = array();
 		if( !empty($_REQUEST['action_data']) ){
 			foreach( $_REQUEST['action_data'] as $key => $action_data ){
+				$action_data = wp_unslash( $action_data );
 				if( $key !== '%id%' ){
 					$action_type = $action_data['type'];
 					if( $action_type ){

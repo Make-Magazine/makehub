@@ -171,7 +171,11 @@ export const getSupportLink = ( templateId, subject ) => {
 export const getGridItem = ( site ) => {
 	let imageUrl = site[ 'thumbnail-image-url' ] || '';
 	if ( '' === imageUrl && false === whiteLabelEnabled() ) {
-		imageUrl = `${ starterTemplates.imageDir }placeholder.png`;
+		if ( astraSitesVars.default_page_builder === 'fse' ) {
+			imageUrl = `${ starterTemplates.imageDir }spectra-placeholder.png`;
+		} else {
+			imageUrl = `${ starterTemplates.imageDir }placeholder.png`;
+		}
 	}
 
 	return {
@@ -179,9 +183,21 @@ export const getGridItem = ( site ) => {
 		image: imageUrl,
 		title: decodeEntities( site.title ),
 		badge:
-			'agency-mini' === site[ 'astra-sites-type' ]
+			'free' !== site[ 'astra-sites-type' ]
 				? __( 'Premium', 'astra-sites' )
 				: '',
 		...site,
 	};
+};
+
+export const getTotalTime = ( value ) => {
+	const hours = Math.floor( value / 60 / 60 );
+	const minutes = Math.floor( value / 60 ) - hours * 60;
+	const seconds = value % 60;
+
+	if ( minutes ) {
+		return minutes + '.' + seconds;
+	}
+
+	return '0.' + seconds;
 };

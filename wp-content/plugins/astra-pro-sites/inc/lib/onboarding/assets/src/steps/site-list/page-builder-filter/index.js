@@ -7,7 +7,9 @@ const { imageDir, isBrizyEnabled } = starterTemplates;
 
 const PageBuilder = () => {
 	const [ { builder }, dispatch ] = useStateValue();
-
+	if ( builder === 'fse' ) {
+		return null;
+	}
 	const buildersList = [
 		{
 			id: 'gutenberg',

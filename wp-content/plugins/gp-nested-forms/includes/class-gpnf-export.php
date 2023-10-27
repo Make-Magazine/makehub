@@ -132,8 +132,18 @@ class GPNF_Export {
 						$value               = self::get_nested_field_value( $nested_form_field->gpnfForm, $child_entry, $child_form_field_id );
 						$_line[]             = self::escape_value( $value );
 					} elseif ( ! is_numeric( $column ) ) {
-						$field   = GFAPI::get_field( $form, $column );
-						$_line[] = self::escape_value( $field->get_value_export( $child_entry, $column, false, true ) );
+						$field = GFAPI::get_field( $form, $column );
+						$value = self::escape_value( $field->get_value_export( $child_entry, $column, false, true ) );
+						// Format the Created Date and Payment Date for Nested Entries as Gravity Forms does for the Parent Entry.
+						// Same logic as Gravity Forms export.php
+						if ( $column === 'date_created' || $column === 'payment_date' ) {
+							$value           = $entry[ $column ];
+							$lead_gmt_time   = mysql2date( 'G', $value );
+							$lead_local_time = GFCommon::get_local_timestamp( $lead_gmt_time );
+							$value           = date_i18n( 'Y-m-d H:i:s', $lead_local_time, true );
+						}
+
+						$_line[] = $value;
 					} else {
 						if ( $export_parent ) {
 							$field   = GFAPI::get_field( $form, $column );
@@ -281,7 +291,9 @@ class GPNF_Export {
 
 		$form_titles = wp_list_pluck( $forms, 'title' );
 
-		$matches = preg_grep( sprintf( '/%s(\([0-9]+\))?/i', preg_quote( $child_form_title ) ), $form_titles );
+		$child_form_title = preg_quote( $child_form_title, '/' );
+		$pattern          = sprintf( '/%s(\([0-9]+\))?/i', $child_form_title );
+		$matches          = preg_grep( $pattern, $form_titles );
 		if ( ! empty( $matches ) ) {
 			$match = array_keys( $matches );
 			$index = array_shift( $match );

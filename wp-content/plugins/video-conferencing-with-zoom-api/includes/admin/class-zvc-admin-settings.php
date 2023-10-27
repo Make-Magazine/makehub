@@ -137,6 +137,9 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 		if ( is_wp_error( $OAuth_access_token ) ) {
 			self::$message     = sprintf( __( 'Zoom Oauth Error Code: "%s"  -  %s ', 'video-conferencing-with-zoom-api' ), $OAuth_access_token->get_error_code(), $OAuth_access_token->get_error_message() );
 			self::$messageType = 'error';
+
+			video_conferencing_zoom_api_delete_user_cache();
+			delete_option( 'vczapi_global_oauth_data' );
 			//error has not been displayed yet.
 		} elseif ( $delete_jwt_keys == 'on' ) {
 			delete_option( 'zoom_api_key' );
@@ -245,7 +248,7 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 
 		video_conferencing_zoom_api_show_like_popup();
 
-		$tab        = filter_input( INPUT_GET, 'tab', FILTER_SANITIZE_STRING );
+		$tab        = filter_input( INPUT_GET, 'tab' );
 		$active_tab = $tab ?? 'connect';
 		?>
         <div class="wrap">
@@ -314,7 +317,8 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 						'disable_join_via_browser'           => sanitize_text_field( filter_input( INPUT_POST, 'meeting_disable_join_via_browser' ) ),
 						'join_via_browser_default_lang'      => sanitize_text_field( filter_input( INPUT_POST, 'meeting-lang' ) ),
 						'disable_auto_pwd_generation'        => sanitize_text_field( filter_input( INPUT_POST, 'disable_auto_pwd_generation' ) ),
-						'debugger_logs'                      => sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_debugger_logs' ) )
+						'debugger_logs'                      => sanitize_text_field( filter_input( INPUT_POST, 'zoom_api_debugger_logs' ) ),
+						'enable_direct_join_via_browser'     => sanitize_text_field( filter_input( INPUT_POST, 'vczapi_enable_direct_join' ) )
 					];
 
 					/**
@@ -365,7 +369,6 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 				$twentyfour_format           = get_option( 'zoom_api_twenty_fourhour_format' );
 				$full_month_format           = get_option( 'zoom_api_full_month_format' );
 				$embed_password_join_link    = get_option( 'zoom_api_embed_pwd_join_link' );
-				$embed_password_join_link    = get_option( 'zoom_api_embed_pwd_join_link' );
 				$hide_join_link_nloggedusers = get_option( 'zoom_api_hide_shortcode_join_links' );
 				$hide_email_jvb              = get_option( 'zoom_api_hide_in_jvb' );
 				$vczapi_disable_invite       = get_option( 'vczapi_disable_invite' );
@@ -387,7 +390,8 @@ target="_blank" rel="noreferrer noopener">' . __( 'JWT App Type Depreciation FAQ
 			} elseif ( 'support' == $active_tab ) {
 				require_once ZVC_PLUGIN_VIEWS_PATH . '/tabs/support.php';
 			} elseif ( 'debug' == $active_tab ) {
-				$debug_log = get_option( 'zoom_api_enable_debug_log' );
+				$settings  = get_option( '_vczapi_zoom_settings' );
+				$debug_log = ! empty( $settings['debugger_logs'] ) ? $settings['debugger_logs'] : false;
 				$logs      = Logger::get_log_files();
 
 				if ( ! empty( $_REQUEST['log_file'] ) && isset( $logs[ sanitize_title( wp_unslash( $_REQUEST['log_file'] ) ) ] ) ) {

@@ -63,6 +63,15 @@ class NoticesSubscriber extends Abstract_Render implements Subscriber_Interface 
 	 * @return void
 	 */
 	public function promote_rocketcdn_notice() {
+		/**
+		 * Filters RocketCDN promotion notice.
+		 *
+		 * @param bool $promotion_notice; true to display, false otherwise.
+		 */
+		if ( ! apply_filters( 'rocket_promote_rocketcdn_notice', true ) ) {
+			return;
+		}
+
 		if ( $this->is_white_label_account() ) {
 			return;
 		}
@@ -157,10 +166,14 @@ class NoticesSubscriber extends Abstract_Render implements Subscriber_Interface 
 		check_ajax_referer( 'rocketcdn_dismiss_notice', 'nonce', true );
 
 		if ( ! current_user_can( 'rocket_manage_options' ) ) {
+			wp_send_json_error( 'no permissions' );
+
 			return;
 		}
 
 		update_user_meta( get_current_user_id(), 'rocketcdn_dismiss_notice', true );
+
+		wp_send_json_success();
 	}
 
 	/**
@@ -171,6 +184,15 @@ class NoticesSubscriber extends Abstract_Render implements Subscriber_Interface 
 	 * @return void
 	 */
 	public function display_rocketcdn_cta() {
+		/**
+		 * Filters the display of the RocketCDN cta banner.
+		 *
+		 * @param bool $display_cta_banner; true to display, false otherwise.
+		 */
+		if ( ! apply_filters( 'rocket_display_rocketcdn_cta', true ) ) {
+			return;
+		}
+
 		if ( $this->is_white_label_account() ) {
 			return;
 		}
@@ -261,10 +283,14 @@ class NoticesSubscriber extends Abstract_Render implements Subscriber_Interface 
 		check_ajax_referer( 'rocket-ajax', 'nonce', true );
 
 		if ( ! current_user_can( 'rocket_manage_options' ) ) {
+			wp_send_json_error( 'no permissions' );
+
 			return;
 		}
 
 		if ( ! isset( $_POST['status'] ) ) {
+			wp_send_json_error( 'missing status' );
+
 			return;
 		}
 
@@ -273,6 +299,8 @@ class NoticesSubscriber extends Abstract_Render implements Subscriber_Interface 
 		} elseif ( 'small' === $_POST['status'] ) {
 			update_user_meta( get_current_user_id(), 'rocket_rocketcdn_cta_hidden', true );
 		}
+
+		wp_send_json_success();
 	}
 
 	/**

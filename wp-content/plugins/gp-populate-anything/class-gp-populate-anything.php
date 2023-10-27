@@ -534,8 +534,15 @@ class GP_Populate_Anything extends GP_Plugin {
 			array(
 				'populateChoices'                   => esc_html__( 'Populate choices dynamically', 'gp-populate-anything' ),
 				'populateValues'                    => esc_html__( 'Populate value dynamically', 'gp-populate-anything' ),
+				'or'                                => esc_html__( 'Or', 'gp-populate-anything' ),
+				'and'                               => esc_html__( 'And', 'gp-populate-anything' ),
+				'filterAriaLabel'                   => esc_html__( 'Filter {0}', 'gp-populate-anything' ),
+				'filterGroupAriaLabel'              => esc_html__( 'Filter Group {0}', 'gp-populate-anything' ),
+				'filterGroups'                      => esc_html__( 'Filter Groups', 'gp-populate-anything' ),
 				'addFilter'                         => esc_html__( 'Add Filter', 'gp-populate-anything' ),
+				'addFilterGroup'                    => esc_html__( 'Add Filter Group', 'gp-populate-anything' ),
 				'removeFilter'                      => esc_html__( 'Remove Filter', 'gp-populate-anything' ),
+				'removeFilterAriaLabel'             => esc_html__( 'Remove Filter {0}', 'gp-populate-anything' ),
 				'label'                             => esc_html__( 'Label', 'gp-populate-anything' ),
 				'value'                             => esc_html__( 'Value', 'gp-populate-anything' ),
 				'price'                             => esc_html__( 'Price', 'gp-populate-anything' ),
@@ -658,7 +665,34 @@ class GP_Populate_Anything extends GP_Plugin {
 		);
 	}
 
-	/* Form Display */
+	/*
+	 * Form Display
+	 */
+
+	/**
+	 * Adds JS variable to gp-populate-anything script using wp_localize_script()
+	 *
+	 * Workaround for scripts in GFAddOn::scripts() not being registered until GFAddOn::enqueue_scripts() is called.
+	 *
+	 * Handles registering gp-populate-anything if it's not already registered that way wp_localize_scripts() does
+	 * not return false due to the script not being registered.
+	 *
+	 * @param string $object_name
+	 * @param mixed $value
+	 *
+	 * @return void
+	 */
+	public function add_js_variable( $object_name, $value ) {
+		if ( ! wp_script_is( 'gp-populate-anything', 'registered' ) ) {
+			$scripts = $this->scripts();
+			$script  = $scripts[ array_search( 'gp-populate-anything', array_column( $scripts, 'handle' ) ) ];
+
+			wp_register_script( $script['handle'], $script['src'], $script['deps'], $script['deps'], $script['in_footer'] );
+		}
+
+		wp_localize_script( 'gp-populate-anything', $object_name, $value );
+	}
+
 	public function field_value_js( $form ) {
 
 		if ( ! is_array( $form ) && GFCommon::is_form_editor() ) {
@@ -715,10 +749,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		if ( $has_gppa_field_value ) {
-
-			$this->enqueue_scripts( $form );
-			wp_localize_script( 'gp-populate-anything', "GPPA_FILTER_FIELD_MAP_{$form['id']}", $gppa_field_value_map );
-
+			$this->add_js_variable( "GPPA_FILTER_FIELD_MAP_{$form['id']}", $gppa_field_value_map );
 		}
 
 		return $form;
@@ -754,7 +785,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $form;
 		}
 
-		wp_localize_script( 'gp-populate-anything', "GPPA_POSTED_VALUES_{$form['id']}", $posted_values );
+		$this->add_js_variable( "GPPA_POSTED_VALUES_{$form['id']}", $posted_values );
 
 		return $form;
 
@@ -788,10 +819,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		if ( $has_field_value_object ) {
-
-			$this->enqueue_scripts( $form );
-			wp_localize_script( 'gp-populate-anything', "GPPA_FIELD_VALUE_OBJECT_MAP_{$form['id']}", $field_value_object_map );
-
+			$this->add_js_variable( "GPPA_FIELD_VALUE_OBJECT_MAP_{$form['id']}", $field_value_object_map );
 		}
 
 		return $form;
@@ -2828,8 +2856,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function get_current_entry() {
-
-		if ( ! class_exists( 'GFEntryDetail' ) ) {
+		if ( ! class_exists( 'GFEntryDetail' ) || ! GFCommon::is_entry_detail_edit() ) {
 			return false;
 		}
 
@@ -3054,7 +3081,11 @@ class GP_Populate_Anything extends GP_Plugin {
 						if ( rgar( $field, 'storageType' ) === 'json' ) {
 							$field->defaultValue = json_encode( $hydrated_value );
 						} else {
-							$field->defaultValue = $hydrated_value;
+							/*
+							 * Using is_null() check here to avoid a deprecation warning related to strpos not
+							 * supporting null in GFCommon::replace_variables_prepopulate()
+							 */
+							$field->defaultValue = is_null( $hydrated_value ) ? '' : $hydrated_value;
 						}
 					}
 				}
@@ -3069,10 +3100,12 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * @param array $form The form currently being processed.
 			 * @param GF_Field $field The field currently being processed.
 			 * @param array $field_values The field values currently being processed.
+			 * @param array $entry The entry being processed. Defaults to an empty array.
 			 *
 			 * @since 1.2.46
+			 * @since 1.2.51 Added $entry parameter.
 			 */
-			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values, array() ) ) {
 				continue;
 			}
 
@@ -3146,7 +3179,11 @@ class GP_Populate_Anything extends GP_Plugin {
 					if ( has_filter( $filter_name ) ) {
 						$field = apply_filters( $filter_name, $field, $value, $field_values );
 					} else {
-						$field->defaultValue = $value;
+						/*
+						 * Using is_null() check here to avoid a deprecation warning related to strpos not
+						 * supporting null in GFCommon::replace_variables_prepopulate()
+						 */
+						$field->defaultValue = is_null( $value ) ? '' : $value;
 					}
 				}
 
@@ -3414,19 +3451,14 @@ class GP_Populate_Anything extends GP_Plugin {
 		foreach ( $fake_lead as $input => $value ) {
 			$field = GFFormsModel::get_field( $form, $input );
 
+			if ( ! $field ) {
+				continue;
+			}
+
 			/**
-			 * Filter whether a field's value should be skipped during hydration. This can be useful in situations
-			 * such as excluding hidden fields from being displayed in the @{order_summary} merge tag output when
-			 * populated using a Live Merge Tag.
-			 *
-			 * @param bool $skip Whether to skip the field value during hydration.
-			 * @param array $form The form currently being processed.
-			 * @param GF_Field $field The field currently being processed.
-			 * @param array $field_values The field values currently being processed.
-			 *
-			 * @since 1.2.46
+			 * Documented above.
 			 */
-			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values ) ) {
+			if ( gf_apply_filters( array( 'gppa_skip_field_value_during_hydration', $form['id'], $field->id ), false, $form, $field, $field_values, $fake_lead ) ) {
 				unset( $fake_lead[ $input ] );
 
 				if ( isset( $_POST[ 'input_' . $input ] ) ) {
@@ -3607,6 +3639,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			 */
 			$field_original = GFAPI::get_field( $form_id, $field->id );
 
+			// Un-reference the field object to prevent it from being modified.
+			if ( is_object( $field_original ) ) {
+				$field_original = clone $field_original;
+			}
+
 			foreach ( $reset_gppa_settings as $populate ) {
 				foreach ( $field as $key => $value ) {
 					if ( strpos( $key, 'gppa-' . $populate ) === 0 ) {
@@ -3614,13 +3651,13 @@ class GP_Populate_Anything extends GP_Plugin {
 					}
 				}
 
-				if ( is_array( $field_original ) ) {
+				if ( ! empty( $field_original ) ) {
 					foreach ( $field_original as $orig_key => $orig_value ) {
 						if ( strpos( $orig_key, 'gppa-' . $populate ) !== 0 ) {
 							continue;
 						}
 
-						$field[ $orig_key ] = $orig_value;
+						$field->{$orig_key} = $orig_value;
 					}
 				}
 			}

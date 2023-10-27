@@ -23,12 +23,12 @@ function em_init_actions_start() {
 				$EM_Ticket = new EM_Ticket( absint($_REQUEST['id']) );
 				$result = $EM_Ticket->delete();
 				if( $result ){
-					$result = array('result'=>true);
+					$result = array('result'=>true, 'success'=>true);
 				}else{
-					$result = array('result'=>false, 'error'=>$EM_Ticket->feedback_message);
+					$result = array('result'=>false, 'success'=>false, 'error'=>$EM_Ticket->feedback_message);
 				}
 			}else{
-				$result = array('result'=>false, 'error'=>__('No ticket id provided','events-manager'));	
+				$result = array('result'=>false, 'success'=>false, 'error'=>__('No ticket id provided','events-manager'));
 			}			
 		    echo EM_Object::json_encode($result);
 			die();
@@ -118,12 +118,12 @@ function em_init_actions_start() {
 		}
 		if ( $_REQUEST['action'] == 'event_delete' && wp_verify_nonce($_REQUEST['_wpnonce'],'event_delete_'.$EM_Event->event_id) ) { 
 			//DELETE action
-			$selectedEvents = !empty($_REQUEST['events']) ? $_REQUEST['events']:'';
+			$selectedEvents = !empty($_REQUEST['events']) ? $_REQUEST['events']:array();
 			if(  EM_Object::array_is_numeric($selectedEvents) ){
 				$events_result = EM_Events::delete( $selectedEvents );
 			}elseif( is_object($EM_Event) ){
 				$events_result = $EM_Event->delete();
-			}		
+			}
 			$plural = (count($selectedEvents) > 1) ? __('Events','events-manager'):__('Event','events-manager');
 			if($events_result){
 				$message = ( !empty($EM_Event->feedback_message) ) ? $EM_Event->feedback_message : sprintf(__('%s successfully deleted.','events-manager'),$plural);
@@ -157,9 +157,9 @@ function em_init_actions_start() {
 		//AJAX Exit
 		if( isset($events_result) && !empty($_REQUEST['em_ajax']) ){
 			if( $events_result ){
-				$return = array('result'=>true, 'message'=>$EM_Event->feedback_message);
+				$return = array('result'=>true, 'success'=>true, 'message'=>$EM_Event->feedback_message);
 			}else{		
-				$return = array('result'=>false, 'message'=>$EM_Event->feedback_message, 'errors'=>$EM_Event->errors);
+				$return = array('result'=>false, 'success'=>false, 'message'=>$EM_Event->feedback_message, 'errors'=>$EM_Event->errors);
 			}
 			echo EM_Object::json_encode($return);
 			edit();
@@ -261,18 +261,22 @@ function em_init_actions_start() {
 			die();
 		}
 		if( isset($result) && $result && !empty($_REQUEST['em_ajax']) ){
-			$return = array('result'=>true, 'message'=>$EM_Location->feedback_message);
+			$return = array('result'=>true, 'success'=>true, 'message'=>$EM_Location->feedback_message);
 			echo EM_Object::json_encode($return);
 			die();
 		}elseif( isset($result) && !$result && !empty($_REQUEST['em_ajax']) ){
-			$return = array('result'=>false, 'message'=>$EM_Location->feedback_message, 'errors'=>$EM_Notices->get_errors());
+			$return = array('result'=>false, 'success'=>false, 'message'=>$EM_Location->feedback_message, 'errors'=>$EM_Notices->get_errors());
 			echo EM_Object::json_encode($return);
 			die();
 		}
 	}
 	
 	//Booking Actions
-	if( !empty($_REQUEST['action']) && substr($_REQUEST['action'],0,7) == 'booking' && (is_user_logged_in() || ($_REQUEST['action'] == 'booking_add' && get_option('dbem_bookings_anonymous'))) ){
+	$booking_allowed_actions = array('bookings_approve'=>'approve','bookings_reject'=>'reject','bookings_unapprove'=>'unapprove', 'bookings_delete'=>'delete');
+	$booking_ajax_actions = array('booking_add', 'booking_add_one', 'booking_cancel', 'booking_save', 'booking_set_status', 'booking_resend_email', 'booking_modify_person', 'bookings_add_note', 'booking_form_summary', 'booking_rsvp_change', 'booking_set_rsvp_status');
+	$booking_nopriv_actions = array('booking_add', 'booking_form_summary');
+	$booking_actions = array_merge( $booking_ajax_actions, array_keys($booking_allowed_actions) );
+	if( !empty($_REQUEST['action']) && in_array($_REQUEST['action'], $booking_actions) && (is_user_logged_in() || (in_array($_REQUEST['action'], $booking_nopriv_actions) && get_option('dbem_bookings_anonymous'))) ){
 		global $EM_Event, $EM_Booking, $EM_Person;
 		//Load the booking object, with saved booking if requested
 		$EM_Booking = ( !empty($_REQUEST['booking_id']) ) ? em_get_booking($_REQUEST['booking_id']) : em_get_booking();
@@ -282,9 +286,9 @@ function em_init_actions_start() {
 		}elseif( !empty($_REQUEST['event_id']) ){
 			$EM_Event = new EM_Event( absint($_REQUEST['event_id']) );
 		}
-		$allowed_actions = array('bookings_approve'=>'approve','bookings_reject'=>'reject','bookings_unapprove'=>'unapprove', 'bookings_delete'=>'delete');
 		$result = false;
 		$feedback = '';
+		do_action('em_before_booking_action_'.$_REQUEST['action'], $EM_Event, $EM_Booking);
 		if ( $_REQUEST['action'] == 'booking_add') {
 			//ADD/EDIT Booking
 			ob_start();
@@ -400,9 +404,36 @@ function em_init_actions_start() {
 				$EM_Notices->add_error( __('You must log in to cancel your booking.', 'events-manager') );
 			}
 		//TODO user action shouldn't check permission, booking object should.
-	  	}elseif( array_key_exists($_REQUEST['action'], $allowed_actions) && $EM_Event->can_manage('manage_bookings','manage_others_bookings') ){
+		}elseif ( $_REQUEST['action'] == 'booking_rsvp_change' && isset($_REQUEST['status']) ) {
+			// Change RSVP status
+			em_verify_nonce('booking_rsvp');
+			$status = absint($_REQUEST['status']);
+			if( $EM_Booking->can_manage() || $EM_Booking->person->ID == get_current_user_id() ){
+				if( $EM_Booking->can_rsvp( $status ) ) {
+					if ( $EM_Booking->set_rsvp_status( $status ) ) {
+						$result = true;
+						if ( !defined( 'DOING_AJAX' ) ) {
+							$EM_Notices->add_confirm( $EM_Booking->feedback_message, true );
+							wp_safe_redirect( $_SERVER['HTTP_REFERER'] );
+							exit();
+						}
+					} else {
+						$result = false;
+						$EM_Notices->add_error( $EM_Booking->get_errors() );
+						$feedback = $EM_Booking->feedback_message;
+					}
+				} else {
+					$rsvp_status = EM_Booking::get_rsvp_statuses( $status );
+					$feedback = sprintf( esc_html__('You cannot RSVP to this booking with %s', 'events-manager'), "'" . $rsvp_status->label_action . "'");
+					$EM_Notices->add_error($feedback);
+				}
+			}else{
+				$EM_Notices->add_error( __('You must log in to cancel your booking.', 'events-manager') );
+			}
+			//TODO user action shouldn't check permission, booking object should.
+		}elseif( array_key_exists($_REQUEST['action'], $booking_allowed_actions) && $EM_Event->can_manage('manage_bookings','manage_others_bookings') ){
 	  		//Event Admin only actions
-			$action = $allowed_actions[$_REQUEST['action']];
+			$action = $booking_allowed_actions[$_REQUEST['action']];
 			//Just do it here, since we may be deleting bookings of different events.
 			if( !empty($_REQUEST['bookings']) && EM_Object::array_is_numeric($_REQUEST['bookings'])){
 				$results = array();
@@ -474,6 +505,20 @@ function em_init_actions_start() {
 					$feedback = $EM_Booking->feedback_message;
 				}	
 			}
+		}elseif( $_REQUEST['action'] == 'booking_set_rsvp_status' ){
+			$status = $_REQUEST['booking_rsvp_status'] === '' ? null : absint($_REQUEST['booking_rsvp_status']);
+			if( $EM_Booking->can_manage('manage_bookings','manage_others_bookings') && $status !== $EM_Booking->booking_rsvp_status ){
+				$result = $EM_Booking->set_rsvp_status($status, false, true);
+				if ( $result ){
+					$EM_Notices->add_confirm( $EM_Booking->feedback_message, true );
+					$redirect = !empty($_REQUEST['redirect_to']) ? $_REQUEST['redirect_to'] : em_wp_get_referer();
+					wp_safe_redirect( $redirect );
+					exit();
+				}else{
+					$EM_Notices->add_error( $EM_Booking->get_errors() );
+					$feedback = $EM_Booking->feedback_message;
+				}
+			}
 		}elseif( $_REQUEST['action'] == 'booking_resend_email' ){
 			em_verify_nonce('booking_resend_email_'.$EM_Booking->booking_id);
 			if( $EM_Booking->can_manage('manage_bookings','manage_others_bookings') ){
@@ -532,15 +577,25 @@ function em_init_actions_start() {
 			}else{
 				$EM_Notices->add_error($EM_Booking->errors);
 			}
+		}elseif( $_REQUEST['action'] === 'booking_form_summary' ){
+			$EM_Booking->get_post();
+			// wrap in main tag as we only need what's inside by JS
+			echo '<main>';
+			if( get_option('dbem_bookings_summary') ){
+				em_locate_template('forms/bookingform/summary.php', true, array('EM_Event' => $EM_Event, 'EM_Booking' => $EM_Booking));
+			}
+			echo $EM_Booking->output_intent_html();
+			echo '</main>';
+			exit();
 		}
 	
 		if( $result && defined('DOING_AJAX') ){
-			$return = array('result'=>true, 'message'=>$feedback);
+			$return = array('result'=>true, 'success'=>true, 'message'=>$feedback);
 			header( 'Content-Type: application/javascript; charset=UTF-8', true ); //add this for HTTP -> HTTPS requests which assume it's a cross-site request
 			echo EM_Object::json_encode(apply_filters('em_action_'.$_REQUEST['action'], $return, $EM_Booking));
 			die();
 		}elseif( !$result && defined('DOING_AJAX') ){
-			$return = array('result'=>false, 'message'=>$feedback, 'errors'=>$EM_Notices->get_errors());
+			$return = array('result'=>false, 'success'=>false, 'message'=>$feedback, 'errors'=>$EM_Notices->get_errors());
 			header( 'Content-Type: application/javascript; charset=UTF-8', true ); //add this for HTTP -> HTTPS requests which assume it's a cross-site request
 			echo EM_Object::json_encode(apply_filters('em_action_'.$_REQUEST['action'], $return, $EM_Booking));
 			die();
@@ -550,7 +605,7 @@ function em_init_actions_start() {
 		$EM_Booking = ( !empty($_REQUEST['booking_id']) ) ? em_get_booking($_REQUEST['booking_id']) : em_get_booking();
 		$EM_Notices->add_error( get_option('dbem_booking_feedback_log_in') );
 		if( defined('DOING_AJAX') ){
-			$return = array('result'=>false, 'message'=>get_option('dbem_booking_feedback_log_in'), 'errors'=>$EM_Notices->get_errors());
+			$return = array('result'=>false, 'success'=>false, 'message'=>get_option('dbem_booking_feedback_log_in'), 'errors'=>$EM_Notices->get_errors());
 			echo EM_Object::json_encode(apply_filters('em_action_'.$_REQUEST['action'], $return, $EM_Booking));
 			die();
 		}
@@ -669,29 +724,37 @@ function em_init_actions_start() {
 		}
 		$_REQUEST['limit'] = 0;
 		
-		//generate bookings export according to search request
+		// set up output objects, http headers, etc.
 		$show_tickets = !empty($_REQUEST['show_tickets']);
 		$EM_Bookings_Table = new EM_Bookings_Table($show_tickets);
+		$EM_Bookings_Table->limit = 150; //if you're having server memory issues, try messing with this number
+		$EM_Bookings = $EM_Bookings_Table->get_bookings();
+		$handle = fopen("php://output", "w");
+		$delimiter = !defined('EM_CSV_DELIMITER') ? ',' : EM_CSV_DELIMITER;
+		$delimiter = apply_filters('em_csv_delimiter', $delimiter);
+		
+		//generate bookings export according to search request
 		header("Content-Type: application/octet-stream; charset=utf-8");
 		$file_name = !empty($EM_Event->event_slug) ? $EM_Event->event_slug:get_bloginfo();
 		header("Content-Disposition: Attachment; filename=".sanitize_title($file_name)."-bookings-export.csv");
 		do_action('em_csv_header_output');
 		echo "\xEF\xBB\xBF"; // UTF-8 for MS Excel (a little hacky... but does the job)
-		if( !defined('EM_CSV_DISABLE_HEADERS') || !EM_CSV_DISABLE_HEADERS ){
-			if( !empty($_REQUEST['event_id']) ){
-				echo __('Event','events-manager') . ' : ' . $EM_Event->event_name .  "\n";
-				if( $EM_Event->location_id > 0 ) echo __('Where','events-manager') . ' - ' . $EM_Event->get_location()->location_name .  "\n";
-				echo __('When','events-manager') . ' : ' . $EM_Event->output('#_EVENTDATES - #_EVENTTIMES') .  "\n";
+		
+		// csv headers
+		if ( !defined('EM_CSV_DISABLE_HEADERS') || !EM_CSV_DISABLE_HEADERS ) {
+			if( !empty($_REQUEST['event_id']) ) {
+				fputcsv($handle, array( __('Event','events-manager') . ' : ' . $EM_Event->event_name ), $delimiter);
+				if( $EM_Event->location_id > 0 ) {
+					fputcsv($handle, array( __('Where','events-manager') . ' - ' . $EM_Event->get_location()->location_name ), $delimiter);
+				}
+				fputcsv($handle, array( __('When','events-manager') . ' : ' . $EM_Event->output('#_EVENTDATES - #_EVENTTIMES') ), $delimiter);
 			}
 			$EM_DateTime = new EM_DateTime(current_time('timestamp'));
-			echo sprintf(__('Exported booking on %s','events-manager'), $EM_DateTime->format('D d M Y h:i')) .  "\n";
+			fputcsv($handle, array( sprintf(__('Exported booking on %s','events-manager'), $EM_DateTime->format('D d M Y h:i')) ), $delimiter);
+			fputcsv($handle, array(), $delimiter);
 		}
-		$delimiter = !defined('EM_CSV_DELIMITER') ? ',' : EM_CSV_DELIMITER;
-		$delimiter = apply_filters('em_csv_delimiter', $delimiter);
-		//Rows
-		$EM_Bookings_Table->limit = 150; //if you're having server memory issues, try messing with this number
-		$EM_Bookings = $EM_Bookings_Table->get_bookings();
-		$handle = fopen("php://output", "w");
+		
+		// Header and Rows
 		fputcsv($handle, $EM_Bookings_Table->get_headers(true), $delimiter);
 		while( !empty($EM_Bookings->bookings) ){
 			foreach( $EM_Bookings->bookings as $EM_Booking ) { /* @var EM_Booking $EM_Booking */
@@ -699,8 +762,10 @@ function em_init_actions_start() {
 				if( $show_tickets ){
 					foreach($EM_Booking->get_tickets_bookings() as $EM_Ticket_Bookings){ /* @var EM_Ticket_Bookings $EM_Ticket_Bookings */
 						// since we're splitting by ticket type, we don't need individual EM_Ticket_Booking objects, but the wrapper object
-						$row = $EM_Bookings_Table->get_row_csv($EM_Ticket_Bookings);
+						$EM_Bookings_Table->ticket = $EM_Ticket_Bookings->get_ticket();
+						$row = $EM_Bookings_Table->get_row_csv($EM_Booking);
 						fputcsv($handle, $row, $delimiter);
+						$EM_Bookings_Table->ticket = null;
 					}
 				}else{
 					$row = $EM_Bookings_Table->get_row_csv($EM_Booking);

@@ -9,10 +9,11 @@ use EM\Waitlist\Booking;
 		?>
 	</div>
 	<?php if( !is_user_logged_in() ) include( em_locate_template('forms/bookingform/login.php') ); ?>
-	<form class="em-booking-form" name='booking-form' method='post' action='<?php echo apply_filters('em_booking_form_action_url',''); ?>#em-booking'>
-		<input type='hidden' name='action' value='waitlist_booking'/>
-		<input type='hidden' name='event_id' value='<?php echo $EM_Event->get_bookings()->event_id; ?>'/>
-		<input type='hidden' name='_wpnonce' value='<?php echo wp_create_nonce('waitlist_booking'); ?>'/>
+	<form class="em-waitlist-form" name='waitlist-form' method='post' action='<?php echo apply_filters('em_booking_form_action_url',''); ?>#em-booking'>
+		<input type='hidden' name='action' value='waitlist_booking'>
+		<input type='hidden' name='event_id' value='<?php echo $EM_Event->get_bookings()->event_id; ?>'>
+		<input type='hidden' name='_wpnonce' value='<?php echo wp_create_nonce('waitlist_booking'); ?>'>
+		<input type='hidden' name='intent' value='<?php echo wp_create_nonce('waitlist_booking'); ?>'>
 		<?php if( !is_user_logged_in() ): ?>
 		<p>
 			<label><?php esc_html_e_emp('Email'); ?></label>

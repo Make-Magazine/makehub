@@ -32,10 +32,12 @@ var __webpack_exports__ = {};
       $dom.meetingListTbl = $dom.meetingListTableCheck.find('input[type=checkbox]');
       $dom.cover = $('#zvc-cover');
       $dom.changeMeetingState = $('.vczapi-meeting-state-change');
+      $dom.endMeetingEl = $('.vczapi-meeting-state-end_meeting');
       $dom.show_on_meeting_delete_error = $('.show_on_meeting_delete_error');
       $dom.toggleTriggerElement = $('.vczapi-toggle-trigger');
       this.$manualHostID = $('.vczapi-admin-hostID-manually-add');
       $dom.accordionElement = $('.vczapi-admin-accordion');
+      $dom.connectBox = $('.vczapi-connect-box');
     },
     eventListeners: function () {
       //toggle show hide
@@ -70,6 +72,25 @@ var __webpack_exports__ = {};
 
       //Manual Host Selector
       this.$manualHostID.on('click', this.showManualHostIDField.bind(this));
+
+      //End Meeting
+      $dom.endMeetingEl.on('click', this.endMeeting.bind(this));
+    },
+    endMeeting: function (e) {
+      e.preventDefault();
+      let el = e.target;
+      let meetingID = el.getAttribute('data-id');
+      let postData = {
+        'action': 'vczapi_end_meeting',
+        'access': zvc_ajax.zvc_security,
+        'meeting_id': meetingID
+      };
+      let endMeeting = confirm('Are you sure you want to end this meeting');
+      if (endMeeting) {
+        $.post(zvc_ajax.ajaxurl, postData).done(function (response) {
+          location.reload();
+        });
+      }
     },
     //Expand Accordion
     expandAccordion: function (e) {
@@ -231,7 +252,7 @@ var __webpack_exports__ = {};
                 url: ajaxurl + '?action=vczapi_get_zoom_host_query',
                 type: 'GET',
                 dataType: 'json',
-                delay: 1000,
+                delay: 200,
                 cache: true
               },
               allowClear: true,
@@ -363,14 +384,17 @@ var __webpack_exports__ = {};
     },
     checkConnection: function (e) {
       e.preventDefault();
-      $dom.cover.show();
+      $dom.connectBox.html('<pre>Making demo request to Zoom Servers... Please wait.</pre>');
       $.post(zvc_ajax.ajaxurl, {
         action: 'check_connection',
-        security: zvc_ajax.zvc_security
+        security: zvc_ajax.zvc_security,
+        type: 'oAuth'
       }).done(function (result) {
-        //Done
-        $dom.cover.hide();
-        alert(result);
+        if (result.success) {
+          $dom.connectBox.append(`<pre style="color:green;">${result.data.msg}</pre>`);
+        } else {
+          $dom.connectBox.append(`<pre style="color:red;">${result.data.msg}</pre>`);
+        }
       });
     },
     /**

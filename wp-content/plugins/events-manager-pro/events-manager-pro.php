@@ -5,9 +5,9 @@ Plugin URI: https://eventsmanagerpro.com
 Description: Supercharge the Events Manager free plugin with extra features to make your events even more successful!
 Author: Pixelite
 Author URI: https://pixelite.com/
-Version: 3.1.3
+Version: 3.2.6
 
-Copyright (C) 2022 Pixelite SL
+Copyright (C) 2023 Pixelite SL
 */
 
 //check pre-requisites
@@ -16,7 +16,7 @@ $requirements = new EMP_Requirements_Check('Events Manager Pro', __FILE__, '5.3'
 if( !$requirements->passes(false) ) return;
 unset($requirements);
 
-define('EMP_VERSION', '3.1.3');
+define('EMP_VERSION', '3.2.6');
 define('EM_MIN_VERSION', '6.1.2.6');
 define('EM_MIN_VERSION_CRITICAL', '6.1');
 define('EMP_SLUG', plugin_basename( __FILE__ ));
@@ -87,14 +87,27 @@ class EM_Pro {
 		if( get_option('dbem_rsvp_enabled') ){
 			//booking-specific features
 			include('emp-forms.php'); //form editor
-			include('add-ons/gateways/gateways.php'); //this may change in the future too e.g. for pay-per-post
 			include('add-ons/bookings-form/bookings-form.php');
-			if( apply_filters('em_coupons_enabled', true) ) {
-				include('add-ons/coupons/coupons.php');
+			// load gateways
+			if( EM_Options::site_get('legacy-gateways', false) || em_constant('EMP_GATEWAY_LEGACY') ) {
+				// legacy gateways, containing version freeze from 3.1.5.1 and may disable certain features
+				include( 'add-ons/gateways-legacy/gateways.php' );
+				include('add-ons/gateways-legacy/emails/emails.php');
+				// more add-ons
+				if( apply_filters('em_coupons_enabled', true) ) {
+					include('add-ons/gateways-legacy/coupons/coupons.php');
+				}
+			}else{
+				include('add-ons/gateways/gateways.php');
+				include('add-ons/emails/emails.php');
+				// more add-ons
+				if( apply_filters('em_coupons_enabled', true) ) {
+					include('add-ons/coupons/coupons.php');
+				}
 			}
+			include('add-ons/manual-transactions/loader.php');
 			include('add-ons/dependent-bookings/loader.php');
 			include('add-ons/automation/loader.php');
-			include('add-ons/emails/emails.php');
 			include('add-ons/user-fields.php');
 			include('add-ons/google-maps/google-maps.php');
 			include('add-ons/bookings-manager/bookings-manager.php');
@@ -206,6 +219,11 @@ class EM_Pro {
 		<?php
 	}
 	
+	/**
+	 * Creates a log entry in plugins/events-manager-logs/$log_name-yyyy-mm-dd-logs.txt
+	 * @param string|array|object $log_text
+	 * @param string $log_name
+	 */
 	public static function log($log_text, $log_name = 'general', $force_logging = false){
 		if( get_site_option('dbem_enable_logging') || $force_logging ){
 			if( !class_exists('EMP_Logs') ){
@@ -272,9 +290,14 @@ add_filter('cron_schedules','emp_cron_schedules',10,1);
 function emp_locate_template( $template_name, $load=false, $args = array() ) {
 	//First we check if there are overriding tempates in the child or parent theme
 	$located = locate_template(array('plugins/events-manager-pro/'.$template_name));
-	if( !$located ){
+	// now check the wp-content/plugin-templates/events-manager/ folder
+	if( file_exists(WP_CONTENT_DIR.'/plugin-templates/events-manager-pro/'.$template_name) ){
+		$located = WP_CONTENT_DIR.'/plugin-templates/events-manager-pro/'.$template_name;
+	}else{
+		// finally get the plugin from EM if no others exist
+		$located = apply_filters('emp_locate_template_default', $located, $template_name, $load, $args);
 		$dir_location = plugin_dir_path(__FILE__);
-		if ( file_exists( $dir_location.'templates/'.$template_name) ) {
+		if ( !$located &&  file_exists( $dir_location.'templates/'.$template_name) ) {
 			$located = $dir_location.'templates/'.$template_name;
 		}
 	}

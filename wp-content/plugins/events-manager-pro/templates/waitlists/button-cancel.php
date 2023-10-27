@@ -6,7 +6,7 @@
  */
 $EM_Booking = \EM\Waitlist\Bookings::$booking
 ?>
-<div class="em-waitlist-booking-cancel">
+<div class="<?php em_template_classes('event-booking-form', 'waitlist-booking-cancel'); ?> input">
 	<form class="em-ajax-form no-overlay-spinner em-waitlist-booking-cancel" name='booking-form' method='post' action=''>
 		<?php if( !empty($message) ): ?>
 		<div class="em-booking-message">

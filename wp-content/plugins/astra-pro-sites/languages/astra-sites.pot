@@ -1,10 +1,10 @@
-# Copyright (C) 2023
+# Copyright (C) 2023 
 # This file is distributed under the same license as the  package.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/astra-pro-sites\n"
-"POT-Creation-Date: 2023-02-17 10:07:31+00:00\n"
+"POT-Creation-Date: 2023-07-13 08:40:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -189,7 +189,7 @@ msgstr ""
 #: wordpress/wp-admin/widgets-form.php:553
 #: wordpress/wp-includes/class-wp-editor.php:1178
 #: wordpress/wp-includes/class-wp-editor.php:1904
-#: wordpress/wp-includes/media.php:4446
+#: wordpress/wp-includes/media.php:4447
 #: wordpress/wp-includes/script-loader.php:1174
 msgid "Cancel"
 msgstr ""
@@ -229,7 +229,7 @@ msgid "No plugin specified"
 msgstr ""
 
 #: admin/bsf-core/classes/class-bsf-extension-installer.php:83
-#: inc/classes/class-astra-sites.php:2045
+#: inc/classes/class-astra-sites.php:2180
 msgid "Plugin Activated"
 msgstr ""
 
@@ -376,8 +376,8 @@ msgstr ""
 
 #: classes/class-astra-pro-sites.php:113
 #: inc/classes/class-astra-sites-page.php:351
-#: inc/classes/class-astra-sites.php:1611
-#: inc/classes/class-astra-sites.php:1875 inc/includes/templates.php:302
+#: inc/classes/class-astra-sites.php:1737
+#: inc/classes/class-astra-sites.php:2008 inc/includes/templates.php:302
 msgid "Get Access!"
 msgstr ""
 
@@ -458,7 +458,7 @@ msgstr ""
 msgid "View Blog Templates"
 msgstr ""
 
-#: classes/class-astra-pro-sites.php:277 inc/classes/class-astra-sites.php:1327
+#: classes/class-astra-pro-sites.php:277 inc/classes/class-astra-sites.php:1453
 msgid "See Library"
 msgstr ""
 
@@ -532,12 +532,12 @@ msgid "Invalid plugin slug"
 msgstr ""
 
 #: inc/classes/batch-import/class-astra-sites-batch-site-import.php:538
-#: wordpress/wp-admin/includes/ajax-actions.php:4128
-#: wordpress/wp-admin/includes/ajax-actions.php:4261
-#: wordpress/wp-admin/includes/ajax-actions.php:4325
-#: wordpress/wp-admin/includes/ajax-actions.php:4425
-#: wordpress/wp-admin/includes/ajax-actions.php:4552
-#: wordpress/wp-admin/includes/ajax-actions.php:4621
+#: wordpress/wp-admin/includes/ajax-actions.php:4132
+#: wordpress/wp-admin/includes/ajax-actions.php:4265
+#: wordpress/wp-admin/includes/ajax-actions.php:4329
+#: wordpress/wp-admin/includes/ajax-actions.php:4429
+#: wordpress/wp-admin/includes/ajax-actions.php:4556
+#: wordpress/wp-admin/includes/ajax-actions.php:4625
 #: wordpress/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php:349
 msgid "Unable to connect to the filesystem. Please confirm your credentials."
 msgstr ""
@@ -555,21 +555,22 @@ msgstr ""
 msgid "There was an error your website."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:96
-msgid "Required File Permissions to import the templates are missing."
+#: inc/classes/class-astra-sites-importer-log.php:102
+#. translators: %1$s refers to the plugin name
+msgid "Required File Permissions to import the templates from %s are missing."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:98
+#: inc/classes/class-astra-sites-importer-log.php:107
 msgid "This is usually due to inconsistent file permissions."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:101
+#: inc/classes/class-astra-sites-importer-log.php:110
 msgid ""
 "You can easily update permissions by adding the following code into the "
 "wp-config.php file."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:267
+#: inc/classes/class-astra-sites-importer-log.php:276
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:207
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:212
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:221
@@ -584,7 +585,7 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:270
+#: inc/classes/class-astra-sites-importer-log.php:279
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:202
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:212
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:221
@@ -599,8 +600,8 @@ msgstr ""
 msgid "Disabled"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:355
-#: inc/classes/class-astra-sites-importer-log.php:412
+#: inc/classes/class-astra-sites-importer-log.php:364
+#: inc/classes/class-astra-sites-importer-log.php:421
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:102
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:107
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:112
@@ -613,8 +614,8 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:358
-#: inc/classes/class-astra-sites-importer-log.php:415
+#: inc/classes/class-astra-sites-importer-log.php:367
+#: inc/classes/class-astra-sites-importer-log.php:424
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:102
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:107
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:112
@@ -627,33 +628,33 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:430
+#: inc/classes/class-astra-sites-importer-log.php:439
 msgid "You currently have no scheduled cron events."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:212
-#: inc/classes/class-astra-sites-importer.php:426
-#: inc/classes/class-astra-sites-importer.php:470
-#: inc/classes/class-astra-sites-importer.php:541
-#: inc/classes/class-astra-sites-importer.php:588
-#: inc/classes/class-astra-sites-importer.php:632
-#: inc/classes/class-astra-sites-importer.php:749
-#: inc/classes/class-astra-sites-importer.php:808
-#: inc/classes/class-astra-sites-importer.php:836
-#: inc/classes/class-astra-sites-importer.php:870
-#: inc/classes/class-astra-sites-importer.php:935
-#: inc/classes/class-astra-sites-importer.php:979
-#: inc/classes/class-astra-sites-importer.php:1018
-#: inc/classes/class-astra-sites.php:451 inc/classes/class-astra-sites.php:500
-#: inc/classes/class-astra-sites.php:737 inc/classes/class-astra-sites.php:823
-#: inc/classes/class-astra-sites.php:854 inc/classes/class-astra-sites.php:1048
-#: inc/classes/class-astra-sites.php:1067
-#: inc/classes/class-astra-sites.php:1094
-#: inc/classes/class-astra-sites.php:1152
-#: inc/classes/class-astra-sites.php:1208
-#: inc/classes/class-astra-sites.php:1224
-#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:982
-#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1000
+#: inc/classes/class-astra-sites-importer.php:215
+#: inc/classes/class-astra-sites-importer.php:434
+#: inc/classes/class-astra-sites-importer.php:478
+#: inc/classes/class-astra-sites-importer.php:549
+#: inc/classes/class-astra-sites-importer.php:596
+#: inc/classes/class-astra-sites-importer.php:640
+#: inc/classes/class-astra-sites-importer.php:757
+#: inc/classes/class-astra-sites-importer.php:816
+#: inc/classes/class-astra-sites-importer.php:844
+#: inc/classes/class-astra-sites-importer.php:878
+#: inc/classes/class-astra-sites-importer.php:943
+#: inc/classes/class-astra-sites-importer.php:987
+#: inc/classes/class-astra-sites-importer.php:1026
+#: inc/classes/class-astra-sites.php:452 inc/classes/class-astra-sites.php:854
+#: inc/classes/class-astra-sites.php:949 inc/classes/class-astra-sites.php:980
+#: inc/classes/class-astra-sites.php:1174
+#: inc/classes/class-astra-sites.php:1193
+#: inc/classes/class-astra-sites.php:1220
+#: inc/classes/class-astra-sites.php:1278
+#: inc/classes/class-astra-sites.php:1334
+#: inc/classes/class-astra-sites.php:1350
+#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1023
+#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1041
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:201
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:236
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:352
@@ -661,16 +662,17 @@ msgstr ""
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:412
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:447
 #: inc/lib/gutenberg-templates/classes/class-ast-block-templates-sync-library.php:482
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:86
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:162
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:333
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:85
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:116
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:206
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:377
 msgid "You are not allowed to perform this action"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:221
-#: inc/classes/class-astra-sites-importer.php:373
-#: inc/classes/class-astra-sites-importer.php:481
-#: inc/classes/class-astra-sites.php:557
+#: inc/classes/class-astra-sites-importer.php:227
+#: inc/classes/class-astra-sites-importer.php:381
+#: inc/classes/class-astra-sites-importer.php:489
+#: inc/classes/class-astra-sites.php:538 inc/classes/class-astra-sites.php:653
 #: inc/lib/onboarding/classes/class-astra-sites-onboarding-setup.php:83
 #. Translators: %s is WP Forms URL.
 #. Translators: %s is XML URL.
@@ -679,56 +681,60 @@ msgstr ""
 msgid "Invalid Request URL - %s"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:280
+#: inc/classes/class-astra-sites-importer.php:286
 msgid "Invalid JSON file for WP Forms."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:283
-#: inc/classes/class-astra-sites-importer.php:286
+#: inc/classes/class-astra-sites-importer.php:289
+#: inc/classes/class-astra-sites-importer.php:292
 msgid "There was an error downloading the WP Forms file."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:339
+#: inc/classes/class-astra-sites-importer.php:345
 msgid "Invalid file for CartFlows flows"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:342
-#: inc/classes/class-astra-sites-importer.php:345
+#: inc/classes/class-astra-sites-importer.php:348
+#: inc/classes/class-astra-sites-importer.php:351
 msgid "There was an error downloading the CartFlows flows file."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:393
+#: inc/classes/class-astra-sites-importer.php:354
+msgid "Empty file for CartFlows flows"
+msgstr ""
+
+#: inc/classes/class-astra-sites-importer.php:401
 msgid "Invalid file for Spectra Settings"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:396
-#: inc/classes/class-astra-sites-importer.php:399
+#: inc/classes/class-astra-sites-importer.php:404
+#: inc/classes/class-astra-sites-importer.php:407
 msgid "There was an error downloading the Spectra Settings file."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:452
+#: inc/classes/class-astra-sites-importer.php:460
 msgid "Customizer data is empty!"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:474
+#: inc/classes/class-astra-sites-importer.php:482
 msgid ""
 "The XMLReader library is not available. This library is required to import "
 "the content for the website."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:510
+#: inc/classes/class-astra-sites-importer.php:518
 msgid "There was an error downloading the XML file."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:566
+#: inc/classes/class-astra-sites-importer.php:574
 msgid "Site options are empty!"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:613
+#: inc/classes/class-astra-sites-importer.php:621
 msgid "Widget data is empty!"
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer.php:914
+#: inc/classes/class-astra-sites-importer.php:922
 msgid "Deleted Widgets!"
 msgstr ""
 
@@ -776,7 +782,7 @@ msgstr ""
 #: inc/classes/class-astra-sites-page.php:413
 #: inc/classes/class-astra-sites-page.php:415
 #: inc/classes/class-astra-sites-page.php:427
-#: inc/classes/class-astra-sites.php:1390 inc/includes/templates.php:28
+#: inc/classes/class-astra-sites.php:1516 inc/includes/templates.php:28
 #: inc/includes/templates.php:35 wordpress/wp-admin/export.php:189
 #: wordpress/wp-admin/export.php:201 wordpress/wp-admin/export.php:226
 #: wordpress/wp-admin/export.php:248 wordpress/wp-admin/export.php:273
@@ -818,7 +824,7 @@ msgid "Brizy"
 msgstr ""
 
 #: inc/classes/class-astra-sites-page.php:583
-#: wordpress/wp-includes/formatting.php:3821
+#: wordpress/wp-includes/formatting.php:3844
 #. translators: 1: The number of years in an interval of time.
 #. translators: Time difference between two dates, in years. %s: Number of
 #. years.
@@ -828,7 +834,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/classes/class-astra-sites-page.php:585
-#: wordpress/wp-includes/formatting.php:3814
+#: wordpress/wp-includes/formatting.php:3837
 #. translators: 1: The number of months in an interval of time.
 #. translators: Time difference between two dates, in months. %s: Number of
 #. months.
@@ -838,7 +844,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/classes/class-astra-sites-page.php:587
-#: wordpress/wp-includes/formatting.php:3807
+#: wordpress/wp-includes/formatting.php:3830
 #. translators: 1: The number of weeks in an interval of time.
 #. translators: Time difference between two dates, in weeks. %s: Number of
 #. weeks.
@@ -848,7 +854,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/classes/class-astra-sites-page.php:589
-#: wordpress/wp-includes/formatting.php:3800
+#: wordpress/wp-includes/formatting.php:3823
 #. translators: 1: The number of days in an interval of time.
 #. translators: Time difference between two dates, in days. %s: Number of days.
 msgid "%s day"
@@ -857,7 +863,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/classes/class-astra-sites-page.php:591
-#: wordpress/wp-includes/formatting.php:3793
+#: wordpress/wp-includes/formatting.php:3816
 #: wordpress/wp-includes/functions.php:543
 #. translators: 1: The number of hours in an interval of time.
 #. translators: Time difference between two dates, in hours. %s: Number of
@@ -878,7 +884,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: inc/classes/class-astra-sites-page.php:595
-#: wordpress/wp-includes/formatting.php:3779
+#: wordpress/wp-includes/formatting.php:3802
 #: wordpress/wp-includes/functions.php:555
 #. translators: 1: The number of seconds in an interval of time.
 #. translators: Time difference between two dates, in seconds. %s: Number of
@@ -1053,229 +1059,233 @@ msgstr ""
 msgid "This site category does not exist. Please try a different site category."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:364
+#: inc/classes/class-astra-sites.php:365
 #. translators: %d is the Template ID.
 msgid "Invalid Template ID - %d"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:457 inc/classes/class-astra-sites.php:752
+#: inc/classes/class-astra-sites.php:467 inc/classes/class-astra-sites.php:875
 msgid "Invalid API URL."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:469
+#: inc/classes/class-astra-sites.php:479
 msgid "Invalid Post Meta"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:476
+#: inc/classes/class-astra-sites.php:486
 msgid "Invalid Post ID or Elementor Meta"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:538
+#: inc/classes/class-astra-sites.php:519
 msgid "Provided API URL is empty! Please try again!"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:580
+#: inc/classes/class-astra-sites.php:561 inc/classes/class-astra-sites.php:676
 #. translators: %s Error Message
 msgid "API Request could not be performed - %s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:585
+#: inc/classes/class-astra-sites.php:566 inc/classes/class-astra-sites.php:681
 #. translators: %s Error Message
 msgid "API Request has failed - %s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:614
+#: inc/classes/class-astra-sites.php:595 inc/classes/class-astra-sites.php:710
 msgid "Internal Server Error."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:620
+#: inc/classes/class-astra-sites.php:601 inc/classes/class-astra-sites.php:716
 #. translators: %s IP address.
 msgid "Client IP: %1$s </br> Error code: %2$s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:862
+#: inc/classes/class-astra-sites.php:634
+msgid "Provided API details are empty! Please try again!"
+msgstr ""
+
+#: inc/classes/class-astra-sites.php:988
 msgid "Need to send URL of the image to be downloaded"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:887
+#: inc/classes/class-astra-sites.php:1013
 msgid "Could not download the image."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1079
+#: inc/classes/class-astra-sites.php:1205
 msgid "Theme Activated"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1254
+#: inc/classes/class-astra-sites.php:1380
 msgid "User does not have permission!"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1391
+#: inc/classes/class-astra-sites.php:1517
 msgid "Animals"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1392
+#: inc/classes/class-astra-sites.php:1518
 msgid "Architecture/Buildings"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1393
+#: inc/classes/class-astra-sites.php:1519
 msgid "Backgrounds/Textures"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1394
+#: inc/classes/class-astra-sites.php:1520
 msgid "Beauty/Fashion"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1395
+#: inc/classes/class-astra-sites.php:1521
 msgid "Business/Finance"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1396
+#: inc/classes/class-astra-sites.php:1522
 msgid "Computer/Communication"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1397
+#: inc/classes/class-astra-sites.php:1523
 #: wordpress/wp-admin/includes/theme.php:313
 msgid "Education"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1398
+#: inc/classes/class-astra-sites.php:1524
 msgid "Emotions"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1399
+#: inc/classes/class-astra-sites.php:1525
 msgid "Food/Drink"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1400
+#: inc/classes/class-astra-sites.php:1526
 msgid "Health/Medical"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1401
+#: inc/classes/class-astra-sites.php:1527
 msgid "Industry/Craft"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1402
+#: inc/classes/class-astra-sites.php:1528
 msgid "Music"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1403
+#: inc/classes/class-astra-sites.php:1529
 msgid "Nature/Landscapes"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1404
+#: inc/classes/class-astra-sites.php:1530
 msgid "People"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1405
+#: inc/classes/class-astra-sites.php:1531
 msgid "Places/Monuments"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1406
+#: inc/classes/class-astra-sites.php:1532
 msgid "Religion"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1407
+#: inc/classes/class-astra-sites.php:1533
 msgid "Science/Technology"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1408
+#: inc/classes/class-astra-sites.php:1534
 msgid "Sports"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1409
+#: inc/classes/class-astra-sites.php:1535
 msgid "Transportation/Traffic"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1410
+#: inc/classes/class-astra-sites.php:1536
 msgid "Travel/Vacation"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1413
+#: inc/classes/class-astra-sites.php:1539
 msgid "Popular"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1414
+#: inc/classes/class-astra-sites.php:1540
 #: wordpress/wp-admin/includes/update.php:348
 msgid "Latest"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1415
+#: inc/classes/class-astra-sites.php:1541
 msgid "Upcoming"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1416
+#: inc/classes/class-astra-sites.php:1542
 msgid "Editor's Choice"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1419
+#: inc/classes/class-astra-sites.php:1545
 msgid "Any Orientation"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1420
+#: inc/classes/class-astra-sites.php:1546
 msgid "Vertical"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1421
+#: inc/classes/class-astra-sites.php:1547
 msgid "Horizontal"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1423
+#: inc/classes/class-astra-sites.php:1549
 msgid "Free Images"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1424
+#: inc/classes/class-astra-sites.php:1550
 msgid "Search - Ex: flowers"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1425
+#: inc/classes/class-astra-sites.php:1551
 msgid "Downloading..."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1426
+#: inc/classes/class-astra-sites.php:1552
 msgid "Validating..."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1427
+#: inc/classes/class-astra-sites.php:1553
 msgid "Please enter an API key."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1428
+#: inc/classes/class-astra-sites.php:1554
 msgid "An error occured with code "
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1483
+#: inc/classes/class-astra-sites.php:1609
 msgid "Installed! Activating.."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1484
+#: inc/classes/class-astra-sites.php:1610
 msgid "Activating..."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1485
+#: inc/classes/class-astra-sites.php:1611
 msgid "Activated!"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1486
+#: inc/classes/class-astra-sites.php:1612
 msgid "Installing..."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1613
+#: inc/classes/class-astra-sites.php:1739
 msgid "Upgrade"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1617
+#: inc/classes/class-astra-sites.php:1743
 msgid ""
 "Syncing template library in the background. The process can take anywhere "
 "between 2 to 3 minutes. We will notify you once done."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1618
+#: inc/classes/class-astra-sites.php:1744
 msgid ""
 "Some of the files required during the import process are "
 "missing.<br/><br/>Please try again after some time."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1619
+#: inc/classes/class-astra-sites.php:1745
 msgid ""
 "<p>WordPress debug mode is currently enabled on your website. This has "
 "interrupted the import process..</p><p>Kindly disable debug mode and try "
@@ -1284,7 +1294,7 @@ msgid ""
 "mode.</p><p><code>define('WP_DEBUG', false);</code></p>"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1621
+#: inc/classes/class-astra-sites.php:1747
 #. translators: %s is a documentation link.
 msgid ""
 "<p>We are facing a temporary issue in importing this template.</p><p>Read "
@@ -1292,7 +1302,7 @@ msgid ""
 "continue importing template.</p>"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1623
+#: inc/classes/class-astra-sites.php:1749
 #. translators: %s is a documentation link.
 msgid ""
 "<p>We are facing a temporary issue in installing the required plugins for "
@@ -1301,212 +1311,212 @@ msgid ""
 "importing template.</p>"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1627
+#: inc/classes/class-astra-sites.php:1753
 #. translators: %s are white label strings.
 msgid ""
 "Warning! %1$s Import process is not complete. Don't close the window until "
 "import process complete. Do you still want to leave the window?"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1628
+#: inc/classes/class-astra-sites.php:1754
 msgid "Done! View Site"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1631
+#: inc/classes/class-astra-sites.php:1757
 #. translators: %s is a template name
 msgid "Import \"%s\" Template"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1634
+#: inc/classes/class-astra-sites.php:1760
 msgid "Installing Required Plugins.."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1636
+#: inc/classes/class-astra-sites.php:1762
 #. translators: %s are white label strings.
 msgid "Installing %1$s Theme.."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1659 wordpress/wp-admin/user-edit.php:917
+#: inc/classes/class-astra-sites.php:1785 wordpress/wp-admin/user-edit.php:917
 msgid "Dismiss this notice."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1661
+#: inc/classes/class-astra-sites.php:1787
 msgid "One Last Step.."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1662
+#: inc/classes/class-astra-sites.php:1788
 msgid "Your Selected Website is Being Imported."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1663
+#: inc/classes/class-astra-sites.php:1789
 msgid "Your Selected Template is Being Imported."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1665
+#: inc/classes/class-astra-sites.php:1791
 msgid ""
 "We have sent you a surprise gift on your email address! Please check your "
 "inbox!"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1667
+#: inc/classes/class-astra-sites.php:1793
 msgid "Looks like the template you are importing is temporarily not available."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1668
+#: inc/classes/class-astra-sites.php:1794
 msgid ""
 "We could not start the import process and this is the message from "
 "WordPress:"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1669
+#: inc/classes/class-astra-sites.php:1795
 msgid "There was an error connecting to the Starter Templates API."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1670
+#: inc/classes/class-astra-sites.php:1796
 msgid "There was an error while importing the content."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1671
+#: inc/classes/class-astra-sites.php:1797
 msgid ""
 "To import content, WordPress needs to store XML file in /wp-content/ "
 "folder. Please get in touch with your hosting provider."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1672
+#: inc/classes/class-astra-sites.php:1798
 msgid ""
 "Looks like your host probably could not store XML file in /wp-content/ "
 "folder."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1674
+#: inc/classes/class-astra-sites.php:1800
 #. translators: %s HTML tags
 msgid ""
 "%1$sWe could not start the import process due to failed AJAX request and "
 "this is the message from WordPress:%2$s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1676
+#: inc/classes/class-astra-sites.php:1802
 #. translators: %s URL to document.
 msgid ""
 "%1$sRead&nbsp;<a href=\"%2$s\" target=\"_blank\">article</a>&nbsp;to "
 "resolve the issue and continue importing template.%3$s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1685
+#: inc/classes/class-astra-sites.php:1811
 #. translators: %s URL to document.
 msgid ""
 "%1$sWe could not complete the import process due to failed AJAX request and "
 "this is the message:%2$s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1687
+#: inc/classes/class-astra-sites.php:1813
 #. translators: %s URL to document.
 msgid "%1$sPlease report this <a href=\"%2$s\" target=\"_blank\">here</a>.%3$s"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1692
+#: inc/classes/class-astra-sites.php:1818
 #. translators: %s Anchor link to support URL.
 msgid "Please report this error %1$shere%2$s, so we can fix it."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1741
+#: inc/classes/class-astra-sites.php:1867
 msgid "XMLReader Support Missing"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1743
+#: inc/classes/class-astra-sites.php:1869
 #. translators: %s doc link.
 msgid ""
 "You're close to importing the template. To complete the process, enable "
 "XMLReader support on your website.."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1743
-#: inc/classes/class-astra-sites.php:1748
-#: inc/classes/class-astra-sites.php:1753
+#: inc/classes/class-astra-sites.php:1869
+#: inc/classes/class-astra-sites.php:1874
+#: inc/classes/class-astra-sites.php:1879
 msgid ""
 "Read an article <a href=\"%s\" target=\"_blank\">here</a> to resolve the "
 "issue."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1746
+#: inc/classes/class-astra-sites.php:1872
 msgid "cURL Support Missing"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1748
+#: inc/classes/class-astra-sites.php:1874
 #. translators: %s doc link.
 msgid "To run a smooth import, kindly enable cURL support on your website."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1751
+#: inc/classes/class-astra-sites.php:1877
 msgid "Disable Debug Mode"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1753
+#: inc/classes/class-astra-sites.php:1879
 #. translators: %s doc link.
 msgid ""
 "WordPress debug mode is currently enabled on your website. With this, any "
 "errors from third-party plugins might affect the import process."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1753
+#: inc/classes/class-astra-sites.php:1879
 msgid ""
 "Kindly disable it to continue importing the Starter Template. To do so, you "
 "can add the following code into the wp-config.php file."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1756
+#: inc/classes/class-astra-sites.php:1882
 #: wordpress/wp-admin/includes/class-plugin-upgrader-skin.php:62
 #: wordpress/wp-admin/update.php:63
 msgid "Update Plugin"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1758
+#: inc/classes/class-astra-sites.php:1884
 #. translators: %s update page link.
 msgid "Updates are available for plugins used in this starter template."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1758
+#: inc/classes/class-astra-sites.php:1884
 msgid ""
 "Kindly <a href=\"%s\" target=\"_blank\">update</a> them for a successful "
 "import. Skipping this step might break the template design/feature."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1761 inc/includes/templates.php:442
+#: inc/classes/class-astra-sites.php:1887 inc/includes/templates.php:442
 msgid "Required Plugins Missing"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1762
+#: inc/classes/class-astra-sites.php:1888
 msgid ""
 "This starter template requires premium plugins. As these are third party "
 "premium plugins, you'll need to purchase, install and activate them first."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1765
+#: inc/classes/class-astra-sites.php:1891
 msgid "Dynamic Page"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1766
+#: inc/classes/class-astra-sites.php:1892
 msgid ""
 "The page template you are about to import contains a dynamic widget/module. "
 "Please note this dynamic data will not be available with the imported page."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1766
+#: inc/classes/class-astra-sites.php:1892
 msgid "You will need to add it manually on the page."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1766
+#: inc/classes/class-astra-sites.php:1892
 msgid "This dynamic content will be available when you import the entire site."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1849
+#: inc/classes/class-astra-sites.php:1975
 #. translators: %s are link.
 msgid ""
 "This is a premium template available with Essential Bundle and Growth "
 "Bundle. you can purchase it from <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1853
+#: inc/classes/class-astra-sites.php:1979
 #. translators: %s are link.
 msgid ""
 "This is a premium template available with Essential Bundle and Growth "
@@ -1514,19 +1524,19 @@ msgid ""
 "import this template."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1879
+#: inc/classes/class-astra-sites.php:2012
 #: wordpress/wp-admin/includes/class-wp-posts-list-table.php:1807
 #: wordpress/wp-admin/includes/meta-boxes.php:979
 #: wordpress/wp-includes/class-wp-xmlrpc-server.php:566
 msgid "Template"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1880
+#: inc/classes/class-astra-sites.php:2013
 #: wordpress/wp-includes/widgets/class-wp-widget-block.php:45
 msgid "Block"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1881 inc/includes/templates.php:59
+#: inc/classes/class-astra-sites.php:2014 inc/includes/templates.php:59
 #: wordpress/wp-admin/async-upload.php:120
 #: wordpress/wp-admin/includes/dashboard.php:1721
 #: wordpress/wp-admin/includes/file.php:341 wordpress/wp-admin/index.php:186
@@ -1537,43 +1547,43 @@ msgstr ""
 msgid "Dismiss"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1882
+#: inc/classes/class-astra-sites.php:2015
 msgid "Install Required Plugins"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1886
+#: inc/classes/class-astra-sites.php:2019
 #. translators: %s are link.
 msgid ""
 "You can locate <strong>Starter Templates Settings</strong> under the "
 "<strong>Page Settings</strong> of the Style Tab."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:1888
+#: inc/classes/class-astra-sites.php:2021
 msgid "Read More →"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:2008
+#: inc/classes/class-astra-sites.php:2143
 msgid "Error: You don't have the required permissions to install plugins."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:2208
+#: inc/classes/class-astra-sites.php:2323
 msgid ""
 "Insufficient Permission. Please contact your Super Admin to allow the "
 "install required plugin permissions."
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:2401
+#: inc/classes/class-astra-sites.php:2567
 msgid "Template library refreshed!"
 msgstr ""
 
-#: inc/classes/class-astra-sites.php:2449
-#: inc/classes/class-astra-sites.php:2470
+#: inc/classes/class-astra-sites.php:2615
+#: inc/classes/class-astra-sites.php:2636
 msgid "You do not have permission to perform this action."
 msgstr ""
 
-#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:989
-#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1007
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:303
+#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1030
+#: inc/importers/batch-processing/class-astra-sites-batch-processing.php:1048
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:347
 msgid "You are not allowed to perform this action."
 msgstr ""
 
@@ -1915,11 +1925,16 @@ msgstr ""
 msgid "Quick Links"
 msgstr ""
 
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:342
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:101
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:192
+msgid "Something went wrong"
+msgstr ""
+
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:389
 msgid "Something wrong"
 msgstr ""
 
-#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:424
+#: inc/lib/gutenberg-templates/classes/class-ast-block-templates.php:475
 msgid "Template Kits"
 msgstr ""
 
@@ -2072,35 +2087,49 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:44 wordpress/wp-admin/about.php:442
+#: wordpress/wp-admin/about.php:44 wordpress/wp-admin/about.php:487
 msgid "Maintenance and Security Releases"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:49 wordpress/wp-admin/about.php:69
-#: wordpress/wp-admin/about.php:447
-#. translators: %s: WordPress version number.
-msgid "<strong>Version %s</strong> addressed some security issues."
-msgstr ""
+#: wordpress/wp-admin/about.php:49 wordpress/wp-admin/about.php:500
+#. translators: 1: WordPress version number, 2: Plural number of bugs. More
+#. than one security issue.
+#. translators: 1: WordPress version number, 2: Plural number of bugs. Singular
+#. security issue.
+msgid "<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bug."
+msgid_plural ""
+"<strong>Version %1$s</strong> addressed a security issue and fixed %2$s "
+"bugs."
+msgstr[0] ""
+msgstr[1] ""
 
-#: wordpress/wp-admin/about.php:56 wordpress/wp-admin/about.php:76
-#: wordpress/wp-admin/about.php:100 wordpress/wp-admin/about.php:124
-#: wordpress/wp-admin/about.php:148 wordpress/wp-admin/about.php:465
+#: wordpress/wp-admin/about.php:60 wordpress/wp-admin/about.php:81
+#: wordpress/wp-admin/about.php:101 wordpress/wp-admin/about.php:121
+#: wordpress/wp-admin/about.php:145 wordpress/wp-admin/about.php:169
+#: wordpress/wp-admin/about.php:193 wordpress/wp-admin/about.php:510
 #. translators: %s: HelpHub URL.
 #. translators: %s: Documentation URL.
 msgid "For more information, see <a href=\"%s\">the release notes</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:59 wordpress/wp-admin/about.php:79
-#: wordpress/wp-admin/about.php:103 wordpress/wp-admin/about.php:127
-#: wordpress/wp-admin/about.php:151 wordpress/wp-admin/includes/update.php:302
+#: wordpress/wp-admin/about.php:63 wordpress/wp-admin/about.php:84
+#: wordpress/wp-admin/about.php:104 wordpress/wp-admin/about.php:124
+#: wordpress/wp-admin/about.php:148 wordpress/wp-admin/about.php:172
+#: wordpress/wp-admin/about.php:196 wordpress/wp-admin/includes/update.php:302
 #: wordpress/wp-admin/index.php:119 wordpress/wp-admin/install.php:238
 #: wordpress/wp-admin/update-core.php:94 wordpress/wp-admin/upgrade.php:80
 #. translators: %s: WordPress version.
 msgid "https://wordpress.org/support/wordpress-version/version-%s/"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:89 wordpress/wp-admin/about.php:137
-#: wordpress/wp-admin/about.php:450
+#: wordpress/wp-admin/about.php:74 wordpress/wp-admin/about.php:94
+#: wordpress/wp-admin/about.php:114 wordpress/wp-admin/about.php:492
+#. translators: %s: WordPress version number.
+msgid "<strong>Version %s</strong> addressed some security issues."
+msgstr ""
+
+#: wordpress/wp-admin/about.php:134 wordpress/wp-admin/about.php:182
+#: wordpress/wp-admin/about.php:495
 #. translators: 1: WordPress version number, 2: plural number of bugs.
 #. translators: 1: WordPress version number, 2: Plural number of bugs.
 msgid "<strong>Version %1$s</strong> addressed %2$s bug."
@@ -2108,7 +2137,7 @@ msgid_plural "<strong>Version %1$s</strong> addressed %2$s bugs."
 msgstr[0] ""
 msgstr[1] ""
 
-#: wordpress/wp-admin/about.php:113 wordpress/wp-admin/about.php:460
+#: wordpress/wp-admin/about.php:158 wordpress/wp-admin/about.php:505
 #. translators: 1: WordPress version number, 2: Plural number of bugs. More
 #. than one security issue.
 msgid ""
@@ -2120,26 +2149,26 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: wordpress/wp-admin/about.php:164
+#: wordpress/wp-admin/about.php:209
 msgid "Full Site Editing is here"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:167
+#: wordpress/wp-admin/about.php:212
 msgid "It puts you in control of your whole site, right in the WordPress Admin."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:179
+#: wordpress/wp-admin/about.php:224
 msgid "Say hello to Twenty Twenty&#8209;Two"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:182
+#: wordpress/wp-admin/about.php:227
 msgid ""
 "And say hello to the first default block theme in the history of WordPress. "
 "This is more than just a new default theme. It&#8217;s a brand-new way to "
 "work with WordPress themes."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:185
+#: wordpress/wp-admin/about.php:230
 msgid ""
 "Block themes put a wide array of visual choices in your hands, from color "
 "schemes and typeface combinations to page templates and image filters "
@@ -2149,7 +2178,7 @@ msgid ""
 "another direction."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:192
+#: wordpress/wp-admin/about.php:237
 #. translators: %s: Link to Themes screen.
 msgid ""
 "The Twenty Twenty&#8209;Two theme is already available to you. It came "
@@ -2157,18 +2186,18 @@ msgid ""
 "other installed themes</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:204
+#: wordpress/wp-admin/about.php:249
 msgid "Your personal paintbox awaits"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:207
+#: wordpress/wp-admin/about.php:252
 msgid ""
 "More block themes built for full site editing features are in the Theme "
 "Directory alongside the Twenty Twenty&#8209;Two theme, just waiting to be "
 "explored. Expect more to come!"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:210
+#: wordpress/wp-admin/about.php:255
 msgid ""
 "When you use any of those new themes, you no longer need the Customizer. "
 "Instead, you have all the power of the Styles interface inside the Site "
@@ -2177,15 +2206,15 @@ msgid ""
 "interface that practically comes alive in your hands."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:224
+#: wordpress/wp-admin/about.php:269
 msgid "The Navigation block"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:227
+#: wordpress/wp-admin/about.php:272
 msgid "Blocks come to site navigation, the heart of user experience."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:230
+#: wordpress/wp-admin/about.php:275
 msgid ""
 "The new Navigation block gives you the power to choose: an always-on "
 "responsive menu or one that adapts to your user&#8217;s screen size. "
@@ -2193,32 +2222,32 @@ msgid ""
 "whether in a brand new template or after switching themes."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:239
+#: wordpress/wp-admin/about.php:284
 msgid "More improvements and updates"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:242
+#: wordpress/wp-admin/about.php:287
 msgid ""
 "Do you love to blog or produce content? New tweaks to the publishing flow "
 "help you say more, faster."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:254
+#: wordpress/wp-admin/about.php:299
 msgid "Better block controls"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:257
+#: wordpress/wp-admin/about.php:302
 msgid ""
 "WordPress 5.9 features new typography tools, flexible layout controls, and "
 "finer control over details like spacing, borders, and more &#8212; to help "
 "you get not just the look, but the polish that says you care about details."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:265
+#: wordpress/wp-admin/about.php:310
 msgid "The power of patterns"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:268
+#: wordpress/wp-admin/about.php:313
 msgid ""
 "The WordPress Pattern Directory is the home of a wide range of block "
 "patterns built to save you time and add core site functionality. And you "
@@ -2226,18 +2255,18 @@ msgid ""
 "footer for your theme? Swap it out with a new one in a few clicks."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:271
+#: wordpress/wp-admin/about.php:316
 msgid ""
 "With a near full-screen view that draws you in to see fine details, the "
 "Pattern Explorer makes it easy to compare patterns and choose the one your "
 "users will expect."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:285
+#: wordpress/wp-admin/about.php:330
 msgid "A revamped List View"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:288
+#: wordpress/wp-admin/about.php:333
 msgid ""
 "In 5.9, the List View lets you drag and drop your content exactly where you "
 "want it. Managing complex documents is easier, too: simple controls let you "
@@ -2245,33 +2274,33 @@ msgid ""
 "anchors to your blocks to help users get around the page."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:296
+#: wordpress/wp-admin/about.php:341
 msgid "A better Gallery block"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:299
+#: wordpress/wp-admin/about.php:344
 msgid ""
 "Treat every image in a Gallery block the same way you would treat it in the "
 "Image block."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:302
+#: wordpress/wp-admin/about.php:347
 msgid ""
 "Style every image in your gallery differently from the next (with different "
 "crops, or duotones, for instance) or make them all the same. And change the "
 "layout with drag-and-drop."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:317
+#: wordpress/wp-admin/about.php:362
 #. translators: %s: Version number.
 msgid "WordPress %s for developers"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:327
+#: wordpress/wp-admin/about.php:372
 msgid "Introducing block themes"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:333
+#: wordpress/wp-admin/about.php:378
 #. translators: %s: Block-based themes dev note link.
 msgid ""
 "A new way to build themes: Block themes use blocks to define the templates "
@@ -2280,11 +2309,11 @@ msgid ""
 "information is available in the <a href=\"%s\">block themes dev note</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:341
+#: wordpress/wp-admin/about.php:386
 msgid "Multiple stylesheets for a block"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:347
+#: wordpress/wp-admin/about.php:392
 #. translators: %s: Multiple stylesheets dev note link.
 msgid ""
 "Now you can register more than one stylesheet per block. You can use this "
@@ -2293,22 +2322,22 @@ msgid ""
 "more about <a href=\"%s\">using multiple stylesheets in a block</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:357
+#: wordpress/wp-admin/about.php:402
 msgid "Block&#8209;level locking"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:360
+#: wordpress/wp-admin/about.php:405
 msgid ""
 "Now you can lock any block (or a few of them) in a pattern, just by adding "
 "a lock attribute to its settings in block.json &#8212; leaving the rest of "
 "the pattern free for site editors to adapt to their content."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:365
+#: wordpress/wp-admin/about.php:410
 msgid "A refactored Gallery block"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:371
+#: wordpress/wp-admin/about.php:416
 #. translators: %s: Gallery Refactor dev note link.
 msgid ""
 "The changes to the Gallery block listed above are the result of a "
@@ -2317,11 +2346,11 @@ msgid ""
 "compatibility dev note</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:386
+#: wordpress/wp-admin/about.php:431
 msgid "Learn more about the new features in 5.9"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:391
+#: wordpress/wp-admin/about.php:436
 #. translators: %s: Learn WordPress link.
 msgid ""
 "Want to dive into 5.9 but don&#8217;t know where to start? Visit <a "
@@ -2329,11 +2358,11 @@ msgid ""
 "in WordPress 5.9."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:403
+#: wordpress/wp-admin/about.php:448
 msgid "Check the Field Guide for more!"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:408
+#: wordpress/wp-admin/about.php:453
 #. translators: %s: WordPress 5.9 Field Guide link.
 msgid ""
 "Check out the latest version of the WordPress Field Guide. It highlights "
@@ -2341,58 +2370,48 @@ msgid ""
 "href=\"%s\">WordPress 5.9 Field Guide.</a>"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:421
+#: wordpress/wp-admin/about.php:466
 msgid "Go to Updates"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:421
+#: wordpress/wp-admin/about.php:466
 msgid "Go to Dashboard &rarr; Updates"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:424
+#: wordpress/wp-admin/about.php:469
 msgid "Go to Dashboard &rarr; Home"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:424 wordpress/wp-admin/includes/network.php:148
+#: wordpress/wp-admin/about.php:469 wordpress/wp-admin/includes/network.php:148
 msgid "Go to Dashboard"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:435
+#: wordpress/wp-admin/about.php:480
 msgid "Maintenance Release"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:436
+#: wordpress/wp-admin/about.php:481
 msgid "Maintenance Releases"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:438
+#: wordpress/wp-admin/about.php:483
 msgid "Security Release"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:439
+#: wordpress/wp-admin/about.php:484
 msgid "Security Releases"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:441
+#: wordpress/wp-admin/about.php:486
 msgid "Maintenance and Security Release"
 msgstr ""
 
-#: wordpress/wp-admin/about.php:445
+#: wordpress/wp-admin/about.php:490
 #. translators: %s: WordPress version number.
 msgid "<strong>Version %s</strong> addressed one security issue."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:455
-#. translators: 1: WordPress version number, 2: Plural number of bugs. Singular
-#. security issue.
-msgid "<strong>Version %1$s</strong> addressed a security issue and fixed %2$s bug."
-msgid_plural ""
-"<strong>Version %1$s</strong> addressed a security issue and fixed %2$s "
-"bugs."
-msgstr[0] ""
-msgstr[1] ""
-
-#: wordpress/wp-admin/about.php:468
+#: wordpress/wp-admin/about.php:513
 #. translators: 1: WordPress version number, 2: Link to update WordPress
 msgid ""
 "Important! Your version of WordPress (%1$s) is no longer supported, you "
@@ -2401,12 +2420,22 @@ msgid ""
 "WordPress</a>."
 msgstr ""
 
-#: wordpress/wp-admin/about.php:471
+#: wordpress/wp-admin/about.php:516
 #. translators: 1: WordPress version number, 2: Link to update WordPress
 msgid ""
 "Important! Your version of WordPress (%1$s) will stop receiving security "
 "updates in the near future. To keep your site secure, please <a "
 "href=\"%2$s\">update to the latest version of WordPress</a>."
+msgstr ""
+
+#: wordpress/wp-admin/about.php:519
+#. translators: %s: The major version of WordPress for this branch.
+msgid "This is the final release of WordPress %s"
+msgstr ""
+
+#: wordpress/wp-admin/about.php:522
+#. translators: The localized WordPress download URL.
+msgid "https://wordpress.org/download/"
 msgstr ""
 
 #: wordpress/wp-admin/admin-footer.php:37
@@ -2465,8 +2494,8 @@ msgstr ""
 #: wordpress/wp-admin/edit-form-advanced.php:627
 #: wordpress/wp-admin/edit-form-advanced.php:630
 #: wordpress/wp-admin/includes/ajax-actions.php:1573
-#: wordpress/wp-admin/includes/ajax-actions.php:2811
-#: wordpress/wp-admin/includes/ajax-actions.php:2814
+#: wordpress/wp-admin/includes/ajax-actions.php:2815
+#: wordpress/wp-admin/includes/ajax-actions.php:2818
 #: wordpress/wp-admin/includes/class-wp-application-passwords-list-table.php:71
 #: wordpress/wp-admin/includes/class-wp-application-passwords-list-table.php:86
 #: wordpress/wp-admin/includes/class-wp-application-passwords-list-table.php:226
@@ -2494,8 +2523,8 @@ msgstr ""
 #: wordpress/wp-admin/edit-form-advanced.php:627
 #: wordpress/wp-admin/edit-form-advanced.php:630
 #: wordpress/wp-admin/includes/ajax-actions.php:1573
-#: wordpress/wp-admin/includes/ajax-actions.php:2812
-#: wordpress/wp-admin/includes/ajax-actions.php:2815
+#: wordpress/wp-admin/includes/ajax-actions.php:2816
+#: wordpress/wp-admin/includes/ajax-actions.php:2819
 #: wordpress/wp-admin/includes/class-wp-comments-list-table.php:992
 #: wordpress/wp-admin/includes/class-wp-posts-list-table.php:1149
 #: wordpress/wp-admin/includes/schema.php:428
@@ -2904,7 +2933,7 @@ msgstr ""
 #: wordpress/wp-admin/includes/meta-boxes.php:442
 #: wordpress/wp-includes/media-template.php:538
 #: wordpress/wp-includes/media-template.php:689
-#: wordpress/wp-includes/media.php:4482
+#: wordpress/wp-includes/media.php:4483
 msgid "Move to Trash"
 msgstr ""
 
@@ -2996,7 +3025,7 @@ msgstr ""
 #: wordpress/wp-includes/media-template.php:1186
 #: wordpress/wp-includes/media-template.php:1260
 #: wordpress/wp-includes/media-template.php:1351
-#: wordpress/wp-includes/media.php:4442 wordpress/wp-includes/media.php:5091
+#: wordpress/wp-includes/media.php:4443 wordpress/wp-includes/media.php:5092
 #: wordpress/wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php:61
 #: wordpress/wp-includes/sitemaps/class-wp-sitemaps-stylesheet.php:175
 #: wordpress/wp-includes/widgets/class-wp-widget-media-image.php:113
@@ -3922,7 +3951,7 @@ msgid "Word count: %s"
 msgstr ""
 
 #: wordpress/wp-admin/edit-form-advanced.php:627
-#: wordpress/wp-admin/includes/ajax-actions.php:2822
+#: wordpress/wp-admin/includes/ajax-actions.php:2826
 #. translators: 1: Name of most recent post author, 2: Post edited date, 3:
 #. Post edited time.
 #. translators: 1: User's display name, 2: Date of last edit, 3: Time of last
@@ -3931,7 +3960,7 @@ msgid "Last edited by %1$s on %2$s at %3$s"
 msgstr ""
 
 #: wordpress/wp-admin/edit-form-advanced.php:630
-#: wordpress/wp-admin/includes/ajax-actions.php:2825
+#: wordpress/wp-admin/includes/ajax-actions.php:2829
 #. translators: 1: Post edited date, 2: Post edited time.
 #. translators: 1: Date of last edit, 2: Time of last edit.
 msgid "Last edited on %1$s at %2$s"
@@ -4061,7 +4090,7 @@ msgstr ""
 #: wordpress/wp-admin/includes/meta-boxes.php:453
 #: wordpress/wp-admin/includes/meta-boxes.php:454
 #: wordpress/wp-admin/includes/template.php:647
-#: wordpress/wp-includes/media.php:4447
+#: wordpress/wp-includes/media.php:4448
 #: wordpress/wp-includes/script-loader.php:1128 wordpress/wp-login.php:682
 msgid "Update"
 msgstr ""
@@ -5122,7 +5151,7 @@ msgstr ""
 #: wordpress/wp-admin/menu.php:364
 #: wordpress/wp-includes/block-template-utils.php:162
 #: wordpress/wp-includes/class-wp-editor.php:1229
-#: wordpress/wp-includes/media.php:4441 wordpress/wp-includes/media.php:5098
+#: wordpress/wp-includes/media.php:4442 wordpress/wp-includes/media.php:5099
 #. translators: Default privacy policy heading.
 msgid "Media"
 msgstr ""
@@ -5440,11 +5469,11 @@ msgid "Item not updated."
 msgstr ""
 
 #: wordpress/wp-admin/includes/ajax-actions.php:2189
-#: wordpress/wp-admin/includes/ajax-actions.php:3830
+#: wordpress/wp-admin/includes/ajax-actions.php:3834
 #: wordpress/wp-admin/includes/class-wp-list-table.php:339
 #: wordpress/wp-admin/includes/class-wp-themes-list-table.php:93
 #: wordpress/wp-includes/media-template.php:1475
-#: wordpress/wp-includes/media.php:4472
+#: wordpress/wp-includes/media.php:4473
 msgid "No items found."
 msgstr ""
 
@@ -5545,60 +5574,60 @@ msgstr ""
 msgid "The uploaded file is not a valid image. Please try again."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3738
+#: wordpress/wp-admin/includes/ajax-actions.php:3742
 #. translators: %s: URL that could not be embedded.
 msgid "%s failed to embed."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3772
+#: wordpress/wp-admin/includes/ajax-actions.php:3776
 msgid "This preview is unavailable in the editor."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3885
+#: wordpress/wp-admin/includes/ajax-actions.php:3889
 msgid "Could not log out user sessions. Please try again."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3894
+#: wordpress/wp-admin/includes/ajax-actions.php:3898
 msgid "You are now logged out everywhere else."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3898
+#: wordpress/wp-admin/includes/ajax-actions.php:3902
 #. translators: %s: User's display name.
 msgid "%s has been logged out."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:3923
+#: wordpress/wp-admin/includes/ajax-actions.php:3927
 msgid "Image could not be processed."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4072
-#: wordpress/wp-admin/includes/ajax-actions.php:4198
-#: wordpress/wp-admin/includes/ajax-actions.php:4293
+#: wordpress/wp-admin/includes/ajax-actions.php:4076
+#: wordpress/wp-admin/includes/ajax-actions.php:4202
+#: wordpress/wp-admin/includes/ajax-actions.php:4297
 msgid "No theme specified."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4085
+#: wordpress/wp-admin/includes/ajax-actions.php:4089
 #: wordpress/wp-admin/theme-install.php:16 wordpress/wp-admin/update.php:258
 #: wordpress/wp-admin/update.php:300 wordpress/wp-admin/update.php:334
 msgid "Sorry, you are not allowed to install themes on this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4212
+#: wordpress/wp-admin/includes/ajax-actions.php:4216
 #: wordpress/wp-admin/update.php:207 wordpress/wp-admin/update.php:230
 msgid "Sorry, you are not allowed to update themes for this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4272
+#: wordpress/wp-admin/includes/ajax-actions.php:4276
 #: wordpress/wp-admin/includes/class-theme-upgrader.php:63
 #: wordpress/wp-admin/includes/class-theme-upgrader.php:100
 msgid "Theme update failed."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4305
+#: wordpress/wp-admin/includes/ajax-actions.php:4309
 msgid "Sorry, you are not allowed to delete themes on this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4310
+#: wordpress/wp-admin/includes/ajax-actions.php:4314
 #: wordpress/wp-admin/includes/file.php:435
 #: wordpress/wp-admin/includes/file.php:445
 #: wordpress/wp-admin/theme-editor.php:70
@@ -5608,31 +5637,31 @@ msgstr ""
 msgid "The requested theme does not exist."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4343
+#: wordpress/wp-admin/includes/ajax-actions.php:4347
 msgid "Theme could not be deleted."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4367
-#: wordpress/wp-admin/includes/ajax-actions.php:4476
-#: wordpress/wp-admin/includes/ajax-actions.php:4584
+#: wordpress/wp-admin/includes/ajax-actions.php:4371
+#: wordpress/wp-admin/includes/ajax-actions.php:4480
+#: wordpress/wp-admin/includes/ajax-actions.php:4588
 msgid "No plugin specified."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4378
+#: wordpress/wp-admin/includes/ajax-actions.php:4382
 #: wordpress/wp-admin/plugin-install.php:19 wordpress/wp-admin/update.php:107
 #: wordpress/wp-admin/update.php:152 wordpress/wp-admin/update.php:186
 #: wordpress/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php:245
 msgid "Sorry, you are not allowed to install plugins on this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4491
+#: wordpress/wp-admin/includes/ajax-actions.php:4495
 #: wordpress/wp-admin/update.php:29 wordpress/wp-admin/update.php:57
 #: wordpress/wp-admin/update.php:80
 msgid "Sorry, you are not allowed to update plugins for this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4501
-#: wordpress/wp-admin/includes/ajax-actions.php:4544
+#: wordpress/wp-admin/includes/ajax-actions.php:4505
+#: wordpress/wp-admin/includes/ajax-actions.php:4548
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:959
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:1006
 #: wordpress/wp-admin/includes/class-wp-debug-data.php:1329
@@ -5650,29 +5679,29 @@ msgstr ""
 msgid "Version %s"
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4563
+#: wordpress/wp-admin/includes/ajax-actions.php:4567
 #: wordpress/wp-admin/includes/class-plugin-upgrader.php:64
 #: wordpress/wp-admin/includes/class-plugin-upgrader.php:91
 msgid "Plugin update failed."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4597
+#: wordpress/wp-admin/includes/ajax-actions.php:4601
 #: wordpress/wp-admin/plugins.php:269
 #: wordpress/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php:507
 msgid "Sorry, you are not allowed to delete plugins for this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4606
+#: wordpress/wp-admin/includes/ajax-actions.php:4610
 #: wordpress/wp-admin/plugins.php:624
 msgid "You cannot delete a plugin while it is active on the main site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4637
+#: wordpress/wp-admin/includes/ajax-actions.php:4641
 msgid "Plugin could not be deleted."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4673
-#: wordpress/wp-admin/includes/ajax-actions.php:4725
+#: wordpress/wp-admin/includes/ajax-actions.php:4677
+#: wordpress/wp-admin/includes/ajax-actions.php:4729
 #: wordpress/wp-admin/plugins.php:13
 #: wordpress/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php:116
 #: wordpress/wp-includes/rest-api/endpoints/class-wp-rest-plugins-controller.php:166
@@ -5681,210 +5710,210 @@ msgstr ""
 msgid "Sorry, you are not allowed to manage plugins for this site."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4774
+#: wordpress/wp-admin/includes/ajax-actions.php:4778
 #: wordpress/wp-admin/plugin-editor.php:185
 #: wordpress/wp-admin/theme-editor.php:190
 msgid "File edited successfully."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4788
-#: wordpress/wp-admin/includes/ajax-actions.php:4978
+#: wordpress/wp-admin/includes/ajax-actions.php:4792
+#: wordpress/wp-admin/includes/ajax-actions.php:4982
 #: wordpress/wp-login.php:1137
 msgid "Missing request ID."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4794
-#: wordpress/wp-admin/includes/ajax-actions.php:4984
+#: wordpress/wp-admin/includes/ajax-actions.php:4798
+#: wordpress/wp-admin/includes/ajax-actions.php:4988
 msgid "Invalid request ID."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4798
-#: wordpress/wp-admin/includes/ajax-actions.php:4989
+#: wordpress/wp-admin/includes/ajax-actions.php:4802
+#: wordpress/wp-admin/includes/ajax-actions.php:4993
 msgid "Sorry, you are not allowed to perform this action."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4807
-#: wordpress/wp-admin/includes/ajax-actions.php:4998
+#: wordpress/wp-admin/includes/ajax-actions.php:4811
+#: wordpress/wp-admin/includes/ajax-actions.php:5002
 msgid "Invalid request type."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4812
+#: wordpress/wp-admin/includes/ajax-actions.php:4816
 msgid "A valid email address must be given."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4816
+#: wordpress/wp-admin/includes/ajax-actions.php:4820
 msgid "Missing exporter index."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4822
-#: wordpress/wp-admin/includes/ajax-actions.php:5014
+#: wordpress/wp-admin/includes/ajax-actions.php:4826
+#: wordpress/wp-admin/includes/ajax-actions.php:5018
 msgid "Missing page index."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4851
+#: wordpress/wp-admin/includes/ajax-actions.php:4855
 msgid "An exporter has improperly used the registration filter."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4857
+#: wordpress/wp-admin/includes/ajax-actions.php:4861
 msgid "Exporter index cannot be negative."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4861
+#: wordpress/wp-admin/includes/ajax-actions.php:4865
 msgid "Exporter index is out of range."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4865
-#: wordpress/wp-admin/includes/ajax-actions.php:5053
+#: wordpress/wp-admin/includes/ajax-actions.php:4869
+#: wordpress/wp-admin/includes/ajax-actions.php:5057
 msgid "Page index cannot be less than one."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4875
+#: wordpress/wp-admin/includes/ajax-actions.php:4879
 #. translators: %s: Exporter array index.
 msgid "Expected an array describing the exporter at index %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4882
+#: wordpress/wp-admin/includes/ajax-actions.php:4886
 #. translators: %s: Exporter array index.
 msgid "Exporter array at index %s does not include a friendly name."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4891
+#: wordpress/wp-admin/includes/ajax-actions.php:4895
 #. translators: %s: Exporter friendly name.
 msgid "Exporter does not include a callback: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4898
+#: wordpress/wp-admin/includes/ajax-actions.php:4902
 #. translators: %s: Exporter friendly name.
 msgid "Exporter callback is not a valid callback: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4912
+#: wordpress/wp-admin/includes/ajax-actions.php:4916
 #. translators: %s: Exporter friendly name.
 msgid "Expected response as an array from exporter: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4919
+#: wordpress/wp-admin/includes/ajax-actions.php:4923
 #. translators: %s: Exporter friendly name.
 msgid "Expected data in response array from exporter: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4926
+#: wordpress/wp-admin/includes/ajax-actions.php:4930
 #. translators: %s: Exporter friendly name.
 msgid "Expected data array in response array from exporter: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:4933
+#: wordpress/wp-admin/includes/ajax-actions.php:4937
 #. translators: %s: Exporter friendly name.
 msgid "Expected done (boolean) in response array from exporter: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5004
+#: wordpress/wp-admin/includes/ajax-actions.php:5008
 msgid "Invalid email address in request."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5008
+#: wordpress/wp-admin/includes/ajax-actions.php:5012
 msgid "Missing eraser index."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5045
+#: wordpress/wp-admin/includes/ajax-actions.php:5049
 msgid "Eraser index cannot be less than one."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5049
+#: wordpress/wp-admin/includes/ajax-actions.php:5053
 msgid "Eraser index is out of range."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5062
+#: wordpress/wp-admin/includes/ajax-actions.php:5066
 #. translators: %d: Eraser array index.
 msgid "Expected an array describing the eraser at index %d."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5067
+#: wordpress/wp-admin/includes/ajax-actions.php:5071
 #. translators: %d: Eraser array index.
 msgid "Eraser array at index %d does not include a friendly name."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5076
+#: wordpress/wp-admin/includes/ajax-actions.php:5080
 #. translators: %s: Eraser friendly name.
 msgid "Eraser does not include a callback: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5086
+#: wordpress/wp-admin/includes/ajax-actions.php:5090
 #. translators: %s: Eraser friendly name.
 msgid "Eraser callback is not valid: %s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5103
+#: wordpress/wp-admin/includes/ajax-actions.php:5107
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid "Did not receive array from %1$s eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5114
+#: wordpress/wp-admin/includes/ajax-actions.php:5118
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid "Expected items_removed key in response array from %1$s eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5125
+#: wordpress/wp-admin/includes/ajax-actions.php:5129
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid "Expected items_retained key in response array from %1$s eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5136
+#: wordpress/wp-admin/includes/ajax-actions.php:5140
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid "Expected messages key in response array from %1$s eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5147
+#: wordpress/wp-admin/includes/ajax-actions.php:5151
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid ""
 "Expected messages key to reference an array in response array from %1$s "
 "eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5158
+#: wordpress/wp-admin/includes/ajax-actions.php:5162
 #. translators: 1: Eraser friendly name, 2: Eraser array index.
 msgid "Expected done flag in response array from %1$s eraser (index %2$d)."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5211
-#: wordpress/wp-admin/includes/ajax-actions.php:5244
-#: wordpress/wp-admin/includes/ajax-actions.php:5277
-#: wordpress/wp-admin/includes/ajax-actions.php:5327
+#: wordpress/wp-admin/includes/ajax-actions.php:5215
+#: wordpress/wp-admin/includes/ajax-actions.php:5248
+#: wordpress/wp-admin/includes/ajax-actions.php:5281
+#: wordpress/wp-admin/includes/ajax-actions.php:5331
 #. translators: 1: The Site Health action that is no longer used by core. 2:
 #. The new function that replaces it.
 msgid "The Site Health check for %1$s has been replaced with %2$s."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5399
+#: wordpress/wp-admin/includes/ajax-actions.php:5403
 msgid "Invalid data. No selected item."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5405
+#: wordpress/wp-admin/includes/ajax-actions.php:5409
 msgid "Invalid data. Unknown state."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5410
-#: wordpress/wp-admin/includes/ajax-actions.php:5435
+#: wordpress/wp-admin/includes/ajax-actions.php:5414
+#: wordpress/wp-admin/includes/ajax-actions.php:5439
 msgid "Invalid data. Unknown type."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5417
+#: wordpress/wp-admin/includes/ajax-actions.php:5421
 msgid "Sorry, you are not allowed to modify plugins."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5427
+#: wordpress/wp-admin/includes/ajax-actions.php:5431
 msgid "Sorry, you are not allowed to modify themes."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5439
+#: wordpress/wp-admin/includes/ajax-actions.php:5443
 msgid "Invalid data. The item does not exist."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5473
+#: wordpress/wp-admin/includes/ajax-actions.php:5477
 msgid "Cannot send password reset, permission denied."
 msgstr ""
 
-#: wordpress/wp-admin/includes/ajax-actions.php:5483
+#: wordpress/wp-admin/includes/ajax-actions.php:5487
 #. translators: %s: User's display name.
 msgid "A password reset link was emailed to %s."
 msgstr ""
@@ -7138,7 +7167,7 @@ msgstr ""
 #: wordpress/wp-includes/customize/class-wp-customize-media-control.php:259
 #: wordpress/wp-includes/customize/class-wp-customize-nav-menu-item-control.php:158
 #: wordpress/wp-includes/media-template.php:574
-#: wordpress/wp-includes/media.php:4449
+#: wordpress/wp-includes/media.php:4450
 msgid "Remove"
 msgstr ""
 
@@ -7641,7 +7670,7 @@ msgstr ""
 #: wordpress/wp-admin/includes/meta-boxes.php:445
 #: wordpress/wp-includes/media-template.php:541
 #: wordpress/wp-includes/media-template.php:692
-#: wordpress/wp-includes/media.php:4484
+#: wordpress/wp-includes/media.php:4485
 msgid "Delete permanently"
 msgstr ""
 
@@ -8547,13 +8576,13 @@ msgstr ""
 #: wordpress/wp-admin/includes/class-wp-screen.php:1092
 #: wordpress/wp-includes/class-wp-customize-widgets.php:797
 #: wordpress/wp-includes/class-wp-editor.php:1386
-#: wordpress/wp-includes/media.php:4485
+#: wordpress/wp-includes/media.php:4486
 msgid "Apply"
 msgstr ""
 
 #: wordpress/wp-admin/includes/class-wp-list-table.php:654
 #: wordpress/wp-admin/includes/media.php:2846
-#: wordpress/wp-includes/media.php:4471
+#: wordpress/wp-includes/media.php:4472
 msgid "All dates"
 msgstr ""
 
@@ -8649,7 +8678,7 @@ msgid "Grid view"
 msgstr ""
 
 #: wordpress/wp-admin/includes/class-wp-media-list-table.php:131
-#: wordpress/wp-includes/media.php:4470
+#: wordpress/wp-includes/media.php:4471
 msgid "All media items"
 msgstr ""
 
@@ -8668,7 +8697,7 @@ msgid "No media files found."
 msgstr ""
 
 #: wordpress/wp-admin/includes/class-wp-media-list-table.php:278
-#: wordpress/wp-includes/media.php:4487
+#: wordpress/wp-includes/media.php:4488
 msgid "Filter by type"
 msgstr ""
 
@@ -8689,7 +8718,7 @@ msgstr ""
 #: wordpress/wp-includes/blocks/search.php:26
 #: wordpress/wp-includes/blocks/search.php:46
 #: wordpress/wp-includes/class-wp-editor.php:1879
-#: wordpress/wp-includes/media.php:4444 wordpress/wp-includes/media.php:4488
+#: wordpress/wp-includes/media.php:4445 wordpress/wp-includes/media.php:4489
 msgid "Search"
 msgstr ""
 
@@ -8988,7 +9017,7 @@ msgstr ""
 #: wordpress/wp-admin/includes/template.php:1955
 #: wordpress/wp-admin/nav-menus.php:904
 #: wordpress/wp-admin/plugin-editor.php:236
-#: wordpress/wp-admin/theme-editor.php:239 wordpress/wp-includes/media.php:4445
+#: wordpress/wp-admin/theme-editor.php:239 wordpress/wp-includes/media.php:4446
 msgid "Select"
 msgstr ""
 
@@ -15105,7 +15134,7 @@ msgid "Gallery"
 msgstr ""
 
 #: wordpress/wp-admin/includes/media.php:21 wordpress/wp-admin/upload.php:80
-#: wordpress/wp-admin/upload.php:220 wordpress/wp-includes/media.php:4464
+#: wordpress/wp-admin/upload.php:220 wordpress/wp-includes/media.php:4465
 msgid "Media Library"
 msgstr ""
 
@@ -15405,7 +15434,7 @@ msgid "Gallery columns:"
 msgstr ""
 
 #: wordpress/wp-admin/includes/media.php:2682
-#: wordpress/wp-includes/media.php:4510
+#: wordpress/wp-includes/media.php:4511
 msgid "Insert gallery"
 msgstr ""
 
@@ -16126,7 +16155,7 @@ msgstr ""
 #: wordpress/wp-includes/class-wp-customize-widgets.php:886
 #: wordpress/wp-includes/customize/class-wp-customize-nav-menus-panel.php:72
 #: wordpress/wp-includes/customize/class-wp-customize-themes-panel.php:70
-#: wordpress/wp-includes/media.php:4450
+#: wordpress/wp-includes/media.php:4451
 msgid "Back"
 msgstr ""
 
@@ -23776,7 +23805,7 @@ msgstr ""
 msgid "Search installed themes..."
 msgstr ""
 
-#: wordpress/wp-admin/themes.php:250 wordpress/wp-includes/formatting.php:3916
+#: wordpress/wp-admin/themes.php:250 wordpress/wp-includes/formatting.php:3939
 #: wordpress/wp-includes/general-template.php:4333
 msgid "&hellip;"
 msgstr ""
@@ -25782,7 +25811,7 @@ msgid ""
 "missing."
 msgstr ""
 
-#: wordpress/wp-includes/blocks.php:1049
+#: wordpress/wp-includes/blocks.php:1066
 #. translators: 1: Block type, 2: Typography supports key, e.g: fontSize,
 #. lineHeight, etc. 3: block.json, 4: Old metadata key, 5: New metadata key.
 msgid ""
@@ -29151,7 +29180,7 @@ msgid "No image selected"
 msgstr ""
 
 #: wordpress/wp-includes/customize/class-wp-customize-media-control.php:252
-#: wordpress/wp-includes/media.php:4523
+#: wordpress/wp-includes/media.php:4524
 msgid "Choose image"
 msgstr ""
 
@@ -29497,7 +29526,7 @@ msgstr ""
 msgid "Use the %s filter instead."
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:3786
+#: wordpress/wp-includes/formatting.php:3809
 #. translators: Time difference between two dates, in minutes (min=minute). %s:
 #. Number of minutes.
 msgid "%s min"
@@ -29505,57 +29534,57 @@ msgid_plural "%s mins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: wordpress/wp-includes/formatting.php:4724
+#: wordpress/wp-includes/formatting.php:4747
 msgid ""
 "The email address entered did not appear to be a valid email address. "
 "Please enter a valid email address."
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4834
+#: wordpress/wp-includes/formatting.php:4857
 msgid ""
 "The WordPress address you entered did not appear to be a valid URL. Please "
 "enter a valid URL."
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4847
+#: wordpress/wp-includes/formatting.php:4870
 msgid ""
 "The Site address you entered did not appear to be a valid URL. Please enter "
 "a valid URL."
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4906
+#: wordpress/wp-includes/formatting.php:4929
 msgid "The timezone you have entered is not valid. Please select a valid timezone."
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4926
+#: wordpress/wp-includes/formatting.php:4949
 #. translators: %s: Documentation URL.
 msgid ""
 "A structure tag is required when using custom permalinks. <a "
 "href=\"%s\">Learn more</a>"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4927
+#: wordpress/wp-includes/formatting.php:4950
 msgid ""
 "https://wordpress.org/support/article/using-permalinks/#choosing-your-"
 "permalink-structure"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:4955
+#: wordpress/wp-includes/formatting.php:4978
 #. translators: 1: Option name, 2: Error code.
 msgid "Could not sanitize the %1$s option. Error code: %2$s"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:5196
+#: wordpress/wp-includes/formatting.php:5219
 #. translators: Used to join items in a list with more than 2 items.
 msgid "%1$s, %2$s"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:5198
+#: wordpress/wp-includes/formatting.php:5221
 #. translators: Used to join last two items in a list with more than 2 times.
 msgid "%1$s, and %2$s"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:5200
+#: wordpress/wp-includes/formatting.php:5223
 #. translators: Used to join items in a list with only 2 items.
 msgid "%1$s and %2$s"
 msgstr ""
@@ -30103,7 +30132,7 @@ msgid "Upload Limit Exceeded"
 msgstr ""
 
 #: wordpress/wp-includes/media-template.php:296
-#: wordpress/wp-includes/media.php:4530
+#: wordpress/wp-includes/media.php:4531
 #. translators: 1: Suggested width number, 2: Suggested height number.
 msgid "Suggested image dimensions: %1$s by %2$s pixels."
 msgstr ""
@@ -30169,7 +30198,7 @@ msgstr ""
 
 #: wordpress/wp-includes/media-template.php:536
 #: wordpress/wp-includes/media-template.php:687
-#: wordpress/wp-includes/media.php:4483
+#: wordpress/wp-includes/media.php:4484
 msgid "Restore from Trash"
 msgstr ""
 
@@ -30328,7 +30357,7 @@ msgid "Edit Original"
 msgstr ""
 
 #: wordpress/wp-includes/media-template.php:1226
-#: wordpress/wp-includes/media.php:4448
+#: wordpress/wp-includes/media.php:4449
 msgid "Replace"
 msgstr ""
 
@@ -30420,276 +30449,276 @@ msgstr ""
 msgid "No editor could be selected."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4443 wordpress/wp-includes/media.php:4465
+#: wordpress/wp-includes/media.php:4444 wordpress/wp-includes/media.php:4466
 msgid "Add media"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4456
+#: wordpress/wp-includes/media.php:4457
 #. translators: This is a would-be plural string used in the media manager. If
 #. there is not a word you can use in your language to avoid issues with the
 #. lack of plural support here, turn it into "selected: %d" then translate it.
 msgid "%d selected"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4457
+#: wordpress/wp-includes/media.php:4458
 msgid "Drag and drop to reorder media files."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4460
+#: wordpress/wp-includes/media.php:4461
 msgid "Upload files"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4461
+#: wordpress/wp-includes/media.php:4462
 msgid "Upload images"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4466
+#: wordpress/wp-includes/media.php:4467
 msgid "Create a new gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4467
+#: wordpress/wp-includes/media.php:4468
 msgid "Create a new playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4468
+#: wordpress/wp-includes/media.php:4469
 msgid "Create a new video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4469
+#: wordpress/wp-includes/media.php:4470
 msgid "&#8592; Go to library"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4478
+#: wordpress/wp-includes/media.php:4479
 msgid ""
 "You are about to permanently delete this item from your site.\n"
 "This action cannot be undone.\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4479
+#: wordpress/wp-includes/media.php:4480
 msgid ""
 "You are about to permanently delete these items from your site.\n"
 "This action cannot be undone.\n"
 " 'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4480
+#: wordpress/wp-includes/media.php:4481
 msgid ""
 "You are about to trash these items.\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4481
+#: wordpress/wp-includes/media.php:4482
 msgid "Bulk select"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4486 wordpress/wp-includes/post.php:1971
+#: wordpress/wp-includes/media.php:4487 wordpress/wp-includes/post.php:1971
 msgid "Filter by date"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4489
+#: wordpress/wp-includes/media.php:4490
 msgid "Search media"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4490
+#: wordpress/wp-includes/media.php:4491
 msgid "Search media items..."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4492
+#: wordpress/wp-includes/media.php:4493
 #. translators: %d: Number of attachments found in a search.
 msgid "Number of media items found: %d"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4493
+#: wordpress/wp-includes/media.php:4494
 msgid "No media items found."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4494
+#: wordpress/wp-includes/media.php:4495
 msgid "No media items found. Try a different search."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4497
+#: wordpress/wp-includes/media.php:4498
 msgid "Attachment details"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4500
+#: wordpress/wp-includes/media.php:4501
 msgid "Insert from URL"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4507
+#: wordpress/wp-includes/media.php:4508
 msgid "Create gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4508
+#: wordpress/wp-includes/media.php:4509
 msgid "Edit gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4509
+#: wordpress/wp-includes/media.php:4510
 msgid "&#8592; Cancel gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4511
+#: wordpress/wp-includes/media.php:4512
 msgid "Update gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4512 wordpress/wp-includes/media.php:4513
+#: wordpress/wp-includes/media.php:4513 wordpress/wp-includes/media.php:4514
 msgid "Add to gallery"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4514
+#: wordpress/wp-includes/media.php:4515
 msgid "Reverse order"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4517
+#: wordpress/wp-includes/media.php:4518
 msgid "Image details"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4518
+#: wordpress/wp-includes/media.php:4519
 msgid "Replace image"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4519 wordpress/wp-includes/media.php:4537
-#: wordpress/wp-includes/media.php:4543
+#: wordpress/wp-includes/media.php:4520 wordpress/wp-includes/media.php:4538
+#: wordpress/wp-includes/media.php:4544
 msgid "Cancel edit"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4520
+#: wordpress/wp-includes/media.php:4521
 msgid "Edit image"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4524
+#: wordpress/wp-includes/media.php:4525
 msgid "Select and crop"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4525
+#: wordpress/wp-includes/media.php:4526
 msgid "Skip cropping"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4526
+#: wordpress/wp-includes/media.php:4527
 msgid "Crop image"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4527
+#: wordpress/wp-includes/media.php:4528
 msgid "Crop your image"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4528
+#: wordpress/wp-includes/media.php:4529
 msgid "Cropping&hellip;"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4531
+#: wordpress/wp-includes/media.php:4532
 msgid "There has been an error cropping your image."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4534
+#: wordpress/wp-includes/media.php:4535
 msgid "Audio details"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4535
+#: wordpress/wp-includes/media.php:4536
 msgid "Replace audio"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4536
+#: wordpress/wp-includes/media.php:4537
 msgid "Add audio source"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4540
+#: wordpress/wp-includes/media.php:4541
 msgid "Video details"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4541
+#: wordpress/wp-includes/media.php:4542
 msgid "Replace video"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4542
+#: wordpress/wp-includes/media.php:4543
 msgid "Add video source"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4544
+#: wordpress/wp-includes/media.php:4545
 msgid "Select poster image"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4545
+#: wordpress/wp-includes/media.php:4546
 msgid "Add subtitles"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4548
+#: wordpress/wp-includes/media.php:4549
 msgid "Drag and drop to reorder tracks."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4549
+#: wordpress/wp-includes/media.php:4550
 msgid "Create audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4550
+#: wordpress/wp-includes/media.php:4551
 msgid "Edit audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4551
+#: wordpress/wp-includes/media.php:4552
 msgid "&#8592; Cancel audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4552
+#: wordpress/wp-includes/media.php:4553
 msgid "Insert audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4553
+#: wordpress/wp-includes/media.php:4554
 msgid "Update audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4554
+#: wordpress/wp-includes/media.php:4555
 msgid "Add to audio playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4555
+#: wordpress/wp-includes/media.php:4556
 msgid "Add to Audio Playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4558
+#: wordpress/wp-includes/media.php:4559
 msgid "Drag and drop to reorder videos."
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4559
+#: wordpress/wp-includes/media.php:4560
 msgid "Create video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4560
+#: wordpress/wp-includes/media.php:4561
 msgid "Edit video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4561
+#: wordpress/wp-includes/media.php:4562
 msgid "&#8592; Cancel video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4562
+#: wordpress/wp-includes/media.php:4563
 msgid "Insert video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4563
+#: wordpress/wp-includes/media.php:4564
 msgid "Update video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4564
+#: wordpress/wp-includes/media.php:4565
 msgid "Add to video playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4565
+#: wordpress/wp-includes/media.php:4566
 msgid "Add to video Playlist"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4568
+#: wordpress/wp-includes/media.php:4569
 msgid "Filter media"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4569
+#: wordpress/wp-includes/media.php:4570
 msgid "Media list"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:5042
+#: wordpress/wp-includes/media.php:5043
 msgid "WordPress Media"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:5099
+#: wordpress/wp-includes/media.php:5100
 msgid "User&#8217;s media data."
 msgstr ""
 
@@ -38249,13 +38278,13 @@ msgstr ""
 msgid "We already have a ping from that URL for this post."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:288
+#: inc/classes/class-astra-sites-importer-log.php:297
 #. translators: %1$s Memory Limit, %2$s Recommended memory limit.
 msgctxt "Recommended Memory Limit"
 msgid "Current memory limit %1$s. We recommend setting memory to at least %2$s."
 msgstr ""
 
-#: inc/classes/class-astra-sites-importer-log.php:369
+#: inc/classes/class-astra-sites-importer-log.php:378
 msgctxt "PHP Version"
 msgid "We recommend to use php 5.4 or higher"
 msgstr ""
@@ -38305,7 +38334,7 @@ msgctxt "noun"
 msgid "Comment"
 msgstr ""
 
-#: wordpress/wp-includes/media.php:4476
+#: wordpress/wp-includes/media.php:4477
 msgctxt "noun"
 msgid "Trash"
 msgstr ""
@@ -38951,13 +38980,13 @@ msgid "%1$s of %2$s"
 msgstr ""
 
 #: wordpress/wp-admin/includes/class-wp-media-list-table.php:154
-#: wordpress/wp-includes/media.php:4474
+#: wordpress/wp-includes/media.php:4475
 msgctxt "media items"
 msgid "Unattached"
 msgstr ""
 
 #: wordpress/wp-admin/includes/class-wp-media-list-table.php:159
-#: wordpress/wp-includes/media.php:4475
+#: wordpress/wp-includes/media.php:4476
 msgctxt "media items"
 msgid "Mine"
 msgstr ""
@@ -40522,7 +40551,7 @@ msgid "By %s"
 msgstr ""
 
 #: wordpress/wp-includes/formatting.php:84
-#: wordpress/wp-includes/formatting.php:5522
+#: wordpress/wp-includes/formatting.php:5545
 #. translators: Opening curly double quote.
 msgctxt "opening curly double quote"
 msgid "&#8220;"
@@ -40592,13 +40621,13 @@ msgid ""
 ";til,&#8217;bout,&#8217;nuff,&#8217;round,&#8217;cause,&#8217;em"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:3867
+#: wordpress/wp-includes/formatting.php:3890
 #. translators: Maximum number of words used in a post excerpt.
 msgctxt "excerpt_length"
 msgid "55"
 msgstr ""
 
-#: wordpress/wp-includes/formatting.php:3928
+#: wordpress/wp-includes/formatting.php:3951
 #: wordpress/wp-includes/script-loader.php:1761
 #. translators: If your word count is based on single characters (e.g. East
 #. Asian characters), enter 'characters_excluding_spaces' or

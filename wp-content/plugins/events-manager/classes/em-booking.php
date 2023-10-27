@@ -42,7 +42,8 @@ class EM_Booking extends EM_Object{
 	var $booking_price = null;
 	var $booking_spaces;
 	var $booking_comment;
-	protected $booking_status = false;
+	public $booking_status = false;
+	public $booking_rsvp_status = null;
 	var $booking_tax_rate = null;
 	var $booking_taxes = null;
 	var $booking_meta = array();
@@ -55,6 +56,7 @@ class EM_Booking extends EM_Object{
 		'booking_spaces' => array('name'=>'spaces','type'=>'%d'),
 		'booking_comment' => array('name'=>'comment','type'=>'%s'),
 		'booking_status' => array('name'=>'status','type'=>'%d'),
+		'booking_rsvp_status' => array('name'=>'rsvp_status','type'=>'%d','null'=>1),
 		'booking_tax_rate' => array('name'=>'tax_rate','type'=>'%f','null'=>1),
 		'booking_taxes' => array('name'=>'taxes','type'=>'%f','null'=>1),
 		'booking_meta' => array('name'=>'meta','type'=>'%s')
@@ -102,6 +104,7 @@ class EM_Booking extends EM_Object{
 	 * @var int
 	 */
 	var $previous_status = false;
+	var $previous_rsvp_status;
 	/**
 	 * The booking approval status number corresponds to a state in this array.
 	 * @var array
@@ -124,6 +127,8 @@ class EM_Booking extends EM_Object{
 	 * @var EM_Tickets_Bookings
 	 */
 	var $manage_override;
+	
+	static $rsvp_statuses = array();
 	
 	/**
 	 * Creates booking object and retrieves booking data (default is a blank booking object). Accepts either array of booking data (from db) or a booking id.
@@ -155,6 +160,7 @@ class EM_Booking extends EM_Object{
 		    }
 			//Save into the object
 			$this->to_object($booking);
+			$this->booking_status = absint($this->booking_status);
 			$this->previous_status = $this->booking_status;
 			$this->booking_date = !empty($booking['booking_date']) ? $booking['booking_date']:false;
 		    if( empty($this->booking_uuid) ) {
@@ -164,6 +170,8 @@ class EM_Booking extends EM_Object{
 				    $this->booking_uuid = $this->generate_uuid();
 			    }
 		    }
+			// format status of rsvp into an int
+		    $this->booking_rsvp_status = $this->booking_rsvp_status === '' || $this->booking_rsvp_status === null ? null : absint($this->booking_rsvp_status);
 		}else{
 		    $this->booking_uuid = $this->generate_uuid();
 	    }
@@ -200,8 +208,6 @@ class EM_Booking extends EM_Object{
 	    	if( !empty($this->booking_meta['lang']) ){
 	    		return $this->booking_meta['lang'];
 		    }
-	    }elseif( $var == 'booking_status' ){
-			return ($this->booking_status == 0 && !get_option('dbem_bookings_approval') ) ? 1:$this->booking_status;
 	    }elseif( $var == 'person' ){
 	    	return $this->get_person();
 	    }elseif( $var == 'date' ){
@@ -241,13 +247,11 @@ class EM_Booking extends EM_Object{
 	 */
 	public function __wakeup(){
 		// we need to do this here because the __wakeup function bubbles up from the innermost class
-		foreach( $this->get_tickets_bookings() as $EM_Tickets_Bookings ){
-			$EM_Tickets_Bookings->booking = $this;
-			foreach( $EM_Tickets_Bookings as $EM_Ticket_Bookings ){
-				$EM_Ticket_Bookings->booking = $this;
-				foreach( $EM_Tickets_Bookings as $EM_Ticket_Booking ){
-					$EM_Ticket_Booking->booking = $this;
-				}
+		$this->get_tickets_bookings()->booking = $this;
+		foreach( $this->get_tickets_bookings() as $EM_Ticket_Bookings ){
+			$EM_Ticket_Bookings->booking = $this;
+			foreach( $EM_Ticket_Bookings as $EM_Ticket_Booking ){
+				$EM_Ticket_Booking->booking = $this;
 			}
 		}
 	}
@@ -274,8 +278,8 @@ class EM_Booking extends EM_Object{
 	function save($mail = true){
 		global $wpdb;
 		$table = EM_BOOKINGS_TABLE;
-		do_action('em_booking_save_pre',$this);
-		if( $this->can_manage() ){
+		do_action('em_booking_save_pre',$this); // last chance to circumvent
+		if( empty($this->errors) && $this->can_manage() ){
 			//update prices, spaces, person_id
 			$this->get_spaces(true);
 			$this->calculate_price();
@@ -464,6 +468,11 @@ class EM_Booking extends EM_Object{
 			//re-run compatiblity keys function
 			$this->compat_keys(); //depracating in 6.0
 		}
+		/*
+		if( !$this->booking_id && !empty($_REQUEST['booking_intent']) && preg_match('/^[a-zA-Z0-9]{32}/', $_REQUEST['booking_intent']) ){
+			$this->booking_uuid = sanitize_key($_REQUEST['booking_intent']);
+		}
+		*/
 		return apply_filters('em_booking_get_post', empty($this->errors), $this);
 	}
 	
@@ -806,6 +815,18 @@ class EM_Booking extends EM_Object{
 		return $total;
 	}
 	
+	/**
+	 * Returns the 3-character ISO-4217 currency code of this booking.
+	 * NOTE!
+	 * This is an in-progress feature and not recommended overriding as this will cause unexpected results. For now, it will always return the general currency setting from EM.
+	 * You can, however, use this function to reference the current currency of this booking and expect that in the future if the currency varies it will be reflected here.
+	 *
+	 * @return string
+	 */
+	function get_currency(){
+		$currency = get_option('dbem_bookings_currency','USD');
+		return apply_filters('em_booking_get_currency', $currency, $this);
+	}
 	
 	/* Get Objects linked to booking */
 	
@@ -844,7 +865,7 @@ class EM_Booking extends EM_Object{
 	 */
 	function get_tickets_bookings(){
 		global $wpdb;
-		if( !is_object($this->tickets_bookings) || get_class($this->tickets_bookings)!='EM_Tickets_Bookings'){
+		if( !is_object($this->tickets_bookings) || get_class($this->tickets_bookings) != 'EM_Tickets_Bookings'){
 			$this->tickets_bookings = new EM_Tickets_Bookings($this);
 		}
 		return apply_filters('em_booking_get_tickets_bookings', $this->tickets_bookings, $this);
@@ -1000,11 +1021,10 @@ class EM_Booking extends EM_Object{
 	 * @return string
 	 */
 	function get_status(){
-		$status = ($this->booking_status == 0 && !get_option('dbem_bookings_approval') ) ? 1:$this->booking_status;
 		if( $this->booking_status === false && isset($this->previous_status) ) {
 			$status_text = __('Deleted', 'events-manager');
 		}else{
-			$status_text = $this->status_array[ $status ];
+			$status_text = $this->status_array[ $this->booking_status ];
 		}
 		return apply_filters('em_booking_get_status', $status_text, $this);
 	}
@@ -1022,7 +1042,7 @@ class EM_Booking extends EM_Object{
 			if( $result !== false ){
 				//delete the tickets too
 				$this->get_tickets_bookings()->delete();
-				$this->previous_status = $this->booking_status;
+				$this->previous_status = $this->booking_meta['previous_status'] = $this->booking_status;
 				$this->booking_status = false;
 				$this->feedback_message = sprintf(__('%s deleted', 'events-manager'), __('Booking','events-manager'));
 				$wpdb->delete( EM_META_TABLE, array('meta_key'=>'booking-note', 'object_id' => $this->booking_id), array('%s','%d'));
@@ -1036,43 +1056,90 @@ class EM_Booking extends EM_Object{
 		return apply_filters('em_booking_delete',( $result !== false ), $this);
 	}
 	
-	function cancel($email = true){
+	/**
+	 * Cancel a booking
+	 * @param $email
+	 * param array $email_args Overloaded
+	 * @return bool
+	 */
+	function cancel( $email = true ){
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[1]) ? $func_args[1] : array();
 		if( $this->get_person()->ID == get_current_user_id() ){
 			$this->manage_override = true; //normally, users can't manage a booking, only event owners, so we allow them to mod their booking status in this case only.
 		}
-		return $this->set_status(3, $email);
+		return $this->set_status(3, $email, false, $email_args);
 	}
 	
 	/**
 	 * Approve a booking.
+	 * @param $email
+	 * param array $email_args Overloaded
 	 * @return bool
 	 */
-	function approve($email = true, $ignore_spaces = false){
-		return $this->set_status(1, $email, $ignore_spaces);
-	}	
+	function approve($email = true, $ignore_spaces = false ){
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[2]) ? $func_args[2] : array();
+		return $this->set_status(1, $email, $ignore_spaces, $email_args);
+	}
+	
 	/**
 	 * Reject a booking and save
+	 * @param $email
+	 * param array $email_args Overloaded
 	 * @return bool
 	 */
-	function reject($email = true){
-		return $this->set_status(2, $email);
-	}	
+	function reject($email = true ){
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[1]) ? $func_args[1] : array();
+		return $this->set_status(2, $email, false, $email_args);
+	}
+	
 	/**
 	 * Unapprove a booking.
+	 * @param $email
+	 * param array $email_args Overloaded
 	 * @return bool
 	 */
-	function unapprove($email = true){
-		return $this->set_status(0, $email);
+	function unapprove( $email = true ){
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[1]) ? $func_args[1] : array();
+		return $this->set_status(0, $email, false, $email_args);
+	}
+	
+	function uncancel( $email = true, $email_args = array() ) {
+		if ( $this->can_uncancel() ) {
+			// get status to uncancel to
+			if ( isset($this->booking_meta['previous_status']) ) {
+				$status = $this->booking_meta['previous_status'];
+				if( $status == 2 ){ // we shouldn't reject an uncancelled booking!
+					$status = 0;
+				}
+			} elseif ( defined('EM_BOOKINGS_UNCANCEL_STATUS') ) {
+				$status = EM_BOOKINGS_UNCANCEL_STATUS;
+			} else {
+				$status = 0;
+			}
+			return $this->set_status( $status, $email, false, $email_args );
+		} else {
+			return false;
+		}
 	}
 	
 	/**
 	 * Change the status of the booking. This will save to the Database too. 
 	 * @param int $status
+	 * @param bool $email
+	 * @param bool $ignore_spaces
+	 * param array $email_args Overloaded
 	 * @return boolean
 	 */
-	function set_status($status, $email = true, $ignore_spaces = false){
+	function set_status($status, $email = true, $ignore_spaces = false ){
 		global $wpdb;
-		$action_string = strtolower($this->status_array[$status]); 
+		$func_args = func_get_args();
+		$email_args = !empty($func_args[3]) ? $func_args[3] : array();
+		$email_args = array_merge( array('email_admin'=> true, 'force_resend' => false, 'email_attendee' => true), $email_args );
+		$action_string = strtolower($this->status_array[$status]);
 		//if we're approving we can't approve a booking if spaces are full, so check before it's approved.
 		if(!$ignore_spaces && $status == 1){
 			if( !$this->is_reserved() && $this->get_event()->get_bookings()->get_available_spaces() < $this->get_spaces() && !get_option('dbem_bookings_approval_overbooking') ){
@@ -1082,15 +1149,16 @@ class EM_Booking extends EM_Object{
 			}
 		}
 		$this->previous_status = $this->booking_status;
-		$this->booking_status = $status;
+		$this->booking_status = absint($status);
 		$result = $wpdb->query($wpdb->prepare('UPDATE '.EM_BOOKINGS_TABLE.' SET booking_status=%d WHERE booking_id=%d', array($status, $this->booking_id)));
 		if($result !== false){
+			$this->update_meta('previous_status', $this->previous_status);
 			$this->feedback_message = sprintf(__('Booking %s.','events-manager'), $action_string);
 			$result = apply_filters('em_booking_set_status', $result, $this); // run the filter before emails go out, in case others need to hook in first
 			if( $result && $this->previous_status != $this->booking_status ){ //email if status has changed
 				do_action('em_booking_status_changed', $this, array('status' => $status, 'email' => $email, 'ignore_spaces' => $ignore_spaces)); // method params passed as array
 				if( $email ){
-					if( $this->email() ){
+					if( $this->email( !empty($email_args['email_admin']), !empty($email_args['force_resend']), !empty($email_args['email_attendee'])) ){
 					    if( $this->mails_sent > 0 ){
 					        $this->feedback_message .= " ".__('Email Sent.','events-manager');
 					    }
@@ -1111,7 +1179,7 @@ class EM_Booking extends EM_Object{
 	}
 	
 	public function can_cancel(){
-		if( get_option('dbem_bookings_user_cancellation') ){
+		if( get_option('dbem_bookings_user_cancellation') && !in_array($this->booking_status, array(2,3)) ){
 			$cancellation_time = get_option('dbem_bookings_user_cancellation_time');
 			$can_cancel = $this->get_event()->start()->getTimestamp() > time(); // previously default was rsvp end
 			if( !empty($cancellation_time) && $cancellation_time > 0 ){
@@ -1127,8 +1195,17 @@ class EM_Booking extends EM_Object{
 		return apply_filters('em_booking_can_cancel', $can_cancel, $this);
 	}
 	
+	/*
+	 * Bookings that are made since
+	 */
+	public function can_uncancel() {
+		$has_previous_status = isset( $this->booking_meta['previous_status'] ) || defined('EM_BOOKINGS_UNCANCEL_STATUS');
+		$can_uncancel = get_option('dbem_bookings_user_uncancellation') && $this->validate() && $has_previous_status;
+		return apply_filters('em_booking_can_uncancel', $can_uncancel, $this);
+	}
+	
 	public static function is_dateinterval_string( $string ){
-		return preg_match('/^\-?P(([0-9]+[YMDW])+)?(T(([0-9]+[YMDW])+))?/', $string);
+		return preg_match('/^\-?P(([0-9]+[YMDW])+)?(T(([0-9]+[HMS])+))?$/', $string);
 	}
 	
 	/**
@@ -1160,6 +1237,179 @@ class EM_Booking extends EM_Object{
 	function is_pending(){
 		$result = ($this->is_reserved() || $this->booking_status == 0) && $this->booking_status != 1;
 	    return apply_filters('em_booking_is_pending', $result, $this);
+	}
+	
+	/**
+	 * Set RSVP status to given number. Null sets booking to unconfirmed.
+	 *
+	 * @param null|int $status
+	 * @param array $args
+	 *
+	 * @return bool
+	 */
+	function set_rsvp_status( $status, $args = array() ) {
+		global $wpdb;
+		// get status strings
+		$action_string = static::get_rsvp_statuses( $status )->label;
+		//if we're approving we can't approve a booking if spaces are full, so check before it's approved.
+		$this->previous_rsvp_status = $this->booking_rsvp_status;
+		$this->booking_rsvp_status = ( $status !== null && $status <= 2  && $status >= 0 ) ? absint($status) : null;
+		if ( $this->booking_rsvp_status === null ) {
+			$result = $wpdb->query($wpdb->prepare('UPDATE '.EM_BOOKINGS_TABLE.' SET booking_rsvp_status=NULL WHERE booking_id=%d', array($this->booking_id)));
+		} else {
+			$result = $wpdb->query($wpdb->prepare('UPDATE '.EM_BOOKINGS_TABLE.' SET booking_rsvp_status=%d WHERE booking_id=%d', array($this->booking_rsvp_status, $this->booking_id)));
+		}
+		if ( $result !== false ) {
+			$this->feedback_message = esc_html__( sprintf(__("Booking RSVP status set to '%s'.",'events-manager'), $action_string) );
+			$result = apply_filters('em_booking_set_rsvp_status', true, $this);
+			if( $result && $this->previous_rsvp_status != $this->booking_rsvp_status ){ // act on booking status if there's a change in rsvp
+				do_action('em_booking_rsvp_status_changed', $this, $status, $args); // method params passed as array
+				if( $this->booking_rsvp_status === 0  && get_option('dbem_bookings_rsvp_sync_cancel') ) {
+					$this->cancel();
+				} elseif ( $this->booking_rsvp_status === 1 && get_option('dbem_bookings_rsvp_sync_confirm') ) {
+					$this->set_status(1);
+				} elseif( $this->previous_rsvp_status === 0 && $this->can_uncancel() ) {
+					$this->uncancel();
+				}
+			}
+			$this->feedback_message = static::get_rsvp_statuses($status)->confirmation;
+		} else {
+			//errors should be logged by save()
+			$this->feedback_message = sprintf(__('Booking could not be %s.','events-manager'), $action_string);
+			$this->add_error(sprintf(__('Booking could not be %s.','events-manager'), $action_string));
+			$result =  apply_filters('em_booking_set_rsvp_status', false, $this, $args);
+		}
+		return $result;
+	}
+	
+	/**
+	 * Get RSVP Status equivalents
+	 * @param $text
+	 * @param $status
+	 *
+	 * @return int|string|null
+	 */
+	function get_rsvp_status( $text = false ) {
+		if( $text ) {
+			$status = static::get_rsvp_statuses( $this->booking_rsvp_status );
+			return apply_filters('em_booking_get_rsvp_status_text', $status->label, $this, array('text' => $text, 'status' => $status));
+		}
+		return apply_filters('em_booking_get_rsvp_status', $this->booking_rsvp_status, $this);
+	}
+	
+	/**
+	 * Sets the RSVP status of a booking to 'Maybe' (status 2), not to be confused with the actual status of the booking.
+	 * @param $args
+	 *
+	 * @return bool
+	 */
+	public function can_change_rsvp() {
+		$can_change = false;
+		$changeable_statuses = apply_filters( 'em_booking_statuses_rsvp_changeable', array(0,1,3), $this );
+		if ( get_option('dbem_bookings_rsvp_can_change') && in_array( $this->booking_status, $changeable_statuses) ) {
+			if ( $this->booking_status == 3 && $this->can_uncancel()  ) {
+				$can_change = true;
+			} else {
+				$can_change = true;
+			}
+		}
+		return apply_filters( 'can_change_rsvp', $can_change, $this );
+	}
+	
+	/**
+	 * Returns true or false if user can RSVP a certain status, null if the current status is already the one requested.
+	 * @param int|null $status
+	 *
+	 * @return mixed|null
+	 */
+	public function can_rsvp( $status ) {
+		$result = false;
+		if( get_option( 'dbem_bookings_rsvp' ) ) {
+			// check if we're changing the RSVP or doing anew with a specific status
+			if ( $this->booking_rsvp_status !== null && $this->can_change_rsvp() ) {
+				$can_rsvp = true;
+			} else {
+				$rsvpable_booking_statuses = apply_filters( 'em_booking_rsvpable_booking_statuses', array( 0, 1 ) );
+				if ( $this->booking_status === 3 && get_option( 'dbem_bookings_rsvp_sync_cancel' ) && $this->can_uncancel() ) {
+					$rsvpable_booking_statuses[] = 3;
+				}
+				$can_rsvp = in_array( $this->booking_status, $rsvpable_booking_statuses );
+			}
+			// general RSVP possible, now go deeper
+			if ( $can_rsvp ) {
+				if ( $status === null ) { // unconfirm
+					$result = $this->can_manage(); // we cannot unconfirm unless an admin
+				} elseif ( $status === 0 ) { // cancel
+					if ( get_option( 'dbem_bookings_rsvp_sync_cancel' ) && $this->booking_rsvp_status !== $status ) {
+						$result = $this->can_cancel();
+					} else {
+						$result = true;
+					}
+				} elseif ( $status === 1 ) { // confirm
+					$result = true;
+				} elseif ( $status === 2 ) { // maybe
+					if ( get_option( 'dbem_bookings_rsvp_maybe' ) ) {
+						$result = true;
+					}
+				}
+				if( $result ){
+					$result = $this->booking_rsvp_status === $status ? null : true;
+				}
+			}
+		}
+		return apply_filters('em_booking_can_rsvp', $result, $this, $status );
+	}
+	
+	public static function get_rsvp_statuses( $status = false ) {
+		
+		if( empty(static::$rsvp_statuses) ) {
+			$statuses = array(
+				null => array(
+					'label' => __('Unconfirmed', 'events-manager'),
+					'label_action' => __('Unconfirm', 'events-manager'),
+					'action' => 'unconfirm',
+					'confirmation' => __('Your booking is now unconfirmed', 'events-manager'),
+				),
+				0 => array(
+					'label' => __('Not Attending', 'events-manager'),
+					'label_action' => sprintf( __('RSVP - %s', 'events-manager'), __('No') ),
+					'label_answer' => __('No'),
+					'confirmation' => __('You have declined your attendance.', 'events-manager'),
+					'action' => 'decline',
+				),
+				1 => array(
+					'label' => __('Attending', 'events-manager'),
+					'label_action' => sprintf( __('RSVP - %s', 'events-manager'), __('Yes') ),
+					'label_answer' => __('Yes'),
+					'action' => 'confirm',
+					'confirmation' => __('You have confirmed your attendance.', 'events-manager'),
+				),
+			);
+			
+			if( get_option('dbem_bookings_rsvp_sync_cancel') ) {
+				$statuses[0] = array_merge( $statuses[0], array(
+					'confirmation' => __('You have declined your attendance, your booking is now cancelled.', 'events-manager'),
+				));
+			}
+			if( get_option('dbem_bookings_rsvp_maybe') ) {
+				$statuses[2] = array(
+					'label' => __('Maybe Attending', 'events-manager'),
+					'label_action' => sprintf( __('RSVP - %s', 'events-manager'), __('Maybe', 'events-manager') ),
+					'label_answer' => __('Maybe', 'events-manager'),
+					'action' => 'maybe',
+					'confirmation' => __('You have not definitively confrimed your attendance.', 'events-manager'),
+				);
+			}
+			
+			$statuses = apply_filters( 'em_booking_get_rsvp_statuses', $statuses );
+			foreach( $statuses as $k => $s ) $statuses[$k] = (object) $s;
+			static::$rsvp_statuses = $statuses;
+		}
+		
+		if ( $status !== false ) {
+			return !empty(static::$rsvp_statuses[$status]) ? static::$rsvp_statuses[$status] : static::$rsvp_statuses[null];
+		}
+		return static::$rsvp_statuses;
 	}
 	
 	/**
@@ -1200,9 +1450,21 @@ class EM_Booking extends EM_Object{
 			preg_match_all('/\{([a-zA-Z0-9_\-,]+)\}(.+?)\{\/\1\}/s', $output_string, $conditionals);
 			if( count($conditionals[0]) > 0 ){
 				//Check if the language we want exists, if not we take the first language there
-				foreach($conditionals[1] as $key => $condition){
+				foreach ($conditionals[1] as $key => $condition) {
 					$show_condition = apply_filters('em_booking_output_show_condition', false, array('format' => $format, 'target' => $target, 'condition' => $condition, 'conditionals' => $conditionals, 'key' => $key), $this );
-					// run conditionals, but don't erase unrecognized replacements, leave that to EM_Event->output()
+					if ($condition == 'has_rsvp_reply') { //check if there's an rsvp
+						$show_condition = $this->booking_rsvp_status !== null;
+					} elseif ( $condition == 'no_rsvp_reply' ) { //check if there's no rsvp
+						$show_condition = $this->booking_rsvp_status === null;
+					} elseif ( $condition == 'is_rsvp_reply_no' ) { //check if there's no rsvp
+						$show_condition = $this->booking_rsvp_status === 0;
+					} elseif ( $condition == 'is_rsvp_reply_yes' ) { //check if there's no rsvp
+						$show_condition = $this->booking_rsvp_status === 1;
+					} elseif ( $condition == 'is_rsvp_reply_maybe' ) { //check if there's no rsvp
+						$show_condition = $this->booking_rsvp_status === 2;
+					} elseif ( preg_match('/^is_rsvp_reply_([0-9]+)$/', $condition, $matches ) ) { //check if there's no rsvp
+						$show_condition = $this->booking_rsvp_status == $matches[1];
+					}
 					if( $show_condition ){
 						//calculate lengths to delete placeholders
 						$placeholder_length = strlen($condition)+2;
@@ -1302,6 +1564,14 @@ class EM_Booking extends EM_Object{
 						$replace = $bookings_link;
 					}
 					break;
+				case '#_BOOKINGSTATUS':
+				case '#_BOOKING_STATUS':
+					$replace = $this->get_status();
+					break;
+				case '#_BOOKINGRSVPSTATUS':
+				case '#_BOOKING_RSVP_STATUS':
+					$replace = $this->get_rsvp_status( true );
+					break;
 				default:
 					$replace = $this->output_placeholder( $full_result, $placeholder_atts, $format, $target );
 					break;
@@ -1332,6 +1602,28 @@ class EM_Booking extends EM_Object{
 		return $full_result;
 	}
 	
+	public function output_intent_html(){
+		$input = '<input type="hidden" name="booking_intent" value="' . esc_attr($this->booking_uuid) .'" class="em-booking-intent" id="em-booking-intent-'. esc_attr($this->event_id) .'"';
+		foreach( $this->get_intent_data() as $key => $value ){
+			$input .= ' data-'.$key.'="'. esc_attr($value) .'"';
+		}
+		$input .= '>';
+		return apply_filters('em_booking_output_intent_html', $input, $this);
+	}
+	
+	public function get_intent_data(){
+		return array(
+			'uuid' => $this->booking_uuid,
+			'event_id' => $this->event_id,
+			'spaces' => $this->get_spaces(),
+			'amount' => $this->get_price(),
+			'amount_formatted' => $this->get_price( true ),
+			'amount_base' => $this->get_price_base(),
+			'taxes' => $this->get_price_taxes(),
+			'currency' => $this->get_currency(),
+		);
+	}
+	
 	/**
 	 * @param boolean $email_admin
 	 * @param boolean $force_resend
@@ -1341,8 +1633,6 @@ class EM_Booking extends EM_Object{
 	function email( $email_admin = true, $force_resend = false, $email_attendee = true ){
 		$result = true;
 		$this->mails_sent = 0;
-		
-		
 		//Make sure event matches booking, and that booking used to be approved.
 		if( $this->booking_status !== $this->previous_status || $force_resend ){
 			// before we format dates or any other language-specific placeholders, make sure we're translating the site language, not the user profile language in the admin area (e.g. if an admin is sending a booking confirmation email), assuming this isn't a ML-enabled site.
@@ -1353,71 +1643,91 @@ class EM_Booking extends EM_Object{
 			$EM_Event->get_bookings(true); //refresh all bookings
 			//messages can be overridden just before being sent
 			$msg = $this->email_messages();
+			$filter_args = array('email_admin'=> true, 'force_resend' => $force_resend, 'email_attendee' => $email_attendee, 'msg' => $msg );
 
 			//Send user (booker) emails
 			if( !empty($msg['user']['subject']) && $email_attendee ){
-				$msg['user']['subject'] = $this->output($msg['user']['subject'], 'raw');
-				$msg['user']['body'] = $this->output($msg['user']['body'], 'email');
-				$attachments = array();
-				if( !empty($msg['user']['attachments']) && is_array($msg['user']['attachments']) ){
-					$attachments = $msg['user']['attachments'];
-				}
-				//add extra args
-				$args = array();
-				if( get_option('dbem_bookings_replyto_owner') && $this->get_event()->get_contact()->user_email ){
-					$args['reply-to'] = $this->get_event()->get_contact()->user_email;
-					$args['reply-to-name'] = $this->get_event()->get_contact()->display_name;
-				}
-				$args = apply_filters('em_booking_email_user_args', $args, array('email_admin'=> $email_admin, 'force_resend' => $force_resend, 'email_attendee' => $email_attendee, 'msg' => $msg ), $this);
-				//Send to the person booking
-				if( !$this->email_send( $msg['user']['subject'], $msg['user']['body'], $this->get_person()->user_email, $attachments, $args) ){
-					$result = false;
-				}else{
-					$this->mails_sent++;
-				}
+				$result = $this->email_attendee( $msg, $filter_args );
 			}
 			
 			//Send admin/contact emails if this isn't the event owner or an events admin
 			if( $email_admin && !empty($msg['admin']['subject']) ){ //emails won't be sent if admin is logged in unless they book themselves
-				//get admin emails that need to be notified, hook here to add extra admin emails
-				$admin_emails = str_replace(' ','',get_option('dbem_bookings_notify_admin'));
-				$admin_emails = apply_filters('em_booking_admin_emails', explode(',', $admin_emails), $this); //supply emails as array
-				if( get_option('dbem_bookings_contact_email') == 1 && !empty($EM_Event->get_contact()->user_email) ){
-				    //add event owner contact email to list of admin emails
-				    $admin_emails[] = $EM_Event->get_contact()->user_email;
-				}
-				foreach($admin_emails as $key => $email){ if( !is_email($email) ) unset($admin_emails[$key]); } //remove bad emails
-				//add extra args
-				$args = array();
-				if( get_option('dbem_bookings_replyto_owner_admins') && $this->get_event()->get_contact()->user_email ){
-					$args['reply-to'] = $this->get_event()->get_contact()->user_email;
-					$args['reply-to-name'] = $this->get_event()->get_contact()->display_name;
-				}
-				$args = apply_filters('em_booking_email_admin_args', $args, array('email_admin'=> $email_admin, 'force_resend' => $force_resend, 'email_attendee' => $email_attendee, 'msg' => $msg ), $this);
-				//proceed to email admins if need be
-				if( !empty($admin_emails) ){
-					//Only gets sent if this is a pending booking, unless approvals are disabled.
-					$msg['admin']['subject'] = $this->output($msg['admin']['subject'],'raw');
-					$msg['admin']['body'] = $this->output($msg['admin']['body'], 'email');
-					$attachments = array();
-					if( !empty($msg['admin']['attachments']) && is_array($msg['admin']['attachments']) ){
-						$attachments = $msg['admin']['attachments'];
-					}
-					//email admins
-						if( !$this->email_send( $msg['admin']['subject'], $msg['admin']['body'], $admin_emails, $attachments, $args) && current_user_can('manage_options') ){
-							$this->errors[] = __('Confirmation email could not be sent to admin. Registrant should have gotten their email (only admin see this warning).','events-manager');
-							$result = false;
-						}else{
-							$this->mails_sent++;
-						}
-				}
+				$result = $this->email_admins( $msg );
 			}
 			do_action('em_booking_email_after_send', $this);
 			if( !EM_ML::$is_ml && is_admin() ) EM_ML::restore_locale(); // restore the locale back for the rest of the site, which will happen if we switched it earlier
 		}
 		return apply_filters('em_booking_email', $result, $this, $email_admin, $force_resend, $email_attendee);
 		//TODO need error checking for booking mail send
-	}	
+	}
+	
+	function email_attendee( $msg, $filter_args = null ){
+		$result = true;
+		if( !$filter_args ){
+			$filter_args = array('email_admin'=> true, 'force_resend' => true, 'email_attendee' => false, 'msg' => $msg );
+		}
+		$msg['user']['subject'] = $this->output($msg['user']['subject'], 'raw');
+		$msg['user']['body'] = $this->output($msg['user']['body'], 'email');
+		$attachments = array();
+		if( !empty($msg['user']['attachments']) && is_array($msg['user']['attachments']) ){
+			$attachments = $msg['user']['attachments'];
+		}
+		//add extra args
+		$args = array();
+		if( get_option('dbem_bookings_replyto_owner') && $this->get_event()->get_contact()->user_email ){
+			$args['reply-to'] = $this->get_event()->get_contact()->user_email;
+			$args['reply-to-name'] = $this->get_event()->get_contact()->display_name;
+		}
+		$args = apply_filters('em_booking_email_user_args', $args, $filter_args, $this);
+		//Send to the person booking
+		if( !$this->email_send( $msg['user']['subject'], $msg['user']['body'], $this->get_person()->user_email, $attachments, $args) ){
+			$result = false;
+		}else{
+			$this->mails_sent++;
+		}
+		return $result;
+	}
+	
+	function email_admins( $msg, $filter_args = null ){
+		$result = true;
+		$EM_Event = $this->get_event(); //We NEED event details here.
+		if( !$filter_args ){
+			$filter_args = array('email_admin'=> true, 'force_resend' => true, 'email_attendee' => false, 'msg' => $msg );
+		}
+		//get admin emails that need to be notified, hook here to add extra admin emails
+		$admin_emails = str_replace(' ','',get_option('dbem_bookings_notify_admin'));
+		$admin_emails = apply_filters('em_booking_admin_emails', explode(',', $admin_emails), $this); //supply emails as array
+		if( get_option('dbem_bookings_contact_email') == 1 && !empty($EM_Event->get_contact()->user_email) ){
+			//add event owner contact email to list of admin emails
+			$admin_emails[] = $EM_Event->get_contact()->user_email;
+		}
+		foreach($admin_emails as $key => $email){ if( !is_email($email) ) unset($admin_emails[$key]); } //remove bad emails
+		//add extra args
+		$args = array();
+		if( get_option('dbem_bookings_replyto_owner_admins') && $this->get_event()->get_contact()->user_email ){
+			$args['reply-to'] = $this->get_event()->get_contact()->user_email;
+			$args['reply-to-name'] = $this->get_event()->get_contact()->display_name;
+		}
+		$args = apply_filters('em_booking_email_admin_args', $args, $filter_args, $this);
+		//proceed to email admins if need be
+		if( !empty($admin_emails) ){
+			//Only gets sent if this is a pending booking, unless approvals are disabled.
+			$msg['admin']['subject'] = $this->output($msg['admin']['subject'],'raw');
+			$msg['admin']['body'] = $this->output($msg['admin']['body'], 'email');
+			$attachments = array();
+			if( !empty($msg['admin']['attachments']) && is_array($msg['admin']['attachments']) ){
+				$attachments = $msg['admin']['attachments'];
+			}
+			//email admins
+			if( !$this->email_send( $msg['admin']['subject'], $msg['admin']['body'], $admin_emails, $attachments, $args) && current_user_can('manage_options') ){
+				$this->errors[] = __('Confirmation email could not be sent to admin. Registrant should have gotten their email (only admin see this warning).','events-manager');
+				$result = false;
+			}else{
+				$this->mails_sent++;
+			}
+		}
+		return $result;
+	}
 	
 	function email_messages(){
 		$msg = array( 'user'=> array('subject'=>'', 'body'=>'', 'attachments' => array()), 'admin'=> array('subject'=>'', 'body'=>'', 'attachments' => array())); //blank msg template

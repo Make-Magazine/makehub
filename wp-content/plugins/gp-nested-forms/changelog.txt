@@ -1,6 +1,75 @@
 
 # Changelog
 
+## 1.1.38
+
+	- Fixed potential PHP error upon submission of a child form if a submitted input references a field that does not exist.
+	- Fixed an issue where calculations using GPNF merge tags such as `{Field:1:total}` could sometimes trigger a JavaScript error.
+
+## 1.1.37
+
+	- Updated the class name to disable responsive table styling. It is now `gpnf-disable-responsive-table` rather than `gpnf-disable-table` as the latter did not make sense. 😄
+
+## 1.1.36
+
+	- Added ability to disable responsive table styling by adding `gpnf-disable-table` as a class to parent forms.
+	- Fixed potential PHP warning.
+
+## 1.1.35
+
+	- Updated sessions to be page-specific.
+
+## 1.1.34
+
+	- Fixed issue where loading a form with an invalid S&C token in the URL would cause an error.
+
+## 1.1.33
+
+	- Updated child entry datetime format to match parent entry datetime format when exporting entries.
+
+## 1.1.32
+
+	- Fixed issue where the Add/Edit modal would fail to open due to malformed JSON when using Weglot Translate.
+	- Added new `duplicate_children()` method to `GPNF_Entry`.
+
+## 1.1.31
+
+	- Added `gpnf_should_use_simple_details_template` PHP filter hook.
+	- Fixed issue where child entries could be removed when adding items to a cart using WooCommerce Gravity Forms Product Add-ons 3.5.0 or newer.
+
+## 1.1.30
+
+	- Fixed issue where responsive styles were not correctly applied for the Nested Entries Detail Simple template.
+
+## 1.1.29
+
+	- Improved styling of Nested Form fields inside parent forms when using the Gravity Forms Theme Framework.
+	- Updated references to `String.prototype.format()` to use `String.prototype.gformFormat()` as the former will be removed in Gravity Forms 2.8.
+
+## 1.1.28
+
+	- Added support for including the Nested Form fields context in AJAX requests.
+	- Fixed issue where the modal height would sometimes be incorrectly set after opening. This fixes an issue if using GP Limit Date's Inline Datepicker in Nested Forms.
+
+## 1.1.27
+
+	- Fixed PHP 8 warnings that could show when importing forms with forward slashes in the form names.
+
+## 1.1.26
+
+	- Fixed a PHP notice due to implicit number conversion.
+	- Added `gpnf_template_args` filter to the `nested-entries-simple-list` template args.
+
+## 1.1.25
+
+	- Updated how soon we load `GFFormDisplay` to prevent errors when printing parent forms with no child entries.
+	- Fixed an issue where using the `index` modifier with All Fields Template would skip empty values which could cause confusing results.
+	- Fixed issue where forms for individual entries were not passed through the `gpnf_get_nested_form` filter for every entry which could cause choice values instead of choice labels to show in some situations when using the `{all_fields}` merge tag.
+
+## 1.1.24
+
+	- Fixed issue where parent form was submitted instead of child form when the parent form's "Submit Button Location" was configured to "End of last row."
+
 ## 1.1.23
 
 	- Fixed an issue with Save & Continue not working when nested entries were spammed or deleted.

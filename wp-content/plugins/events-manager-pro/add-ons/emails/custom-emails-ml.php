@@ -58,17 +58,19 @@ class EM_Custom_Emails_ML{
 	/**
 	 * Checks if the event linked to EM_Booking is in the language we're currently requesting, 
 	 * otherwise call the same function EM_Custom_Emails will have passed again with the overriding EM_Event object.
+	 *
 	 * @param array $gateway_emails
 	 * @param EM_Booking $EM_Booking
-	 * @param EM_Gateway $EM_Gateway
+	 * @param \EM\Payments\Gateway $Gateway
+	 *
 	 * @return array
 	 */
-	public static function em_custom_emails_gateway_messages( $gateway_emails, $EM_Booking, $EM_Gateway ){
+	public static function em_custom_emails_gateway_messages( $gateway_emails, $EM_Booking, $Gateway ){
 	    //if booking language is set, get the translation
 		if( $EM_Booking->language ){
 		    $lang = $EM_Booking->language; //easy reference
             //unserlialize saved translations for gateway emails and check whether we have 
-            $gateway_emails_ml = maybe_unserialize($EM_Gateway->get_option('emails_ml'));
+            $gateway_emails_ml = maybe_unserialize($Gateway::get_option('emails_ml'));
 		    if( !empty($gateway_emails_ml[$lang]) ){
 		        //translations exist, so merge them into gateway emails for filter return
 		        $gateway_emails =  EM_Custom_Emails::merge_emails_array($gateway_emails, $gateway_emails_ml[$lang]);
@@ -79,16 +81,18 @@ class EM_Custom_Emails_ML{
 	
     /**
      * Merges translations of gateway emails into default gateway emails if booking is not the default language.
+	 *
 	 * @param array $admin_emails
 	 * @param EM_Booking $EM_Booking
-	 * @param EM_Gateway $EM_Gateway
+	 * @param \EM\Payments\Gateway $Gateway
+     *
 	 * @return array
 	 */
-	public static function em_custom_emails_gateway_admin( $admin_emails, $EM_Booking, $EM_Gateway ){
+	public static function em_custom_emails_gateway_admin( $admin_emails, $EM_Booking, $Gateway ){
 	    if( $EM_Booking->language ){
     		$lang = $EM_Booking->language;
     		//get admin emails for this language
-		    $possible_email_values_ml = maybe_unserialize($EM_Gateway->get_option('emails_admins_ml'));
+		    $possible_email_values_ml = maybe_unserialize($Gateway::get_option('emails_admins_ml'));
 			$admin_emails_ml = empty($possible_email_values_ml[$lang]) ? array():$possible_email_values_ml[$lang];
     		//convert all comma-delimited values into an array for merging
     		foreach( $admin_emails_ml as $k => $v ) $admin_emails_ml[$k] = !empty($v) ? explode(',', $v) : array();

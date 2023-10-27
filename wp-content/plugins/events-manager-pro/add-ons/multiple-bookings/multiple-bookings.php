@@ -75,11 +75,12 @@ class EM_Multiple_Bookings{
 	    add_filter('em_data_privacy_export_bookings_item', 'EM_Multiple_Bookings::data_privacy_export', 10, 2); //add MB bookings to export
 	    if( get_option('dbem_data_privacy_consent_bookings') == 1 || ( get_option('dbem_data_privacy_consent_bookings') == 2 && !is_user_logged_in() ) ){
 	    	//remove booking form privacy filters and add them to mb checkout form
-		    remove_action('em_booking_form_footer', 'em_data_privacy_consent_checkbox', 9);
+		    remove_action('em_booking_form_footer', 'em_data_privacy_consent_checkbox', 9); // backwards compatible
+		    remove_action('em_booking_form_after_user_details', 'em_data_privacy_consent_checkbox', 9); // EM 6.4 onwards
 		    remove_filter('em_booking_get_post', 'em_data_privacy_consent_booking_get_post', 10);
 		    remove_filter('em_booking_validate', 'em_data_privacy_consent_booking_validate', 10);
 		    remove_filter('em_booking_save', 'em_data_privacy_consent_booking_save', 10);
-		    add_action('em_checkout_form_footer', 'em_data_privacy_consent_checkbox', 9);
+		    add_action('em_checkout_form_after_user_details', 'em_data_privacy_consent_checkbox', 100);
 		    add_filter('em_multiple_booking_get_post', 'em_data_privacy_consent_booking_get_post', 10, 2);
 		    add_filter('em_multiple_booking_validate', 'em_data_privacy_consent_booking_validate', 10, 2);
 		    add_filter('em_multiple_booking_save_bookings', 'em_data_privacy_consent_booking_save', 10, 2);
@@ -435,6 +436,10 @@ class EM_Multiple_Bookings{
 	}
 
 	public static function checkout_page(){
+		// backwards compatibility for EM Pro 3.2 and earlier
+		add_action('em_checkout_form_confirm_footer', array( static::class, 'checkout_page_backcompat')); // for oudated code using deprecated action
+		add_action('em_checkout_form_footer', array( static::class, 'checkout_page_polyfill')); // for outdated overriden templates that don't use new actions
+		// output notices
 	    if( !self::get_multiple_booking()->validate_bookings_spaces() ){
 	        global $EM_Notices;
 	        $EM_Notices->add_error(self::get_multiple_booking()->get_errors());
@@ -449,6 +454,40 @@ class EM_Multiple_Bookings{
 		echo '</div>';
 		EM_Bookings::enqueue_js();
     }
+	
+	/**
+	 * Provides a polyfill for outdated templates that don't trigger new actions such as em_checkout_form_confirm_footer, which is used for
+	 * crucial gateway-related things.
+	 *
+	 * @param EM_Multiple_Booking $EM_Multiple_Booking
+	 *
+	 * @return void
+	 */
+	public static function checkout_page_polyfill( $EM_Multiple_Booking ) {
+		// remove the backcompat to prevent loop
+		remove_action('em_checkout_form_confirm_footer', array( static::class, 'checkout_page_backcompat'));
+		// output booking intent
+		echo $EM_Multiple_Booking->output_intent_html();
+		// trigger the new actions required for gateways etc to work
+		do_action('em_checkout_form_after_user_details', $EM_Multiple_Booking);
+		do_action('em_checkout_form_confirm_footer', $EM_Multiple_Booking);
+	}
+	
+	/**
+	 * Triggers any actions that are bound to the deprecated em_checkout_form_footer action, ensuring compatibility with outdated code that
+	 * hasn't changed its trigger action to em_checkout_form_confirm_footer. Any code using this oudated filter should do so, as there's a polyfill
+	 * that will handle any themes that override the new template with older versions containing em_checkout_form_Footer.
+	 *
+	 * @return void
+	 */
+	public static function checkout_page_backcompat( $EM_Multiple_Booking ) {
+		// remove polyfill to prevent loop
+		remove_action('em_checkout_form_footer', array( static::class, 'checkout_page_polyfill'));
+		// trigger deprecated action
+		if( has_action('em_checkout_form_footer') ){
+			do_action('em_checkout_form_footer', $EM_Multiple_Booking);
+		}
+	}
     
     /* Shopping Cart Page */
 	

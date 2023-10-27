@@ -111,8 +111,11 @@ class Meetings {
 	 */
 	public function show_meeting_by_postTypeID( $atts ) {
 		extract( shortcode_atts( array(
-			'post_id'  => '',
-			'template' => '',
+			'post_id'     => '',
+			'template'    => '',
+			'countdown'   => true,
+			'description' => true,
+			'details'     => true,
 		), $atts ) );
 
 		ob_start();
@@ -174,8 +177,13 @@ class Meetings {
 				}
 
 				//Set flag that this is coming from shortcode instance
-				$GLOBALS['zoom']['shortcode'] = true;
-				$GLOBALS['zoom']['post_id']   = get_the_id();
+				$GLOBALS['zoom']['shortcode']  = true;
+				$GLOBALS['zoom']['post_id']    = get_the_id();
+				$GLOBALS['zoom']['parameters'] = [
+					'description' => esc_html( $description ),
+					'countdown'   => esc_html( $countdown ),
+					'details'     => esc_html( $details ),
+				];
 
 				//Check if pro active
 				if ( vczapi_pro_version_active() && ! empty( $GLOBALS['zoom']['api']->registration_url ) ) {
@@ -218,7 +226,7 @@ class Meetings {
 				'show_on_past' => 'yes',
 				'cols'         => 3,
 			),
-			$atts,'zoom_list_meetings'
+			$atts, 'zoom_list_meetings'
 		);
 
 		wp_enqueue_script( 'video-conferencing-with-zoom-api-shortcode-js' );

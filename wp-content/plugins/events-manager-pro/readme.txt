@@ -2,8 +2,8 @@
 Contributors: pxlite, msykes
 Tags: events, event, event registration, event calendar, events calendar, event management, paypal, registration, ticket, tickets, ticketing, tickets, theme, widget, locations, maps, booking, attendance, attendee, buddypress, calendar, gigs, payment, payments, sports,
 Requires at least: 4.9
-Tested up to: 6.1
-Stable tag: 3.1.3
+Tested up to: 6.2
+Stable tag: 3.2.6
 
 == Description ==
 
@@ -22,6 +22,54 @@ http://wp-events-plugin.com/support/
 Please visit http://wp-events-plugin.com/documentation/installation/
 
 == Changelog ==
+= 3.2.6 =
+* fixed gateway checkout errors on Multiple Bookings mode
+* fixed PHP 8 warnings for automations
+* fixed return url not saving properly for gateways
+
+= 3.2.5 =
+* fixed plus signs in emails not producing correct waitlist signup url
+* changed gateway JS to use new EM enable/disable button functions since EM 6.4.3.1
+* updated checkout template to use new booking form markup
+* added backcompat functions/hooks for sites overriding checkout templates using old markup and missing new hooks,
+* updated goateway to use new checkout form footer action (or backcompat fallbacks)
+* fixed waitlist issues whilst logged in when double-bookings are blocked,
+* fixed possiblity to waitlist-request more than a single booking will ever allow if approved
+* fixed gateway intial load issues of booking intent with minimum spaces already defined with a pre-selected gateway
+* fixed default gateway redirect url (my bookings) not showing successful custom feedback message in notice markup
+* fixed cancellation notice for waiting lists missing formatting,
+* fixed waitlist booking form not collapsing upon successful booking
+
+= 3.2.4 =
+* fixed error in 3.2.3 which caused problems with versions earlier than Events Manager 6.4.2
+
+= 3.2.3 =
+* fixed QuickPay buttons not showing for checkout
+* fixed automation emails action admin area adding slashes to message and not displaying message in textarea
+* fixed automation emails and other scheduled emails not working when added to the EM Pro email queue when reminders are disabled
+* added $email_args to set_status and ensure compatibility with EM_Booking parent method in EM 6.4.2
+* fixed waitlist booking form compatibility issues with EM 6.4.x
+* fixed PHP warning when inserting event time trigger flags into em_meta table
+* fixed booking form init JS not triggering a change event for a pre-selected when booking form initially loaded,
+* added extra fallback fix to enable booking button in event of a free booking
+* fixed JS errors not redirecting users with the PayPal legacy gateway (running new API)
+* fixed date timestamp issues of transaction history for outgoing NVP checks for PayPal legacy gateway
+* fixed sandbox mode not redirecting properly for PayPal legacy gateway (both APIs)
+
+= 3.2.2 =
+* fixed JS issue with gateway QuickPay buttons
+* fixed minor php 8 deprecated warnings
+
+= 3.2.1 =
+* added support for custom fonts allowing for special character languages (Chinese, Japanese, etc.)
+* added template loading from the plugins-template folder
+* fixed waitlists feature placeholders not working and/or overwriting certain event placeholders when enabled
+* complete overhaul of Gateway API with support for new payment methods for Stripe, PayPal and Authorize.net
+* rewrite of coupon code UI including decoupling from jQuery
+* updated manual transactions and custom emails for new gateway API class names and methods
+* changed attednee forms hooks to use em_booking_js rather than em_gateway_js
+* changed attendee forms js to use listener function that is called rather than triggering a change listener on load (causes issues with intents and summaries)
+
 = 3.1.3 =
 * added dependent event booking restrictions feature
 * fixed minor PHP warning for booking time automation
@@ -477,7 +525,7 @@ Please visit http://wp-events-plugin.com/documentation/installation/
 * added Norwegian translation
 * added MB mode feature to allow users with edit_others_bookings to sync no-user booking personal info edits to all bookings in a MB booking set
 * changed PayPal gateway to use HTTP 1.1 when verifying IPN authenticity
-* fixed php warning when invalid user field name supplied to EM_Gateways::get_customer_field
+* fixed php warning when invalid user field name supplied to \EM\Payments\Gateways::get_customer_field
 * improved cart coupon JS and changed template to make coupon application a different html form entirely to allow for graceful fallback
 * fixed bug where wrong data type returned when looking for gateway common fields that don't exist
 * added failsafe for known fatal EM version conflicts
