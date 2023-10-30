@@ -124,7 +124,7 @@ class EM_Gateways_Transactions{
 		$total = $this->total_transactions;
 
 		$columns = array();
-
+		
 		$columns['event'] = __('Event','em-pro');
 		$columns['user'] = __('User','em-pro');
 		$columns['date'] = __('Date','em-pro');
@@ -236,11 +236,14 @@ class EM_Gateways_Transactions{
 		ob_start();
 		if($transactions) {
 			foreach($transactions as $key => $transaction) {
+				$EM_Booking = em_get_booking($transaction->booking_id);
 				?>
 				<tr valign="middle" class="alternate">
 					<td>
+						<?php if( !empty($EM_Booking->booking_meta['test']) ): ?>
+							<span class="em-icon em-icon-warning em-tooltip" aria-label="<?php esc_html_e('Test Mode', 'em-pro'); ?>"></span>
+						<?php endif; ?>
 						<?php
-							$EM_Booking = em_get_booking($transaction->booking_id);
 							if( get_class($EM_Booking) == 'EM_Multiple_Booking' ){
 								$link = em_add_get_params($EM_Booking->get_admin_url(), array('booking_id'=>$EM_Booking->booking_id, 'em_ajax'=>null, 'em_obj'=>null));
 								echo '<a href="'.$link.'">'.$EM_Booking->get_event()->event_name.'</a>';

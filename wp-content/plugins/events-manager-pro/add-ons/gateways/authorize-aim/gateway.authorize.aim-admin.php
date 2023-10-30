@@ -38,8 +38,8 @@ class Gateway_Admin extends EM\Payments\Gateway_Admin {
 	 * Add extra info about silent posts to default notificaiton info
 	 * @return void
 	 */
-	public static function settings_api_notifications() {
-		parent::settings_api_notifications();
+	public static function settings_api_notifications( $test_mode = false ) {
+		parent::settings_api_notifications( $test_mode );
 		?>
 		<p><?php _e('If you would like to receive notifications from Authorize.net and handle refunds or voided transactions automatically, you need to enable either Silent Posts or Webhooks. We recommend using Webhooks instead of Silent Posts.','em-pro'); ?></p>
 		<p><?php echo sprintf(__('Your Silent Posts url is %s.','em-pro'),'<code>'.static::gateway()::get_payment_return_url().'</code>'); ?></p>

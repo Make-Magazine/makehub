@@ -238,10 +238,17 @@ if (!function_exists('essb_wpml_translatable_fields')) {
 			}
 		}
 		
+		/**
+		 * @since 8.4 Widget titles are added to the WPML
+		 */
+		$result['menu10'] = array('type' => 'menu', 'title' => esc_html__('Widget Titles', 'essb'));
+		$result['widget_title_followers_counter'] = array('type' => 'input', 'group' => 'menu10', 'title' => 'Followers Counter');
+		$result['widget_title_profiles'] = array('type' => 'input', 'group' => 'menu10', 'title' => 'Social Profiles');
+		
 		return $result;
 	}
 	
-	function essb_wpml_subscribe_forms_translate($field_index, $group, $title = '', $result) {
+	function essb_wpml_subscribe_forms_translate($field_index, $group, $title = '', $result = '') {
 		$result['subscribe_heading_'.$field_index] = array('type' => 'heading', 'group' => $group, 'title' => $title);
 
 		$result['subscribe_mc_title'.$field_index] = array('type' => 'input', 'group' => $group, 'title' => esc_html__('Title', 'essb'));

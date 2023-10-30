@@ -9,22 +9,23 @@
  *
  * 0. If you haven't already, sign up for a TrustedLogin account {@see https://www.trustedlogin.com}
  * 1. Namespace the installation ({@see https://www.trustedlogin.com/configuration/} to learn how)
- * 2. Instantiate this class with a configuration array (really, {@see https://www.trustedlogin.com/configuration/} for more info)
+ * 2. Instantiate this class with a configuration object (really, go see {@see https://www.trustedlogin.com/configuration/} for more info)
  *
  * Class Client
  *
  * @package GravityKit\GravityRevisions\Foundation\ThirdParty\TrustedLogin\Client
  *
- * @copyright 2021 Katz Web Services, Inc.
+ * @copyright 2023 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
+
 namespace GravityKit\GravityRevisions\Foundation\ThirdParty\TrustedLogin;
 
 // Exit if accessed directly
-if ( ! defined('ABSPATH') ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -37,10 +38,10 @@ use \WP_Error;
 final class Client {
 
 	/**
-	 * @var string The current drop-in file version
+	 * @var string The current SDK version.
 	 * @since 1.0.0
 	 */
-	const VERSION = '1.3.6';
+	const VERSION = '1.6.0';
 
 	/**
 	 * @var Config
@@ -92,6 +93,7 @@ final class Client {
 	 */
 	private $site_access;
 
+
 	/**
 	 * TrustedLogin constructor.
 	 *
@@ -108,8 +110,8 @@ final class Client {
 
 		$should_initialize = $this->should_init( $config );
 
-		if ( ! $should_initialize ) {
-			throw new \Exception( 'TrustedLogin was prevented from loading by constants defined on the site.', 403 );
+		if ( is_wp_error( $should_initialize ) ) {
+			throw new \Exception( $should_initialize->get_error_message(), 403 );
 		}
 
 		try {
@@ -129,13 +131,16 @@ final class Client {
 
 		$this->support_user = new SupportUser( $this->config, $this->logging );
 
-		$this->admin = new Admin( $this->config, $this->logging );
+		$this->site_access = new SiteAccess( $this->config, $this->logging );
+
+		$form = new Form( $this->config, $this->logging, $this->support_user, $this->site_access );
+
+		$this->admin = new Admin( $this->config, $form, $this->support_user );
 
 		$this->ajax = new Ajax( $this->config, $this->logging );
 
 		$this->remote = new Remote( $this->config, $this->logging );
 
-		$this->site_access = new SiteAccess( $this->config, $this->logging );
 
 		if ( $init ) {
 			$this->init();
@@ -147,25 +152,31 @@ final class Client {
 	 *
 	 * @param Config $config
 	 *
-	 * @return bool
+	 * @return true|WP_Error
 	 */
 	private function should_init( Config $config ) {
 
-		// Disables all TL clients.
+		// Disables all TL clients for the site.
 		if ( defined( 'TRUSTEDLOGIN_DISABLE' ) && TRUSTEDLOGIN_DISABLE ) {
-			return false;
+			return new WP_Error( 'disabled_globally', 'TrustedLogin has been disabled globally for this site using the TRUSTEDLOGIN_DISABLE constant.' );
 		}
 
 		$ns = $config->ns();
 
 		// Namespace isn't set; allow Config
-		if( empty( $ns ) ) {
+		if ( empty( $ns ) ) {
 			return true;
 		}
 
 		// Disables namespaced client if `TRUSTEDLOGIN_DISABLE_{NS}` is defined and truthy.
 		if ( defined( 'TRUSTEDLOGIN_DISABLE_' . strtoupper( $ns ) ) && constant( 'TRUSTEDLOGIN_DISABLE_' . strtoupper( $ns ) ) ) {
-			return false;
+			return new WP_Error( 'disabled_for_namespace', 'TrustedLogin has been disabled for this namespace using the TRUSTEDLOGIN_DISABLE_' . $ns . ' constant.' );
+		}
+
+		$meets_requirements = Encryption::meets_requirements();
+
+		if ( ! $meets_requirements ) {
+			return new WP_Error( 'does_not_meet_requirements', 'TrustedLogin could not load: the site does not meet encryption requirements.' );
 		}
 
 		return true;
@@ -193,7 +204,7 @@ final class Client {
 	public function get_access_key() {
 
 		if ( ! self::$valid_config ) {
-			return new WP_Error( 'invalid_configuration', 'TrustedLogin has not been properly configured or instantiated.', array( 'error_code' => 424 ) );
+			return new \WP_Error( 'invalid_configuration', 'TrustedLogin has not been properly configured or instantiated.', array( 'error_code' => 424 ) );
 		}
 
 		return $this->site_access->get_access_key();
@@ -202,16 +213,21 @@ final class Client {
 	/**
 	 * This creates a TrustedLogin user ✨
 	 *
+	 * @since 1.5.0 Added $ticket_data parameter.
+	 *
+	 * @param bool $include_debug_data Whether to include debug data in the response.
+	 * @param array|null $ticket_data If provided, customer-provided data associated with the access request.
+	 *
 	 * @return array|WP_Error
 	 */
-	public function grant_access() {
+	public function grant_access( $include_debug_data = false, $ticket_data = null ) {
 
 		if ( ! self::$valid_config ) {
-			return new WP_Error( 'invalid_configuration', 'TrustedLogin has not been properly configured or instantiated.', array( 'error_code' => 424 ) );
+			return new \WP_Error( 'invalid_configuration', 'TrustedLogin has not been properly configured or instantiated.', array( 'error_code' => 424 ) );
 		}
 
 		if ( ! current_user_can( 'create_users' ) ) {
-			return new WP_Error( 'no_cap_create_users', 'Permissions issue: You do not have the ability to create users.', array( 'error_code' => 403 ) );
+			return new \WP_Error( 'no_cap_create_users', 'Permissions issue: You do not have the ability to create users.', array( 'error_code' => 403 ) );
 		}
 
 		// If the user exists already, extend access
@@ -227,7 +243,7 @@ final class Client {
 
 			$this->logging->log( 'An exception occurred trying to create a support user.', __METHOD__, 'critical', $exception );
 
-			return new WP_Error( 'support_user_exception', $exception->getMessage(), array( 'error_code' => 500 ) );
+			return new \WP_Error( 'support_user_exception', $exception->getMessage(), array( 'error_code' => 500 ) );
 		}
 
 		if ( is_wp_error( $support_user_id ) ) {
@@ -247,7 +263,7 @@ final class Client {
 
 			$this->logging->log( 'Could not generate a secure secret.', __METHOD__, 'error' );
 
-			return new WP_Error( 'secure_secret_failed', 'Could not generate a secure secret.', array( 'error_code' => 501 ) );
+			return new \WP_Error( 'secure_secret_failed', 'Could not generate a secure secret.', array( 'error_code' => 501 ) );
 		}
 
 		$endpoint_hash = $this->endpoint->get_hash( $site_identifier_hash );
@@ -273,7 +289,7 @@ final class Client {
 		}
 
 		if ( empty( $did_setup ) ) {
-			return new WP_Error( 'support_user_setup_failed', 'Error updating user with identifier.', array( 'error_code' => 503 ) );
+			return new \WP_Error( 'support_user_setup_failed', 'Error updating user with identifier.', array( 'error_code' => 503 ) );
 		}
 
 		$secret_id = $this->endpoint->generate_secret_id( $site_identifier_hash, $endpoint_hash );
@@ -292,36 +308,42 @@ final class Client {
 		$timing_local = timer_stop( 0, 5 );
 
 		$return_data = array(
-			'type'       => 'new',
-			'site_url'   => get_site_url(),
-			'endpoint'   => $endpoint_hash,
-			'identifier' => $site_identifier_hash,
-			'user_id'    => $support_user_id,
-			'expiry'     => $expiration_timestamp,
+			'type'         => 'new',
+			'site_url'     => get_site_url(),
+			'endpoint'     => $endpoint_hash,
+			'identifier'   => $site_identifier_hash,
+			'user_id'      => $support_user_id,
+			'expiry'       => $expiration_timestamp,
 			'reference_id' => $reference_id,
-			'timing'     => array(
+			'timing'       => array(
 				'local'  => $timing_local,
 				'remote' => null, // Updated later
 			),
 		);
 
 		if ( ! $this->config->meets_ssl_requirement() ) {
-			return new WP_Error( 'fails_ssl_requirement', esc_html__( 'TrustedLogin requires a secure connection using HTTPS.', 'gk-gravityrevisions' ) );
+			return new \WP_Error( 'fails_ssl_requirement', esc_html__( 'TrustedLogin requires a secure connection using HTTPS.', 'gk-gravityrevisions' ) );
 		}
 
 		timer_start();
 
 		try {
 
-			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 			$created = $this->site_access->sync_secret( $secret_id, $site_identifier_hash, 'create' );
 
-			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 		} catch ( Exception $e ) {
 
-			$exception_error = new WP_Error( $e->getCode(), $e->getMessage(), array( 'status_code' => 500 ) );
+			$exception_error = new \WP_Error( $e->getCode(), $e->getMessage(), array( 'status_code' => 500 ) );
 
 			$this->logging->log( 'There was an error creating a secret.', __METHOD__, 'error', $e );
 
@@ -343,12 +365,30 @@ final class Client {
 
 		$return_data['timing']['remote'] = timer_stop( 0, 5 );
 
-		do_action( 'trustedlogin/' . $this->config->ns() . '/access/created', array(
-			'url'    => get_site_url(),
-			'ns' => $this->config->ns(),
-			'action' => 'created',
-			'ref' => $reference_id,
-		) );
+		timer_start();
+
+		$action_data = array(
+			'url'        => get_site_url(),
+			'ns'         => $this->config->ns(),
+			'action'     => 'created',
+			'ref'        => $reference_id,
+			'access_key' => $this->site_access->get_access_key(),
+		);
+
+		if ( $include_debug_data ) {
+			$action_data['debug_data'] = $this->get_debug_data();
+		}
+
+		if ( $ticket_data ) {
+			$action_data['ticket'] = $ticket_data;
+		}
+
+		/**
+		 * @usedby Remote::maybe_send_webhook()
+		 */
+		do_action( 'trustedlogin/' . $this->config->ns() . '/access/created', $action_data );
+
+		$return_data['timing']['access_created_action'] = timer_stop( 0, 5 );
 
 		return $return_data;
 	}
@@ -409,22 +449,28 @@ final class Client {
 		);
 
 		if ( ! $this->config->meets_ssl_requirement() ) {
-			return new WP_Error( 'fails_ssl_requirement', esc_html__( 'TrustedLogin requires a secure connection using HTTPS.', 'gk-gravityrevisions' ) );
+			return new \WP_Error( 'fails_ssl_requirement', esc_html__( 'TrustedLogin requires a secure connection using HTTPS.', 'gk-gravityrevisions' ) );
 		}
 
 		timer_start();
 
 		try {
 
-			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 			$updated = $this->site_access->sync_secret( $secret_id, $site_identifier_hash, 'extend' );
 
-			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 		} catch ( Exception $e ) {
 
-			$exception_error = new WP_Error( $e->getCode(), $e->getMessage(), array( 'status_code' => 500 ) );
+			$exception_error = new \WP_Error( $e->getCode(), $e->getMessage(), array( 'status_code' => 500 ) );
 
 			$this->logging->log( 'There was an error updating TrustedLogin servers.', __METHOD__, 'error', $e );
 
@@ -446,11 +492,15 @@ final class Client {
 
 		$return_data['timing']['remote'] = timer_stop( 0, 5 );
 
+		/**
+		 * @usedby Remote::maybe_send_webhook()
+		 */
 		do_action( 'trustedlogin/' . $this->config->ns() . '/access/extended', array(
-			'url'    => get_site_url(),
-			'ns' => $this->config->ns(),
-			'action' => 'extended',
-			'ref' => self::get_reference_id(),
+			'url'        => get_site_url(),
+			'ns'         => $this->config->ns(),
+			'action'     => 'extended',
+			'ref'        => self::get_reference_id(),
+			'access_key' => $this->site_access->get_access_key(),
 		) );
 
 		return $return_data;
@@ -489,8 +539,8 @@ final class Client {
 		}
 
 		$site_identifier_hash = $this->support_user->get_site_hash( $user );
-		$endpoint_hash = $this->endpoint->get_hash( $site_identifier_hash );
-		$secret_id = $this->endpoint->generate_secret_id( $site_identifier_hash, $endpoint_hash );
+		$endpoint_hash        = $this->endpoint->get_hash( $site_identifier_hash );
+		$secret_id            = $this->endpoint->generate_secret_id( $site_identifier_hash, $endpoint_hash );
 
 		// Revoke site in SaaS
 		$site_revoked = $this->site_access->revoke( $secret_id, $this->remote );
@@ -514,7 +564,8 @@ final class Client {
 
 		if ( ! empty( $should_be_deleted ) ) {
 			$this->logging->log( 'User #' . $should_be_deleted->ID . ' was not removed', __METHOD__, 'error' );
-			return new WP_Error( 'support_user_not_deleted', esc_html__( 'The support user was not deleted.', 'gk-gravityrevisions' ) );
+
+			return new \WP_Error( 'support_user_not_deleted', esc_html__( 'The support user was not deleted.', 'gk-gravityrevisions' ) );
 		}
 
 		/**
@@ -522,7 +573,7 @@ final class Client {
 		 */
 		do_action( 'trustedlogin/' . $this->config->ns() . '/access/revoked', array(
 			'url'    => get_site_url(),
-			'ns' => $this->config->ns(),
+			'ns'     => $this->config->ns(),
 			'action' => 'revoked',
 		) );
 
@@ -569,4 +620,48 @@ final class Client {
 		return null;
 	}
 
+	/**
+	 * Returns the debug data for the current website.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return string|false|null String: A text-formatted summary of WP Debug Data; false: the debug data setting wasn't enabled; null: there was an error.
+	 */
+	private function get_debug_data() {
+
+		if ( ! $this->config->get_setting( 'webhook/debug_data' ) ) {
+			return false;
+		}
+
+		if ( ! class_exists( 'WP_Debug_Data' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/class-wp-debug-data.php';
+		}
+
+		if ( ! class_exists( 'WP_Debug_Data' ) ) {
+			$this->logging->log( 'WP_Debug_Data failed to be loaded.', __METHOD__, 'error' );
+
+			return null;
+		}
+
+		try {
+			$info = \WP_Debug_Data::debug_data();
+		} catch ( \ImagickException $exception ) {
+			return null;
+		} catch ( \Exception $exception ) {
+			return null;
+		}
+
+		$debug_data = \WP_Debug_Data::format( $info, 'info' );
+
+		// Remove backtick added by WP.
+		$debug_data = trim( $debug_data, '`' );
+
+		// Format Markdown in Zapier-friendly manner (`### Heading`, not `### Heading ###`).
+		$debug_data = str_replace( "###\n", "\n", $debug_data );
+
+		// Add two spaces to create line breaks in Markdown.
+		$debug_data = str_replace( "\n", "  \n", $debug_data );
+
+		return $debug_data;
+	}
 }

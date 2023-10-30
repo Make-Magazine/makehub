@@ -2,8 +2,8 @@
 Contributors: pxlite, msykes
 Tags: events, event, event registration, event calendar, events calendar, event management, paypal, registration, ticket, tickets, ticketing, tickets, theme, widget, locations, maps, booking, attendance, attendee, buddypress, calendar, gigs, payment, payments, sports,
 Requires at least: 4.9
-Tested up to: 6.2
-Stable tag: 3.2.6
+Tested up to: 6.3
+Stable tag: 3.2.7
 
 == Description ==
 
@@ -22,6 +22,14 @@ http://wp-events-plugin.com/support/
 Please visit http://wp-events-plugin.com/documentation/installation/
 
 == Changelog ==
+= 3.2.7 =
+* added new Loader check for QR feature to prevent fatal errors from inconsistent feature active checks
+* added EM\Loader for backcompat with older EM versions
+* fixed bookings manager page load issues when front-end management features are enabled in Elementor Pro
+* fixed PHP error when automation triggers/actions from external plugins aren't active anymore
+* added RSVP Pro features including endpoint link and RSVP policies
+* added gateway test modes, allowing for live/test switching quickly along with testing gateways restricted to IPs, users and events
+
 = 3.2.6 =
 * fixed gateway checkout errors on Multiple Bookings mode
 * fixed PHP 8 warnings for automations

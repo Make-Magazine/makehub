@@ -21,7 +21,7 @@
 			}
 			?>
 		</td>
-		<?php if( get_option('dbem_bookings_qr') ): ?>
+		<?php if( EM\Feature::has('qr') ): ?>
 		<td class="qr">
 			<img src="<?php echo \EM_Pro\QR::base64('booking/' . $EM_Booking->booking_uuid)['src']; ?>" style="width:99px;">
 		</td>

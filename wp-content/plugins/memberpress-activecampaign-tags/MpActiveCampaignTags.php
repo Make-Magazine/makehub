@@ -358,16 +358,9 @@ class MpActiveCampaignTags {
     if(is_null($apikey)) { $apikey = $this->apikey(); }
     if(is_null($account)) { $account = $this->account(); }
 
-    $url = "https://{$account}.api-us1.com/admin/api.php";
-
-    $req_args = array_merge(
-      $args,
-      array(
-        'api_action' => $endpoint,
-        'api_key' => $apikey,
-        'api_output' => 'json',
-      )
-    );
+    $url = "https://{$account}.api-us1.com/admin/api.php/?api_action=" . $endpoint;
+    $url .= "&api_key=" . $apikey;
+    $url .= "&api_output=json";
 
     $wp_args = array(
       'timeout' => 60,
@@ -377,10 +370,12 @@ class MpActiveCampaignTags {
     );
 
     if(strtoupper($method) == 'GET' || strtoupper($method) == 'DELETE') {
-      $url .= '?' . http_build_query($req_args);
+      foreach ($args as $key => $value) {
+        $url .= "&" . $key . "=" . $value;
+      }
     }
     else {
-      $wp_args['body'] = $req_args;
+      $wp_args['body'] = $args;
     }
 
     $res = wp_remote_request( $url, $wp_args );

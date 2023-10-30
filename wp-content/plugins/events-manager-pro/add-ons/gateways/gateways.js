@@ -23,11 +23,7 @@ document.addEventListener("em_booking_form_init", function( e ) {
 			input.name = 'gateway';
 			input.value = gateway;
 			booking_form.append(input);
-			booking_form.dispatchEvent( new CustomEvent('submit', {
-				target : e.target,
-				bubbles : true,
-				cancellable : true,
-			}) );
+			booking_form.requestSubmit( button );
 			return false;
 		});
 	});

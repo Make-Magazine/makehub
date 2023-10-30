@@ -825,6 +825,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<select name='secondary_sort_type' data-field-template-id='secondary_sort_type'>
 							<option value="numeric"<?php $this->set_selected($values['secondary_sort_type'], "numeric"); ?>><?php _e("Numerical", $this->plugin_slug); ?></option>
 							<option value="alphabetic"<?php $this->set_selected($values['secondary_sort_type'], "alphabetic"); ?>><?php _e("Alphabetical", $this->plugin_slug); ?></option>
+							<option value="date"<?php $this->set_selected($values['secondary_sort_type'], "date"); ?>><?php _e("Date", $this->plugin_slug); ?></option>
+                            <option value="datetime"<?php $this->set_selected($values['secondary_sort_type'], "datetime"); ?>><?php _e("Datetime", $this->plugin_slug); ?></option>
+                            
 						</select>
 					</fieldset>
 				</td>

@@ -15,7 +15,7 @@ function emio_event_output_placeholder($replace, $EM_Event, $result){
 			$replace = !empty($EM_Event->event_attributes['bookings_url']) ? $EM_Event->event_attributes['bookings_url'] : '';
 			break;
 		case '#_EMIOBOOKINGSPRICE':
-			if( isset($EM_Event->event_attributes['bookings_price']) ){
+			if( isset($EM_Event->event_attributes['bookings_price']) && is_numeric($EM_Event->event_attributes['bookings_price']) ){
 				$price = $EM_Event->event_attributes['bookings_price'];
 				$replace = number_format( $price, 2, get_option('dbem_bookings_currency_decimal_point','.'), get_option('dbem_bookings_currency_thousands_sep',',') );
 			}else{

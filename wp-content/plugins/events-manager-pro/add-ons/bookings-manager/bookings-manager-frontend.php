@@ -8,8 +8,8 @@ class Bookings_Manager_Frontend {
 	
 	public static function init() {
 		// rule flushes are handled by EM itself, we can just add our endpoints
-		add_action( 'template_include', '\EM_Pro\Bookings_Manager_Frontend::template_include' );
-		add_action( 'init', '\EM_Pro\Bookings_Manager_Frontend::add_endpoint' );
+		add_action( 'template_include', array(static::class, 'template_include'), 1 );
+		add_action( 'init', array(static::class, 'add_endpoint') );
 	}
 	
 	public static function add_endpoint(){
@@ -38,8 +38,8 @@ class Bookings_Manager_Frontend {
 		global $wp_query;
 		//echo '<pre>'.print_r($wp_query, true).'</pre>'; die();
 		$endpoint = get_option('dbem_bookings_manager_endpoint');
-		
-		if ( (!is_home() && !is_front_page()) ) return $template;
+		// check if we're on the endpoint, if not bail
+		if ( !is_home() && !is_front_page() )  return $template;
 		if( !isset( $wp_query->query_vars[$endpoint] ) ){
 			if( !defined('EM_FE_ENDPOINT_ALIAS') ){
 				return $template;
@@ -87,11 +87,11 @@ class Bookings_Manager_Frontend {
 		
 		// Load template from either plugins directory or load our own core one
 		$template = emp_locate_template('bookings-manager/template.php', false);
-		if( file_exists( $template ) ) {
-			return $template;
-		}else{
-			return dirname( __FILE__ ) . '/template/template.php';
+		if( !file_exists( $template ) ) {
+			$template = dirname( __FILE__ ) . '/template/template.php';
 		}
+		include($template);
+		die();
 	}
 }
 Bookings_Manager_Frontend::init();

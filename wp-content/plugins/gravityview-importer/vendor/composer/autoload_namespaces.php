@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Goodby\\CSV' => array($vendorDir . '/goodby/csv/src'),
-    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
 );

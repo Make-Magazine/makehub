@@ -337,6 +337,11 @@ class Checkout extends lib\BaseCtrl {
    * @return [type]
    */
   public function gift_product_override($override, $product){
+    global $post;
+    if( \MeprUser::is_account_page($post) && false === $override ) {
+      return $override;
+    }
+
     if( models\Gift::is_product_giftable($product) ){
       $override = true;
     }

@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Monolog\Handler;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityRevisions\Monolog\Logger;
-use GravityKit\GravityRevisions\Monolog\Utils;
-use GravityKit\GravityRevisions\Monolog\Formatter\FlowdockFormatter;
-use GravityKit\GravityRevisions\Monolog\Formatter\FormatterInterface;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Logger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Utils;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Formatter\FlowdockFormatter;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Formatter\FormatterInterface;
 
 /**
  * Sends notifications through the Flowdock push API

@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Monolog\Formatter;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Formatter;
 
-use GravityKit\GravityImport\Monolog\Utils;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Utils;
 
 /**
  * Class FluentdFormatter
@@ -30,9 +30,9 @@ use GravityKit\GravityImport\Monolog\Utils;
  *
  * Monolog setup:
  *
- * $logger = new GravityKit\GravityImport\Monolog\Logger('fluent.tag');
- * $fluentHandler = new GravityKit\GravityImport\Monolog\Handler\SocketHandler('unix:///var/run/td-agent/td-agent.sock');
- * $fluentHandler->setFormatter(new GravityKit\GravityImport\Monolog\Formatter\FluentdFormatter());
+ * $logger = new GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Logger('fluent.tag');
+ * $fluentHandler = new GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Handler\SocketHandler('unix:///var/run/td-agent/td-agent.sock');
+ * $fluentHandler->setFormatter(new GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Formatter\FluentdFormatter());
  * $logger->pushHandler($fluentHandler);
  *
  * @author Andrius Putna <fordnox@gmail.com>
@@ -47,7 +47,7 @@ class FluentdFormatter implements FormatterInterface
     public function __construct($levelTag = false)
     {
         if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityImport\Monolog\'s FluentdUnixFormatter');
+            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\'s FluentdUnixFormatter');
         }
 
         $this->levelTag = (bool) $levelTag;

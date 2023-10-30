@@ -9,6 +9,7 @@
 	--essb-sf-color-instagram: #3f729b;
 	--essb-sf-color-facebook: #3B5998;
 	--essb-sf-color-twitter: #4099FF;
+	--essb-sf-color-twitter-x: #0f1419;
 	--essb-sf-color-pinterest: #cb2027;
 	--essb-sf-color-linkedin: #007bb6;
 	--essb-sf-color-github: #171515;
@@ -93,12 +94,22 @@
 	transition: 0.2s all;
 }
 
+.essb-fc-grid .essb-fc-block a label {
+	display: none;
+	opacity: 0;
+}
+
 .essb-fc-grid.essb-fc-nospace .essb-fc-block {
 	margin: 0 !important;	
 }
 
 .essb-fc-grid .essb-fc-block .essb-fc-block-icon {
 	line-height: 1;
+}
+
+.essb-fc-block .essb-fc-block-icon svg {
+	width: 32px;
+	height: 32px;
 }
 
 .essb-fc-grid .essb-fc-block .essb-fc-block-icon,
@@ -140,39 +151,6 @@
 	height: 18px;
 }
 
-.essb-fc-grid.essb-fc-profile-size-xsmall i svg {
-	width: 10px;
-	height: 10px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-small i svg {
-	width: 14px;
-	height: 14px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-large i svg {
-	width: 22px;
-	height: 22px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-large .essb-fc-block {
-	padding: 12px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-xlarge i svg {
-	width: 26px;
-	height: 26px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-xxlarge i svg {
-	width: 32px;
-	height: 32px;
-}
-
-.essb-fc-grid.essb-fc-profile-size-xlarge .essb-fc-block,
-.essb-fc-grid.essb-fc-profile-size-xxlarge .essb-fc-block {
-	padding: 16px;
-}
 
 .essb-fc-grid.essb-profiles .essb-fc-block .essb-fc-block-details .text {
 	font-size: 13px;
@@ -377,6 +355,66 @@
 	height: 21px;
 }
 
+
+/** Sizes */
+.essb-fc-grid.essb-fc-profile-size-xsmall i svg {
+	width: 10px;
+	height: 10px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xsmall .essb-fc-block-details .text {
+	font-size: 10px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xsmall .essb-fc-block-details .count {
+	font-size: 12px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-small i svg {
+	width: 14px;
+	height: 14px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-small .essb-fc-block-details .text {
+	font-size: 11px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-small .essb-fc-block-details .count {
+	font-size: 14px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-large i svg {
+	width: 22px;
+	height: 22px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-large .essb-fc-block {
+	padding: 12px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xlarge i svg {
+	width: 26px;
+	height: 26px;
+}
+
+
+.essb-fc-grid.essb-fc-profile-size-xlarge .essb-fc-block-details .count {
+	font-size: 26px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xxlarge i svg {
+	width: 32px;
+	height: 32px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xxlarge .essb-fc-block-details .count {
+	font-size: 28px;
+}
+
+.essb-fc-grid.essb-fc-profile-size-xlarge .essb-fc-block,
+.essb-fc-grid.essb-fc-profile-size-xxlarge .essb-fc-block {
+	padding: 16px;
+}
 
 
 /** Templates */
@@ -597,9 +635,23 @@
      color: var( --essb-sf-color-twitter );
      fill: var( --essb-sf-color-twitter );
 }
- .essb-fc-border-twitter, .essb-fc-hborder-twitter:hover{
+.essb-fc-border-twitter, .essb-fc-hborder-twitter:hover{
      border-color: var( --essb-sf-color-twitter );
 }
+
+.essb-fc-bg-twitter-x, .essb-fc-hbg-twitter-x:hover{
+     background-color: var( --essb-sf-color-twitter-x );
+}
+ .essb-fc-c-twitter-x, .essb-fc-hc-twitter-x:hover {
+     color: var( --essb-sf-color-twitter-x );
+     fill: var( --essb-sf-color-twitter-x );
+}
+
+.essb-fc-border-twitter-x, .essb-fc-hborder-twitter-x:hover{
+     border-color: var( --essb-sf-color-twitter-x );
+}
+
+ 
  .essb-fc-bg-pinterest, .essb-fc-hbg-pinterest:hover{
      background-color: var( --essb-sf-color-pinterest );
 }

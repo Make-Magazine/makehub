@@ -259,13 +259,19 @@ class MeprTransactionsHelper {
     $show_negative_tax_on_invoice = get_option('mepr_show_negative_tax_on_invoice');
 
     if($coupon = $txn->coupon()) {
+      $amount = MeprUtils::maybe_round_to_minimum_amount($prd->price);
+
       if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
-        $amount = $prd->price;
         $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount);
       }
       else {
         $remove_tax = $calculate_taxes && $tax_inclusive && $txn->tax_rate > 0;
-        $amount = $remove_tax ? ($prd->price/(1+($txn->tax_rate/100))) : $prd->price;
+        if($remove_tax) {
+          $amount = ($amount/(1+($txn->tax_rate/100)));
+        }
+        if(!$remove_tax && $prd->trial && $txn->amount == 0) {
+          $amount = 0;
+        }
         $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount);
       }
 
@@ -274,10 +280,10 @@ class MeprTransactionsHelper {
     }
     elseif($sub && ($coupon = $sub->coupon())) {
       if($coupon->discount_mode == 'trial-override' && $sub->trial){
-        $amount = $prd->trial_amount;
+        $amount = MeprUtils::maybe_round_to_minimum_amount($prd->trial_amount);
         $cpn_id = $coupon->ID;
         $cpn_desc = sprintf(__("Coupon Code '%s'", 'memberpress'), $coupon->post_title);
-        $cpn_amount = MeprUtils::format_float((float)$prd->trial_amount - (float)$txn->amount);
+        $cpn_amount = MeprUtils::format_float((float)$amount - (float)$txn->amount);
       }
       else{
         $amount = $sub->price;
@@ -331,15 +337,16 @@ class MeprTransactionsHelper {
 
     if($sub) {
       $prd = $sub->product();
-      if($prd->register_price_action == 'custom' && !empty($prd->register_price) && !$txn->coupon_id && !$txn->prorated) {
-        $sub_price_str = stripslashes($prd->register_price);
-      }
-      elseif($prd->register_price_action != 'hidden' && ! $tmpsub instanceof MeprSubscription) {
+      if($prd->register_price_action == 'custom' && $mepr_options->design_show_checkout_price_terms) {
         $sub_price_str = MeprSubscriptionsHelper::format_currency($sub);
       }
     }
 
-    MeprView::render('/checkout/invoice', get_defined_vars());
+    if($mepr_options->design_enable_checkout_template) {
+      MeprView::render('/readylaunch/checkout/invoice', get_defined_vars());
+    } else {
+      MeprView::render('/checkout/invoice', get_defined_vars());
+    }
 
     $invoice = ob_get_clean();
     return MeprHooks::apply_filters('mepr-invoice-html', $invoice, $txn );
@@ -466,13 +473,14 @@ class MeprTransactionsHelper {
     $show_negative_tax_on_invoice = get_option('mepr_show_negative_tax_on_invoice');
 
     if($coupon = $txn->coupon()) {
+      $amount = MeprUtils::maybe_round_to_minimum_amount($prd->price);
+
       if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
-        $amount = $prd->price;
         $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount);
       }
       else {
         $remove_tax = $calculate_taxes && $tax_inclusive && $txn->tax_rate > 0;
-        $amount = $remove_tax ? ($prd->price/(1+($txn->tax_rate/100))) : $prd->price;
+        $amount = $remove_tax ? ($amount/(1+($txn->tax_rate/100))) : $amount;
         $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount);
       }
 
@@ -481,10 +489,10 @@ class MeprTransactionsHelper {
     }
     elseif($sub && ($coupon = $sub->coupon())) {
       if($coupon->discount_mode == 'trial-override' && $sub->trial){
-        $amount = $prd->trial_amount;
+        $amount = MeprUtils::maybe_round_to_minimum_amount($prd->trial_amount);
         $cpn_id = $coupon->ID;
         $cpn_desc = sprintf(__("Coupon Code '%s'", 'memberpress'), $coupon->post_title);
-        $cpn_amount = MeprUtils::format_float((float)$prd->trial_amount - (float)$txn->amount);
+        $cpn_amount = MeprUtils::format_float((float)$amount - (float)$txn->amount);
       }
       else{
         $amount = $sub->price;
@@ -611,15 +619,16 @@ class MeprTransactionsHelper {
 
     if($sub) {
       $prd = $sub->product();
-      if($prd->register_price_action == 'custom' && !empty($prd->register_price) && !$txn->coupon_id && !$txn->prorated) {
-        $sub_price_str = stripslashes($prd->register_price);
-      }
-      elseif($prd->register_price_action != 'hidden' && ! $tmpsub instanceof MeprSubscription) {
+      if($prd->register_price_action == 'custom' && $mepr_options->design_show_checkout_price_terms) {
         $sub_price_str = MeprSubscriptionsHelper::format_currency($sub);
       }
     }
 
-    MeprView::render('/checkout/invoice_order_bumps', get_defined_vars());
+    if($mepr_options->design_enable_checkout_template) {
+      MeprView::render('/readylaunch/checkout/invoice_order_bumps', get_defined_vars());
+    } else {
+      MeprView::render('/checkout/invoice_order_bumps', get_defined_vars());
+    }
 
     $invoice = ob_get_clean();
     return MeprHooks::apply_filters('mepr-invoice-html', $invoice, $txn );

@@ -4,7 +4,7 @@ import { Mixins } from 'vimeography-blueprint'
 
 const defaultTemplate = `
   <figure class="vimeography-thumbnail">
-    <router-link class="vimeography-link" :to="this.query" :title="video.name" exact exact-active-class="vimeography-link-active" v-on:click.native="scrollToTop">
+    <router-link class="vimeography-link" :to="this.query" :title="video.name" exact exact-active-class="vimeography-link-active">
       <img class="vimeography-thumbnail-img" :src="thumbnailUrl" :alt="video.name" />
     </router-link>
   </figure>

@@ -8,7 +8,7 @@ function emio_export_endpoint_handler() {
 	global $wp_query;
 	
 	// if this is not a request for json or a singular object then bail
-	if ( !isset( $wp_query->query_vars['events-manager-io'] ) || !is_home() )
+	if ( !isset( $wp_query->query_vars['events-manager-io'] ) || (!is_home() && !is_front_page()) )
 		return;
 	
 	// find the export ID

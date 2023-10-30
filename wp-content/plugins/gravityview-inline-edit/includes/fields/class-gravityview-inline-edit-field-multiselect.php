@@ -27,15 +27,9 @@ class GravityView_Inline_Edit_Field_Multiselect extends GravityView_Inline_Edit_
 	 * @return array
 	 */
 	public function modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field ) {
-
 		$field_value = rgar( $entry, $field_id );
 
-		// Get the rendered form after filters incase the values have changed.
-		$form = gf_apply_filters( array( 'gform_pre_render', $current_form['id'] ), $current_form, false, false );
-
-		$field = GFFormsModel::get_field( $form, $field_id );
-
-		$wrapper_attributes['data-source'] = json_encode( $field['choices'] );
+		$wrapper_attributes['data-source'] = json_encode( $gf_field->choices );
 
 		parent::add_field_template( $this->inline_edit_type, $gf_field->get_field_input( $current_form, $field_value, $entry ), $current_form['id'], $field_id );
 

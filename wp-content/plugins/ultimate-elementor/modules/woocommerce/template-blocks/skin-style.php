@@ -158,10 +158,10 @@ abstract class Skin_Style {
 
 			$slick_options['responsive'] = array();
 
-			if ( $settings['slides_to_show_tablet'] ) {
+			if ( ! empty( $settings['slides_to_show_tablet'] ) ) {
 
 				$tablet_show   = absint( $settings['slides_to_show_tablet'] );
-				$tablet_scroll = ( $settings['slides_to_scroll_tablet'] ) ? absint( $settings['slides_to_scroll_tablet'] ) : $tablet_show;
+				$tablet_scroll = ( ! empty( $settings['slides_to_scroll_tablet'] ) ) ? absint( $settings['slides_to_scroll_tablet'] ) : $tablet_show;
 
 				$slick_options['responsive'][] = array(
 					'breakpoint' => 1024,
@@ -172,10 +172,10 @@ abstract class Skin_Style {
 				);
 			}
 
-			if ( $settings['slides_to_show_mobile'] ) {
+			if ( ! empty( $settings['slides_to_show_mobile'] ) ) {
 
 				$mobile_show   = absint( $settings['slides_to_show_mobile'] );
-				$mobile_scroll = ( $settings['slides_to_scroll_mobile'] ) ? absint( $settings['slides_to_scroll_mobile'] ) : $mobile_show;
+				$mobile_scroll = ( ! empty( $settings['slides_to_scroll_mobile'] ) ) ? absint( $settings['slides_to_scroll_mobile'] ) : $mobile_show;
 
 				$slick_options['responsive'][] = array(
 					'breakpoint' => 767,
@@ -252,9 +252,9 @@ abstract class Skin_Style {
 
 						$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : '1';
 
-						if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'uael-product-nonce' ) ) {
+						if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'uael-product-nonce' ) ) {
 							if ( isset( $_POST['page_number'] ) && '' !== $_POST['page_number'] ) {
-								$paged = $_POST['page_number'];
+								$paged = sanitize_text_field( $_POST['page_number'] );
 							}
 						}
 
@@ -360,10 +360,10 @@ abstract class Skin_Style {
 
 					$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : '1';
 
-					if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'uael-product-nonce' ) ) {
+					if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'uael-product-nonce' ) ) {
 
 						if ( isset( $_POST['page_number'] ) && '' !== $_POST['page_number'] ) {
-							$paged = $_POST['page_number'];
+							$paged = sanitize_text_field( $_POST['page_number'] );
 						}
 					}
 
@@ -518,9 +518,9 @@ abstract class Skin_Style {
 					/* Pagination */
 					$paged = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 
-					if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'uael-product-nonce' ) ) {
+					if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'uael-product-nonce' ) ) {
 						if ( isset( $_POST['page_number'] ) && '' !== $_POST['page_number'] ) {
-							$paged = $_POST['page_number'];
+							$paged = sanitize_text_field( $_POST['page_number'] );
 						}
 					}
 
@@ -923,8 +923,8 @@ abstract class Skin_Style {
 
 		ob_start();
 
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'uael-product-nonce' ) ) {
-			$category = ( isset( $_POST['category'] ) ) ? $_POST['category'] : '';
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'uael-product-nonce' ) ) {
+			$category = ( isset( $_POST['category'] ) ) ? sanitize_text_field( $_POST['category'] ) : '';
 		}
 
 		self::$settings = $widget->get_settings();
@@ -954,8 +954,8 @@ abstract class Skin_Style {
 
 		ob_start();
 
-		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( $_POST['nonce'], 'uael-product-nonce' ) ) {
-			$category = ( isset( $_POST['category'] ) ) ? $_POST['category'] : '';
+		if ( isset( $_POST['nonce'] ) && wp_verify_nonce( sanitize_text_field( $_POST['nonce'] ), 'uael-product-nonce' ) ) {
+			$category = ( isset( $_POST['category'] ) ) ? sanitize_text_field( $_POST['category'] ) : '';
 		}
 
 		self::$settings = $widget->get_settings();

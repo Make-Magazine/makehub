@@ -42,11 +42,16 @@ class EMIO_OAuth_Admin_Settings {
 					<?php
 					emio_input_text(sprintf(__('%s App ID', 'events-manager-io'), static::$service_name), static::$option_name.'_app_id', EMIO_Options::get(static::$option_name.'_app_id'));
 					emio_input_text(sprintf(__('%s App Secret', 'events-manager-io'), static::$service_name), static::$option_name.'_app_secret', EMIO_Options::get(static::$option_name.'_app_secret'));
+					static::emio_settings_apps_additional();
 					?>
 				</table>
 			</div> <!-- . inside -->
 		</div> <!-- .postbox -->
 		<?php
+	}
+	
+	public static function emio_settings_apps_additional(){
+		// override to add any additional settings
 	}
 	
 	public static function emio_settings_user_auth(){

@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Handler;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityEdit\Monolog\Logger;
-use GravityKit\GravityEdit\Monolog\Formatter\FormatterInterface;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Formatter\FormatterInterface;
 
 /**
  * Simple handler wrapper that filters records based on a list of levels
@@ -30,7 +30,7 @@ class FilterHandler extends AbstractHandler
     /**
      * Handler or factory callable($record, $this)
      *
-     * @var callable|\GravityKit\GravityEdit\Monolog\Handler\HandlerInterface
+     * @var callable|\GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler\HandlerInterface
      */
     protected $handler;
 
@@ -80,7 +80,7 @@ class FilterHandler extends AbstractHandler
     public function setAcceptedLevels($minLevelOrList = Logger::DEBUG, $maxLevel = Logger::EMERGENCY)
     {
         if (is_array($minLevelOrList)) {
-            $acceptedLevels = array_map('GravityKit\GravityEdit\Monolog\Logger::toMonologLevel', $minLevelOrList);
+            $acceptedLevels = array_map('GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger::toMonologLevel', $minLevelOrList);
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
             $maxLevel = Logger::toMonologLevel($maxLevel);

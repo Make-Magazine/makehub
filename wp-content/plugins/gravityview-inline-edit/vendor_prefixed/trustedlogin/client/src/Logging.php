@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityEdit\Foundation\ThirdParty\TrustedLogin;
@@ -124,6 +124,22 @@ class Logging {
 		}
 
 		return $klogger;
+	}
+
+	/**
+	 * Returns the full path to the log file
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return null|string Path to log file, if exists; null if not instantiated.
+	 */
+	public function get_log_file_path() {
+
+		if ( ! $this->klogger instanceof Logger ) {
+			return null;
+		}
+
+		return $this->klogger->getLogFilePath();
 	}
 
 	/**

@@ -301,8 +301,9 @@ class EMIO_Export extends EMIO_Item {
 	public function export_http_headers( ){
 		if( $this->get_source_type() == 'public-dl' ){
 			header("Content-Type: ". current(static::$mime_type));
-			$file_name = 'emio-csv-export.'. static::$ext;
-			header("Content-Disposition: Attachment; filename=".sanitize_title($file_name).".".static::$ext);
+			$url = explode('/', preg_replace('/https?:\/\//', '', get_home_url()));
+			$file_name = $url[0].'-emio-'.static::$ext.'-export';
+			header("Content-Disposition: Attachment; filename=".sanitize_file_name($file_name).".".static::$ext);
 		}
 	}
 	

@@ -69,7 +69,7 @@
 							<p class="when"><?php echo $EM_Event->start()->i18n( 'd/m @ h:i A' ); ?></p>
 						<?php endif; ?>
 						</div>
-						<?php if( get_option('dbem_bookings_qr') ): ?>
+						<?php if( EM\Feature::has('qr') ): ?>
 						<img src="<?php echo \EM_Pro\QR::base64('ticket/'. $EM_Ticket_Booking->ticket_uuid)['src']; ?>" style="width:75px;">
 						<?php endif; ?>
 					</td>

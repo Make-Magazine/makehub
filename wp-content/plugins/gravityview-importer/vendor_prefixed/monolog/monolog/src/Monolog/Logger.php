@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Monolog;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Monolog;
 
-use GravityKit\GravityImport\Monolog\Handler\HandlerInterface;
-use GravityKit\GravityImport\Monolog\Handler\StreamHandler;
-use GravityKit\GravityImport\Psr\Log\LoggerInterface;
-use GravityKit\GravityImport\Psr\Log\InvalidArgumentException;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Handler\HandlerInterface;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Handler\StreamHandler;
+use GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\InvalidArgumentException;
 use Exception;
 
 /**

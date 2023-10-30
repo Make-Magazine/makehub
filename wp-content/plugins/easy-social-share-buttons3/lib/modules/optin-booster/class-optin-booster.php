@@ -37,7 +37,6 @@ class ESSBOptinBooster {
 			if (!$this->option_bool_value('ofob_manual_mode')) {    
                 add_action ( 'wp_footer', array(&$this, 'draw_forms'), 99);
 			}
-			add_action('init', array(&$this, 'load_assets'), 99);
 			add_shortcode('booster-subscribe-form', array(&$this, 'manually_load_form'));
 		}		
 	}
@@ -74,24 +73,18 @@ class ESSBOptinBooster {
 			}
 		}
 		
-		if (essb_option_bool_value('optin_booster_activate_posttypes')) {
-			$posttypes = $this->option_value('posttypes');
-			if (!is_array($posttypes)) {
-				$posttypes = array();
-			}
-			
-			if (!is_singular($posttypes)) {
-				$is_deactivated = true;
-			}
+		$posttypes = $this->option_value('posttypes');
+		if (!is_array($posttypes)) {
+		    $posttypes = array();
+		}
+		
+		if (!empty($posttypes)) {
+		    if (!is_singular($posttypes)) {
+		        $is_deactivated = true;
+		    }
 		}
 		
 		return $is_deactivated;
-	}
-	
-	public function load_assets() {
-		if (function_exists('essb_resource_builder')) {
-			essb_resource_builder()->add_static_resource_footer(ESSB3_OFOB_PLUGIN_URL . 'assets/essb-optin-booster.min.js', 'essb-optin-booster', 'js');
-		}
 	}
 	
 	public function option_value($param) {
@@ -229,6 +222,8 @@ class ESSBOptinBooster {
 		    $ofob_deactivate_mobile = true;
 		}
 		
+		$ofob_deactivate_desktop = $this->option_bool_value('ofob_deactivate_desktop');
+		
 		$close_type = $this->option_value('of_'.$event.'_close');
 		$close_color = $this->option_value('of_'.$event.'_closecolor');
 		$close_text = $this->option_value('of_'.$event.'_closetext');
@@ -246,10 +241,10 @@ class ESSBOptinBooster {
 			$close_text = esc_html__("No thanks. I don't want.", 'essb');
 		}
 		
-		$output .= '<div class="essb-optinbooster essb-optinbooster-'.esc_attr($event).($ofob_deactivate_mobile ? ' essb-subscribe-mobile-hidden' : '').'" '.$event_fire.'>';
+		$output .= '<div class="essb-optinbooster essb-optinbooster-'.esc_attr($event).($ofob_deactivate_mobile ? ' essb-subscribe-mobile-hidden' : '').($ofob_deactivate_desktop ? ' essb-subscribe-desktop-hidden' : '').'" '.$event_fire.'>';
 		
 		if ($close_type == 'icon') {
-			$output .= '<div class="essb-optinbooster-close essb-optinbooster-closeicon" '.esc_attr($css_color).'><i class="essb_icon_close"></i></div>';
+			$output .= '<div class="essb-optinbooster-close essb-optinbooster-closeicon" '.$css_color.'>'.essb_svg_replace_font_icon('close').'</div>';
 		}
 		
 		$output .= do_shortcode('[easy-subscribe design="'.$design.'" mode="mailchimp" conversion="booster-'.esc_attr($event).'"]');
@@ -258,10 +253,7 @@ class ESSBOptinBooster {
 		}
 		
 		$output .= '</div>';
-		$output .= '<div class="essb-optinbooster-overlay essb-optinbooster-overlay-'.esc_attr($event).($ofob_deactivate_mobile ? ' essb-subscribe-mobile-hidden' : '').'"'.($overlay_color != '' ? ' style="background-color:'.esc_attr($overlay_color).'!important;"' : '').'>';
-		if ($credit_link) {
-			$output .= '<div class="promo">Powered by <a href="http://go.appscreo.com/essb" target="_blank">Best Social Sharing Plugin for WordPress</a> Easy Social Share Buttons</div>';
-		}
+		$output .= '<div class="essb-optinbooster-overlay essb-optinbooster-overlay-'.esc_attr($event).($ofob_deactivate_mobile ? ' essb-subscribe-mobile-hidden' : '').($ofob_deactivate_desktop ? ' essb-subscribe-desktop-hidden' : '').'"'.($overlay_color != '' ? ' style="background-color:'.esc_attr($overlay_color).'!important;"' : '').'>';
 		
 		$output .= '</div>';
 		

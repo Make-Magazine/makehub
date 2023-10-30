@@ -2,7 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */ declare(strict_types=1);
 
@@ -15,9 +15,9 @@
  * file that was distributed with this source code.
  */
 
-namespace GravityKit\GravityEdit\Monolog\Handler;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityEdit\Monolog\ResettableInterface;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\ResettableInterface;
 
 /**
  * Helper trait for implementing ProcessableInterface

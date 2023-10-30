@@ -9,6 +9,7 @@ namespace UltimateElementor\Modules\RegistrationForm;
 
 use UltimateElementor\Base\Module_Base;
 use UltimateElementor\Classes\UAEL_Helper;
+use Elementor\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -78,6 +79,29 @@ class Module extends Module_Base {
 		add_action( 'edit_user_profile', array( $this, 'show_user_extra_field' ) );
 		add_action( 'personal_options_update', array( $this, 'update_user_profile' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'update_user_profile' ) );
+		if ( ! current_user_can( 'manage_options' ) ) {
+			add_filter(
+				'elementor/document/save/data',
+				function ( $data ) {
+					if ( isset( $data['elements'] ) ) {
+						$data['elements'] = Plugin::$instance->db->iterate_data(
+							$data['elements'],
+							function ( $element ) {
+								if ( isset( $element['widgetType'] ) && 'uael-registration-form' === $element['widgetType'] ) {
+									if ( ! empty( $element['settings']['select_role'] ) ) {
+										$element['settings']['select_role'] = 'default';
+									}
+								}
+
+								return $element;
+							}
+						);
+					}
+
+					return $data;
+				}
+			);
+		}
 
 	}
 
@@ -175,7 +199,7 @@ class Module extends Module_Base {
 
 		if ( isset( $_POST['data'] ) && $allow_register && true === $is_widget_active ) {
 
-			$data = $_POST['data'];
+			$data = array_map( 'sanitize_text_field', $_POST['data'] );
 
 			if ( isset( $data['is_recaptcha_enabled'] ) ) {
 				if ( 'yes' === sanitize_text_field( $data['is_recaptcha_enabled'] ) ) {
@@ -355,6 +379,10 @@ class Module extends Module_Base {
 				);
 
 				$phone_val = $user_args['phone'];
+
+				if ( 'administrator' === $user_args['role'] ) {
+					$user_args['role'] = get_option( 'default_role' );
+				}
 
 				unset( $user_args['phone'] );
 

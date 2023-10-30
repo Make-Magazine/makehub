@@ -376,7 +376,8 @@ class EMIO_Item {
 	public function save_history($history, $EM_Object ){
 		global $wpdb;
 		//check we can even save history here
-		if( !is_array($history) || empty($history['uid']) || empty($EM_Object->post_id) ) return false;
+		$is_error = !empty($history['action']) && $history['action'] === 'error' && !empty($history['error']);
+		if( !is_array($history) || empty($history['uid']) || (empty($EM_Object->post_id) && !$is_error) ) return false;
 		//prepare data for saving
 		$history['type'] = get_class($EM_Object) == 'EM_Event' ? 'event':'location';
 		$format = $history['type'] == 'event' ? '#_EVENTNAME (#_EVENTDATES)' : '#_LOCATIONNAME, #_LOCATIONTOWN';
@@ -410,7 +411,7 @@ class EMIO_Item {
 		//save log history
 		$io_log = array(
 			'io_id' => $this->ID,
-			'post_id' => $EM_Object->post_id,
+			'post_id' => absint($EM_Object->post_id),
 			'uuid' => pack('H*',str_replace('-', '', $this->batch_uuid)), //we hash this table for space saving and marginal performance gains
 			'uid_md5' => pack('H*',$history['uid_md5']),
 			'uid' => $history['uid'],
@@ -418,7 +419,7 @@ class EMIO_Item {
 			'log_date' => $this->batch_start,
 			'log_desc' => $EM_Object->output($format)
 		);
-		if( !empty($history['action']) && $history['action'] === 'error' && !empty($history['error']) ){
+		if( $is_error ){
 			$io_log['action'] = 'error';
 			$io_log['log_desc'] = $io_log['log_desc'] .' && '. $history['error'];
 		}else{

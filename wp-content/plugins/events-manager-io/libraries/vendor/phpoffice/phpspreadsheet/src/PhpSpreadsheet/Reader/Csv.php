@@ -320,8 +320,8 @@ class Csv extends BaseReader
      */
     public function loadIntoExisting($pFilename, Spreadsheet $spreadsheet)
     {
-        $lineEnding = ini_get('auto_detect_line_endings');
-        ini_set('auto_detect_line_endings', true);
+        //$lineEnding = ini_get('auto_detect_line_endings');
+	    //ini_set('auto_detect_line_endings', true);
 
         // Open file
         $this->openFileOrMemory($pFilename);
@@ -367,7 +367,7 @@ class Csv extends BaseReader
         // Close file
         fclose($fileHandle);
 
-        ini_set('auto_detect_line_endings', $lineEnding);
+        //ini_set('auto_detect_line_endings', $lineEnding);
 
         // Return
         return $spreadsheet;

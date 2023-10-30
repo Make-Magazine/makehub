@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -11,14 +11,14 @@ namespace GravityKit\GravityRevisions\Foundation\Logger;
 use GravityKit\GravityRevisions\Foundation\Core as FoundationCore;
 use GravityKit\GravityRevisions\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityRevisions\Foundation\Helpers\Arr;
-use GravityKit\GravityRevisions\Monolog\Handler\ChromePHPHandler;
-use GravityKit\GravityRevisions\Monolog\Handler\StreamHandler;
-use GravityKit\GravityRevisions\Monolog\Logger as MonologLogger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Handler\ChromePHPHandler;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Handler\StreamHandler;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Logger as MonologLogger;
 use GravityKit\GravityRevisions\Foundation\Settings\Framework as SettingsFramework;
 use GravityKit\GravityRevisions\Foundation\Encryption\Encryption;
 use Exception;
-use GravityKit\GravityRevisions\Psr\Log\LoggerInterface;
-use GravityKit\GravityRevisions\Psr\Log\LoggerTrait;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\LoggerTrait;
 
 /**
  * Logging framework for GravityKit.
@@ -124,7 +124,7 @@ class Framework implements LoggerInterface {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $logger_id    (optional) Unique logger identifier that's prefixed to each log entry or used with some handlers.. Default: gravitykit.
+	 * @param string $logger_id    (optional) Unique logger identifier that's prefixed to each log entry or used with some handlers. Default: gravitykit.
 	 * @param string $logger_title (optional) Logger title (used in the admin UI). Default: GravityKit.
 	 *
 	 * @return Framework
@@ -346,7 +346,7 @@ HTML;
 				'id'          => 'logger_type',
 				'type'        => 'select',
 				'title'       => esc_html__( 'Log Type', 'gk-gravityrevisions' ),
-				'description' => esc_html__( 'Where to store log output', 'gk-gravityrevisions' ),
+				'description' => esc_html__( 'Where to store log output.', 'gk-gravityrevisions' ),
 				'value'       => $logger_type,
 				'choices'     => [
 					[
@@ -513,7 +513,7 @@ HTML;
 
     /**
      * @inheritDoc
-     * @since $ver$
+     * @since 1.0.0
      */
     public function log($level, $message, array $context = array())
     {

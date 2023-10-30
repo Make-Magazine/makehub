@@ -7,14 +7,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Monolog\Formatter;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Formatter;
 
-use GravityKit\GravityRevisions\Monolog\Logger;
-use GravityKit\GravityRevisions\Monolog\Utils;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Logger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Utils;
 
 /**
  * Formats incoming records into an HTML table

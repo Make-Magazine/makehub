@@ -11,10 +11,10 @@ class MeprAppCtrl extends MeprBaseCtrl {
     add_action('admin_enqueue_scripts', 'MeprAppCtrl::load_admin_scripts', 1);
     add_action('init', 'MeprAppCtrl::parse_standalone_request', 10);
     add_action('wp_dashboard_setup', 'MeprAppCtrl::add_dashboard_widgets');
-    add_action('widgets_init', 'MeprAppCtrl::add_sidebar_widgets');
     add_filter('custom_menu_order', '__return_true');
     add_filter('menu_order', 'MeprAppCtrl::admin_menu_order');
     add_filter('menu_order', 'MeprAppCtrl::admin_submenu_order');
+    add_action('widgets_init', 'MeprAccountLinksWidget::register_widget');
     add_action('widgets_init', 'MeprLoginWidget::register_widget');
     add_action('widgets_init', 'MeprSubscriptionsWidget::register_widget');
     add_action('add_meta_boxes', 'MeprAppCtrl::add_meta_boxes', 10, 2);
@@ -24,6 +24,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
     add_action('admin_notices', 'MeprAppCtrl::maybe_show_get_started_notice');
     add_action('wp_ajax_mepr_dismiss_notice', 'MeprAppCtrl::dismiss_notice');
     add_action('wp_ajax_mepr_dismiss_daily_notice', 'MeprAppCtrl::dismiss_daily_notice');
+    add_action('wp_ajax_mepr_dismiss_weekly_notice', 'MeprAppCtrl::dismiss_weekly_notice');
     add_action('wp_ajax_mepr_todays_date', 'MeprAppCtrl::todays_date');
     add_action('wp_ajax_mepr_close_about_notice', 'MeprAppCtrl::close_about_notice');
     add_action('admin_init', 'MeprAppCtrl::append_mp_privacy_policy');
@@ -55,6 +56,16 @@ class MeprAppCtrl extends MeprBaseCtrl {
     if(MeprUtils::is_memberpress_admin_page()) {
       $option = get_option( 'mepr_notifications' );
       $notifications = ! empty($option) ? $option['feed'] : array();
+      if ( MeprNotifications::has_access() && ! empty( $notifications ) && count( $notifications ) > 0 ) {
+        foreach( $notifications as $key => $notification ) {
+          if (
+            ( ! empty( $notification['start'] ) && strtotime( $notification['start'] . ' America/New_York' ) > strtotime( date('F j, Y') . ' America/New_York' ) ) ||
+            ( ! empty( $notification['end'] ) && strtotime( $notification['end'] . ' America/New_York' ) < strtotime( date('F j, Y') . ' America/New_York' ) )
+          ) {
+            unset( $notifications[ $key ] );
+          }
+        }
+      }
       ?>
       <div id="mp-admin-header">
         <img class="mp-logo" src="<?php echo MEPR_IMAGES_URL . '/memberpress-logo-color.svg'; ?>" />
@@ -62,7 +73,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
           <a class="mp-support-button button button-primary" href="<?php echo admin_url('admin.php?page=memberpress-support'); ?>"><?php _e('Support', 'memberpress')?></a>
           <button id="mepAdminHeaderNotifications" class="mepr-notifications-button">
             <svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.6944 6.5625C21.8981 6.85417 22 7.18229 22 7.54687V12.25C22 12.7361 21.8218 13.1493 21.4653 13.4896C21.1088 13.8299 20.6759 14 20.1667 14H1.83333C1.32407 14 0.891204 13.8299 0.534722 13.4896C0.178241 13.1493 0 12.7361 0 12.25V7.54687C0 7.18229 0.101852 6.85417 0.305556 6.5625L4.35417 0.765625C4.45602 0.644097 4.58333 0.522569 4.73611 0.401042C4.91435 0.279514 5.10532 0.182292 5.30903 0.109375C5.51273 0.0364583 5.7037 0 5.88194 0H16.1181C16.3981 0 16.6782 0.0850694 16.9583 0.255208C17.2639 0.401042 17.4931 0.571181 17.6458 0.765625L21.6944 6.5625ZM6.1875 2.33333L2.94097 7H7.63889L8.86111 9.33333H13.1389L14.3611 7H19.059L15.8125 2.33333H6.1875Z" fill="#2679C1"></path></svg>
-            <?php if ( MeprNotifications::has_access() && ! empty( $notifications ) && count( $notifications ) > 0 ) : ?>
+            <?php if ( ! empty( $notifications ) && count( $notifications ) > 0 ) : ?>
               <span id="meprAdminHeaderNotificationsCount" class="mepr-notifications-count"><?php echo count( $notifications ); ?></span>
             <?php endif; ?>
           </button>
@@ -298,6 +309,15 @@ class MeprAppCtrl extends MeprBaseCtrl {
     wp_send_json_success();
   }
 
+  public static function dismiss_weekly_notice() {
+    if(check_ajax_referer('mepr_dismiss_notice', false, false) && isset($_POST['notice']) && is_string($_POST['notice'])) {
+      $notice = sanitize_key($_POST['notice']);
+      set_transient( "mepr_dismiss_notice_{$notice}", true, WEEK_IN_SECONDS);
+    }
+
+    wp_send_json_success();
+  }
+
   public static function unauthorized_meta_box()
   {
     global $post;
@@ -431,11 +451,9 @@ class MeprAppCtrl extends MeprBaseCtrl {
    */
   public static function admin_menu_order($menu_order)
   {
-    if(!$menu_order)
-      return true;
-
-    if(!is_array($menu_order))
+    if(!$menu_order) {
       return $menu_order;
+    }
 
     // Initialize our custom order array
     $new_menu_order = array();
@@ -783,7 +801,8 @@ class MeprAppCtrl extends MeprBaseCtrl {
     wp_enqueue_script('mepr-admin-shared-js', MEPR_JS_URL.'/admin_shared.js', array('jquery', 'jquery-magnific-popup', 'mepr-settings-table-js', 'mepr-cookie-js'), MEPR_VERSION);
     wp_localize_script('mepr-admin-shared-js', 'MeprAdminShared', array(
       'ajax_url' => admin_url('admin-ajax.php'),
-      'dismiss_notice_nonce' => wp_create_nonce('mepr_dismiss_notice')
+      'dismiss_notice_nonce' => wp_create_nonce('mepr_dismiss_notice'),
+      'enable_stripe_tax_nonce' => wp_create_nonce('mepr_enable_stripe_tax')
     ));
 
     //Widget in the dashboard stuff
@@ -967,18 +986,6 @@ class MeprAppCtrl extends MeprBaseCtrl {
     $wp_meta_boxes['dashboard']['normal']['core'] = $sorted_dashboard;
   }
 
-  public static function add_sidebar_widgets() {
-    try {
-      $account_ctrl = MeprCtrlFactory::fetch('account');
-      wp_register_sidebar_widget( 'mepr-account-links', __('MemberPress Account Links', 'memberpress'), array($account_ctrl,'account_links_widget') );
-      //control func below doesn't do anything, but without it a bunch of debug notices are logged when in the theme customizer
-      wp_register_widget_control( 'mepr-account-links', __('MemberPress Account Links', 'memberpress'), function($args=array(), $params=array()){} );
-    }
-    catch(Exception $e) {
-      // Silently fail if the account controller is absent
-    }
-  }
-
   public static function weekly_stats_widget() {
     $mepr_options = MeprOptions::fetch();
     $failed_transactions = $pending_transactions = $refunded_transactions = $completed_transactions = $revenue = $refunds = 0;
@@ -1147,11 +1154,11 @@ class MeprAppCtrl extends MeprBaseCtrl {
 
     add_submenu_page('memberpress', __('Subscriptions', 'memberpress'), __('Subscriptions', 'memberpress'), $capability, 'memberpress-subscriptions', array( $sub_ctrl, 'listing' ));
     // Specifically for subscriptions listing
-    add_submenu_page(null, __('Subscriptions', 'memberpress'), __('Subscriptions', 'memberpress'), $capability, 'memberpress-lifetimes', array( $sub_ctrl, 'listing' ));
+    add_submenu_page('', __('Subscriptions', 'memberpress'), __('Subscriptions', 'memberpress'), $capability, 'memberpress-lifetimes', array( $sub_ctrl, 'listing' ));
     add_submenu_page('memberpress', __('Transactions', 'memberpress'), __('Transactions', 'memberpress'), $capability, 'memberpress-trans', array( $txn_ctrl, 'listing' ));
     add_submenu_page('memberpress', __('Reports', 'memberpress'), __('Reports', 'memberpress'), $capability, 'memberpress-reports', 'MeprReportsCtrl::main');
     add_dashboard_page(__('MemberPress', 'memberpress'), __('MemberPress', 'memberpress'), $capability, 'memberpress-reports', 'MeprReportsCtrl::main');
-    add_submenu_page('memberpress', __('Settings', 'memberpress'), __('Settings', 'memberpress'), $capability, 'memberpress-options', 'MeprOptionsCtrl::route');
+    add_submenu_page('memberpress', __('Settings', 'memberpress'), __('Settings', 'memberpress') . MeprUtils::new_badge(), $capability, 'memberpress-options', 'MeprOptionsCtrl::route');
     add_submenu_page('memberpress', __('Onboarding', 'memberpress'), __('Onboarding', 'memberpress'), $capability, 'memberpress-onboarding', 'MeprOnboardingCtrl::route');
     add_submenu_page('memberpress', __('Account Login', 'memberpress'), __('Account Login', 'memberpress'), $capability, 'memberpress-account-login', 'MeprAccountLoginCtrl::route');
     add_submenu_page('memberpress', __('Add-ons', 'memberpress'), '<span style="color:#8CBD5A;">' . __('Add-ons', 'memberpress') . '</span>', $capability, 'memberpress-addons', 'MeprAddonsCtrl::route');
@@ -1180,7 +1187,7 @@ class MeprAppCtrl extends MeprBaseCtrl {
       }
     }
 
-    add_submenu_page(null, __('Support', 'memberpress'), __('Support', 'memberpress'), $capability, 'memberpress-support', 'MeprAppCtrl::render_admin_support');
+    add_submenu_page('', __('Support', 'memberpress'), __('Support', 'memberpress'), $capability, 'memberpress-support', 'MeprAppCtrl::render_admin_support');
 
     MeprHooks::do_action('mepr_menu');
   }

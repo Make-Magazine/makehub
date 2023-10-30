@@ -2,13 +2,13 @@
 /**
  * @license MIT
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Psr\Log\Test;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\Test;
 
-use GravityKit\GravityRevisions\Psr\Log\AbstractLogger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\AbstractLogger;
 
 /**
  * Used for testing purposes.

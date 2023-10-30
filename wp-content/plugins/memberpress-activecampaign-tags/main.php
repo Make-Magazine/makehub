@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: MemberPress Active Campaign - Tags Version
+Plugin Name: MemberPress ActiveCampaign - Tags Version
 Plugin URI: http://www.memberpress.com/
-Description: Active Campaign Autoresponder tag-based integration for MemberPress.
-Version: 1.0.10
+Description: ActiveCampaign Autoresponder tag-based integration for MemberPress.
+Version: 1.0.11
 Author: Caseproof, LLC
 Author URI: http://caseproof.com/
 Text Domain: memberpress-activecampaigntags
@@ -31,8 +31,8 @@ if(is_plugin_active('memberpress/memberpress.php')) {
     MPACTIVECAMPAIGNTAGS_EDITION,
     MPACTIVECAMPAIGNTAGS_PLUGIN_SLUG,
     'mpactivecampaigntags_license_key',
-    __('MemberPress Active Campaign - Tags Version', 'memberpress-activecampaigntags'),
-    __('Active Campaign Autoresponder Tags-based Integration for MemberPress.', 'memberpress-activecampaigntags')
+    __('MemberPress ActiveCampaign - Tags Version', 'memberpress-activecampaigntags'),
+    __('ActiveCampaign Autoresponder Tags-based Integration for MemberPress.', 'memberpress-activecampaigntags')
   );
 }
 

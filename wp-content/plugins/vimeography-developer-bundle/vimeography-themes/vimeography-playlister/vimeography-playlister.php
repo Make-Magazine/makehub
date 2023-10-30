@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Playlister
 Plugin URI: https://vimeography.com/themes
 Theme Name: Playlister
 Theme URI:  https://vimeography.com/themes/playlister
-Version: 2.0.6
+Version: 2.1.1
 Description: Playlister showcases a stream of videos meant to be played back to back.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Playlister') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Playlister') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

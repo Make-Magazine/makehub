@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -11,14 +11,14 @@ namespace GravityKit\GravityEdit\Foundation\Logger;
 use GravityKit\GravityEdit\Foundation\Core as FoundationCore;
 use GravityKit\GravityEdit\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityEdit\Foundation\Helpers\Arr;
-use GravityKit\GravityEdit\Monolog\Handler\ChromePHPHandler;
-use GravityKit\GravityEdit\Monolog\Handler\StreamHandler;
-use GravityKit\GravityEdit\Monolog\Logger as MonologLogger;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler\ChromePHPHandler;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler\StreamHandler;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger as MonologLogger;
 use GravityKit\GravityEdit\Foundation\Settings\Framework as SettingsFramework;
 use GravityKit\GravityEdit\Foundation\Encryption\Encryption;
 use Exception;
-use GravityKit\GravityEdit\Psr\Log\LoggerInterface;
-use GravityKit\GravityEdit\Psr\Log\LoggerTrait;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LoggerTrait;
 
 /**
  * Logging framework for GravityKit.
@@ -124,7 +124,7 @@ class Framework implements LoggerInterface {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $logger_id    (optional) Unique logger identifier that's prefixed to each log entry or used with some handlers.. Default: gravitykit.
+	 * @param string $logger_id    (optional) Unique logger identifier that's prefixed to each log entry or used with some handlers. Default: gravitykit.
 	 * @param string $logger_title (optional) Logger title (used in the admin UI). Default: GravityKit.
 	 *
 	 * @return Framework
@@ -346,7 +346,7 @@ HTML;
 				'id'          => 'logger_type',
 				'type'        => 'select',
 				'title'       => esc_html__( 'Log Type', 'gk-gravityedit' ),
-				'description' => esc_html__( 'Where to store log output', 'gk-gravityedit' ),
+				'description' => esc_html__( 'Where to store log output.', 'gk-gravityedit' ),
 				'value'       => $logger_type,
 				'choices'     => [
 					[

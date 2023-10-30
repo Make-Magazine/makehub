@@ -78,7 +78,8 @@ class MeprUsersCtrl extends MeprBaseCtrl {
       wp_enqueue_script( 'mepr-tel-config-js', MEPR_JS_URL . '/tel_input.js', array( 'mepr-phone-js' ), MEPR_VERSION, true );
       wp_localize_script( 'mepr-tel-config-js', 'meprTel', MeprHooks::apply_filters( 'mepr-phone-input-config', array(
         'defaultCountry' => strtolower( get_option( 'mepr_biz_country' ) ),
-        'utilsUrl' => MEPR_JS_URL . '/intlTelInputUtils.js'
+        'utilsUrl' => MEPR_JS_URL . '/intlTelInputUtils.js',
+        'onlyCountries' => ''
       ) ) );
     }
   }
@@ -94,6 +95,7 @@ class MeprUsersCtrl extends MeprBaseCtrl {
 
   public static function erase_pii($email, $page = 1) {
     $user = get_user_by('email', $email);
+    if(!$user) { return; }
 
     delete_user_meta($user->ID, 'mepr_vat_number');
     delete_user_meta($user->ID, 'mepr-geo-country');
@@ -602,6 +604,7 @@ class MeprUsersCtrl extends MeprBaseCtrl {
 
     foreach($all_ids as $id) {
       $prd = new MeprProduct($id);
+      $created_at = MeprUser::get_user_product_signup_date($user->ID, $id);
 
       if(in_array($id, $active_ids) && $status !== 'expired') {
         $expiring_txn = MeprUser::get_user_product_expires_at_date($user->ID, $id, true);
@@ -613,10 +616,62 @@ class MeprUsersCtrl extends MeprBaseCtrl {
           $expires_at = MeprAppHelper::format_date($expiring_txn->expires_at, _x('Never', 'ui', 'memberpress'));
         }
 
-        $active_rows[] = (object)array('membership' => $prd->post_title, 'expires' => $expires_at, 'renewal_link' => $renewal_link, 'access_url' => $prd->access_url);
+        $active_rows[] = (object)array('membership' => $prd->post_title, 'expires' => $expires_at, 'renewal_link' => $renewal_link, 'access_url' => $prd->access_url, 'created_at' => $created_at);
       }
       elseif(!in_array($id, $active_ids) && in_array($status, array('expired', 'all'))) {
-        $inactive_rows[] = (object)array('membership' => $prd->post_title, 'purchase_link' => $prd->url());
+        $inactive_rows[] = (object)array('membership' => $prd->post_title, 'purchase_link' => $prd->url(), 'created_at' => $created_at);
+      }
+    }
+
+    // Sorting active subs
+    if(!empty($active_rows) && isset($atts['orderby']) && in_array($atts['orderby'], array('date', 'title'))) {
+      if($atts['orderby'] == 'date') {
+        if($atts['order'] == 'asc') {
+          usort($active_rows, function ($a, $b) {
+            return $a->created_at <=> $b->created_at;
+          });
+        } else {
+          usort($active_rows, function ($a, $b) {
+            return $b->created_at <=> $a->created_at;
+          });
+        }
+      }
+      if($atts['orderby'] == 'title') {
+        if($atts['order'] == 'desc') {
+          usort($active_rows, function ($a, $b) {
+            return $b->membership <=> $a->membership;
+          });
+        } else {
+          usort($active_rows, function ($a, $b) {
+            return $a->membership <=> $b->membership;
+          });
+        }
+      }
+    }
+
+    // Sorting inactive subs
+    if (!empty($inactive_rows) && isset($atts['orderby']) && in_array($atts['orderby'], array('date', 'title'))) {
+      if($atts['orderby'] == 'date') {
+        if($atts['order'] == 'asc') {
+          usort($inactive_rows, function ($a, $b) {
+            return $a->created_at <=> $b->created_at;
+          });
+        } else {
+          usort($inactive_rows, function ($a, $b) {
+            return $b->created_at <=> $a->created_at;
+          });
+        }
+      }
+      if($atts['orderby'] == 'title') {
+        if($atts['order'] == 'desc') {
+          usort($inactive_rows, function ($a, $b) {
+            return $b->membership <=> $a->membership;
+          });
+        } else {
+          usort($inactive_rows, function ($a, $b) {
+            return $a->membership <=> $b->membership;
+          });
+        }
       }
     }
 
@@ -637,6 +692,8 @@ class MeprUsersCtrl extends MeprBaseCtrl {
     $key = (isset($atts['slug'])) ? $atts['slug'] : '';
     $userid = (isset($atts['userid'])) ? $atts['userid'] : get_current_user_id();
     $download = get_user_meta($userid, $key, true);
+
+    if(empty($download)) { return; }
 
     $file_headers = @get_headers($download);
     if(strpos($file_headers[0], '200 OK')){

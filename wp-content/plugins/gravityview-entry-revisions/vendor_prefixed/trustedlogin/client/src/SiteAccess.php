@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -59,7 +59,7 @@ class SiteAccess {
 		$encryption = new Encryption( $this->config, $remote, $logging );
 
 		if ( ! in_array( $action, self::$sync_actions, true ) ) {
-			return new WP_Error( 'param_error', __( 'Unexpected action value', 'gk-gravityrevisions' ) );
+			return new \WP_Error( 'param_error', __( 'Unexpected action value', 'gk-gravityrevisions' ) );
 		}
 
 		$access_key = $this->get_access_key();
@@ -90,7 +90,7 @@ class SiteAccess {
 		}
 
 		if ( empty( $response_json['success'] ) ) {
-			return new WP_Error( 'sync_error', __( 'Could not sync to TrustedLogin server', 'gk-gravityrevisions' ) );
+			return new \WP_Error( 'sync_error', __( 'Could not sync to TrustedLogin server', 'gk-gravityrevisions' ) );
 		}
 
 		do_action( 'trustedlogin/' . $this->config->ns() . '/secret/synced', array(
@@ -141,13 +141,14 @@ class SiteAccess {
 		$license_key_config = $this->config->get_setting( 'auth/license_key', null );
 
 		/**
-		 * Filter: Allow for over-riding the 'accessKey' sent to SaaS platform
+		 * Filter: Allow for over-riding the 'accessKey' sent to SaaS platform.
 		 *
 		 * @since 1.0.0
+		 * @since 1.4.0 Fixed typo in filter name.
 		 *
 		 * @param string|null $license_key
 		 */
-		$license_key = apply_filters( 'trustedlogin/' . $this->config->ns() . '/licence_key', $license_key_config );
+		$license_key = apply_filters( 'trustedlogin/' . $this->config->ns() . '/license_key', $license_key_config );
 
 		if ( empty( $license_key ) ) {
 			return null;
@@ -160,7 +161,7 @@ class SiteAccess {
 				'$license after filter: ' => $license_key,
 			) );
 
-			return new WP_Error( 'invalid_license_key', 'License key was not a string.' );
+			return new \WP_Error( 'invalid_license_key', 'License key was not a string.' );
 		}
 
 		if ( $hashed && $license_key ) {

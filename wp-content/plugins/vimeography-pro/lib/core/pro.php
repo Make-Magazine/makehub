@@ -79,7 +79,7 @@ class Core extends \Vimeography\Core {
     $this->_vimeo = new \Vimeography\Vimeo( null, null, $this->_auth );
 
     add_filter( 'vimeography.request.fields', array( $this, 'add_request_fields' ) );
-    add_filter( 'vimeography.pro.paginate', array( $this, 'get_video_page' ) );
+    add_filter( 'vimeography.pro.paginate', array( $this, 'get_video_page' ), 10, 2 );
     add_filter( 'vimeography.pro.post_process', array( $this, 'post_process' ) );
 
     if ( isset( $this->gallery_settings['page'] ) ) {
@@ -124,7 +124,12 @@ class Core extends \Vimeography\Core {
    * @param  object $cache     Cached Vimeo API response
    * @return object            Vimeo data
    */
-  public function get_video_page( $cache ) {
+  public function get_video_page( $cache, $gallery_id ) {
+
+    if ($this->gallery_id !== $gallery_id) {
+      return $cache;
+    }
+
     $start = 1 + ( $this->_page * $this->_per_page ) - $this->_per_page;
     $end = $this->_page * $this->_per_page;
 
@@ -233,6 +238,8 @@ class Core extends \Vimeography\Core {
    */
   public function add_request_fields( $fields ) {
     $fields[] = 'download';
+    $fields[] = 'privacy.view';
+    $fields[] = 'metadata.connections.texttracks';
     return $fields;
   }
 }

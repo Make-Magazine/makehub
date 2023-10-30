@@ -15,7 +15,7 @@ class EM_License extends PXL_License {
 	public static function init(){
 		parent::init();
 		static::$dev_updates =  get_option('em_check_dev_version');
-		static::$current_versions['events-manager'] = EM_VERSION;
+		if( defined('EM_VERSION') ) static::$current_versions['events-manager'] = EM_VERSION;
 	}
 	
 	public static function load_admin(){
@@ -50,6 +50,11 @@ class EM_License extends PXL_License {
 		return true;
 	}
 	
+	public static function get_request_args($action) {
+		$return = parent::get_request_args($action);
+		return $return;
+	}
+	
 	public static function license_activated(){
 		if( !static::load_em_admin_notices() ) return false;
 		EM_Admin_Notices::remove(static::$slug.'-deactivation');
@@ -62,10 +67,13 @@ class EM_License extends PXL_License {
 		//remove previous notices to be added again
 		EM_Admin_Notices::remove(static::$slug.'-activation', is_multisite());
 		EM_Admin_Notices::remove(static::$slug.'-license', is_multisite());
+		EM_Admin_Notices::remove(static::$slug.'-error', is_multisite());
 		EM_Admin_Notices::remove('pxl-dev-license', is_multisite());
 		if( !static::is_active() ){
 			EM_Admin_Notices::remove(static::$slug.'-activated', is_multisite());
 			EM_Admin_Notices::add(static::$slug.'-activation', is_multisite());
+		}elseif( static::$license->error ){
+			EM_Admin_Notices::add(static::$slug.'-error', is_multisite());
 		}elseif( static::get_license()->dev ){
 			EM_Admin_Notices::add('pxl-dev-license', is_multisite());
 		}

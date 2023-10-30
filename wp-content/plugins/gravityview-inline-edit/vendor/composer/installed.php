@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'da5271becd1d802dc9208b85d781f934dfcff64c',
+        'reference' => '118d547f14dbab004f0ecb172abbffa856820121',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'da5271becd1d802dc9208b85d781f934dfcff64c',
+            'reference' => '118d547f14dbab004f0ecb172abbffa856820121',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'gravitykit/foundation' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5ee55e8e3289c9d27f8677ab0bdd3fad1e020496',
+            'reference' => '77b662681223db0da43c5d4545de0e8f6d0ba17b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gravitykit/foundation',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'trustedlogin/client' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'cee119c6491e1281b3e5e94114f6f6ebd8da7a02',
+            'reference' => '3aecfa088ee2f864b516c1abef7229264a9e472a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../trustedlogin/client',
             'aliases' => array(

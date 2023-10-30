@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -11,6 +11,7 @@ namespace GravityKit\GravityRevisions\Foundation\Translations;
 use GravityKit\GravityRevisions\Foundation\Core as FoundationCore;
 use GravityKit\GravityRevisions\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityRevisions\Foundation\Logger\Framework as LoggerFramework;
+use Exception;
 
 class Framework {
 	const ID = 'gk-translations';
@@ -82,8 +83,8 @@ class Framework {
 			return;
 		}
 
-		foreach ( FoundationCore::get_instance()->get_registered_plugins() as $plugin_file ) {
-			$plugin_data = CoreHelpers::get_plugin_data( $plugin_file );
+		foreach ( FoundationCore::get_instance()->get_registered_plugins() as $plugin ) {
+			$plugin_data = CoreHelpers::get_plugin_data( $plugin['plugin_file'] );
 
 			if ( isset( $plugin_data['TextDomain'] ) ) {
 				$this->_text_domains[] = $plugin_data['TextDomain'];
@@ -95,8 +96,8 @@ class Framework {
 		}
 
 		add_action( 'update_option_WPLANG', [ $this, 'on_site_language_change' ], 10, 2 );
-		add_action( 'gk/foundation/plugin_activated', [ $this, 'on_plugin_activation' ] );
-		add_action( 'gk/foundation/plugin_deactivated', [ $this, 'on_plugin_deactivation' ] );
+		add_action( 'gk/foundation/plugin-activated', [ $this, 'on_plugin_activation' ] );
+		add_action( 'gk/foundation/plugin-deactivated', [ $this, 'on_plugin_deactivation' ] );
 
 		$this->_logger = LoggerFramework::get_instance();
 
@@ -142,7 +143,7 @@ class Framework {
 		$current_user = wp_get_current_user();
 
 		if ( ! $this->can_install_languages() ) {
-			$this->_logger->addError(
+			$this->_logger->error(
 				sprintf(
 					'User "%s" does not have permissions to install languages.',
 					$current_user->user_login
@@ -160,8 +161,8 @@ class Framework {
 			if ( isset( $translations[ $new_language ] ) ) {
 				$this->load_backend_translations( $text_domain, $new_language );
 			}
-		} catch ( \Exception $e ) {
-			$this->_logger->addError( $e->getMessage() );
+		} catch ( Exception $e ) {
+			$this->_logger->error( $e->getMessage() );
 		}
 	}
 

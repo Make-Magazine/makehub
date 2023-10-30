@@ -12,6 +12,13 @@ class Gateways {
 	
     public static $customer_fields = array();
 	
+	/**
+	 * The current event ID being acted on, used in situations such as determining Limited Test Mode for a specific event.
+	 * @var int
+	 */
+	public static $current_event_id;
+	public static $previous_event_id = array();
+	
 	
 	public static function init(){
 	    add_filter('em_wp_localize_script', array( static::class, 'em_wp_localize_script'),10,1);
@@ -244,6 +251,52 @@ class Gateways {
 		return $context === null;
 	}
 	
+	/**
+	 * Useful for setting and resetting the current event ID being worked on. Returns the current event_id before updated value.
+	 * Ideally should be used at start and end of a function, getting the old id at start and resetting it again at the end.
+	 * @param \EM_Event|\EM_Booking|\EM_Object|int $object Any object that has event_id property, or the event ID directly
+	 *
+	 * @return int|null
+	 */
+	public static function switch_current_event( $object ) {
+		$previous_event_id = static::$current_event_id;
+		if( is_numeric($object) ) {
+			static::$current_event_id = $object;
+		} elseif ( is_object($object) && !empty($object->event_id) ) {
+			static::$current_event_id = $object->event_id;
+		} elseif ( !$object ) {
+			static::$current_event_id = null;
+		}
+		static::$previous_event_id[] = $previous_event_id;
+		return $previous_event_id;
+	}
+	
+	public static function restore_current_event() {
+		array_pop( static::$previous_event_id );
+	}
+	
+	public static function load_current_event() {
+		if( !empty($_REQUEST['booking_id']) ) {
+			$EM_Booking = em_get_booking( absint($_REQUEST['booking_id']) );
+			self::switch_current_event( $EM_Booking );
+		} elseif( !empty($_REQUEST['event_id']) ) {
+			self::switch_current_event( absint($_REQUEST['event_id']) );
+		}
+	}
+	
+	public static function unload_current_event() {
+		if( !empty($_REQUEST['booking_id']) ) {
+			$EM_Booking = em_get_booking( absint($_REQUEST['booking_id']) );
+			if( $EM_Booking->event_id == Gateways::$current_event_id ) {
+				self::restore_current_event();
+			}
+		} elseif( !empty($_REQUEST['event_id']) ) {
+			if( $_REQUEST['event_id'] == Gateways::$current_event_id ) {
+				self::restore_current_event();
+			}
+		}
+	}
+	
 	
   /* ------------------------------------------------------------------------------------------------------------------
    * Booking Interception - functions that modify booking object behaviour
@@ -274,12 +327,23 @@ class Gateways {
 	    		die();
 	    	}
 	    }elseif( !empty($_REQUEST['gateway']) ) {
-			$Gateway = static::get( $_REQUEST['gateway'] );
-			// set booking gateway
-			$EM_Booking->booking_meta['gateway'] = $Gateway::$gateway;
-			// set booking status out the door
+			// if the booking isn't free, set gateway and other relevant values
 			if ( $EM_Booking->get_price() > 0 ) {
+				$Gateway = static::get( $_REQUEST['gateway'] );
+				// set booking gateway
+				$EM_Booking->booking_meta['gateway'] = $Gateway::$gateway;
+				// set booking status out the door
 				$EM_Booking->booking_status = $Gateway::$status; // e.g. status 4 = awaiting online payment
+				// check if this booking is in test mode, if so, we add it right now and we know onwards that we're in test mode for this booking
+				if( $EM_Booking->event_id > 0 ) {
+					static::$current_event_id = $EM_Booking->event_id;
+				}
+				$current_event_id = static::switch_current_event( $EM_Booking ); // for Test Mode
+				$test_mode = $Gateway::is_test_mode();
+				if ( $test_mode ) {
+					$EM_Booking->booking_meta['test'] = $test_mode;
+				}
+				static::$current_event_id = $current_event_id; // for Test Mode
 			}
 		}
 	    return $result;
@@ -301,7 +365,9 @@ class Gateways {
 		}
 		if( !empty($EM_Booking->booking_meta['gateway']) && !empty($_REQUEST['gateway']) && static::is_active($_REQUEST['gateway']) ){
 			$Gateway = static::get($EM_Booking->booking_meta['gateway']);
+			static::switch_current_event( $EM_Booking ); // for Test Mode
 			$result = $result && $Gateway::booking_validate( $EM_Booking );
+			static::restore_current_event(); // for Test Mode
 		}
 		return $result;
 	}
@@ -316,7 +382,9 @@ class Gateways {
 		if( !empty($EM_Booking->booking_meta['gateway']) && static::is_active($EM_Booking->booking_meta['gateway']) ){
 			$Gateway = static::get($EM_Booking->booking_meta['gateway']);
 			//Individual gateways will hook into this function
+			static::switch_current_event( $EM_Booking ); // for Test Mode
 			$Gateway::booking_add($EM_Event, $EM_Booking, $post_validation);
+			static::restore_current_event(); // for Test Mode
 		}
 	}
 	
@@ -327,25 +395,31 @@ class Gateways {
 	 */
 	static function em_booking_added( $EM_Booking ){
 		if( !empty($_REQUEST['gateway']) && static::is_active($_REQUEST['gateway']) ){
-			$Gateway = static::get_gateway($_REQUEST['gateway']);
+			$Gateway = static::get($_REQUEST['gateway']);
 			if( $Gateway::uses_gateway($EM_Booking) ){
 				//Individual gateways will hook into this function
+				static::switch_current_event( $EM_Booking ); // for Test Mode
 				$Gateway::booking_added( $EM_Booking );
+				static::restore_current_event(); // for Test Mode
 			}
 		}
 	}
 	
 	public static function event_booking_payment_form( $EM_Event ){
 		if( !$EM_Event->is_free(true) ){
+			static::switch_current_event( $EM_Event ); // for Test Mode
 		    self::payment_form( $EM_Event->event_id );
+			static::restore_current_event(); // for Test Mode
 		}
 	}
 	
 	public static function mb_payment_form(){
 	    $EM_Multiple_Booking = EM_Multiple_Bookings::get_multiple_booking();
+		static::switch_current_event( 0 ); // for Test Mode
 	    if( $EM_Multiple_Booking->get_price() > 0 ){
 	        self::payment_form( 0 );
 	    }
+		static::restore_current_event(); // for Test Mode
 	}
 	
 	public static function em_action_booking_add($return){
@@ -373,8 +447,14 @@ class Gateways {
 	public static function payment_form( $id = null ){
 		$id = $id === null ? rand() : absint($id);
 		$active_gateways = static::active_gateways();
+		// filter out non-displayable gateways
+		foreach ( $active_gateways as $gateway => $Gateway ) {
+			if( !$Gateway::is_displayable() ) {
+				unset($active_gateways[$gateway]);
+			}
+		}
 		//Check if we can user quick pay buttons
-		if( get_option('dbem_gateway_use_buttons', 1) ){ //backward compatability
+		if( get_option('dbem_gateway_use_buttons', 1) && static::buttons_mode_possible() ){ //backward compatability
 			echo static::booking_form_buttons();
 			do_action('em_gateways_payment_form_footer');
 		}else{
@@ -486,7 +566,10 @@ class Gateways {
 			$EM_Booking = em_get_booking($_REQUEST['booking_id']);
 			if( $EM_Booking->booking_id ) {
 				$Gateway = static::get( $_REQUEST['payment_cancelled'] );
+				$force_mode = $Gateway::force_mode( $EM_Booking ); // for Test Mode
 				$Gateway::handle_cancel_url( $EM_Booking );
+				$Gateway::force_mode( $force_mode ); // for Test Mode
+				
 			}
 		}
 		if( !empty($_GET['payment_complete']) && static::is_active($_GET['payment_complete']) ){
@@ -581,6 +664,24 @@ class Gateways {
   /* ----------------------------------------------------------------------------------------------------
    * BUTTONS MODE Functions - i.e. booking doesn't require gateway selection, just button click
    * ---------------------------------------------------------------------------------------------------- */
+	
+	/**
+	 * Determines whether bookings mode can be displayed, returns false if any of the gateways supplied in $gateways are not button-enabled.
+	 * @param Gateway[] $gateways Default is all gateways that are active.
+	 *
+	 * @return bool
+	 */
+	public static function buttons_mode_possible ( $gateways = array() ) {
+		if( empty($gateways) ) {
+			$gateways = static::active_gateways();
+		}
+		foreach ( $gateways as $Gateway ) {
+			if ( !$Gateway::$button_enabled ) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	/**
 	 * This gets called when a booking form created using the old buttons API, and calls subsequent gateways to output their buttons.

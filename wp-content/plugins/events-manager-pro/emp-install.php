@@ -690,6 +690,16 @@ function emp_add_options() {
 			$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'ProV3.2-update', 'who' => 'admin', 'where' => 'all', 'message' => "$message" ));
 			EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 		}
+		
+		if( version_compare($current_version, '3.2.6.2', '<') ){
+			// update native legacy gateways for new test mode, in case already in test mode
+			// authorize.net
+			$current_api = get_option('em_authorize_aim_api');
+			if (  ( get_option( 'em_authorize_aim_mode' ) !== 'live' || get_option( 'em_authorize_aim_mode' ) !== 'live' ) && get_option( 'em_authorize_aim_api_test', false ) !== false )  {
+				update_option( 'em_authorize_aim_api_test', $current_api );
+			}
+		}
+		
 	}else{
 		//Booking form stuff only run on install
 		$wpdb->insert(EM_META_TABLE, array('meta_value'=>serialize($booking_form_data), 'meta_key'=>'booking-form','object_id'=>0));

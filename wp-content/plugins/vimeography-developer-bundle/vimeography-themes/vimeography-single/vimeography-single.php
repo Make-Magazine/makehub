@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Single
 Plugin URI: https://vimeography.com/themes
 Theme Name: Single
 Theme URI:  https://vimeography.com/themes/single
-Version: 2.0.5
+Version: 2.1.1
 Description: Single retrieves the single latest video from the provided Vimeo source.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Single') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Single') ) {
      *
      * @var string
      */
-    public $version = '2.0.5';
+    public $version = '2.1.1';
 
 
     /**

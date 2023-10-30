@@ -1,11 +1,11 @@
 === GravityRevisions ===
 Tags: gravitykit, gravityview, gravity forms, revisions
-Requires at least: 4.4
-Tested up to: 6.1
+Requires at least: 5.1
+Tested up to: 6.3
 Contributors: The GravityKit Team
 License: GPL 2
 Requires PHP: 7.2.0
-Stable tag: 1.2.7
+Stable tag: 1.2.10
 
 Track changes to Gravity Forms entries and restore from previous revisions. Requires Gravity Forms 2.0 or higher.
 
@@ -17,6 +17,20 @@ Track changes to Gravity Forms entries and restore from previous revisions. Requ
 4. You'll see a "Revisions" meta box on the entries page. Click the link next to the revision to compare versions, and restore.
 
 == Changelog ==
+
+= 1.2.10 on September 7, 2023 =
+
+* Improved: Support for RTL languages
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.2.2
+
+= 1.2.9 on July 12, 2023 =
+
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.1.1
+
+= 1.2.8 on June 13, 2023 =
+
+* Fixed: Incompatibility with some plugins/themes that use Laravel components
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.12
 
 = 1.2.7 on February 20, 2023 =
 
@@ -77,7 +91,7 @@ __Developer Updates:__
 
 = 1.1 on January 26, 2022 =
 
-* Added: Entry Revisions now tracks edits made using our [GravityEdit add-on](https://www.gravitykit.com/extensions/inline-edit/). Tracking revisions is enabled by default. You can change the default setting and override the setting per-form. [Learn how to change these settings.](https://docs.gravitykit.com/article/777-inline-edit-revisions). Requires Gravity Forms 2.5 or newer.
+* Added: Entry Revisions now tracks edits made using our [GravityEdit add-on](https://www.gravitykit.com/products/inline-edit/). Tracking revisions is enabled by default. You can change the default setting and override the setting per-form. [Learn how to change these settings.](https://docs.gravitykit.com/article/777-inline-edit-revisions). Requires Gravity Forms 2.5 or newer.
 
 = 1.0.4 on July 22, 2021 =
 
@@ -87,7 +101,7 @@ __Developer Updates:__
 = 1.0.3 on February 19, 2020 =
 
 * Fixed: Error when Gravity Forms is deactivated
-* Fixed: Linking to entry revisions from GravityView and [Gravity Forms Calendar](https://www.gravitykit.com/extensions/calendar/)
+* Fixed: Linking to entry revisions from GravityView and [Gravity Forms Calendar](https://www.gravitykit.com/products/calendar/)
 * Fixed: PHP warning in Gravity Forms Entry screen
 
 __Developer Updates:__
@@ -110,9 +124,12 @@ __Developer Updates:__
 = 1.0.1 on September 17, 2018 =
 
 * Fixed: `{all_fields}` Merge Tag was being replaced with "This entry has no revisions."
-* Updated: Polish, Russian, and Turkish (Thank you, [@dariusz.zielonka](https://www.transifex.com/user/profile/dariusz.zielonka/), [@awsswa59](https://www.transifex.com/user/profile/awsswa59/), and [@suhakaralar](https://www.transifex.com/accounts/profile/suhakaralar/)!)
+* Updated: Polish, Russian, and Turkish (Thank you, @dariusz.zielonka, @awsswa59, and @suhakaralar!)
 * Improved: Added an error message when trying to activate a GravityView license key that does not have access to Entry Revisions
 
 = 1.0 =
 
 * Launch!
+
+
+= 1698694728-4249 =

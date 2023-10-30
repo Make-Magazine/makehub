@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Handler;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityEdit\Monolog\Logger;
-use GravityKit\GravityEdit\Monolog\Handler\SyslogUdp\UdpSocket;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler\SyslogUdp\UdpSocket;
 
 /**
  * A Handler for logging to a remote syslogd server.

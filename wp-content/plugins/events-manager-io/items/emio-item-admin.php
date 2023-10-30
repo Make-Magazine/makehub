@@ -57,7 +57,7 @@ class EMIO_Item_Admin {
 		//save taxonomies to add for each import
 		$taxonomies = EM_Object::get_taxonomies();
 		foreach( $taxonomies as $tax_name => $tax ){
-			if( !empty($_POST['emio_taxonomies_'.$tax_name]) && is_array($_POST['emio_taxonomies_'.$tax_name]) ){
+			if( isset($_POST['emio_taxonomies_'.$tax_name]) && is_array($_POST['emio_taxonomies_'.$tax_name]) ){
 				if( !empty($tax['ms']) ) EM_Object::ms_global_switch(); //switch back if ms global mode
 				//check context is correct
 				if( ($EMIO_Item->scope == 'events' && !in_array(EM_POST_TYPE_EVENT, $tax['context'])) || ($EMIO_Item->scope == 'locations' && !in_array(EM_POST_TYPE_LOCATION, $tax['context'])) ){
@@ -77,6 +77,8 @@ class EMIO_Item_Admin {
 				}
 				if( !empty($_POST['emio_taxonomies_'.$tax_name]) ) $EMIO_Item->meta['taxonomies'][$tax['name']] = $_POST['emio_taxonomies_'.$tax_name];
 				if( !empty($tax['ms']) ) EM_Object::ms_global_switch_back(); //switch back if ms global mode
+			}elseif( !empty($EMIO_Item->meta['taxonomies'][$tax['name']]) ){
+				unset($EMIO_Item->meta['taxonomies'][$tax['name']]);
 			}
 		}
 		// User ID
@@ -579,7 +581,7 @@ class EMIO_Item_Admin {
 			<td>
 				<?php
 				$scope_dates = $EMIO_Item->get_filter_scope();
-				$scope_select = preg_match ( "/^([0-9]{4}-[0-9]{2}-[0-9]{2})?,([0-9]{4}-[0-9]{2}-[0-9]{2})?$/", $EMIO_Item->filter_scope ) ? 'custom':$EMIO_Item->filter_scope;
+				$scope_select = !empty($EMIO_Item->filter_scope) && preg_match ( "/^([0-9]{4}-[0-9]{2}-[0-9]{2})?,([0-9]{4}-[0-9]{2}-[0-9]{2})?$/", $EMIO_Item->filter_scope ) ? 'custom':$EMIO_Item->filter_scope;
 				?>
 				<select name="emio_filter_scope" id="emio_filter_scope">
 					<option value="0"><?php esc_html_e('All Events'); ?></option>

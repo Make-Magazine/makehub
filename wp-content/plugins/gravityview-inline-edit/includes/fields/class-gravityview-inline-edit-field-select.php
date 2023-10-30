@@ -27,13 +27,7 @@ class GravityView_Inline_Edit_Field_Select extends GravityView_Inline_Edit_Field
 	 * @return mixed
 	 */
 	public function modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field ) {
-
-		// Get the rendered form after filters incase the values have changed.
-		$form = gf_apply_filters( array( 'gform_pre_render', $current_form['id'] ), $current_form, false, false );
-
-		$field = GFFormsModel::get_field( $form, $field_id );
-
-		$wrapper_attributes['data-source'] = json_encode( $field['choices'] );
+		$wrapper_attributes['data-source'] = json_encode( $gf_field->choices );
 
 		return parent::modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field );
 	}

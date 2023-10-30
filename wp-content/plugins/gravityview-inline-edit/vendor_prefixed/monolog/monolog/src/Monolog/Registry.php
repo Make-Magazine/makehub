@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog;
 
 use InvalidArgumentException;
 
@@ -23,8 +23,8 @@ use InvalidArgumentException;
  * via static method calls on this class.
  *
  * <code>
- * $application = new GravityKit\GravityEdit\Monolog\Logger('application');
- * $api = new GravityKit\GravityEdit\Monolog\Logger('api');
+ * $application = new GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger('application');
+ * $api = new GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Logger('api');
  *
  * Monolog\Registry::addLogger($application);
  * Monolog\Registry::addLogger($api);

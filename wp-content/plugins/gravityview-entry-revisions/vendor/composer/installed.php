@@ -3,7 +3,7 @@
         'name' => 'gravityview/gravityrevisions',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '384bb90dd772606e4e2d84defd4686da27604247',
+        'reference' => 'ec00f4efcd25f973003f474100c216511df7fe9e',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'gravitykit/foundation' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'aaece78685cd3fe56ecc2064e86a393dae7ade3c',
+            'reference' => '77b662681223db0da43c5d4545de0e8f6d0ba17b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gravitykit/foundation',
             'aliases' => array(
@@ -51,7 +51,7 @@
         'gravityview/gravityrevisions' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '384bb90dd772606e4e2d84defd4686da27604247',
+            'reference' => 'ec00f4efcd25f973003f474100c216511df7fe9e',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -111,15 +111,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'katzgrau/klogger' => array(
-            'pretty_version' => '1.2.2',
-            'version' => '1.2.2.0',
-            'reference' => '36481c69db9305169a2ceadead25c2acaabd567c',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../katzgrau/klogger',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
         'monolog/monolog' => array(
             'pretty_version' => '1.27.1',
             'version' => '1.27.1.0',
@@ -135,15 +126,6 @@
             'reference' => '96c132c7f2f7bc3230723b66e89f8f150b29d5ae',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/random_compat',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'paragonie/sodium_compat' => array(
-            'pretty_version' => 'v1.19.0',
-            'version' => '1.19.0.0',
-            'reference' => 'cb15e403ecbe6a6cc515f855c310eb6b1872a933',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../paragonie/sodium_compat',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
@@ -207,7 +189,7 @@
         'trustedlogin/client' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'd19cc4da8483ad4360267ee3b695038f75bf46b4',
+            'reference' => '3aecfa088ee2f864b516c1abef7229264a9e472a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../trustedlogin/client',
             'aliases' => array(

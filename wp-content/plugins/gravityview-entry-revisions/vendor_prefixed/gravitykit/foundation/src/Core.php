@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -13,6 +13,8 @@ use GravityKit\GravityRevisions\Foundation\Integrations\HelpScout;
 use GravityKit\GravityRevisions\Foundation\Integrations\TrustedLogin;
 use GravityKit\GravityRevisions\Foundation\WP\AdminMenu;
 use GravityKit\GravityRevisions\Foundation\Logger\Framework as LoggerFramework;
+use GravityKit\GravityRevisions\Foundation\WP\AjaxRouter;
+use GravityKit\GravityRevisions\Foundation\CLI\CLI;
 use GravityKit\GravityRevisions\Foundation\WP\PluginActivationHandler;
 use GravityKit\GravityRevisions\Foundation\Settings\Framework as SettingsFramework;
 use GravityKit\GravityRevisions\Foundation\Licenses\Framework as LicensesFramework;
@@ -20,16 +22,29 @@ use GravityKit\GravityRevisions\Foundation\Translations\Framework as Translation
 use GravityKit\GravityRevisions\Foundation\Encryption\Encryption;
 use GravityKit\GravityRevisions\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityRevisions\Foundation\Helpers\Arr;
-use Exception;
+use GravityKit\GravityRevisions\Foundation\WP\RESTController;
+use GravityKitFoundation;
 
+/**
+ * Core class that initializes Foundation.
+ *
+ * @method static AjaxRouter ajax_router()
+ * @method static RESTController rest_controller()
+ * @method static Encryption encryption()
+ * @method static TrustedLogin trustedlogin()
+ * @method static HelpScout helpscout()
+ * @method static GravityForms gravityforms()
+ * @method static Logger logger( string $logger_name = null, string $logger_title = null )
+ * @method static Settings settings()
+ * @method static Licenses licenses()
+ * @method static Translations translations()
+ * @method static AdminMenu admin_menu()
+ * @method static PluginActivationHandler plugin_activation_handler()
+ */
 class Core {
-	const VERSION = '1.0.9';
+	const VERSION = '1.2.2';
 
 	const ID = 'gk_foundation';
-
-	const WP_AJAX_ACTION = 'gk_foundation_do_ajax';
-
-	const AJAX_ROUTER = 'core';
 
 	const INIT_PRIORITY = 100;
 
@@ -92,7 +107,14 @@ class Core {
 
 		$this->_plugin_activation_handler->register_hooks( $plugin_file );
 
-		$this->_registered_plugins['foundation_source'] = $plugin_file;
+		$this->_registered_plugins = [
+			$plugin_file => [
+				'plugin_file'        => $plugin_file,
+				'text_domain'        => CoreHelpers::get_plugin_data( $plugin_file )['TextDomain'],
+				'foundation_version' => self::VERSION,
+				'loads_foundation'   => true,
+			],
+		];
 
 		add_filter(
 			'gk/foundation/get-instance',
@@ -123,12 +145,7 @@ class Core {
 				}
 
 				// We need to make sure that the returned instance contains a list of all registered plugins that may have come with another passed instance.
-				if ( $instance_to_return === $this ) {
-					// Reset the other instance's registered plugin keys so that there is only 1 "foundation source" plugin, which is that of the current instance.
-					$registered_plugins = array_merge( $this->_registered_plugins, array_values( $passed_instance->get_registered_plugins() ) );
-				} else {
-					$registered_plugins = array_merge( array_values( $this->_registered_plugins ), $instance_to_return->get_registered_plugins() );
-				}
+				$registered_plugins = array_merge( $this->_registered_plugins, $passed_instance->get_registered_plugins() );
 
 				$instance_to_return->set_registered_plugins( $registered_plugins );
 
@@ -165,10 +182,23 @@ class Core {
 	 * @return void
 	 */
 	public static function register( $plugin_file ) {
+		if ( wp_doing_ajax() &&
+		     ( LicensesFramework::AJAX_ROUTER === ( $_REQUEST['ajaxRouter'] ?? '' ) ) &&
+		     version_compare( $_REQUEST['frontendFoundationVersion'] ?? 0, self::VERSION, '<' )
+		) {
+			return;
+		}
+
 		if ( is_null( self::$_instance ) ) {
 			self::$_instance = new self( $plugin_file );
-		} elseif ( ! in_array( $plugin_file, self::$_instance->_registered_plugins ) ) {
-			self::$_instance->_registered_plugins[] = $plugin_file;
+		} elseif ( ! isset( self::$_instance->_registered_plugins[ $plugin_file ] ) ) {
+			self::$_instance->_registered_plugins[ $plugin_file ] = [
+				'plugin_file'        => $plugin_file,
+				'text_domain'        => CoreHelpers::get_plugin_data( $plugin_file )['TextDomain'],
+				'foundation_version' => self::$_instance->get_plugin_foundation_version( $plugin_file ),
+				'has_foundation'     => false,
+				'loads_foundation'   => false
+			];
 		}
 	}
 
@@ -204,7 +234,30 @@ class Core {
 	 * @return void
 	 */
 	public function set_registered_plugins( $plugins ) {
-		$this->_registered_plugins = array_unique( $plugins );
+		$registered_plugins = $this->_registered_plugins;
+
+		foreach ( $plugins as $plugin ) {
+			if ( is_array( $plugin ) ) {
+				if ( ! isset( $registered_plugins[ $plugin['plugin_file'] ] ) ) {
+					// 'loads_foundation' is set to true in __construct() for the plugin that instantiated Foundation (i.e., this instance), so we need to set it to false for all other plugins.
+					$plugin['loads_foundation'] = false;
+
+					$registered_plugins[ $plugin['plugin_file'] ] = $plugin;
+				}
+			} else {
+				// Backward compatability with Foundation <1.20 where the plugins object was a simple array of plugin files.
+				$registered_plugins[ $plugin ] = [
+					'plugin_file'        => $plugin,
+					'text_domain'        => CoreHelpers::get_plugin_data( $plugin )['TextDomain'],
+					'foundation_version' => $this->get_plugin_foundation_version( $plugin ),
+					'loads_foundation'   => false,
+				];
+			}
+		}
+
+		$registered_plugins = array_filter( $registered_plugins, 'is_array' );
+
+		$this->_registered_plugins = $registered_plugins;
 	}
 
 	/**
@@ -219,18 +272,22 @@ class Core {
 			return;
 		}
 
-		add_action( 'wp_ajax_' . self::WP_AJAX_ACTION, [ $this, 'process_ajax_request' ] );
+		if ( CoreHelpers::is_wp_cli() ) {
+			CLI::get_instance();
+		}
 
 		$this->_components = [
-			'settings'     => SettingsFramework::get_instance(),
-			'licenses'     => LicensesFramework::get_instance(),
-			'translations' => TranslationsFramework::get_instance(),
-			'logger'       => LoggerFramework::get_instance(),
-			'admin_menu'   => AdminMenu::get_instance(),
-			'encryption'   => Encryption::get_instance(),
-			'trustedlogin' => TrustedLogin::get_instance(),
-			'helpscout'    => HelpScout::get_instance(),
-			'gravityforms' => GravityForms::get_instance(),
+			'settings'        => SettingsFramework::get_instance(),
+			'licenses'        => LicensesFramework::get_instance(),
+			'translations'    => TranslationsFramework::get_instance(),
+			'logger'          => LoggerFramework::get_instance(),
+			'admin_menu'      => AdminMenu::get_instance(),
+			'ajax_router'     => AjaxRouter::get_instance(),
+			'rest_controller' => RESTController::get_instance(),
+			'encryption'      => Encryption::get_instance(),
+			'trustedlogin'    => TrustedLogin::get_instance(),
+			'helpscout'       => HelpScout::get_instance(),
+			'gravityforms'    => GravityForms::get_instance(),
 		];
 
 		foreach ( $this->_components as $component => $instance ) {
@@ -248,7 +305,7 @@ class Core {
 
 			add_action( 'admin_enqueue_scripts', [ $this, 'inline_scripts_and_styles' ], 20 );
 
-			add_action( 'admin_footer', [ $this, 'display_foundation_information' ] );
+			add_action( 'admin_footer', [ $this, 'show_loaded_by_message_on_admin_pages' ] );
 		}
 
 		class_alias( __CLASS__, 'GravityKitFoundation' );
@@ -286,12 +343,32 @@ class Core {
 				}
 
 				$default_settings = [
-					'support_email'    => get_bloginfo( 'admin_email' ),
-					'support_port'     => 1,
-					'no_conflict_mode' => 1,
-					'powered_by'       => 0,
-					'beta'             => 0,
+					'group_gk_products'     => 0,
+					'top_level_menu_action' => $this->licenses()::ID,
+					'support_email'         => get_bloginfo( 'admin_email' ),
+					'support_port'          => 1,
+					'no_conflict_mode'      => 1,
+					'powered_by'            => 0,
+					'beta'                  => 0,
 				];
+
+				$admin_menu_items = Arr::flatten( $this->admin_menu()->get_submenus(), 1 );
+
+				$top_level_menu_action_choices = array_map( function ( $menu_item ) {
+					if ( Arr::get( $menu_item, 'hide' ) || Arr::get( $menu_item, 'exclude_from_top_level_menu_action' ) ) {
+						return;
+					}
+
+					return [
+						'title' => $menu_item['menu_title'],
+						'value' => $menu_item['id'],
+					];
+				}, $admin_menu_items );
+
+				$top_level_menu_action_value = Arr::get( $gk_settings, 'top_level_menu_action' );
+				$top_level_menu_action_value = in_array( $top_level_menu_action_value, Arr::flatten( $top_level_menu_action_choices ) ) ? $top_level_menu_action_value : $default_settings['top_level_menu_action'];
+
+				$top_level_menu_action_choices = array_values( array_filter( $top_level_menu_action_choices ) );
 
 				$general_settings = [];
 
@@ -337,6 +414,22 @@ HTML;
 				$general_settings = array_merge(
 					$general_settings,
 					[
+						[
+							'id'          => 'group_gk_products',
+							'type'        => 'checkbox',
+							'value'       => Arr::get( $gk_settings, 'group_gk_products', $default_settings['group_gk_products'] ),
+							'choices'     => $top_level_menu_action_choices,
+							'title'       => esc_html__( 'Group GravityKit Products', 'gk-gravityrevisions' ),
+							'description' => esc_html__( 'Aggregate all GravityKit products into a single entry on the Plugins page for a cleaner view and easier management.', 'gk-gravityrevisions' ),
+						],
+						[
+							'id'          => 'top_level_menu_action',
+							'type'        => 'select',
+							'value'       => $top_level_menu_action_value,
+							'choices'     => $top_level_menu_action_choices,
+							'title'       => esc_html__( 'GravityKit Menu Item Action', 'gk-gravityrevisions' ),
+							'description' => esc_html__( 'Open the selected page when clicking the GravityKit menu item.', 'gk-gravityrevisions' ),
+						],
 						[
 							'id'          => 'powered_by',
 							'type'        => 'checkbox',
@@ -458,109 +551,6 @@ HTML;
 	}
 
 	/**
-	 * Registers the GravityKit admin menu.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $router AJAX router that will be handling the request.
-	 *
-	 * @return array
-	 */
-	public static function get_ajax_params( $router ) {
-		return [
-			'_wpNonce'      => wp_create_nonce( self::ID ),
-			'_wpAjaxUrl'    => admin_url( 'admin-ajax.php' ),
-			'_wpAjaxAction' => self::WP_AJAX_ACTION,
-			'ajaxRouter'    => $router ?: self::AJAX_ROUTER,
-		];
-	}
-
-	/**
-	 * Processes AJAX request and routes it to the appropriate endpoint.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @throws Exception
-	 *
-	 * @return void|mixed Send JSON response if an AJAX request or return the response as is.
-	 */
-	public function process_ajax_request() {
-		$request = wp_parse_args(
-			$_POST, // phpcs:ignore WordPress.Security.NonceVerification.Missing
-			[
-				'nonce'      => null,
-				'payload'    => [],
-				'ajaxRouter' => null,
-				'ajaxRoute'  => null,
-			]
-		);
-
-		list ( $nonce, $payload, $router, $route ) = array_values( $request );
-
-		if ( ! is_array( $payload ) ) {
-			$payload = json_decode( stripslashes_deep( $payload ), true );
-		}
-
-		$is_valid_nonce = wp_verify_nonce( $nonce, self::ID );
-
-		if ( ! wp_doing_ajax() || ! $is_valid_nonce ) {
-			wp_die( false, false, [ 'response' => 403 ] );
-		}
-
-		/**
-		 * Modifies a list of AJAX routes that map to backend functions/class methods. $router groups routes to avoid a name collision (e.g., 'settings', 'licenses').
-		 *
-		 * @filter gk/foundation/ajax/{$router}/routes
-		 *
-		 * @since  1.0.0
-		 *
-		 * @param array[] $routes AJAX route to function/class method map.
-		 */
-		$ajax_route_to_class_method_map = apply_filters( "gk/foundation/ajax/{$router}/routes", [] );
-
-		$route_callback = Arr::get( $ajax_route_to_class_method_map, $route );
-
-		if ( ! CoreHelpers::is_callable_function( $route_callback ) && ! CoreHelpers::is_callable_class_method( $route_callback ) ) {
-			wp_die( false, false, [ 'response' => 404 ] );
-		}
-
-		try {
-			/**
-			 * Modifies AJAX payload before the route is processed.
-			 *
-			 * @filter gk/foundation/ajax/payload
-			 *
-			 * @since  1.0.3
-			 *
-			 * @param array  $payload
-			 * @param string $router
-			 * @param string $route
-			 */
-			$payload = apply_filters( 'gk/foundation/ajax/payload', $payload, $router, $route );
-
-			$result = call_user_func( $route_callback, $payload );
-		} catch ( Exception $e ) {
-			$result = new Exception( $e->getMessage() );
-		}
-
-		/**
-		 * Modifies AJAX response after the route is processed.
-		 *
-		 * @filter gk/foundation/ajax/result
-		 *
-		 * @since  1.0.3
-		 *
-		 * @param mixed|Exception $result
-		 * @param string          $router
-		 * @param string          $route
-		 * @param array           $payload
-		 */
-		$result = apply_filters( 'gk/foundation/ajax/result', $result, $router, $route, $payload );
-
-		return CoreHelpers::process_return( $result );
-	}
-
-	/**
 	 * Inlines scripts/styles.
 	 *
 	 * @since 1.0.0
@@ -651,6 +641,12 @@ HTML;
 			];
 		}
 
+		// Ajax logic was moved to a GravityKit\Foundation\WP\AjaxRouter in 1.0.11
+		// TODO: remove when other plugins are updated not to use GravityKitFoundation::get_ajax_params().
+		if ( 'get_ajax_params' === $name ) {
+			return $this->_components['ajax_router']->get_ajax_params( Arr::get( $arguments, 0, '' ) );
+		}
+
 		if ( ! isset( $this->_components[ $name ] ) ) {
 			return;
 		}
@@ -695,31 +691,120 @@ HTML;
 	}
 
 	/**
-	 * Outputs an HTML comment with the Foundation version and the plugin that loaded it.
+	 * Outputs an HTML comment with the Foundation version and the plugin that loaded it in admin pages.
 	 *
 	 * @since 1.0.1
+	 * @since 1.2.0 Renamed to 'show_loaded_by_message_on_admin_pages'.
 	 *
 	 * @return void
 	 */
-	public function display_foundation_information() {
-		/**
-		 * Controls the display of HTML comment with Foundation information.
-		 *
-		 * @filter gk/foundation/display_foundation_information
-		 *
-		 * @since  1.0.1
-		 *
-		 * @param bool $display_foundation_information Whether to display the information.
-		 */
-		$display_foundation_information = apply_filters( 'gk/foundation/display_foundation_information', true );
+	public function show_loaded_by_message_on_admin_pages() {
+		$foundation_information = $this->get_foundation_information();
 
-		if ( ! $display_foundation_information ) {
+		if ( ! $foundation_information['show_loaded_by_message'] ) {
 			return;
 		}
 
-		$foundation_version = self::VERSION;
-		$foundation_source  = Arr::get( CoreHelpers::get_plugin_data( $this->_registered_plugins['foundation_source'] ), 'Name', '<unknown plugin>' );
+		printf( '<!-- %s -->', $foundation_information['loaded_by_message'] );
+	}
 
-		echo "<!-- GravityKit Foundation v{$foundation_version} (loaded by {$foundation_source}) -->"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	/**
+	 * Returns information about Foundation (version, plugin that loaded it, etc.).
+	 *
+	 * @since 1.2.0
+	 *
+	 * @return array{version: string, source: array, registered_plugins: array, loaded_by_foundation_message: string, display_loaded_by_foundation_message: bool}
+	 */
+	public function get_foundation_information(): array {
+		$foundation_source = Arr::first( $this->_registered_plugins, function ( $plugin ) {
+			return $plugin['loads_foundation'];
+		} );
+
+		$version            = $foundation_source['foundation_version'];
+		$source_plugin      = CoreHelpers::get_plugin_data( $foundation_source['plugin_file'] );
+		$source_plugin_name = $source_plugin['Name'] ?? __( 'Unknown Plugin', 'gk-gravityrevisions' );
+		$loaded_by_message  = strtr(
+			_x( 'GravityKit Foundation [version] (loaded by [plugin]).', 'Placeholders inside [] are not to be translated.', 'gk-gravityrevisions' ),
+			[
+				'[version]' => $version,
+				'[plugin]'  => $source_plugin_name,
+			]
+		);
+
+		/**
+		 * Controls whether to include "GravityKit Foundation X (loaded by Y)" HTML comment in admin pages.
+		 *
+		 * @filter gk/foundation/show-loaded-by-message
+		 *
+		 * @since  1.2.0
+		 *
+		 * @param bool $show_loaded_by_message Whether to display the information.
+		 */
+		$show_loaded_by_message = apply_filters( 'gk/foundation/show-loaded-by-message', true );
+
+		return [
+			'version'                => $version,
+			'source_plugin'          => $source_plugin,
+			'registered_plugins'     => $this->_registered_plugins,
+			'loaded_by_message'      => $loaded_by_message,
+			'show_loaded_by_message' => $show_loaded_by_message,
+		];
+	}
+
+	/**
+	 * Gets the Foundation version included with a plugin.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param string $plugin_file Absolute path to the plugin file.
+	 *
+	 * @return string|null
+	 */
+	public function get_plugin_foundation_version( $plugin_file ) {
+		// Try to get the version first from the registered plugins.
+		$plugin = Arr::first( $this->_registered_plugins, function ( $plugin ) use ( $plugin_file ) {
+			return $plugin['plugin_file'] === $plugin_file;
+		} );
+
+		// If the plugin is not registered, try to get the version from the plugin file.
+		if ( ! isset( $plugin['foundation_version'] ) ) {
+			$foundation_core = sprintf( '%s/vendor_prefixed/gravitykit/foundation/src/Core.php', dirname( $plugin_file ) );
+
+			if ( ! file_exists( $foundation_core ) ) {
+				$foundation_core = sprintf( '%s/vendor/gravitykit/foundation/src/Core.php', dirname( $plugin_file ) );
+
+				if ( ! file_exists( $foundation_core ) ) {
+					return null;
+				}
+			}
+
+			return ( preg_match( "/const version = '([^']+)';/i", file_get_contents( $foundation_core ), $matches ) ) ? $matches[1] : null;
+
+		}
+
+		return $plugin['foundation_version'] ?? null;
+	}
+
+	/**
+	 * Returns the latest Foundation version from all registered plugins.
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param string|null $text_domain_to_exclude Text domain to exclude from the search.
+	 *
+	 * @return string
+	 */
+	public function get_latest_foundation_version_from_registered_plugins( $text_domain_to_exclude = null ) {
+		$registered_plugins = $this->_registered_plugins;
+
+		if ( $text_domain_to_exclude ) {
+			$registered_plugins = array_filter( $this->_registered_plugins, function ( $plugin ) use ( $text_domain_to_exclude ) {
+				return $plugin['text_domain'] !== $text_domain_to_exclude;
+			} );
+		}
+
+		return max( array_map( function ( $plugin ) {
+			return $plugin['foundation_version'] ?? 0;
+		}, $registered_plugins ) ) ?: '';
 	}
 }

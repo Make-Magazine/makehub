@@ -8,15 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Monolog\Handler;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityRevisions\Monolog\Formatter\ChromePHPFormatter;
-use GravityKit\GravityRevisions\Monolog\Logger;
-use GravityKit\GravityRevisions\Monolog\Utils;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Formatter\ChromePHPFormatter;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Logger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Utils;
 
 /**
  * Handler sending logs to the ChromePHP extension (http://www.chromephp.com/)
@@ -69,7 +69,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
     {
         parent::__construct($level, $bubble);
         if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityRevisions\Monolog\'s ChromePHPHandler');
+            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\'s ChromePHPHandler');
         }
     }
 

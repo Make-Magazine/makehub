@@ -1,6 +1,14 @@
 <?php
 
 abstract class GravityView_Inline_Edit_Render {
+	/*
+	 * Cached collection of forms used throughout the request
+	 *
+	 * @since 2.0
+	 *
+	 * @var array $forms
+	 */
+	protected $forms = [];
 
 	/**
 	 * Instance of this class.
@@ -82,19 +90,32 @@ abstract class GravityView_Inline_Edit_Render {
 	 *
 	 * @since 1.4 Added $field_settings_parameter
 	 *
-	 * @param $output
-	 * @param $entry
-	 * @param string $field_id
+	 * @param string   $output
+	 * @param array    $entry
+	 * @param string   $field_id
 	 * @param GF_Field $gf_field
-	 * @param array $form
-	 * @param array $field_settings
+	 * @param array    $form
+	 * @param array    $field_settings
+	 * @param null     $context
 	 *
 	 * @return string
 	 */
-	public function wrap_field_value( $output, $entry, $field_id, $gf_field, $form = array(), $field_settings = array() ) {
+	public function wrap_field_value( $output, $entry, $field_id, $gf_field, $form = array(), $field_settings = array(), $context = null ) {
 		$source = null;
 
+		// Apply 'gform_pre_render' filter and cache result
+		static $filtered_forms = [];
+
+		if ( isset( $form['id'] ) && ! in_array( $form['id'], $filtered_forms ) ) {
+			$filtered_forms[] = $form['id'];
+
+			$form = gf_apply_filters( array( 'gform_pre_render', $form['id'] ), $form, false, false );
+		}
+
+		$this->cache_form( $form );
+
 		if ( $gf_field ) {
+			$gf_field          = GFFormsModel::get_field( $form, $field_id ); // Ensure that we always have the latest field data as it may have changed when the `gform_pre_render` filter was applied
 			$input_type        = $gf_field->type;
 			$source            = rgobj( $gf_field, 'choices' );
 			$gf_field_id       = $gf_field->id;
@@ -159,6 +180,7 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @since 1.0
 		 * @since 1.4 added $output parameter.
 		 * @since 1.6 added $field_settings parameter.
+		 * @since 2.0 added $context parameter.
 		 *
 		 * @param array $wrapper_attributes The attributes of the container <div> or <span>.
 		 * @param string $field_input_type The field input type.
@@ -168,14 +190,16 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @param GF_Field $gf_field Gravity Forms field object.
 		 * @param string $output The original field value HTML.
 		 * @param array $field_settings GravityView field settings array.
+		 * @param null|\GV\Template_Context $context The GravityView Template Context, if available.
 		 */
-		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings );
+		$wrapper_attributes = apply_filters( "gravityview-inline-edit/wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings, $context );
 
 		/**
 		 * @filter `gravityview-inline-edit/{$input_type}-wrapper-attributes` Modify the attributes being added to an inline editable link for a specific input type
 		 *
 		 * @since 1.0
 		 * @since 1.6 added $output and $field_settings parameter.
+		 * @since 2.0 added $context parameter.
 		 *
 		 * @param array $wrapper_attributes The attributes of the container <div> or <span>.
 		 * @param string $field_input_type The field input type.
@@ -185,8 +209,9 @@ abstract class GravityView_Inline_Edit_Render {
 		 * @param GF_Field $gf_field Gravity Forms field object. Is an instance of GF_Field.
 		 * @param string $output The original field value HTML.
 		 * @param array $field_settings GravityView field settings array.
+		 * @param null|\GV\Template_Context $context The GravityView Template Context, if available.
 		 */
-		$wrapper_attributes = apply_filters( "gravityview-inline-edit/{$input_type}-wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings );
+		$wrapper_attributes = apply_filters( "gravityview-inline-edit/{$input_type}-wrapper-attributes", $wrapper_attributes, $input_type, $gf_field_id, $entry, $form, $gf_field, $output, $field_settings, $context );
 
 		// If only inline elements, use <span>
 		if ( $output === strip_tags( $output, '<a><abbr><acronym><audio><b><bdi><bdo><big><br><button><canvas><cite><code><data><datalist><del><dfn><em><embed><i><iframe><img><input><ins><kbd><label><map><mark><meter><noscript><object><output><picture><progress><q><ruby><s><samp><script><select><slot><small><span><strong><sub><sup><svg><template><textarea><time><u><tt><var><video><wbr>' ) ) {
@@ -250,5 +275,35 @@ abstract class GravityView_Inline_Edit_Render {
 		/** @define "GRAVITYEDIT_DIR" "../" */
 		include GRAVITYEDIT_DIR . 'templates/toggle.php';
 		echo ob_get_clean();
+	}
+
+	/*
+	 * Returns cached forms used during the request
+	 *
+	 * @since 2.0
+	 *
+	 * @return array
+	 */
+	public function get_cached_forms() {
+		return $this->forms;
+	}
+
+	/*
+	 * Caches and returns the form used during the request
+	 *
+	 * @since 2.0
+	 *
+	 * @param array $form
+	 *
+	 * @return array
+	 */
+	public function cache_form( $form ) {
+		if ( ! isset( $form['id'] ) ) {
+			return $form;
+		}
+
+		$this->forms[ $form['id'] ] = $form;
+
+		return $form;
 	}
 }

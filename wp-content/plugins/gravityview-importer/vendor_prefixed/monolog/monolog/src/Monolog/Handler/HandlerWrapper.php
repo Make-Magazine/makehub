@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Monolog\Handler;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityImport\Monolog\ResettableInterface;
-use GravityKit\GravityImport\Monolog\Formatter\FormatterInterface;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\ResettableInterface;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Formatter\FormatterInterface;
 
 /**
  * This simple wrapper class can be used to extend handlers functionality.

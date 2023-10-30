@@ -30,6 +30,7 @@ class Vimeography_Pro_Shortcode {
       $result['playlist']  = isset($atts['playlist'])  ? intval($atts['playlist']) : intval($pro_settings[0]->playlist);
       $result['allow_downloads'] = isset( $atts['allow_downloads'] ) ? intval( $atts['allow_downloads'] ) : intval( $pro_settings[0]->allow_downloads );
       $result['enable_search'] = isset( $atts['enable_search'] ) ? intval( $atts['enable_search'] ) : intval( $pro_settings[0]->enable_search );
+      $result['enable_tags'] = isset( $atts['enable_tags'] ) ? intval( $atts['enable_tags'] ) : intval( $pro_settings[0]->enable_tags );
 
       if (
         ! empty( $_GET['vimeography_video'] ) &&

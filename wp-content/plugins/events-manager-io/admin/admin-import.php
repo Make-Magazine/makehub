@@ -52,6 +52,7 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
             }
         }elseif( !empty($EMIO_Import->errors) ){
             $EM_Notices->add_alert($EMIO_Import->errors);
+            if( !empty($_GET['tab']) && $_GET['tab'] == 'history' ) $active_tab = 'history'; // we can show history even with errors
         }
 		echo $EM_Notices;
         // Begin page output
@@ -155,23 +156,28 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
 		);
 		$field_mapping_labels = array(
 			'event' => array(
-				'uid'=> __('Event ID','events-manager-io'),
+				'id'=> __('Event ID (Local)','events-manager-io'),
+				'uid'=> __('Event Unique ID (Import Source)','events-manager-io'),
 				'slug'=> __('Event Slug','events-manager-io'),
 				'name'=> __('Event Name','events-manager-io'),
 				'start' => __('Event Start Date/Time','events-manager-io'),
 				'end' => __('Event End Date/Time','events-manager-io'),
+				'start_time'=> __('Start Time','events-manager-io'),
+				'end_time'=> __('End Time','events-manager-io'),
+				'start_date'=> __('Start Date','events-manager-io'),
+				'end_date'=> __('End Date','events-manager-io'),
 				'timezone'=> __('Event Timezone','events-manager-io'),
 				'all_day'=> __('All Day Event (true/false)','events-manager-io'),
 				'content'=> __('Event Description','events-manager-io'),
 				'image' => __('Event Image','events-manager-io'),
 				'categories' => __('Event Categories','events-manager-io'),
 				'tags' => __('Event Tags','events-manager-io'),
-				'start_time'=> __('Start Time','events-manager-io'),
-				'end_time'=> __('End Time','events-manager-io'),
-				'start_date'=> __('Start Date','events-manager-io'),
-				'end_date'=> __('End Date','events-manager-io'),
+				// event location
+				'event_location' => __('Event Location Data (JSON)', 'events-manager'),
+				'event_location_type' => __('Event Location Type', 'events-manager'),
 				//meta
-				'meta' => __('Event Meta (Array or Serialized)', 'events-manager-io'),
+				'meta' => __('Event Meta (JSON or Serialized Array)', 'events-manager-io'),
+				'meta/custom_field' => __('Event Custom Field (Meta)', 'events-manager-io'),
 				'meta/event_url' => __('Event URL (External Meta)', 'events-manager-io'),
 				'meta/bookings_url' => __('Bookings URL (External Meta)', 'events-manager-io'),
 				'meta/bookings_price' => __('Bookings Price (External Meta)', 'events-manager-io'),
@@ -189,7 +195,8 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
 			),
 			'location' => array(
 				'location'=> __('Location (Full Name/Address)','events-manager-io'),
-				'uid'=> __('Location ID','events-manager-io'),
+				'id'=> __('Location ID (Local)','events-manager-io'),
+				'uid'=> __('Location Unique ID (Import Source)','events-manager-io'),
 				'slug'=> __('Location Slug','events-manager-io'),
 				'name'=> __('Location Name','events-manager-io'),
 				'address'=> __('Address','events-manager-io'),
@@ -205,7 +212,8 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
 				'categories' => __('Location Categories','events-manager-io'),
 				'tags' => __('Locatio Tags','events-manager-io'),
 				//Meta
-				'meta' => __('Location Meta (Array or Serialized)', 'events-manager-io'),
+				'meta' => __('Location Meta (JSON or Serialized Array)', 'events-manager-io'),
+				'meta/custom_field' => __('Location Custom Field (Meta)', 'events-manager-io'),
 				'meta/location_url' => __('Location URL (External Meta)', 'events-manager-io'),
 			)
 		);
@@ -345,6 +353,9 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
                                     <?php if( $EMIO_Import->scope == 'locations' || $EMIO_Import->scope == 'all' || $EMIO_Import->scope == 'events+locations' ): ?>
                                     <th class="manage-column" scope="col"><?php esc_html_e('Location','events-manager'); ?></th>
                                     <?php endif; ?>
+	                                <?php if( $EMIO_Import->scope == 'events' || $EMIO_Import->scope == 'all' || $EMIO_Import->scope == 'events+locations' ): ?>
+		                                <th class="manage-column" scope="col"><?php esc_html_e('Taxonomies','events-manager'); ?></th>
+	                                <?php endif; ?>
                                     <?php $thead = ob_get_clean(); echo $thead; ?>
                                 </tr>
                             </thead>
@@ -444,6 +455,36 @@ class EMIO_Admin_Import extends EMIO_Admin_Item {
                                             ?>
                                         </td>
                                         <?php endif; ?>
+		                                <td scope="row">
+			                                <?php
+			                                $taxonmies = array('categories' => EM_TAXONOMY_CATEGORY, 'tags' => EM_TAXONOMY_TAG);
+			                                foreach( $taxonmies as $prop => $taxonomy ){
+				                                if( $prop == 'tags' ) echo '<br>';
+												$WP_Taxonomy = get_taxonomy( $taxonomy );
+												echo esc_html($WP_Taxonomy->label) . ' : ';
+				                                if( !empty($item->$prop) ){
+													$terms = array();
+					                                if( !is_array($item->$prop) ){
+						                                $item->$prop = explode(',', $item->$prop);
+					                                }
+					                                foreach( $item->$prop as $k => $taxonomy_term ){
+						                                $taxonomy_term = is_numeric($taxonomy_term) ? absint($taxonomy_term) : trim($taxonomy_term);
+						                                $term_id = term_exists($taxonomy_term, $taxonomy);
+						                                if( $term_id ){
+															$term = get_term($term_id['term_id'], $taxonomy);
+							                                $terms[] = '<a href="'. get_term_link($term) .'">'.$term->name.'</a>';
+						                                }else{
+							                                // assumed we are adding it at this point
+							                                $terms[] = $taxonomy_term;
+						                                }
+					                                }
+													echo implode(' , ', $terms);
+				                                }else{
+													echo ' <em>' . esc_html__('none', 'events-manager-io') . '</em>';
+				                                }
+			                                }
+			                                ?>
+		                                </td>
                                     <?php elseif( $EMIO_Import->scope == 'locations' ): ?>
                                         <td scope="row" class="location">
                                             <?php if( !empty($item->skip) && $item->object->post_id ) : ?>

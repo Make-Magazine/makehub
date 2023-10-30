@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Handler;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler;
 
-use GravityKit\GravityEdit\Monolog\Formatter\LineFormatter;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Formatter\LineFormatter;
 
 /**
  * Handler sending logs to browser's javascript console with no browser extension required
@@ -100,7 +100,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected function registerShutdownFunction()
     {
         if (PHP_SAPI !== 'cli') {
-            register_shutdown_function(array('GravityKit\GravityEdit\Monolog\Handler\BrowserConsoleHandler', 'send'));
+            register_shutdown_function(array('GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Handler\BrowserConsoleHandler', 'send'));
         }
     }
 

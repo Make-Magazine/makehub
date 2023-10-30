@@ -5,7 +5,7 @@ Plugin URI: https://eventsmanagerpro.com
 Description: Supercharge the Events Manager free plugin with extra features to make your events even more successful!
 Author: Pixelite
 Author URI: https://pixelite.com/
-Version: 3.2.6
+Version: 3.2.7
 
 Copyright (C) 2023 Pixelite SL
 */
@@ -16,7 +16,7 @@ $requirements = new EMP_Requirements_Check('Events Manager Pro', __FILE__, '5.3'
 if( !$requirements->passes(false) ) return;
 unset($requirements);
 
-define('EMP_VERSION', '3.2.6');
+define('EMP_VERSION', '3.2.7');
 define('EM_MIN_VERSION', '6.1.2.6');
 define('EM_MIN_VERSION_CRITICAL', '6.1');
 define('EMP_SLUG', plugin_basename( __FILE__ ));
@@ -70,6 +70,9 @@ class EM_Pro {
 			add_action('init', 'EM_Pro::install',2);
 		}
 		// core includes
+		if( !class_exists('EM\Feature') ) {
+			include('em-feature.php');
+		}
 		include('emp-formats.php');
 		include('emp-ml.php');
 		if( is_admin() ){
@@ -111,6 +114,7 @@ class EM_Pro {
 			include('add-ons/user-fields.php');
 			include('add-ons/google-maps/google-maps.php');
 			include('add-ons/bookings-manager/bookings-manager.php');
+			include('add-ons/rsvp/loader.php');
 			include('add-ons/attendance/attendance-loader.php');
 			include('add-ons/printables/printables.php');
 			include('add-ons/waitlists/waitlists.php');

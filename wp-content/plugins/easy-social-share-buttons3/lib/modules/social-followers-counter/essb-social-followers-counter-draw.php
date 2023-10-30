@@ -267,6 +267,8 @@ class ESSBSocialFollowersCounterDraw {
 	    $extra_atts = isset($opts['block_atts']) ? $opts['block_atts'] : '';
 	    $url_atts = isset($opts['url_atts']) ? ' '. $opts['url_atts'] : '';
 	    $icon_classes = isset($opts['icon_classes']) ? $opts['icon_classes'] : '';
+	    // avoid blank links
+	    $network_name = isset($opts['network_name']) ? $opts['network_name'] : '';
 	    
 	    if ($icon_classes != '') {
 	        $icon_classes = ' class="'.esc_attr($icon_classes). '"';
@@ -292,7 +294,7 @@ class ESSBSocialFollowersCounterDraw {
 	    $output .= '</div>';
 	    
 	    if ($url != '') {
-	        $output .= '<a href="'.esc_url($url).'"'.$url_atts.'></a>';
+	        $output .= '<a href="'.esc_url($url).'"'.$url_atts.'><label>'. esc_attr($network_name) . '</label></a>';
 	    }
 	    	    
 	    $output .= '</div>'; // essb-fc-block
@@ -405,8 +407,9 @@ class ESSBSocialFollowersCounterDraw {
 	        $options = apply_filters('essb_followers_draw_options', $options);
 	    }
 	    
-	    $hide_title = isset ( $options ['hide_title'] ) ? $options ['hide_title'] : 0;
-	    if (intval ( $hide_title ) == 1) {
+	    $hide_title = isset ( $options ['hide_title'] ) ? $options ['hide_title'] : '';
+	    // fixed in 8.5
+	    if (essb_unified_true($hide_title)) {
 	        $draw_title = false;
 	    }
 
@@ -435,6 +438,11 @@ class ESSBSocialFollowersCounterDraw {
 	    $instance_hide_value = self::get_internal_option_value($options, 'hide_value', true);
 	    $instance_hide_text = self::get_internal_option_value($options, 'hide_text', true);
 	    	    
+	    // should append or not the alt tag to the links
+	    $follow_alt_text = essb_option_bool_value('follow_alt_text');
+	    
+	    $preview_mode = self::get_internal_option_value($options, 'preview_mode');
+	    
 	    /**
 	     * Adding support for custom network list
 	     */
@@ -543,6 +551,11 @@ class ESSBSocialFollowersCounterDraw {
 	     * Generate list of all social networks
 	     */
 	    $display_networks = $instance_show_user_networks && count($instance_user_networks) > 0 ? $instance_user_networks : essb_followers_counter ()->active_social_networks ();
+	    	    	    
+	    /**
+	     * Get all available social networks for the alt tags
+	     */
+	    $all_networks = ESSBSocialFollowersCounterHelper::available_social_networks(false);
 	    
 	    /**
 	     * Load the SVG icons if not present
@@ -562,6 +575,13 @@ class ESSBSocialFollowersCounterDraw {
 	        
 	        $custom_li_class = '';
 	        
+	        $alt_text = '';
+	        $label_text = '';
+	        if ($follow_alt_text) {
+	            $alt_text = ' alt="'. esc_attr(isset($all_networks[$social]) ? $all_networks[$social] : $social) . '"';
+	            $label_text = ' aria-label="'. esc_attr(isset($all_networks[$social]) ? $all_networks[$social] : $social) . '"';
+	        }
+	        
 	        if ($layout_builder) {
 	            $network_columns = essb_followers_option('layout_cols_'.$social);
 	            if ($network_columns != '') {
@@ -574,14 +594,23 @@ class ESSBSocialFollowersCounterDraw {
 	            $social_display = "instagram";
 	        }
 	        
+	        if ($social_display == 'twitter' && essb_option_value('follow_twitter_icon_type') == 'x') {
+	            $social_display = 'twitter-x';
+	        }
+	        
 	        $social_icon = ESSB_SVG_Icons::get_icon($social_display);
 	        
 	        $opts = array(
 	            'block_classes' => 'essb-fc-network-'.$social_display .' '. self::block_template_class($instance_template, $social_display).$custom_li_class,
 	            'block_atts' => '',
 	            'icon_classes' => self::icon_template_class($instance_template, $social_display),
-	            'url_atts' => $link_nofollow.$link_newwindow
+	            'url_atts' => $link_nofollow.$link_newwindow.$alt_text.$label_text,
+	            'network_name' => isset($all_networks[$social]) ? $all_networks[$social] : $social
 	        );
+	        
+	        if (!empty($preview_mode)) {
+	            $social_follow_url = '';
+	        }
 	        
 	        echo self::generate_single_block($social_icon, $social_followers_counter, $social_followers_text, 
 	            $social_follow_url, $opts);

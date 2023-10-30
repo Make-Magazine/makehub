@@ -141,7 +141,7 @@ class EMIO_Items_List_Table extends EMIO_List_Table {
 				</select>
 				<script>
 					jQuery(document).ready( function($){
-						$('#filter-by-frequency').change( function(){
+						$('#filter-by-frequency').on('change', function(){
 							if( $(this).val() === 'all' || $(this).val() === 'none' ){
 								$('#filter-by-status').hide();
 							}else{

@@ -11,6 +11,22 @@ class PXL_License_Admin {
 		$license_class = static::$license_class;
 		$self = get_called_class();
 		add_action( 'in_plugin_update_message-'.$license_class::$slug,  $self.'::plugin_message');
+		add_action('wp_ajax_pxl-license-error-details', function(){
+			if( !empty($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], 'pxl-license-error-details') ){
+				$license = License::get_license();
+				if( !empty($license->error_response) ){
+					echo '<p>The following is the response object returned after attempting to check your license: </p>';
+					echo '<pre>'.print_r($license->error_response, true). '</pre>'; die();
+				}
+			}
+			die();
+		});
+		add_action('wp_ajax_pxl-license-get-own-ip', function() {
+			if (!empty($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], 'pxl-license-get-own-ip')) {
+				echo $_SERVER['REMOTE_ADDR'];
+				die();
+			}
+		});
 	}
 	
 	public static function get_activation_url( $dev = false ){
@@ -99,6 +115,7 @@ class PXL_License_Admin {
 							</p>
 						<?php endif; ?>
 						<p><?php echo $license->error; ?></p>
+						<?php static::error_info( $license ); ?>
 					</div>
 					<?php
 				}
@@ -155,6 +172,7 @@ class PXL_License_Admin {
 						?>
 					</p>
 					<p><em><strong>Error : <?php echo $license->error; ?></strong></em></p>
+					<?php static::error_info( $license ); ?>
 				</div>
 				<p>
 					<a class="button-primary" href="<?php echo esc_url( static::get_recheck_url() ); ?>"><?php esc_attr_e('Re-check', $class::$lang); ?></a> or
@@ -164,8 +182,9 @@ class PXL_License_Admin {
 			}else{
 				if( $license->error ){
 					?>
-					<div style="padding:10px; background-color:#f2dede; border:1px solid #ebccd1; color: #a94442;">
+					<div style="padding:10px; background-color:#f2dede; border:1px solid #ebccd1; color: #a94442;" id="pxl-license-unknown-error">
 						<p><em><strong><?php echo $license->error; ?></strong></em></p>
+						<?php static::error_info( $license ); ?>
 					</div>
 					<?php
 				}
@@ -186,7 +205,7 @@ class PXL_License_Admin {
 						<th scope="row"><?php esc_html_e('Supports and Updates Until', $class::$lang); ?></th>
 						<td>
 							<?php
-							$date = date_i18n( get_option('date_format'), $license->until );
+							$date = date('Y-m-d', $license->until );
 							if( $license->until > time() ){
 								echo '<em style="color:#006400">'. $date .'</em>';
 							}elseif( $license->until ){
@@ -267,16 +286,16 @@ class PXL_License_Admin {
 				jQuery(document).ready(function($){
 					$('.<?php echo $class::$slug; ?>-license.pxl-license').each( function(){
 						var parent = $(this);
-						parent.find('a.pxl-license-key-trigger').click( function(e){
+						parent.find('a.pxl-license-key-trigger').on('click', function(e){
 							e.preventDefault()
 							parent.find('.pxl-license-key-toggle').toggle();
 							parent.find('.pxl-license-key').toggle();
 						});
-						parent.find('a.pxl-license-key-save').click( function(e){
+						parent.find('a.pxl-license-key-save').on('click', function(e){
 							e.preventDefault();
 							$('<form action="'+$(this).data('url')+'" method="post"><input type="hidden" name="key" value="'+ parent.find('.pxl-license-key input').val() +'"></form>').appendTo('body').submit();
 						});
-						$('.nav-tab').click( function(){
+						$('.nav-tab').on('click', function(){
 							if( $(this).attr('id') === 'em-menu-license' ){
 								$('#notice-<?php echo $class::$slug; ?>-activation').hide();
 							}else{
@@ -286,7 +305,7 @@ class PXL_License_Admin {
 						if( $('.nav-tab.nav-tab-active').attr('id') === 'em-menu-license' ){
 							$('#notice-<?php echo $class::$slug; ?>-activation').hide();
 						}
-						parent.find('.pxl-reset-license').click( function(e){
+						parent.find('.pxl-reset-license').on('click', function(e){
 							if( !confirm($(this).data('warning')) ){
 								e.preventDefault();
 								return false;
@@ -298,5 +317,43 @@ class PXL_License_Admin {
 			</script>
 		</div>
 		<?php
+	}
+	
+	public static function error_info( $license ){
+		if( $license->error_response ){
+			?>
+			<a href="#" id="pxl-license-error-info" onclick="let el = document.getElementById('pxl-license-error-details'); el.style.display = el.style.display === 'none'  ? 'block':'none';">Show/Hide Details</a>
+			<div id="pxl-license-error-details" style="display:none; width:100%;">
+				<iframe style="width:100%; min-height:400px;" src="<?php echo add_query_arg(array('action' => 'pxl-license-error-details', 'nonce' => wp_create_nonce('pxl-license-error-details')), admin_url('admin-ajax.php')); ?>"></iframe>
+				<?php
+				$curl_timeout = is_wp_error($license->error_response) && preg_match('/cURL error 28/', implode(', ', $license->error_response->get_error_messages()));
+				if( wp_remote_retrieve_response_code($license->error_response) == 403 || $curl_timeout ){
+					$regex = '/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/';
+					// get own server IP
+					$request = wp_remote_post( get_admin_url(null, 'admin-ajax.php'), array('action' => 'pxl-license-get-own-ip', 'nonce' => wp_create_nonce('pxl-license-get-own-ip')) );
+					if( !is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) == 200 ){
+						$ip = wp_remote_retrieve_body( $request );
+					}
+					if( empty($ip) || !preg_match($regex, $ip) ){
+						// try ipfy
+						$request = wp_remote_request('https://api.ipify.org');
+						if( !is_wp_error( $request ) && wp_remote_retrieve_response_code( $request ) == 200 ){
+							$ip = wp_remote_retrieve_body( $request );
+						}
+					}
+					if ( !empty($ip) ){
+						?>
+						<p>The following errors may mean that your server firewall is blocking outgoing connections, or possibly that ours are blocking yours. Please, <a href="https://www.abuseipdb.com/check/<?php echo $ip; ?>">check if your server IP is blacklisted via this link</a> or any blacklist lookup service (your server IP is <code><?php echo $ip; ?></code>), if so then our server firewalls will be refusing your connection since your server is potentially compromised.</p>
+						<?php
+					}
+					?>
+					<p><b>This does not mean your site has been hacked</b>, but likely means the IP/machine your site is hosted on has been used for malicious purposes recently and has possibly been compromised in some way. This is entirely possible if you are on shared hosting or do not have a dedicated IP, or if you recently set up your server with a new IP provided to you.</p>
+					<p>In all these cases, please contact your hosts, we strongly suggest for your own security and to ensure you don't experience this issue for other services you connect to that you switch server IPs (and probably the machine your site is hosted on!).</p>
+					<?php
+				}
+				?>
+			</div>
+			<?php
+		}
 	}
 }

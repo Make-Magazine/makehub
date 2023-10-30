@@ -168,16 +168,17 @@ class PXL_License {
 			$code = wp_remote_retrieve_response_code( $request );
 			$msg = wp_remote_retrieve_response_message( $request );
 			// Request failed
-			return new WP_Error('pxl-license-request', "$code - $msg");
+			return new WP_Error('pxl-license-request', "$code - $msg", $request);
 		}
 		// Read server response, which should be an object
 		$response = json_decode( wp_remote_retrieve_body( $request ) );
 		if( is_object( $response ) ) {
+			$response->site = $args['site']; // add site so we can double-check odd site changes
 			return $response;
 		} else {
 			// Unexpected response
 			$response_text = is_string($response) ? $response : json_encode($response);
-			return new WP_Error('pxl-license-request', "Unexpected Error : $response_text");
+			return new WP_Error('pxl-license-request', "Unexpected Error : $response_text", $request);
 		}
 	}
 	
@@ -255,8 +256,9 @@ class PXL_License {
 		// If response is false, don't alter the transient
 		if( static::check_response($response) ){
 			$the_response = clone($response);
+			$the_response->slug = static::$slug;
 			if( !empty($the_response->license) ) unset($the_response->license);
-			if( version_compare($transient->checked[static::$plugin], $the_response->new_version) < 0) {
+			if( !empty($the_response->new_version) && version_compare($transient->checked[static::$plugin], $the_response->new_version) < 0) {
 				if( empty($response->license->valid) ){
 					$the_response->package = '';
 				}
@@ -271,7 +273,7 @@ class PXL_License {
 				foreach( $response->other_plugins as $plugin_slug => $plugin_info ){
 					$plugin_path = $dependencies[$plugin_slug]['plugin'];
 					if( empty($transient->checked[$plugin_path]) ) $transient->checked[$plugin_path] = $dependencies[$plugin_slug]['version'];
-					if( version_compare($transient->checked[$plugin_path], $plugin_info->new_version) < 0) {
+					if( !empty($the_response->new_version) && version_compare($transient->checked[$plugin_path], $plugin_info->new_version) < 0) {
 						if( empty($response->license->valid) ){
 							$plugin_info->package = '';
 						}
@@ -290,6 +292,7 @@ class PXL_License {
 					static::get_license()->load($response->license)->save();
 				}elseif( !empty($response->license->error) ){
 					static::get_license()->error = $response->license->error;
+					static::get_license()->error_response = $response;
 					static::get_license()->save();
 				}
 				static::license_saved();
@@ -340,11 +343,14 @@ class PXL_License_Token {
 	public $valid;
 	public $checked;
 	public $error;
+	public $error_response;
 	public $update_notices;
 	public $until = 0;
 	public $dev = false;
 	public $option_name;
 	public $wp_error_code;
+	public $site;
+	public $previous_site;
 	
 	public function __construct( $option_name ){
 		$this->option_name = $option_name;
@@ -375,15 +381,36 @@ class PXL_License_Token {
 		if( !$response ) return $this;
 		if( is_wp_error($response) ){ /* @var WP_Error $response */
 			$this->error = $response->get_error_message();
+			if( $response->get_error_data() == 'pxl-license-request' && $response->get_error_data('pxl-license-request') ){
+				$this->error_response = $response->get_error_data('pxl-license-request');
+			}else{
+				$this->error_response = $response;
+			}
 			$this->wp_error_code = $response->get_error_code();
 		}elseif( $response !== false ){
 			if( is_array($response) ) $response = (object) $response;
 			if( is_object($response) ){
-				$this->activated = !empty($response->activated);
-				$this->valid = !empty($response->valid);
+				// activate or deal with sudden url changes softly
+				if( $this->activated && empty($response->activated) && ($this->site !== $this->previous_site || $response->site !== $this->site) ){
+					// save previous site info here in event of an unexpected site change, and do not deactivate unless specifically told to
+					if( $response->site !== $this->site ) {
+						$this->previous_site = $this->site;
+					}
+					$this->activated = empty($response->deactivated);
+					$this->valid = false;
+					$response->until = time() - 86400;
+				}else{
+					$this->activated = !empty($response->activated);
+					$this->valid = !empty($response->valid);
+				}
 				$this->deactivated = !empty($response->deactivated);
 				$this->dev = !empty($response->dev);
 				$this->error = !empty($response->error) ? $response->error : false;
+				$this->error_response = !empty($response->error_response) ? $response->error_response : false;
+				$this->site = !empty($response->site) ? $response->site : get_bloginfo('url');
+				// previous site check/cancellation
+				if( !empty($response->previous_site) ) $this->previous_site = $response->previous_site;
+				if( $this->previous_site == $this->site ) $this->previous_site = null;
 				//key and until don't need to get overwritten if $response is empty
 				if( !empty($response->key) ) $this->key = $response->key;
 				if( !empty($response->until) ) $this->until = absint($response->until);

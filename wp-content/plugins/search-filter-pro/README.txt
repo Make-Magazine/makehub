@@ -4,7 +4,7 @@ Donate link:
 Tags: posts, custom posts, products, category, filter, taxonomy, post meta, custom fields, search, wordpress, post type, post date, author
 Requires at least: 5.1
 Tested up to: 6.0
-Stable tag: 2.5.13
+Stable tag: 2.5.16
 
 Search and Filtering for posts, products and custom posts. Allow your users to Search & Filter by taxonomies, custom fields and more.
 
@@ -56,6 +56,26 @@ Great for searching in your online shop, tested with: WooCommerce and WP eCommer
 
 
 == Changelog ==
+
+= 2.5.16 =
+* Fix - an issue with our pagination functions causing fatal errors.
+
+= 2.5.15 = 
+* New - Add debugging hooks
+* Fix - an undefined index warning in the active query class
+* Fix - undefined index warnings when "include with children" is used in a taxonomy field
+* Fix - check to make sure wc_get_product is available before using it
+* Fix - add date sorting options to the secondary sort in the query settings
+* Fix - add new pagination functions for our results.php template to work around issues with pagination not displaying in some scenarios
+* Fix - infinite scroll was not triggering in some scenarios when the class name used was found on other parts of the page
+
+= 2.5.14 = 
+* New - Add support for PODS date format in our date picker
+* New - Add `search_filter_cache_should_index_post` filter to conditionally exclude posts from the cache
+* Fix - An issue where a product variation was not synced correctly when only the variation was updated
+* Fix - An issue when using a number range field and using a step value between 0 and 1.
+* Improvement - hide ajax settings when using 3rd party integrations
+* Improvement - add support for PHP 8.1 and 8.2
 
 = 2.5.13 =
 * Fix - an issue with infinite scroll triggering after pressing "back" in certain browsers.

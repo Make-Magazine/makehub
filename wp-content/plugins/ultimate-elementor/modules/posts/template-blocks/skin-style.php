@@ -691,10 +691,12 @@ abstract class Skin_Style {
 			}
 		}
 
+		$taxonomies_to_exclude = array( 'optional', 'translation_priority' );
+
 		if ( 'post' === $settings['post_type_filter'] ) {
 			$terms_show = $this->get_instance_value( 'terms_to_show' );
 		} else {
-			$terms_show = get_taxonomies( '', 'names' );
+			$terms_show = array_diff( get_taxonomies( '', 'names' ), $taxonomies_to_exclude );
 		}
 
 		$terms = wp_get_post_terms( get_the_ID(), $terms_show );
@@ -802,7 +804,13 @@ abstract class Skin_Style {
 		?>
 
 		<div class="uael-post__excerpt">
-			<?php the_excerpt(); ?>
+			<?php 
+				$excerpt        = get_the_excerpt();
+				$words          = preg_split( '/\s+/', $excerpt );
+				$excerpt_length = (int) $_excerpt_length;
+				$trim_excerpt   = implode( ' ', array_slice( $words, 0, $excerpt_length ) );
+				echo wp_kses_post( $trim_excerpt );
+			?>
 		</div>
 
 		<?php
@@ -1272,7 +1280,7 @@ abstract class Skin_Style {
 			<ul class="uael-post__header-filters" aria-label="<?php esc_attr_e( 'Taxonomy Filter', 'uael' ); ?>">
 				<li class="uael-post__header-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $all_text ); ?></li>
 				<?php foreach ( $filters as $key => $value ) { ?>
-				<li class="uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>" tabindex="0"><?php echo esc_attr( $value->name ); ?></li>
+				<li class="uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>" tabindex="0"><?php echo esc_html( $value->name ); ?></li>
 				<?php } ?>
 			</ul>
 
@@ -1283,7 +1291,7 @@ abstract class Skin_Style {
 					<ul class="uael-filters-dropdown-list uael-post__header-filters">
 						<li class="uael-filters-dropdown-item uael-post__header-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $all_text ); ?></li>
 						<?php foreach ( $filters as $key => $value ) { ?>
-						<li class="uael-filters-dropdown-item uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>"><?php echo esc_attr( $value->name ); ?></li>
+						<li class="uael-filters-dropdown-item uael-post__header-filter" data-filter="<?php echo '.' . esc_attr( $value->slug ); ?>"><?php echo esc_html( $value->name ); ?></li>
 						<?php } ?>
 					</ul>
 				</div>
@@ -1421,7 +1429,7 @@ abstract class Skin_Style {
 
 		<?php do_action( 'uael_posts_before_outer_wrap', $settings ); ?>
 
-		<div <?php echo wp_kses_post( $this->get_render_attribute_string( 'outer_wrapper' ) ); ?> <?php echo wp_kses_post( $this->get_slider_attr() ); ?>>
+		<div <?php echo wp_kses_post( sanitize_text_field( $this->get_render_attribute_string( 'outer_wrapper' ) ) ); ?> <?php echo wp_kses_post( sanitize_text_field( $this->get_slider_attr() ) ); ?>>
 
 			<?php do_action( 'uael_posts_before_wrap', $settings ); ?>
 				<div <?php echo wp_kses_post( $this->get_render_attribute_string( 'wrapper' ) ); ?>>
@@ -1503,7 +1511,7 @@ abstract class Skin_Style {
 				?>
 				<div class="uael-builder-msg elementor-alert elementor-alert-warning">
 					<?php if ( ! $image ) { ?>
-						<span class="elementor-alert-description"><?php esc_attr_e( 'Some posts do not have featured images. Please fill in all required fields to display posts schema properly.', 'uael' ); ?></span>
+						<span class="elementor-alert-description"><?php esc_html_e( 'Some posts do not have featured images. Please fill in all required fields to display posts schema properly.', 'uael' ); ?></span>
 					<?php } else { ?>
 						<span class="elementor-alert-description">
 							<?php esc_attr_e( 'Some fields are empty under the posts schema section. Please fill in all required fields.', 'uael' ); ?><br/>
@@ -1650,7 +1658,7 @@ abstract class Skin_Style {
 
 		check_ajax_referer( 'uael-posts-widget-nonce', 'nonce' );
 
-		$category = ( isset( $_POST['category'] ) ) ? $_POST['category'] : '';
+		$category = ( isset( $_POST['category'] ) ) ? sanitize_text_field( $_POST['category'] ) : '';
 
 		self::$settings  = $widget->get_settings_for_display();
 		self::$query_obj = new Build_Post_Query( $style_id, self::$settings, $category );
@@ -1695,7 +1703,7 @@ abstract class Skin_Style {
 
 		check_ajax_referer( 'uael-posts-widget-nonce', 'nonce' );
 
-		$category = ( isset( $_POST['category'] ) ) ? $_POST['category'] : '';
+		$category = ( isset( $_POST['category'] ) ) ? sanitize_text_field( $_POST['category'] ) : '';
 
 		self::$settings  = $widget->get_settings_for_display();
 		self::$query_obj = new Build_Post_Query( $style_id, self::$settings, $category );

@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Circles
 Plugin URI: https://vimeography.com/themes
 Theme Name: Circles
 Theme URI:  https://vimeography.com/themes/circles
-Version: 2.0.6
+Version: 2.1.1
 Description: Circles takes a rounder approach to displaying your Vimeo videos.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Circles') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Circles') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

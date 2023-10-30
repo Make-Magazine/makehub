@@ -18,7 +18,7 @@
          render: function() {
             this.$input = this.$tpl.parent();
             var field = this.options.scope;
-            $(this.$input).find('input').attr('multiple',$(field).attr('multiple'));
+            $( this.$input ).find( 'input' ).attr( 'multiple', $( field ).data( 'multiple' ) );
         },
 
         /**

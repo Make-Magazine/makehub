@@ -775,4 +775,162 @@ jQuery(document).ready(function($) {
       $('#mepr_show_negative_tax_on_invoice_section').hide();
     }
   });
+
+  var set_stripe_tax_options_visibility = function () {
+    if($('#mepr_tax_stripe_enabled').is(':checked')) {
+      $('#mepr_tax_taxjar_enabled, #mepr_tax_quaderno_enabled').prop('checked', false);
+      $('#mepr_tax_taxjar_box, #mepr_tax_quaderno_box').hide();
+      $('div#taxes').addClass('mepr-stripe-tax-enabled');
+      $('select[name="mepr_tax_calc_location"]').val('customer');
+      $('select[name="mepr_tax_default_address"]').val('none');
+    } else {
+      $('div#taxes').removeClass('mepr-stripe-tax-enabled');
+    }
+  };
+
+  $('#mepr_tax_stripe_enabled').on('change', set_stripe_tax_options_visibility);
+  set_stripe_tax_options_visibility();
+
+  $('#mepr-currency-code').on('change', function () {
+    var $currency = $(this);
+
+    if($currency.val() !== $currency.data('saved-currency')) {
+      $('.mepr-stripe-customize-payment-methods').each(function () {
+        var $container = $(this);
+
+        $container.find('.mepr-stripe-currency-changed-notice').show();
+        $container.find('.mepr-stripe-payment-methods').hide().find('input[type="checkbox"]').prop('checked', false);
+        $container.find('.mepr-update-stripe-payment-methods').hide();
+      });
+    }
+  });
+
+  var validating_payment_method = false;
+
+  $('.mepr-stripe-payment-method-checkbox').on('click', function (e) {
+    var $checkbox = $(this),
+        $integration,
+        payment_method_types = [],
+        $heading,
+        $button,
+        original_button_html;
+
+    if(!$checkbox.is(':checked') || validating_payment_method) {
+      return; // Do nothing if unchecking, or if we're already validating
+    }
+
+    validating_payment_method = true;
+    $integration = $checkbox.closest('.mepr-integration');
+    $heading = $integration.find('.mepr_modal__content h3');
+    $button = $integration.find('.mepr-update-stripe-payment-methods button');
+    original_button_html = $button.html();
+
+    $integration.find('.mepr-stripe-payment-method-checkbox').each(function () {
+      if ($(this).is(':checked')) {
+        payment_method_types.push($(this).val());
+      }
+    });
+
+    e.preventDefault();
+    $button.width($button.width()).html('<i class="mp-icon mp-icon-spinner animate-spin" aria-hidden="true"></i>').prop('disabled', true);
+    $integration.find('.mepr-stripe-payment-method-checkbox:not(:checked)').add($checkbox).prop('disabled', true);
+    $integration.find('.mepr_modal__content .notice-error').remove();
+
+    $.ajax({
+      url: ajaxurl,
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        action: 'mepr_validate_stripe_payment_method_types',
+        gateway_id: $integration.data('id'),
+        payment_method_types: payment_method_types,
+        _ajax_nonce: MeprOptions.validate_stripe_payment_methods_nonce
+      }
+    })
+    .done(function (response) {
+      if (response && typeof response == 'object' && typeof response.success === 'boolean') {
+        if (response.success) {
+          $checkbox.prop('checked', true);
+        } else {
+          onError(response.data);
+        }
+      }
+    })
+    .fail(function () {
+      onError('Request failed');
+    })
+    .always(function () {
+      $integration.find('.mepr-stripe-payment-method-checkbox:not(:checked)').add($checkbox).prop('disabled', false);
+      validating_payment_method = false;
+      $button.html(original_button_html).width('auto').prop('disabled', false);
+    });
+
+    function onError (message) {
+      $heading.after(
+        $('<div class="notice notice-error">').append(
+          $('<p>').html(message)
+        )
+      );
+    }
+  });
+
+  var $stripe_tax_payment_method = $('#mepr_tax_stripe_payment_method'),
+      old_stripe_tax_payment_method = $stripe_tax_payment_method.val();
+
+  $stripe_tax_payment_method.on('change', function () {
+    var gateway_id = $stripe_tax_payment_method.val(),
+        $loader = $('#mepr-loader-validate-stripe-tax');
+
+    if(gateway_id === '') {
+      return;
+    }
+
+    $loader.show();
+
+    $.ajax({
+      method: 'POST',
+      url: ajaxurl,
+      data: {
+        action: 'mepr_validate_stripe_tax',
+        gateway_id: $(this).val(),
+        _ajax_nonce: MeprOptions.validate_stripe_tax_nonce
+      }
+    })
+    .done(function (response) {
+      if(response && typeof response.success === 'boolean') {
+        if(response.success) {
+          if(response.data === true) {
+            old_stripe_tax_payment_method = gateway_id;
+          }
+          else {
+            $stripe_tax_payment_method.val(old_stripe_tax_payment_method);
+
+            $.magnificPopup.open({
+              mainClass: 'mepr-shared-mfp',
+              items: {
+                src: '#mepr-stripe-tax-inactive-popup',
+                type: 'inline'
+              }
+            });
+          }
+        }
+        else {
+          $stripe_tax_payment_method.val(old_stripe_tax_payment_method);
+          console.log(response.data);
+          alert(MeprOptions.unable_to_verify_stripe_tax);
+        }
+      }
+      else {
+        $stripe_tax_payment_method.val(old_stripe_tax_payment_method);
+        alert(MeprOptions.unable_to_verify_stripe_tax);
+      }
+    })
+    .fail(function () {
+      $stripe_tax_payment_method.val(old_stripe_tax_payment_method);
+      alert(MeprOptions.unable_to_verify_stripe_tax);
+    })
+    .always(function () {
+      $loader.hide();
+    });
+  });
 });

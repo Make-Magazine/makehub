@@ -12,10 +12,10 @@ class EMIO_Import extends EMIO_Item {
 	public $type = 'import';
 	/**
 	 * Meta values specific for imports
-	 * 
+	 *
 	 * - action 		What to do with item when it's new, either 'publish' or 'draft'
 	 * - attachments 	What to do with attachment, either 'ignore', 'download' or 'remote'
-	 *  
+	 *
 	 * @var array
 	 */
 	public $meta = array(
@@ -23,6 +23,7 @@ class EMIO_Import extends EMIO_Item {
 		'post_update_status' => 'same',
 		'attachments' => 'remote',
 		'taxonomies' => array(),
+		'taxonoimes_new' => array(),
 		'fuzzy_location' => array(),
 		'ignore_uid' => false
 	);
@@ -86,7 +87,8 @@ class EMIO_Import extends EMIO_Item {
 	 */
 	public static $field_mapping_default = array(
 		//event-specific field mapping
-		'event_id' => 'event/uid',
+		'event_id' => 'event/event_id',
+		'event_uid' => 'event/uid', // external uid
 		'event_slug' => 'event/slug',
 		'event_name' => 'event/name',
 		'event_start' => 'event/start',
@@ -99,10 +101,12 @@ class EMIO_Import extends EMIO_Item {
 		'event_end_date' => 'event/end_date',
 		'event_timezone' => 'event/timezone',
 		'event_image' => 'event/image',
-		'event-categories' => 'event/categories',
-		'event-tags' => 'event/tags',
+		'event_language' => 'event/language',
+		'event_categories' => 'event/categories',
+		'event_tags' => 'event/tags',
 		//event with possibly multiple fields to one end point as an array
 		'event_attributes' => 'event/meta',
+		'event_meta' => 'event/meta',
 		'event_url' => 'event/meta/event_url',
 		'bookings_url' => 'event/meta/bookings_url',
 		'bookings_price' => 'event/meta/bookings_price',
@@ -110,10 +114,12 @@ class EMIO_Import extends EMIO_Item {
 		'bookings_spaces' => 'event/meta/bookings_spaces',
 		'bookings_available' => 'event/meta/bookings_available',
 		'bookings_confirmed' => 'event/meta/bookings_confirmed',
-		
+		'event_location_type' => 'event/event_location_type',
+		'event_location' => 'event/event_location',
 		//location-specific field mapping
 		'location' => 'location/location',
-		'location_id' => 'location/uid',
+		'location_id' => 'location/location_id',
+		'location_uid' => 'location/uid', // external uid
 		'location_slug' => 'location/slug',
 		'location_name' => 'location/name',
 		'location_address' => 'location/address',
@@ -126,11 +132,13 @@ class EMIO_Import extends EMIO_Item {
 		'location_longitude' => 'location/longitude',
 		'location_content' => 'location/content',
 		'location_image' => 'location/image',
+		'location_language' => 'location/language',
 		'location_categories' => 'location/categories',
 		'location_tags' => 'location/tags',
 		//location fields that are possibly repeated and mapped to one destination a an array
 		'location_attributes' => 'location/meta',
 		'location_url' => 'location/meta/location_url',
+		'location_meta' => 'location/meta',
 	);
 	/**
 	 * By default any format can be synced via import, since we generate IDs based on a checksum even if the source doesn't have an ID.
@@ -152,7 +160,15 @@ class EMIO_Import extends EMIO_Item {
 			$this->meta['taxonomies'] = $this->meta['import_taxonomies'];
 			unset($this->meta['import_taxonomies']);
 		}
-		
+		// regularize taxonomy names so they match the slug
+		if( EM_TAXONOMY_CATEGORY !== 'event-categories' && !empty(static::$field_mapping['event-categories']) ){
+			static::$field_mapping[EM_TAXONOMY_CATEGORY] = static::$field_mapping['event-categories'];
+			unset(static::$field_mapping['event-categories']);
+		}
+		if( EM_TAXONOMY_TAG !== 'event-tags' && !empty(static::$field_mapping['event-tags']) ){
+			static::$field_mapping[EM_TAXONOMY_TAG] = static::$field_mapping['event-tags'];
+			unset(static::$field_mapping['event-tags']);
+		}
 	}
 	
 	/**
@@ -179,10 +195,10 @@ class EMIO_Import extends EMIO_Item {
 	}
 	
 	/**
-	 * Runs the import based on current settings and save the items to the DB. 
+	 * Runs the import based on current settings and save the items to the DB.
 	 * An array of items can be supplied, which must be an array of either EM_Event objects or EM_Location objects, depending on the scope.
 	 * If no array of items is supplied, EMIO_Import::get() is invoked and retrieves items from the format source.
-	 *  
+	 *
 	 * @param array $EMIO_Objects
 	 * @return array
 	 */
@@ -228,26 +244,31 @@ class EMIO_Import extends EMIO_Item {
 			$attributes['names'] = array_merge( $attributes['names'], array_keys($EMIO_Object->meta) );
 			return $attributes;
 		}, 10, 3);
+		//remove hooks that might cause problems
+		remove_action('em_event_validate', 'em_data_privacy_cpt_validate');
+		remove_action('em_location_validate', 'em_data_privacy_cpt_validate');
 		//go through items to import and save
 		$result = array('failed' => array(), 'publish'=>array(), 'pending'=>array(), 'draft'=>array() );
 		$location_history = array();
 		foreach( $EMIO_Objects as $EMIO_Object ){ /* @var EMIO_Object $EMIO_Object */
 			$item = $EMIO_Object->object; /* @var EM_Event $item */
 			if( !empty($EMIO_Object->skip) ) continue;
-			//set status of item to 'pending' if the item doesn't validate and set to be published
-			if( $this->meta['post_status'] == 'publish' && !$item->validate() ){
-				$item->post_status = 'pending';
-			}
 			//add categories if applicable (further up)
 			if( !empty($EM_Categories) ) $item->categories = $EM_Categories;
 			//check if we're also importing a location into an event, and if so make sure we're not importing the same location multiple times as new locations
-			if( ($this->scope == 'all' || $this->scope == 'events+locations') && !empty($EMIO_Object->location) && !empty($location_history[$EMIO_Object->location->uid_md5]) ){
-				$item->location = $location_history[$EMIO_Object->location->uid_md5];
-				$item->location_id = $item->location->location_id;
-				$item->location->emio_skip = true;
+			if( ($this->scope == 'all' || $this->scope == 'events+locations') && !empty($EMIO_Object->location) ){
+				if( !empty($location_history[$EMIO_Object->location->uid_md5]) ){
+					$item->location = $location_history[$EMIO_Object->location->uid_md5];
+					$item->location_id = $item->location->location_id;
+					$EMIO_Object->location->location_id = $item->location->location_id;
+					$EMIO_Object->location->emio_skip = true;
+				} elseif ( !empty($item->location_id) ){
+					// locatino already exists, no action required
+					$EMIO_Object->location->emio_skip = true;
+				}
 			}
-			//save the item and proceed with post-save actions
-			$res = $item->save();
+			//save the item if it validates and proceed with post-save actions
+			$res = $item->validate() && $item->save();
 			if( $res ){
 				//add meta about import source
 				update_post_meta( $item->post_id, 'import_source', static::$format);
@@ -261,7 +282,7 @@ class EMIO_Import extends EMIO_Item {
 				}
 				//if scope is all, meaning we've saved locations too, add an import history for that as well
 				$history_res = $history_res_loc = $this->save_history($EMIO_Object, $item);
-				if( ($this->scope == 'all' || $this->scope == 'events+locations') && !empty($EMIO_Object->location) && empty($item->get_location()->emio_skip) ){
+				if( ($this->scope == 'all' || $this->scope == 'events+locations') && !empty($EMIO_Object->location) && empty($EMIO_Object->location->emio_skip) ){
 					$history_res_loc = $this->save_history($EMIO_Object->location, $item->get_location());
 					//also save location to uid array, so we can avoid saving duplicate locations that match up
 					$location_history[$EMIO_Object->location->uid_md5] = $item->get_location();
@@ -275,6 +296,29 @@ class EMIO_Import extends EMIO_Item {
 					//if( ($this->scope == 'all' || $this->scope == 'events+locations') && !empty($item->location_id) ) $result[$item->get_location()->post_status][] = $item->get_location();
 				}else{
 					$result['updated'][] = $item;
+				}
+				// add categories and tags to event objects via $taxonomy_map
+				if( $EMIO_Object instanceof EMIO_Event ){
+					$taxonomies = array('categories' => EM_TAXONOMY_CATEGORY, 'tags' => EM_TAXONOMY_TAG);
+					foreach( $taxonomies as $prop => $taxonomy ){
+						if( !empty($EMIO_Object->$prop) ){
+							$EMIO_Object->$prop = array_unique( $EMIO_Object->$prop );
+							// if cannot create new taxonomies, we only accept numbers
+							if( empty($this->meta['taxonomies_new'][$taxonomy]) ){
+								$EMIO_Object->$prop = array_unique( array_map('intval', $EMIO_Object->$prop) );
+								foreach( $EMIO_Object->$prop as $k => $v ) {
+									if( $v === 0 ) unset($EMIO_Object->$prop[$k]);
+								}
+							}
+							if( empty($taxonomy_map) ) $taxonomy_map = array();
+							if( empty($taxonomy_map['events']) ) $taxonomy_map['events'] = array();
+							if( !empty($taxonomy_map['events'][$taxonomy]) ){
+								$taxonomy_map['events'][$taxonomy] = array_merge($taxonomy_map['events'][$taxonomy], $EMIO_Object->$prop);
+							}else{
+								$taxonomy_map['events'][$taxonomy] = $EMIO_Object->$prop;
+							}
+						}
+					}
 				}
 				//add extra taxonomies to post object
 				if( !empty($taxonomy_map) ){
@@ -332,11 +376,15 @@ class EMIO_Import extends EMIO_Item {
 				}
 			}else{
 				$result['failed'][] = $item;
+				$result['errors'][] = sprintf(_x('Could not import %s named %s.', 'Could not import location/event named XYZ', 'events-manager-io'), $item->post_type, $item->name);
+				// log error in IO history
+				$EMIO_Object->errors = $item->errors;
+				$this->save_history($EMIO_Object, $item);
 			}
 		}
-		//clean up the source
+		// clean up the source
 		if( !$this->flush_source( false ) ){
-			$result['errors'][] = sprintf(__('Could not delete temporary file %s.', 'events-manager-pro'), $this->get_source());
+			$result['errors'][] = sprintf(__('Could not delete temporary file %s.', 'events-manager-io'), $this->get_source());
 		}
 		$wpdb->update(EMIO_TABLE, array('last_update' => current_time('mysql'), 'meta' => maybe_serialize($this->meta)), array('ID' => $this->ID), array('%s', '%s'), '%d');
 		return $result;
@@ -392,7 +440,7 @@ class EMIO_Import extends EMIO_Item {
 		$parsed = array();
 		//go through items for parsing
 		$count = 0;
-		//if a format has pagination, it will externally load import history (via EMIO_Import::get()) and run EMIO_Import::pre_parse() from within the format import function. 
+		//if a format has pagination, it will externally load import history (via EMIO_Import::get()) and run EMIO_Import::pre_parse() from within the format import function.
 		if( !static::$pagination ) $this->load_import_history();
 		foreach( $items as $EMIO_Object ){ /* @var EMIO_Object $EMIO_Object */
 			//double-check this is an EMIO_Object and if it's an array, convert it
@@ -434,7 +482,7 @@ class EMIO_Import extends EMIO_Item {
 					}else{
 						$EM_Event->post_status = $EM_Event->force_status = $this->meta['post_status'];
 					}
-					if( empty($EM_Event->event_owner) ) $EM_Event->event_owner = $EM_Event->post_author = $this->user_id;	
+					if( empty($EM_Event->event_owner) ) $EM_Event->event_owner = $EM_Event->post_author = $this->user_id;
 					$EM_Event->post_excerpt = '';
 					//sort out the times
 					if( empty($EMIO_Object->timezone) ) $EMIO_Object->timezone = EM_DateTimeZone::create()->getName();
@@ -456,13 +504,20 @@ class EMIO_Import extends EMIO_Item {
 					//If scope is all, then we deal with the possibility of a supplied location belonging to this event
 					if( $this->scope == 'all' || $this->scope == 'events+locations' ){
 						if( empty($EMIO_Object->location) ){
-							//no location info supplied, so it's a 'no location' event
-							$EM_Event->location_id = 0;
+							// load event location if necessary
+							if( !empty($EMIO_Object->event_location) && !empty($EMIO_Object->event_location_type) ){
+								$EM_Event->location_id = null;
+								$EM_Event->event_location_type = $EMIO_Object->event_location_type;
+								$EMIO_Object->get_event_location( $EM_Event );
+							}else{
+								//no location info supplied, so it's a 'no location' event
+								$EM_Event->location_id = 0;
+							}
 						}else{
 							$EMIO_Location = $EMIO_Object->location;
-							if( !empty($EMIO_Location->location_id) ){
+							if( !empty($EMIO_Location->id) ){
 								//we're adding a default location to this event, nothing else needed
-								$EM_Event->location_id = $EMIO_Object->location->location_id;
+								$EM_Event->location_id = $EMIO_Object->location->id;
 							}else{
 								if( !empty($EMIO_Location->post_id) ){
 									//load a location, check if it exists. If it doesn't, including if deleted, we recreate it, because the event has a location.
@@ -481,7 +536,7 @@ class EMIO_Import extends EMIO_Item {
 									}else{
 										$EMIO_Location->deleted = false;
 										$EMIO_Location->object = em_get_location( $EMIO_Location->post_id, 'post_id' );
-										$EMIO_Location->location_id = $EMIO_Location->object->location_id;
+										$EMIO_Location->id = $EMIO_Location->object->location_id;
 										//now if necessary we populate the new data into the location to update/recreate it
 										if( $EMIO_Location->updated ){
 											//no skipping here, since we either update a location or recreate it since this event needs it
@@ -503,11 +558,27 @@ class EMIO_Import extends EMIO_Item {
 					}else{
 						$EM_Event->location_id = 0;
 					}
-					// load event location if necessary
-					if( empty($EM_Event->location_id) && empty($EM_Event->location) && !empty($EMIO_Object->event_location) && !empty($EMIO_Object->event_location_type) ){
-						$EM_Event->location_id = null;
-						$EM_Event->event_location_type = $EMIO_Object->event_location_type;
-						$EMIO_Object->get_event_location( $EM_Event );
+					// tags and categories, currently only considered for events, potentially we could map any taxonomy though a specific taxonomies properties array with actual names for keys
+					// convert to term ids if they exist
+					$taxonmies = array('categories' => EM_TAXONOMY_CATEGORY, 'tags' => EM_TAXONOMY_TAG);
+					foreach( $taxonmies as $prop => $taxonomy ){
+						if( !empty($EMIO_Object->$prop) ){
+							if( !is_array($EMIO_Object->$prop) ){
+								$EMIO_Object->$prop = explode(',', $EMIO_Object->$prop);
+							}
+							foreach( $EMIO_Object->$prop as $k => $taxonomy_term ){
+								$taxonomy_term = is_numeric($taxonomy_term) ? absint($taxonomy_term) : trim($taxonomy_term);
+								$term = term_exists($taxonomy_term, $taxonomy);
+								if( $term ){
+									$EMIO_Object->$prop[$k] = absint($term['term_id']);
+								}else{
+									// check if owner has access to create categories
+									if( empty($this->meta['taxonomies_new'][$taxonomy]) ) {
+										unset( $EMIO_Object->$prop[ $k ] );
+									}
+								}
+							}
+						}
 					}
 					//save as $EM_Object so it's added to $parsed array
 					$EMIO_Object->object = $EM_Event;
@@ -529,12 +600,12 @@ class EMIO_Import extends EMIO_Item {
 	}
 	
 	/**
-	 * Does some pre-parsing of an $item array and returns a false as early as possible on whether this $item should be skipped for 
+	 * Does some pre-parsing of an $item array and returns a false as early as possible on whether this $item should be skipped for
 	 * import or display during a preview. If true, item will be imported or considered for display.
-	 * 
+	 *
 	 * This is most useful when run within a loop context of all items being considered for import, and using $count to identify how many items
 	 * have already been considered for import.
-	 * 
+	 *
 	 * @param EMIO_Object $EMIO_Object
 	 * @param int $count
 	 * @return boolean
@@ -660,7 +731,7 @@ class EMIO_Import extends EMIO_Item {
 			//if no location supplied, check if there's a default location and return that
 			if( empty($EMIO_Location) && !empty($opt['default']) ){
 				//return a default location
-				$EMIO_Location->location_id = $opt['default'];
+				$EMIO_Location->id = $opt['default'];
 			}else{
 				//check parsed locations against this data, in case we parsed the same thing before
 				$md5_location = md5(serialize($EMIO_Location));
@@ -757,7 +828,7 @@ class EMIO_Import extends EMIO_Item {
 								$search_address = implode(', ', $search_address);
 							}
 							if( empty($search_address) ){
-								//we're using the generic location string provided for searching 
+								//we're using the generic location string provided for searching
 								$search_address = $EMIO_Location->location;
 							}
 							//We've decided to use only the Google Places API Web Service because it allows 150,000
@@ -936,19 +1007,27 @@ class EMIO_Import extends EMIO_Item {
 								if( is_array($meta) && !empty($meta) ){
 									if( !empty($mapped_item[$item_keys[0]]['meta']) ){
 										//merge in meta array, overwriting anything else
-										$mapped_item[$item_keys[0]]['meta'] = array_merge($mapped_item[$item_keys[0]]['meta'], $unmapped_item[$k]);
+										$mapped_item[$item_keys[0]]['meta'] = array_merge($mapped_item[$item_keys[0]]['meta'], $meta);
 									}else{
 										//create a new array of meta since none exists
-										$mapped_item[$item_keys[0]]['meta'] = $unmapped_item[$k];
+										$mapped_item[$item_keys[0]]['meta'] = $meta;
 									}
 								}
+							}elseif( $item_keys[1] == 'event_location' && is_string($unmapped_item[$k]) ){
+								// event_location must be a json-encoded item
+								$mapped_item[$item_keys[0]][$item_keys[1]] = json_decode($unmapped_item[$k], true);
 							}else{
 								$mapped_item[$item_keys[0]][$item_keys[1]] = $unmapped_item[$k];
 							}
 							break;
 						case 3:
 							if( $item_keys[1] == 'meta' && empty($mapped_item[$item_keys[0]]['meta']) ) $mapped_item[$item_keys[0]]['meta'] = array(); //if this is meta and meta array not defined
-							$mapped_item[$item_keys[0]][$item_keys[1]][$item_keys[2]]= $unmapped_item[$k];
+							if( $item_keys[1] == 'meta' && $item_keys[2] == 'custom_field' ){
+								//convert meta to associative array, it could be passed as an array, object, serialized or JSON
+								$mapped_item[$item_keys[0]]['meta'][$k] = $unmapped_item[$k];
+							}else{
+								$mapped_item[$item_keys[0]][$item_keys[1]][$item_keys[2]]= $unmapped_item[$k];
+							}
 					}
 				}
 			}
@@ -967,7 +1046,7 @@ class EMIO_Import extends EMIO_Item {
 						$timezone = empty($item['timezone']) ? null : $item['timezone'];
 						$datetime = new EM_DateTime($event_date_time, $timezone);
 						$item[$w] = $datetime->getTimestamp();
-					}elseif( !is_numeric($item[$w]) ){
+					}elseif( isset($item[$w]) && !is_numeric($item[$w]) ){
 						//if supplied a full datetime we assume it UTC time
 						$datetime = new EM_DateTime($item[$w], 'UTC');
 						$item[$w] = $datetime->getTimestamp();
@@ -1092,16 +1171,20 @@ class EMIO_Import extends EMIO_Item {
 	 * @return bool
 	 */
 	public function save_history($EMIO_Object, $EM_Object) {
-		global $wpdb;
 		//save import to history table
 		$io_history = array(
 			'uid_md5' => $EMIO_Object->uid_md5,
 			'uid' => $EMIO_Object->uid,
 			'checksum' => $EMIO_Object->checksum,
 			'io_id' => $this->ID,
-			'post_id' => $EM_Object->post_id,
+			'post_id' => absint($EM_Object->post_id),
 		);
-		$io_history['action'] = $EMIO_Object->updated ? 'update' : 'create';
+		if( empty($EMIO_Object->errors) ){
+			$io_history['action'] = $EMIO_Object->updated ? 'update' : 'create';
+		}else{
+			$io_history['action'] = 'error';
+			$io_history['error'] = implode(', '."\r\n", $EMIO_Object->errors);
+		}
 		$io_history['url'] = $EMIO_Object->external_url;
 		return parent::save_history($io_history, $EM_Object);
 	}

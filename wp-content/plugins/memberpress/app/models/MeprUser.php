@@ -966,7 +966,7 @@ class MeprUser extends MeprBaseModel {
 
     if( !empty($order_bump_product_ids) ) {
       try {
-          MeprCheckoutCtrl::get_order_bump_products($mepr_product_id, $order_bump_product_ids);
+        MeprCheckoutCtrl::get_order_bump_products($mepr_product_id, $order_bump_product_ids);
       } catch( \Exception $ex ) {
         $errors[] = $ex->getMessage();
       }
@@ -1428,7 +1428,7 @@ class MeprUser extends MeprBaseModel {
     $use_address_from_request = false;
     $action = isset($_POST['action']) ? sanitize_text_field(wp_unslash($_POST['action'])) : '';
 
-    if(!empty($action) && in_array($action, ['mepr_update_price_string', 'mepr_update_spc_invoice_table', 'mepr_stripe_get_elements_options'], true)) {
+    if(!empty($action) && $action == 'mepr_get_checkout_state') {
       $mepr_options = MeprOptions::fetch();
 
       if(!MeprUtils::is_user_logged_in() || ($mepr_options->show_address_fields && $mepr_options->show_fields_logged_in_purchases)) {
@@ -1507,6 +1507,15 @@ class MeprUser extends MeprBaseModel {
     $tax_reversal_amount = 0.00;
 
     if($rate->customer_type === 'business' && $rate->reversal) {
+      if($subtotal > 0) {
+        $minimum_amount = MeprUtils::get_minimum_amount();
+
+        if($minimum_amount && $subtotal < $minimum_amount) {
+          $subtotal = $minimum_amount;
+          $tax_amount = 0.00;
+        }
+      }
+
       $total = MeprUtils::format_float($subtotal, $num_decimals);
       $tax_reversal_amount = $tax_amount;
       $tax_amount = 0.00;

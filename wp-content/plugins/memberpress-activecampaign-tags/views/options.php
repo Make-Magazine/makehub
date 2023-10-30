@@ -7,13 +7,13 @@
       <div id="mepr-activecampaign-message" class="mepr-hidden mepr-active"></div>
       <div id="mepractivecampaign-account">
         <label>
-          <span><?php _e('Active Campaign Account:', 'memberpress-activecampaigntags'); ?></span>
+          <span><?php _e('ActiveCampaign Account:', 'memberpress-activecampaigntags'); ?></span>
           <input type="text" name="mepractivecampaign_account" id="mepractivecampaign_account" value="<?php echo $this->account(); ?>" class="mepr-text-input form-field" size="20" />
         </label>
         <div>
           <span class="description">
             <?php _e('Your ActiveCampaign account ID. Typically something like: 1234567890123', 'memberpress-activecampaigntags'); ?><br />
-            <i>(<?php _e('If you have a newer Active Campaign account, the ID may be your username (the bold part in the URL you use to access Active Campaign like so: http://<b>username</b>.activehosted.com/admin/', 'memberpress-activecampaign'); //Translators: Leave the <b> and </b> around username. ?>)</i>
+            <i>(<?php _e('If you have a newer ActiveCampaign account, the ID may be your username (the bold part in the URL you use to access ActiveCampaign like so: http://<b>username</b>.activehosted.com/admin/', 'memberpress-activecampaign'); //Translators: Leave the <b> and </b> around username. ?>)</i>
           </span>
         </div>
       </div>
@@ -48,13 +48,13 @@
           <select name="mepractivecampaign_form_id" id="mepractivecampaign_form_id" data-formid="<?php echo $this->form_id(); ?>" class="mepr-text-input form-field"></select>
         </label>
         <div>
-          <span class="description"><?php _e('(optional) This is here to enable double opt-in settings for contacts that are added through MemberPress. To get this working, create a form in Active Campaign with double-opt in setup and associate it with MemberPress here.', 'memberpress-activecampaigntags'); ?></span>
+          <span class="description"><?php _e('(optional) This is here to enable double opt-in settings for contacts that are added through MemberPress. To get this working, create a form in ActiveCampaign with double-opt in setup and associate it with MemberPress here.', 'memberpress-activecampaigntags'); ?></span>
         </div>
       </div>
       <br/>
       <div id="mepractivecampaign-optin-tags">
         <label>
-          <span><?php _e('Active Campaign Tags:', 'memberpress-activecampaigntags'); ?></span>
+          <span><?php _e('ActiveCampaign Tags:', 'memberpress-activecampaigntags'); ?></span>
           <input type="text" name="mepractivecampaign_tags" id="mepractivecampaign_tags" value="<?php echo $this->global_tags(); ?>" class="form-field" size="75" />
         </label>
         <div>

@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -62,6 +62,7 @@ class AjaxRouter {
 	public static function get_ajax_params( $router ) {
 		return [
 			'_wpNonce'      => wp_create_nonce( self::WP_AJAX_ACTION ),
+			'_wpRestUrl'    => get_rest_url(),
 			'_wpRestNonce'  => wp_create_nonce( 'wp_rest' ),
 			'_wpAjaxUrl'    => admin_url( 'admin-ajax.php' ),
 			'_wpAjaxAction' => self::WP_AJAX_ACTION,

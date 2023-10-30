@@ -61,6 +61,11 @@ class EMIO_Object {
 	 * @var EM_Event|EM_Location
 	 */
 	public $object;
+	/**
+	 * Array of errors that may have occurred during an attempted export/import for this item
+	 * @var array
+	 */
+	public $errors;
 
 	/**
 	 * EMIO_Object constructor.

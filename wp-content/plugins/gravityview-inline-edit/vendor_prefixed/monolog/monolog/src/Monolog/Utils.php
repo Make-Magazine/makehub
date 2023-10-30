@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog;
 
 class Utils
 {
@@ -111,7 +111,7 @@ class Utils
         if (is_string($data)) {
             self::detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, array('GravityKit\GravityEdit\Monolog\Utils', 'detectAndCleanUtf8'));
+            array_walk_recursive($data, array('GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Utils', 'detectAndCleanUtf8'));
         } else {
             self::throwEncodeError($code, $data);
         }

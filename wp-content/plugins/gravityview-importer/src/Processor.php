@@ -479,7 +479,7 @@ class Processor {
 							|| strpos( $column_name, Core::strtolower( __( 'IP Address', 'gk-gravityimport' ) ) ) !== false ) {
 							$columns[ $i ] = array(
 								'title' => $column,
-								'field' => 'created_by',
+								'field' => 'ip',
 							);
 							continue;
 						}

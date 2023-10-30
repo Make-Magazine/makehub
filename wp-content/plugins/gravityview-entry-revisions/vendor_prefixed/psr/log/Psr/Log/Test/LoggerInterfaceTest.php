@@ -2,14 +2,14 @@
 /**
  * @license MIT
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Psr\Log\Test;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\Test;
 
-use GravityKit\GravityRevisions\Psr\Log\LoggerInterface;
-use GravityKit\GravityRevisions\Psr\Log\LogLevel;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,7 +38,7 @@ abstract class LoggerInterfaceTest extends TestCase
 
     public function testImplements()
     {
-        $this->assertInstanceOf('GravityKit\GravityRevisions\Psr\Log\LoggerInterface', $this->getLogger());
+        $this->assertInstanceOf('GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\LoggerInterface', $this->getLogger());
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class LoggerInterfaceTest extends TestCase
     }
 
     /**
-     * @expectedException \GravityKit\GravityRevisions\Psr\Log\InvalidArgumentException
+     * @expectedException \GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\InvalidArgumentException
      */
     public function testThrowsOnInvalidLevel()
     {
@@ -92,9 +92,9 @@ abstract class LoggerInterfaceTest extends TestCase
     public function testObjectCastToString()
     {
         if (method_exists($this, 'createPartialMock')) {
-            $dummy = $this->createPartialMock('GravityKit\GravityRevisions\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->createPartialMock('GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         } else {
-            $dummy = $this->getMock('GravityKit\GravityRevisions\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->getMock('GravityKit\GravityRevisions\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         }
         $dummy->expects($this->once())
             ->method('__toString')

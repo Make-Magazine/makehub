@@ -26,10 +26,8 @@ class GravityView_Inline_Edit_Field_File_Upload extends GravityView_Inline_Edit_
 	 */
 	public function modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field ) {
 
-		$gf_field = GFFormsModel::get_field( $current_form, $field_id );
-
 		if ( $gf_field->multipleFiles === true ) {
-			$wrapper_attributes['multiple'] = true;
+			$wrapper_attributes['data-multiple'] = true;
 		}
 
 		return parent::modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field );

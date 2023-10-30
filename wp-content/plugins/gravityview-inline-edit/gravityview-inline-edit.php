@@ -3,7 +3,7 @@
  * Plugin Name: GravityEdit
  * Plugin URI:  https://www.gravitykit.com/extensions/gravityview-inline-edit/
  * Description: Edit your fields inline in Gravity Forms and GravityView.
- * Version:     1.8.5
+ * Version:     2.0.2
  * Author:      GravityKit
  * Author URI:  https://www.gravitykit.com/
  * Text Domain: gk-gravityedit
@@ -20,16 +20,12 @@ if ( ! GravityKit\GravityEdit\Foundation\should_load( __FILE__ ) ) {
 	return;
 }
 
-if ( ! GravityKit\GravityEdit\Foundation\meets_min_php_version_requirement( __FILE__, '7.2.0' ) ) {
-	return;
-}
-
 /**
  * Version number of the plugin
  *
  * @since 1.0
  */
-define( 'GRAVITYEDIT_VERSION', '1.8.5' );
+define( 'GRAVITYEDIT_VERSION', '2.0.2' );
 
 /** @define "GRAVITYEDIT_DIR" "./" The absolute path to the plugin directory */
 define( 'GRAVITYEDIT_DIR', plugin_dir_path( __FILE__ ) );

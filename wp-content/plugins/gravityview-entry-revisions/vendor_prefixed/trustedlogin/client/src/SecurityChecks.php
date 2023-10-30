@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityRevisions\Foundation\ThirdParty\TrustedLogin;
@@ -87,7 +87,7 @@ final class SecurityChecks {
 
 			$this->logging->log( 'Site is in lockdown mode, aborting login.', __METHOD__, 'error' );
 
-			return new WP_Error( 'in_lockdown', __( 'TrustedLogin temporarily disabled.' , 'gk-gravityrevisions') );
+			return new \WP_Error( 'in_lockdown', __( 'TrustedLogin temporarily disabled.' , 'gk-gravityrevisions') );
 		}
 
 		// When passed in the endpoint URL, the unique ID will be the raw value, not the hash.
@@ -153,7 +153,7 @@ final class SecurityChecks {
 				'notice'
 			);
 
-			return new WP_Error( 'brute_force_detected', 'Login aborted due to potential brute force detection.');
+			return new \WP_Error( 'brute_force_detected', 'Login aborted due to potential brute force detection.');
 		}
 
 		return true;

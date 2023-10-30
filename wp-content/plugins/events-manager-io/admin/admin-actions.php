@@ -67,10 +67,15 @@ class EMIO_Admin_Actions {
 			$sql_in = array();
 			foreach( $ids as $item_id ){
 				$EMIO_Item = EMIO_Items::load($item_id);
-				if( $EMIO_Item->type == 'import' ){
-					$EMIO_Item->flush_source(false);
+				if( !empty($EMIO_Item->ID) ) {
+					if ( $EMIO_Item->type == 'import' ) {
+						$EMIO_Item->flush_source( false );
+					}
+					$sql_in[] = $EMIO_Item->ID;
+				} else {
+					// maybe a non-used source
+					$sql_in[] = $item_id;
 				}
-				$sql_in[] = $EMIO_Item->ID;
 			}
 			$result = array();
 			$sql = "DELETE FROM ". EMIO_TABLE ." WHERE ID IN (". implode(',', $sql_in) .")";
@@ -81,6 +86,7 @@ class EMIO_Admin_Actions {
 				$sql = "DELETE FROM ". EMIO_TABLE_SYNC ." WHERE io_id IN (". implode(',', $sql_in) .")";
 				$result[EMIO_TABLE_LOG] = $wpdb->query($sql);
 			}
+			return $result[EMIO_TABLE]->num_rows;
 		}
 		return 0;
 	}

@@ -3,6 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
   die( 'You are not allowed to call this page directly.' );
 }
 
+#[AllowDynamicProperties]
 class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
   /** Used in the view to identify the gateway */
   public function __construct() {
@@ -696,10 +697,15 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
     }
   }
 
-  public function get_paypal_subscription_transactions( $pp_subscription_id ) {
-    $date = new DateTime();
-    $date->sub( new DateInterval( 'P1D' ) );
-    $time = 'start_time=' . $date->format( 'Y-m-d' ) . 'T00:00:00.90Z&end_time=' . date( 'Y-m-d' ) . 'T23:59:59.90Z';
+  public function get_paypal_subscription_transactions( $pp_subscription_id, $start_date = null, $end_date = null) {
+    if (empty($start_date) && empty($end_date)) {
+      $start_date    = new DateTime();
+      $end_date = new DateTime();
+      $end_date->add(new DateInterval('P1D'));
+      $start_date->sub(new DateInterval('P1D'));
+    }
+    $time = 'start_time=' . $start_date->format( 'Y-m-d' ) . 'T00:00:00.90Z&end_time=' . $end_date->format( 'Y-m-d' ) . 'T23:59:59.90Z';
+
     $this->log( $this->settings->rest_api_url . '/v1/billing/subscriptions/' . $pp_subscription_id . '/transactions?' . $time );
     $response = wp_remote_get( $this->settings->rest_api_url . '/v1/billing/subscriptions/' . $pp_subscription_id . '/transactions?' . $time, [
       'headers' => [
@@ -901,8 +907,9 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
       }
 
       $pp_plan_id = $this->get_pp_plan_id($sub, $has_trial || $convert_to_trial, $trial_days, $trial_amount, $skip_taxes);
-
       $pp_subscription = $this->get_pp_subscription($pp_plan_id, $txn, $sub, $return_the_object, $skip_taxes);
+      $sub->subscr_id = $pp_subscription['id'];
+      $sub->store();
 
       if(isset($pp_subscription['links']) && is_array($pp_subscription['links'])) {
         foreach($pp_subscription['links'] as $link) {
@@ -1605,10 +1612,6 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         }
 
         if($sub instanceof MeprSubscription && $sub->id > 0) {
-          if(strpos($sub->subscr_id, 'S-') === false && strpos($sub->subscr_id, 'I-') === false) {
-            $this->handle_create_subscription($sub, $resource['billing_agreement_id']);
-          }
-
           $this->record_subscription_payment();
         }
       }
@@ -1768,7 +1771,7 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
             $sub = $transaction->subscription();
 
             if($sub instanceof MeprSubscription && $sub->id > 0) {
-              $this->activate_subscription($transaction, $sub);
+              $this->handle_create_subscription($sub, $sub->subscr_id);
             }
           }
         }
@@ -1869,6 +1872,12 @@ class MeprPayPalCommerceGateway extends MeprBasePayPalGateway {
         $prd = new MeprProduct( $txn->product_id );
         MeprUtils::wp_redirect( $this->message_page_url( $prd, 'cancel' ) );
       }
+    }
+
+    if ( isset( $_REQUEST['subscription_id'] ) ) {
+      $sub = MeprSubscription::get_one_by_subscr_id($_REQUEST['subscription_id']);
+      $prd = $sub->product();
+      MeprUtils::wp_redirect( $this->message_page_url( $prd, 'cancel' ) );
     }
 
     //If all else fails, just send them to their account page

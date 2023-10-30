@@ -7,13 +7,14 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
+
 namespace GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin;
 
 // Exit if accessed directly
-if ( ! defined('ABSPATH') ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -47,7 +48,7 @@ final class Remote {
 	 * SupportUser constructor.
 	 */
 	public function __construct( Config $config, Logging $logging ) {
-		$this->config = $config;
+		$this->config  = $config;
 		$this->logging = $logging;
 	}
 
@@ -59,23 +60,32 @@ final class Remote {
 	}
 
 	/**
-	 * POSTs to `webhook_url`, if defined in the configuration array
+	 * POSTs to `webhook/url`, if defined in the configuration array.
 	 *
 	 * @since 1.0.0
+	 * @since 1.4.0 $data now includes the `$access_key` and `$debug_data` keys.
+	 * @since 1.5.0 $data now includes the `$ticket` key.
 	 *
 	 * @param array $data {
-	 *
-	 *   @type string $url The site URL as returned by get_site_url()
-	 *   @type string $ns Namespace of the plugin
-	 *   @type string $action "created", "extended", "logged_in", or "revoked"
-	 *   @type string $ref (Optional) Support ticket Reference ID
+	 *   @type string $url The site URL as returned by get_site_url().
+	 *   @type string $ns Namespace of the plugin.
+	 *   @type string $action "created", "extended", "logged_in", or "revoked".
+	 *   @type string $access_key The access key.
+	 *   @type string $debug_data (Optional) Site debug data from {@see WP_Debug_Data::debug_data()}, sent if `webhook/debug_data` is true.
+	 *   @type string $ref (Optional) Support ticket Reference ID.
+	 *   @type array $ticket (Optional) Support ticket provided by customer with `message` key.
 	 * }
 	 *
 	 * @return bool|WP_Error False: webhook setting not defined; True: success; WP_Error: error!
 	 */
 	public function maybe_send_webhook( $data ) {
 
-		$webhook_url = $this->config->get_setting( 'webhook_url' );
+		$webhook_url = $this->config->get_setting( 'webhook/url' );
+
+		if ( ! $webhook_url ) {
+			// Back compatibility with v1–v1.3.4.
+			$webhook_url = $this->config->get_setting( 'webhook_url' );
+		}
 
 		if ( ! $webhook_url ) {
 			return false;
@@ -83,7 +93,7 @@ final class Remote {
 
 		if ( ! wp_http_validate_url( $webhook_url ) ) {
 
-			$error = new WP_Error( 'invalid_webhook_url', 'An invalid `webhook_url` setting was passed to the TrustedLogin Client: ' . esc_attr( $webhook_url ) );
+			$error = new \WP_Error( 'invalid_webhook_url', 'An invalid `webhook/url` setting was passed to the TrustedLogin Client: ' . esc_attr( $webhook_url ) );
 
 			$this->logging->log( $error, __METHOD__, 'error' );
 
@@ -96,6 +106,7 @@ final class Remote {
 
 			if ( is_wp_error( $posted ) ) {
 				$this->logging->log( 'An error encountered while sending a webhook to ' . esc_attr( $webhook_url ), __METHOD__, 'error', $posted );
+
 				return $posted;
 			}
 
@@ -107,7 +118,7 @@ final class Remote {
 
 			$this->logging->log( 'A fatal error was triggered while sending a webhook to ' . esc_attr( $webhook_url ) . ': ' . $exception->getMessage(), __METHOD__, 'error' );
 
-			return new WP_Error( $exception->getCode(), $exception->getMessage() );
+			return new \WP_Error( $exception->getCode(), $exception->getMessage() );
 		}
 	}
 
@@ -127,10 +138,17 @@ final class Remote {
 
 		$method = is_string( $method ) ? strtoupper( $method ) : $method;
 
-		if ( ! is_string( $method ) || ! in_array( $method, array( 'POST', 'PUT', 'GET', 'HEAD', 'PUSH', 'DELETE' ), true ) ) {
+		if ( ! is_string( $method ) || ! in_array( $method, array(
+				'POST',
+				'PUT',
+				'GET',
+				'HEAD',
+				'PUSH',
+				'DELETE',
+			), true ) ) {
 			$this->logging->log( sprintf( 'Error: Method not in allowed array list (%s)', print_r( $method, true ) ), __METHOD__, 'critical' );
 
-			return new WP_Error( 'invalid_method', sprintf( 'Error: HTTP method "%s" is not in the list of allowed methods', print_r( $method, true ) ) );
+			return new \WP_Error( 'invalid_method', sprintf( 'Error: HTTP method "%s" is not in the list of allowed methods', print_r( $method, true ) ) );
 		}
 
 		$headers = array(
@@ -163,7 +181,7 @@ final class Remote {
 
 		} catch ( Exception $exception ) {
 
-			$error = new WP_Error( 'wp_remote_request_exception', sprintf( 'There was an exception during the remote request: %s (%s)', $exception->getMessage(), $exception->getCode() ) );
+			$error = new \WP_Error( 'wp_remote_request_exception', sprintf( 'There was an exception during the remote request: %s (%s)', $exception->getMessage(), $exception->getCode() ) );
 
 			$this->logging->log( $error, __METHOD__, 'error' );
 
@@ -189,9 +207,10 @@ final class Remote {
 		/**
 		 * Modifies the endpoint URL for the TrustedLogin service.
 		 *
-		 * @param string $url URL to TrustedLogin API
+		 * @internal This allows pointing requests to testing servers.
 		 *
-		 * @internal This allows pointing requests to testing servers
+		 * @param string $url URL to TrustedLogin API.
+		 *
 		 */
 		$base_url = apply_filters( 'trustedlogin/' . $this->config->ns() . '/api_url', self::API_URL );
 
@@ -227,40 +246,40 @@ final class Remote {
 
 			case 400:
 			case 423:
-				return new WP_Error( 'unable_to_verify', esc_html__( 'Unable to verify Pause Mode.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'unable_to_verify', esc_html__( 'Unable to verify Pause Mode.', 'gk-gravityimport' ), $api_response );
 
 			case 401:
-				return new WP_Error( 'unauthenticated', esc_html__( 'Authentication failed.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'unauthenticated', esc_html__( 'Authentication failed.', 'gk-gravityimport' ), $api_response );
 
 			case 402:
-				return new WP_Error( 'account_error', esc_html__( 'TrustedLogin account issue.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'account_error', esc_html__( 'TrustedLogin account issue.', 'gk-gravityimport' ), $api_response );
 
 			case 403:
-				return new WP_Error( 'invalid_token', esc_html__( 'Invalid tokens.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'invalid_token', esc_html__( 'Invalid tokens.', 'gk-gravityimport' ), $api_response );
 
 			// the KV store was not found, possible issue with endpoint
 			case 404:
-				return new WP_Error( 'not_found', esc_html__( 'The TrustedLogin vendor was not found.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'not_found', esc_html__( 'The TrustedLogin vendor was not found.', 'gk-gravityimport' ), $api_response );
 
 			// The site is a teapot.
 			case 418:
-				return new WP_Error( 'teapot', '🫖', $api_response );
+				return new \WP_Error( 'teapot', '🫖', $api_response );
 
 			// Server offline
 			case 500:
 			case 503:
 			case 'http_request_failed':
-				return new WP_Error( 'unavailable', esc_html__( 'The TrustedLogin site is not currently online.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'unavailable', esc_html__( 'The TrustedLogin site is not currently online.', 'gk-gravityimport' ), $api_response );
 
 			// Server error
 			case 501:
 			case 502:
 			case 522:
-				return new WP_Error( 'server_error', esc_html__( 'The TrustedLogin site is not currently available.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'server_error', esc_html__( 'The TrustedLogin site is not currently available.', 'gk-gravityimport' ), $api_response );
 
 			// wp_remote_retrieve_response_code() couldn't parse the $api_response
 			case '':
-				return new WP_Error( 'invalid_response', esc_html__( 'Invalid response.', 'gk-gravityimport' ), $api_response );
+				return new \WP_Error( 'invalid_response', esc_html__( 'Invalid response.', 'gk-gravityimport' ), $api_response );
 
 			default:
 				return (int) $response_code;
@@ -297,13 +316,13 @@ final class Remote {
 		if ( empty( $response_body ) ) {
 			$this->logging->log( "Response body not set: " . print_r( $response_body, true ), __METHOD__, 'error' );
 
-			return new WP_Error( 'missing_response_body', esc_html__( 'The response was invalid.', 'gk-gravityimport' ), $api_response );
+			return new \WP_Error( 'missing_response_body', esc_html__( 'The response was invalid.', 'gk-gravityimport' ), $api_response );
 		}
 
 		$response_json = json_decode( $response_body, true );
 
 		if ( empty( $response_json ) ) {
-			return new WP_Error( 'invalid_response', esc_html__( 'Invalid response.', 'gk-gravityimport' ), $response_body );
+			return new \WP_Error( 'invalid_response', esc_html__( 'Invalid response.', 'gk-gravityimport' ), $response_body );
 		}
 
 		if ( isset( $response_json['errors'] ) ) {
@@ -316,13 +335,13 @@ final class Remote {
 				$errors .= $error;
 			}
 
-			return new WP_Error( 'errors_in_response', esc_html( $errors ), $response_body );
+			return new \WP_Error( 'errors_in_response', esc_html( $errors ), $response_body );
 		}
 
 		foreach ( (array) $required_keys as $required_key ) {
 			if ( ! isset( $response_json[ $required_key ] ) ) {
 				// translators: %s is the name of the missing data from the server
-				return new WP_Error( 'missing_required_key', sprintf( esc_html__( 'Invalid response. Missing key: %s', 'gk-gravityimport' ), $required_key ), $response_body );
+				return new \WP_Error( 'missing_required_key', sprintf( esc_html__( 'Invalid response. Missing key: %s', 'gk-gravityimport' ), $required_key ), $response_body );
 			}
 		}
 

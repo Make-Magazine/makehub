@@ -11,7 +11,6 @@
  * @since 1.0
  */
 abstract class GravityView_Inline_Edit_Field {
-
 	/**
 	 * @var string The name of the field type in Gravity Forms (GF_Field->type)
 	 *
@@ -180,7 +179,6 @@ abstract class GravityView_Inline_Edit_Field {
 	 * @return array $wrapper_attributes, with `data-type` and `data-value` atts added
 	 */
 	public function modify_inline_edit_attributes( $wrapper_attributes, $field_input_type, $field_id, $entry, $current_form, $gf_field ) {
-
 		if ( $this->set_value ) {
 			$wrapper_attributes['data-value'] = rgar( $entry, $field_id );
 		}
@@ -194,5 +192,4 @@ abstract class GravityView_Inline_Edit_Field {
 
 		return $wrapper_attributes;
 	}
-
 }

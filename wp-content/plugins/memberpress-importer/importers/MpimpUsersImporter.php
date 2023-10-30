@@ -98,8 +98,8 @@ class MpimpUsersImporter extends MpimpBaseImporter {
           $user["user_pass"] = $cell;
           break;
         case "role":
+          $this->fail_if_not_in_enum($col,$cell,array_keys($wp_roles->roles));
           $user["role"] = empty($cell)?'subscriber':$cell;
-          $this->fail_if_not_in_enum($col,$user["role"],array_keys($wp_roles->roles));
           break;
         case "gen_password": //We're going to silently omit this from the docs now that we send a password reset notification instead
           $gen_password = ((int)$cell == 1);
@@ -184,7 +184,6 @@ class MpimpUsersImporter extends MpimpBaseImporter {
     }
 
     if($exists) {
-      unset($user["role"]); //Unset the role so we don't wipe it out
       add_filter('send_email_change_email', '__return_false'); //Disable the email changed notificaiton from WP?
       add_filter('send_password_change_email', '__return_false'); //Disable the password reset notificaiton from WP?
       $user_id = wp_update_user($user);

@@ -77,6 +77,15 @@ if (!function_exists('essb_shortcode_map_shareoptions')) {
 			$post_share_details['url'] = essb_generate_affiliatewp_referral_link($post_share_details['url']);
 		}
 		
+		$slicewp_active_shortcode = essb_option_bool_value('slicewp_active_shortcode');
+		if ($noaffiliate == 'true' || $noaffiliate == 'yes') {
+		    $slicewp_active_shortcode = false;
+		}
+		if ($slicewp_active_shortcode) {
+		    essb_helper_maybe_load_feature('integration-slicewp');
+		    $post_share_details['url'] = essb_generate_slicewp_referral_link($post_share_details['url']);
+		}
+		
 		$affs_active_shortcode = essb_option_bool_value('affs_active_shortcode');
 		if ($noaffiliate == 'true' || $noaffiliate == 'yes') {
 			$affs_active_shortcode = false;
@@ -97,21 +106,7 @@ if (!function_exists('essb_shortcode_map_shareoptions')) {
 				
 		if (isset($shortcode_options['query'])) {
 			$post_share_details['query'] = $shortcode_options['query'];
-		}
-			
-		if (isset($shortcode_options['utm'])) {
-			if ($shortcode_options['utm'] == 'yes') {
-				$ga_campaign_tracking = essb_option_value('activate_ga_campaign_tracking');
-				$post_ga_campaign_tracking = get_post_meta(get_the_ID(), 'essb_activate_ga_campaign_tracking', true);
-				if ($post_ga_campaign_tracking != '') {
-					$ga_campaign_tracking = $post_ga_campaign_tracking;
-				}
-					
-				if ($ga_campaign_tracking != '') {
-					$post_share_details['url'] = essb_attach_tracking_code($post_share_details['url'], $ga_campaign_tracking);
-				}
-			}
-		}		
+		}				
 		
 		return $post_share_details;
 	}

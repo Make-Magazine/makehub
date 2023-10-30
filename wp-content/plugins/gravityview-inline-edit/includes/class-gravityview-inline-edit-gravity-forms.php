@@ -1,7 +1,6 @@
 <?php
 
 final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edit_Render {
-
 	/**
 	 * @return bool Whether to load the hooks
 	 *
@@ -321,13 +320,12 @@ final class GravityView_Inline_Edit_Gravity_Forms extends GravityView_Inline_Edi
 			return $value;
 		}
 
-		static $forms = array();
+		$forms = parent::get_cached_forms();
 
-		if( isset( $forms[ $form_id ] ) ) {
-			$form = $forms[ $form_id ];
+		if ( ! isset( $forms[ $form_id ] ) ) {
+			$form = parent::cache_form( GFAPI::get_form( $form_id ) );
 		} else {
-			$form = GFAPI::get_form( $form_id );
-			$forms[ $form_id ] = $form;
+			$form = $forms[ $form_id ];
 		}
 
 		$gf_field = GFFormsModel::get_field( $form, $field_id );

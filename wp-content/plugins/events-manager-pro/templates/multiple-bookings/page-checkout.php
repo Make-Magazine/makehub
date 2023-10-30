@@ -23,7 +23,7 @@ if( empty($EM_Multiple_Booking->bookings) ){
 	</div>
 	<?php do_action('em_checkout_form_after_summary', $EM_Multiple_Booking); //do not delete ?>
 
-	<form class="em-booking-form" name='booking-form' method='post' action='<?php echo apply_filters('em_checkout_form_action_url',''); ?>#em-booking' id="em-booking-form-<?php echo $id; ?>">
+	<form class="em-booking-form" name='booking-form' method='post' action='<?php echo apply_filters('em_checkout_form_action_url',''); ?>#em-booking' id="em-booking-form-<?php echo $id; ?>" data-id="<?php echo $id; ?>">
 		<input type='hidden' name='action' value='emp_checkout'/>
 		<input type='hidden' name='_wpnonce' value='<?php echo wp_create_nonce('emp_checkout'); ?>'>
 		<?php echo $EM_Multiple_Booking->output_intent_html(); ?>

@@ -24,14 +24,29 @@ class Gateway_Admin {
 	public static $webhook_admin_urls = array();
 	public static $documentation_url_api = '';
 	
+	/**
+	 * @deprecated Use Gateway::$api_cred_name instead
+	 * @var string
+	 */
 	public static $api_cred_name;
 	
 	public static function init(){
 		// set the right Gateway static class reference if not set hard-coded (and if it even exists)
 		static::$gateway = static::gateway()::$gateway;
-		if( empty( static::$api_cred_name ) ) {
+		if ( empty( static::$api_cred_name ) ) {
 			static::$api_cred_name = 'em_' . static::$gateway . '_api';
 		}
+		if ( static::gateway()::$api_option_name ) {
+			static::$api_cred_name = static::gateway()::$api_option_name;
+		}
+	}
+	
+	public static function is_mode( $mode ){
+		return static::gateway()::is_mode($mode);
+	}
+	
+	public static function get_mode(){
+		return static::gateway()::get_mode();
 	}
 	
 	/**
@@ -55,8 +70,7 @@ class Gateway_Admin {
 	 */
 	public static function toggle() {
 		$active = get_option('em_payment_gateways');
-
-		if(array_key_exists(static::$gateway, $active)) {
+		if ( array_key_exists(static::$gateway, $active) ) {
 			unset($active[static::$gateway]);
 			update_option('em_payment_gateways',$active);
 			return true;
@@ -78,7 +92,7 @@ class Gateway_Admin {
 	
 	public static function activate() {
 		$active = get_option('em_payment_gateways', array());
-		if(array_key_exists(static::$gateway, $active)) {
+		if ( array_key_exists(static::$gateway, $active) ) {
 			return true;
 		} else {
 			$active[static::$gateway] = true;
@@ -89,7 +103,7 @@ class Gateway_Admin {
 	
 	public static function deactivate() {
 		$active = get_option('em_payment_gateways');
-		if(array_key_exists(static::$gateway, $active)) {
+		if ( array_key_exists(static::$gateway, $active) ) {
 			unset($active[static::$gateway]);
 			update_option('em_payment_gateways', $active);
 			return true;
@@ -106,10 +120,22 @@ class Gateway_Admin {
 			),
 		);
 		if( !empty( static::$api_cred_fields ) ){
+			$pre = '';
+			if( static::gateway()::$supports_test_mode ) {
+				$live_status = static::get_mode();
+				$pre = '<span class="gateway-mode gateway-mode-live" data-mode="' . $live_status . '">[' . ucwords( esc_html__( 'Live', 'em-pro' ) ) . ']</span> ';
+			}
 			$settings['api'] = array(
-				'name' => esc_html__emp('API Keys/Notifications'),
+				'name' => $pre . esc_html__('API Keys/Notifications', 'em-pro'),
 				'callback' => array(static::class, 'settings_api'),
 			);
+			if( static::gateway()::$supports_test_mode ) {
+				$pre = '<span class="gateway-mode gateway-mode-test" data-mode="'. $live_status .'">['. ucwords(esc_html__('Test', 'em-pro')) . ']</span> ';
+				$settings['api-test'] = array(
+					'name' => $pre . esc_html__('API Keys/Notifications', 'em-pro'),
+					'callback' => array(static::class, 'settings_api_test'),
+				);
+			}
 		}
 		$settings = array_merge( $settings, $custom_tabs );
 		return apply_filters('em_gateway_settings_tabs', $settings, static::gateway());
@@ -124,19 +150,59 @@ class Gateway_Admin {
 			$link = '<a href="https://eventsmanagerpro.com/downloads/">'. esc_html__('Download new payment methods for this gateway.').'</a>';
 			echo '<div class="notice notice-warning"><p>'. sprintf(esc_html__('This is a legacy payment method, and has been discontinued by the payment provider itself, whilst it may work for the time being, we cannot guarantee when the payment gatewway provider will completely stop supporting it.', 'em-pro')) . ' ' . $link . '</p></div>';
 		}
+		$enabling_test = sprintf( esc_html__( '%s Test Mode', 'events-manager' ), esc_html__( 'Enabling', 'em-pro' ) ). '...';
+		$disabling_test = sprintf( esc_html__( '%s Test Mode', 'events-manager' ), esc_html__( 'Disabling', 'em-pro' ) ) . '...';
+		
+		// tab links
+		$api_test_tab = '<code><a href="#api-test" data-tab="api-test">[' . ucwords(esc_html__('Test', 'em-pro')) . '] ' . esc_html__('API Keys/Notifications', 'em-pro') . '</a></code>';
+		$api_tab = '<code><a href="#api" data-tab="api">[' . ucwords( esc_html__( 'Live', 'em-pro' ) ) . '] ' . esc_html__( 'API Keys/Notifications', 'em-pro' ) . '</a></code>';
 		?>
 	    <script type="text/javascript" charset="utf-8"><?php include(EM_DIR.'/includes/js/admin-settings.js'); ?></script>
 		<div class='wrap nosubsub tabs-active'>
-			<h1><?php echo sprintf(__('Edit &quot;%s&quot; settings','em-pro'), esc_html(static::gateway()::$title) ); ?></h1>
-			<?php
-			$messages['updated'] = esc_html__('Gateway updated.', 'em-pro');
-			$messages['error'] = esc_html__('Gateway not updated.', 'em-pro');
-			if ( isset($_GET['msg']) && !empty($messages[$_GET['msg']]) ){
-				echo '<div id="message" class="'.$_GET['msg'].' fade"><p>' . $messages[$_GET['msg']] .
-				' <a href="'.em_add_get_params($_SERVER['REQUEST_URI'], array('action'=>null,'gateway'=>null, 'msg' => null)).'">'.esc_html__('Back to gateways','em-pro').'</a>'.
-				'</p></div>';
-			}
-			?>
+			<h1 class="wp-heading-inline"><?php echo sprintf(__('Edit &quot;%s&quot; settings','em-pro'), esc_html(static::gateway()::$title) ); ?></h1>
+			<hr class="wp-header-end">
+			<?php if( static::gateway()::$supports_test_mode ) : ?>
+			<div class="notice notice-warning gateway-status-info gateway-status-info-test <?php if( !static::is_mode('test') ) echo "hidden"; ?>">
+				<div class="gateway-status-content">
+					<div>
+						<p>
+							<?php
+								echo sprintf( esc_html__('Test Mode Enabled. Gateway credentials are obtained from the %s tab.', 'events-manager'), $api_test_tab );
+							?>
+						</p>
+					</div>
+					<a href="#" class="page-title-action gateway-status-togggle" data-nonce="<?php echo wp_create_nonce('em_gateway_toggle_'.static::$gateway); ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" data-loading="<?php echo $disabling_test; ?>">
+						<?php echo sprintf( esc_html__('%s Live Mode', 'events-manager'), esc_html__('Enable', 'events-manager') ); ?>
+					</a>
+				</div>
+			</div>
+			<div class="notice notice-info gateway-status-info gateway-status-info-limited <?php if( !static::is_mode('limited') ) echo "hidden"; ?>">
+				<div class="gateway-status-content">
+					<div>
+						<p>
+							<?php
+								echo sprintf( esc_html__('%s is in Live Mode for regular visitors and will make real payments using credentials from the %s tab. Limited Test Mode is active for some visitors or events as per the settings in the %s tab.', 'events-manager'), '<em>' . static::gateway()::$title . '</em>', $api_tab, $api_test_tab );
+							?>
+						</p>
+					</div>
+					<a href="#" class="page-title-action gateway-status-togggle" data-nonce="<?php echo wp_create_nonce('em_gateway_toggle_'.static::$gateway); ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" data-loading="<?php echo $disabling_test; ?>">
+						<?php echo sprintf( esc_html__('%s Live Mode', 'events-manager'), esc_html__('Enable', 'events-manager') ); ?>
+					</a>
+				</div>
+			</div>
+			<div class="notice notice-success gateway-status-info gateway-status-info-live <?php if( !static::is_mode('live') ) echo "hidden"; ?>">
+				<div class="gateway-status-content">
+					<p>
+						<?php
+							echo sprintf( esc_html__( 'Gateway is in Live Mode, real payments are accepted using the credentials from the %s tab.', 'events-manager' ), $api_tab );
+						?>
+					</p>
+					<a href="#" class="page-title-action gateway-status-togggle" data-nonce="<?php echo wp_create_nonce('em_gateway_toggle_'.static::$gateway); ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" data-loading="<?php echo $enabling_test; ?>">
+						<?php echo sprintf( esc_html__('%s Test Mode', 'events-manager'), esc_html__('Enable', 'events-manager') ); ?>
+					</a>
+				</div>
+			</div>
+			<?php endif; ?>
 			<h2 class="nav-tab-wrapper">
 				<?php
 				$settings_tabs = static::settings_tabs();
@@ -328,11 +394,144 @@ class Gateway_Admin {
 	 */
 	
 	public static function settings_api(){
+		static::settings_api_notices();
 		static::settings_api_credentials();
 		static::settings_api_notifications();
 	}
 	
-	public static function settings_api_credentials(){
+	public static function settings_api_test(){
+		static::settings_api_notices( true );
+		static::settings_api_test_limiting();
+		static::settings_api_test_hiding();
+		static::settings_api_credentials( true );
+		static::settings_api_notifications( true );
+	}
+	
+	public static function settings_api_test_limiting() {
+		$api_live_tab = '<code><a href="#api" data-tab="api">[' . ucwords(esc_html__('Live', 'em-pro')) . '] ' . esc_html__('API Keys/Notifications', 'em-pro') . '</a></code>';
+		?>
+		<p style="margin: 20px 0 10px;"><?php echo sprintf( esc_html__('When Test Mode is enabled and active, the following API keys will replace those used in the %s tab and assume you are using the gateway test/sandbox features. Booking forms will display a prominent notice when this gateway is selected for payment in test mode','em-pro'), $api_live_tab); ?></p>
+		<h3><?php esc_html_e('Limited Test Mode Settings','em-pro'); ?></h3>
+		<p><?php esc_html_e('You can limit Test Mode to certain scenarios so that you can test on a live site whilst still accepting payments using live credentials for customers.','em-pro'); ?></p>
+		<table class="form-table">
+			<?php
+				$mb_mode_msg = esc_html__('Note that this limitation will not apply in Multiple Bookigns Mode.', 'em-pro');
+				em_options_radio_binary( esc_html__('Enable Limited Test Mode?', 'em-pro'), 'em_'. static::$gateway . '_test_limited', '', '', '.gateway-limited-test-mode-options' );
+			?>
+			<tbody class="gateway-limited-test-mode-options">
+			<?php
+				static::settings_api_test_limiting_notices();
+				em_options_input_text( esc_html__('Limit to IPs', 'em-pro'), 'em_'. static::$gateway . '_test_ips', sprintf(esc_html__('Limit test mode to one or more %s, separated by comma. Leave blank for no limitations.', 'em-pro'), esc_html__('IP addresses', 'em-pro')) );
+				em_options_input_text( esc_html__('Limit to Users', 'em-pro'), 'em_'. static::$gateway . "_test_users", sprintf(esc_html__('Limit test mode to one or more %s, separated by comma. Leave blank for no limitations.', 'em-pro'), esc_html__('User IDs', 'em-pro')) );
+				em_options_input_text( esc_html__('Limit to Events', 'em-pro'), 'em_'. static::$gateway . "_test_events", sprintf(esc_html__('Limit test mode to one or more %s, separated by comma. Leave blank for no limitations.', 'em-pro') . ' ' . $mb_mode_msg, esc_html__emp('Event IDs')) );
+			?>
+			</tbody>
+		</table>
+		<?php
+	}
+	
+	public static function settings_api_test_hiding() {
+		?>
+		<h3><?php esc_html_e('Hide Test Mode Gateway','em-pro'); ?></h3>
+		<p><?php echo sprintf( esc_html__('If %s is in Test Mode, you can choose to hide it from visitors and only display it to users that match any of the following settings.','em-pro'), '<em>'. static::gateway()::$title . '</em>' ); ?></p>
+		<table class="form-table">
+			<?php
+				em_options_input_text( esc_html__('Display only to IPs', 'em-pro'), 'em_'. static::$gateway . '_test_hide_ips', sprintf(esc_html__('Display gateway in test mode only to one or more %s, separated by comma. Leave blank for no limitations.', 'em-pro'), esc_html__('IP addresses', 'em-pro')) );
+				em_options_input_text( esc_html__('Display only to Users', 'em-pro'), 'em_'. static::$gateway . '_test_hide_users', sprintf(esc_html__('Limit test mode to one or more %s, separated by comma. Leave blank for no limitations.', 'em-pro'), esc_html__('User IDs', 'em-pro')) );
+			?>
+		</table>
+		<?php
+	}
+	
+	public static function settings_api_test_limiting_notices(){
+		?>
+		<tr class="gateway-limited-test-mode-notice">
+			<td colspan="2" class="em-boxheader">
+				<div class="gateway-notice gateway-notice-info has-icon">
+					<em class="em-icon em-icon-info"></em>
+					<p><?php esc_html_e('Test Mode will only be active if any of the following conditions below are matched, otherwise Live Mode credentials will be used. For example, if limiting by IPs and Uer IDs, test mode is only enabled when the site visitor is using a matched IP', 'em-pro'); ?></p>
+				</div>
+			</td>
+		</tr>
+		<?php
+	}
+	
+	public static function settings_api_notices( $test_mode = false ) {
+		
+		$enabling_test = sprintf( esc_html__( '%s Test Mode', 'events-manager' ), esc_html__( 'Enabling', 'em-pro' ) ). '...';
+		$api_test_tab = '<code><a href="#api-test" data-tab="api-test">[' . ucwords(esc_html__('Test', 'em-pro')) . '] ' . esc_html__('API Keys/Notifications', 'em-pro') . '</a></code>';
+		$api_tab = '<code><a href="#api" data-tab="api">[' . ucwords(esc_html__('Live', 'em-pro')) . '] ' . esc_html__('API Keys/Notifications', 'em-pro') . '</a></code>';
+		$title = '<em>' . static::gateway()::$title . '</em>';
+		
+		if( $test_mode ) {
+			?>
+			<div class="gateway-notice has-icon gateway-status-info gateway-status-info-live <?php if( !static::is_mode('live') ) echo 'hidden'; ?>">
+				<span class="em-icon em-icon-warning"></span>
+				<div class="gateway-status-content">
+					<p>
+						<?php
+							echo sprintf( esc_html__('%s is using live credentials from the %s tab, enable Test Mode for these credentials to be used instead.', 'em-pro'), $title, $api_tab );
+						?>
+					</p>
+					<a href="#" class="page-title-action gateway-status-togggle" data-nonce="<?php echo wp_create_nonce('em_gateway_toggle_'.static::$gateway); ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" data-loading="<?php echo $enabling_test; ?>">
+						<?php echo sprintf( esc_html__('%s Test Mode', 'events-manager'), esc_html__('Enable', 'events-manager') ); ?>
+					</a>
+				</div>
+			</div>
+			<div class="gateway-notice gateway-notice-info has-icon gateway-status-info gateway-status-info-limited <?php if( !static::is_mode('limited') ) echo 'hidden'; ?>">
+				<span class="em-icon em-icon-warning"></span>
+				<p>
+					<?php
+						echo sprintf( esc_html__('%s is in Limited Test Mode, if the Limited Test Mode conditions below are matched, the following credentials will be used, otherwise Live Mode credentials are used from the %s tab.', 'em-pro'), $title, $api_tab );
+					?>
+				</p>
+			</div>
+			<div class="gateway-notice gateway-notice-confirm has-icon gateway-status-info gateway-status-info-test <?php if( !static::is_mode('test') ) echo 'hidden'; ?>">
+				<span class="em-icon em-icon-checkmark-circle"></span>
+				<p>
+					<?php
+						echo sprintf( esc_html__('%s is in Test Mode, the following credentials are being used for all users.', 'em-pro'), $title );
+					?>
+				</p>
+			</div>
+			<?php
+		} else {
+			if( static::gateway()::$supports_test_mode ){
+				?>
+				<div class="gateway-notice gateway-notice-confirm has-icon gateway-status-info gateway-status-info-live <?php if( !static::is_mode('live') ) echo 'hidden'; ?>">
+					<span class="em-icon em-icon-checkmark-circle"></span>
+					<div>
+						<p>
+							<?php
+								echo sprintf( esc_html__('%s is in Live Mode, the following credentials are being used for all users.', 'events-manager'), $title );
+							?>
+						</p>
+					</div>
+				</div>
+				<div class="gateway-notice has-icon gateway-status-info gateway-status-info-limited <?php if( !static::is_mode('limited') ) echo 'hidden'; ?>">
+					<span class="em-icon em-icon-info"></span>
+					<div>
+						<p>
+							<?php
+								echo sprintf( esc_html__('%s is in Live Mode for regular visitors, with Limited Test Mode activated for some visitors or events as per the settings in the %s tab.', 'events-manager'), $title, $api_tab );
+							?>
+						</p>
+					</div>
+				</div>
+				<div class="gateway-notice has-icon gateway-status-info gateway-status-info-test <?php if( !static::is_mode('test') ) echo 'hidden'; ?>">
+					<span class="em-icon em-icon-warning"></span>
+					<p>
+						<?php
+							echo sprintf( esc_html__('%s is in Test Mode and is using credentials from the %s tab above.', 'em-pro'), $title, $api_test_tab );
+						?>
+					</p>
+				</div>
+				<?php
+			}
+		}
+	}
+	
+	public static function settings_api_credentials( $test_mode = false ){
 		?>
 		<h3><?php echo sprintf(__('%s Credentials','em-pro'), static::gateway()::$title ); ?></h3>
 		<?php if( static::$documentation_url_api ): ?>
@@ -357,18 +556,20 @@ class Gateway_Admin {
 		<table class="form-table">
 			<tbody>
 			<?php
-			$status_modes = array('live' => __('Live Site', 'em-pro'), 'sandbox' => __('Test Mode (Sandbox)', 'em-pro') );
-			em_options_select(esc_html__('Gateway Mode', 'em-pro'), 'em_'. static::$gateway . "_mode", $status_modes);
-			$is_sandbox = get_option('em_'.static::$gateway.'_mode') == 'sandbox';
-			static::settings_sensitive_credentials( static::$api_cred_fields, $is_sandbox );
+			if ( !static::gateway()::$supports_test_mode ) {
+				$status_modes = array('live' => __('Live Site', 'em-pro'), 'sandbox' => __('Test Mode (Sandbox)', 'em-pro') );
+				em_options_select(esc_html__('Gateway Mode', 'em-pro'), 'em_'. static::$gateway . "_mode", $status_modes);
+				$is_sandbox = get_option('em_'.static::$gateway.'_mode') == 'sandbox';
+			}
+			static::settings_sensitive_credentials( static::$api_cred_fields, static::is_mode('test') || $test_mode , $test_mode );
 			?>
 			</tbody>
 		</table>
 		<?php
 	}
 	
-	public static function settings_sensitive_credentials( $api_cred_fields, $is_sandbox ){
-		if( !is_ssl() ){
+	public static function settings_sensitive_credentials( $api_cred_fields, $is_sandbox, $test_mode = false ){
+		if( !is_ssl() && !$test_mode ){
 			?>
 			<tr>
 				<td colspan="2">
@@ -387,21 +588,22 @@ class Gateway_Admin {
 			</tr>
 			<?php
 		}
-		$api_options = get_option(static::$api_cred_name);
-		if( static::settings_show_settings_credentials( $is_sandbox ) ) {
-			foreach( $api_cred_fields as $api_cred_opt => $api_cred_label ){
+		$d = $test_mode ? '_test':'';
+		$api_options = get_option(static::$api_cred_name . $d);
+		if ( static::settings_show_settings_credentials( $is_sandbox ) ) {
+			foreach ( $api_cred_fields as $api_cred_opt => $api_cred_label ) {
 				$api_cred_value = !empty($api_options[$api_cred_opt]) && $api_options[$api_cred_opt] !== $api_cred_label ? $api_options[$api_cred_opt] : '';
 				?>
-				<tr valign="top" id='<?php echo static::$api_cred_name  .'_'. esc_attr($api_cred_opt); ?>_row'>
+				<tr valign="top" id='<?php echo static::$api_cred_name . $d . '_' . esc_attr($api_cred_opt); ?>_row'>
 					<th scope="row"><?php echo esc_html($api_cred_label); ?></th>
 					<td>
-						<input value="<?php echo esc_attr($api_cred_value); ?>" name="<?php echo static::$api_cred_name . '_'. esc_attr($api_cred_opt) ?>" type="text" id="<?php echo static::$api_cred_name . esc_attr($api_cred_opt) ?>" style="width: 95%" size="45" />
+						<input value="<?php echo esc_attr($api_cred_value); ?>" name="<?php echo static::$api_cred_name . $d . '_'. esc_attr($api_cred_opt) ?>" type="text" id="<?php echo static::$api_cred_name . $d . esc_attr($api_cred_opt) ?>" style="width: 95%" size="45" />
 					</td>
 				</tr>
 				<?php
 			}
 		} else {
-			foreach( $api_cred_fields as $api_cred_opt => $api_cred_label ){
+			foreach ( $api_cred_fields as $api_cred_opt => $api_cred_label ) {
 				$api_cred_value = !empty($api_options[$api_cred_opt]) && $api_options[$api_cred_opt] !== $api_cred_label ? $api_options[$api_cred_opt] : '';
 				?>
 				<tr valign="top">
@@ -419,7 +621,8 @@ class Gateway_Admin {
 		}
 	}
 	
-	public static function settings_api_notifications(){
+	public static function settings_api_notifications( $test_mode = false ){
+		$force_mode = $test_mode ? static::gateway()::force_mode('test') : static::gateway()::force_mode('live');
 		$verify_webhook = static::verify_webhook();
 		?>
 		<h3><?php esc_html_e('Payment Notifications', 'em-pro'); ?></h3>
@@ -458,6 +661,7 @@ class Gateway_Admin {
 				<?php
 			}
 		}
+		static::gateway()::$force_mode = $force_mode;
 	}
 	
 	/**
@@ -476,28 +680,38 @@ class Gateway_Admin {
 			$options_wpkses[] = 'em_' . static::$gateway . '_booking_feedback';
 		}
 		if ( ! empty( static::gateway()::$payment_flow['redirect-success'] ) ) {
-			$defaul_options[] = 'em_' . static::$gateway . '_return';
+			$default_options[] = 'em_' . static::$gateway . '_return';
 			$options_wpkses[] = 'em_' . static::$gateway . '_booking_feedback_completed';
 		}
 		if ( ! empty( static::gateway()::$payment_flow['redirect-cancel'] ) ) {
-			$defaul_options[] = 'em_' . static::$gateway . '_cancel_return';
+			$default_options[] = 'em_' . static::$gateway . '_cancel_return';
 			$options_wpkses[] = 'em_' . static::$gateway . '_booking_feedback_cancelled';
 		}
 		if ( ! empty( static::$api_cred_fields ) ) {
 			if( static::settings_show_settings_credentials( get_option( 'em_' . static::$gateway . '_mode' ) == 'sandbox' ) ) {
-				$defaul_options[ static::$api_cred_name ] = array_keys(static::$api_cred_fields);
+				$default_options[ static::$api_cred_name ] = array_keys(static::$api_cred_fields);
+				$default_options[ static::$api_cred_name . '_test' ] = array_keys(static::$api_cred_fields);
 			}
-			$defaul_options[] = 'em_' . static::$gateway . '_mode';
+			if ( static::gateway()::$supports_test_mode ) {
+				$default_options[] = 'em_' . static::$gateway . '_test_limited';
+				$default_options[] = 'em_' . static::$gateway . '_test_ips';
+				$default_options[] = 'em_' . static::$gateway . '_test_events';
+				$default_options[] = 'em_' . static::$gateway . '_test_users';
+				$default_options[] = 'em_' . static::$gateway . '_test_hide_users';
+				$default_options[] = 'em_' . static::$gateway . '_test_hide_ips';
+			} else {
+				$default_options[] = 'em_' . static::$gateway . '_mode'; // mode isn't relevant anymore, handled by gateways button
+			}
 		}
 		if ( static::gateway()::$count_pending_spaces ) {
-			$defaul_options[] = 'em_' . static::$gateway . '_reserve_pending';
+			$default_options[] = 'em_' . static::$gateway . '_reserve_pending';
 		}
 		if( static::gateway()::$has_timeout ) {
-			$defaul_options[] = 'em_' . static::$gateway . '_booking_timeout';
-			$defaul_options[] = 'em_' . static::$gateway . '_booking_timeout_action';
+			$default_options[] = 'em_' . static::$gateway . '_booking_timeout';
+			$default_options[] = 'em_' . static::$gateway . '_booking_timeout_action';
 		}
 		if( static::gateway()::$can_manually_approve ) {
-			$defaul_options[] = 'em_' . static::$gateway . '_manual_approval';
+			$default_options[] = 'em_' . static::$gateway . '_manual_approval';
 		}
 		// general options
 		$options_wpkses[] = 'em_' . static::$gateway . '_option_name';
@@ -505,7 +719,7 @@ class Gateway_Admin {
 		
 		//add filters for all $option_wpkses values so they go through wp_kses_post
 		foreach( $options_wpkses as $option_wpkses ) add_filter('gateway_update_'.$option_wpkses,'wp_kses_post');
-		$options = array_merge($defaul_options, $options_wpkses, $options);
+		$options = array_merge($default_options, $options_wpkses, $options);
 		
 		//go through the options, grab them from $_REQUEST, run them through a filter for sanitization and save
 		foreach( $options as $option_index => $option_name ){

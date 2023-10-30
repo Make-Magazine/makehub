@@ -346,8 +346,6 @@ class UAEL_Core_Plugin {
 
 		wp_register_script( 'uael-video-subscribe', 'https://apis.google.com/js/platform.js', array( 'jquery' ), UAEL_VER, true );
 
-		wp_register_script( 'uael-google-login', 'https://apis.google.com/js/api:client.js', array( 'jquery' ), UAEL_VER, true );
-
 		wp_register_script( 'uael-google-recaptcha', 'https://www.google.com/recaptcha/api.js?onload=onLoadUAEReCaptcha&render=explicit', array( 'jquery', 'uael-registration' ), UAEL_VER, true );
 
 		foreach ( $js_files as $handle => $data ) {
@@ -374,10 +372,11 @@ class UAEL_Core_Plugin {
 		$wc_localize = apply_filters(
 			'uael_js_localize',
 			array(
-				'ajax_url'          => admin_url( 'admin-ajax.php' ),
-				'get_product_nonce' => wp_create_nonce( 'uael-product-nonce' ),
-				'quick_view_nonce'  => wp_create_nonce( 'uael-qv-nonce' ),
-				'add_cart_nonce'    => wp_create_nonce( 'uael-ac-nonce' ),
+				'ajax_url'              => admin_url( 'admin-ajax.php' ),
+				'get_product_nonce'     => wp_create_nonce( 'uael-product-nonce' ),
+				'quick_view_nonce'      => wp_create_nonce( 'uael-qv-nonce' ),
+				'add_cart_nonce'        => wp_create_nonce( 'uael-ac-nonce' ),
+				'checkout_update_nonce' => wp_create_nonce( 'uael-checkout-nonce' ),
 			)
 		);
 

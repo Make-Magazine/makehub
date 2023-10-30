@@ -1,6 +1,7 @@
 <?php
 if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');}
 
+#[AllowDynamicProperties]
 class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface, MeprTransactionInterface {
   /** INSTANCE VARIABLES & METHODS **/
   public function __construct($obj = null) {
@@ -140,7 +141,7 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
     MeprHooks::do_action('mepr_post_delete_transaction', $id, $user, $result);
 
     if($user && $user->ID > 0) {
-      $user->update_member_data(array('txn_count', 'active_txn_count'));
+      $user->update_member_data(array('txn_count', 'active_txn_count', 'memberships', 'inactive_memberships'));
     }
 
     return $result;
@@ -1116,7 +1117,7 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
     $this->expires_at = $prd->expires_at;
     $this->trial = $prd->trial;
     $this->trial_days = $prd->trial ? $prd->trial_days : 0;
-    $this->trial_amount = $prd->trial_amount;
+    $this->trial_amount = MeprUtils::maybe_round_to_minimum_amount($prd->trial_amount);
 
     // If trial only once is set and the member has
     // already had a trial then get rid of it
@@ -1130,10 +1131,10 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
     }
 
     if($set_subtotal) {
-      $this->set_subtotal($prd->adjusted_price());
+      $this->set_subtotal(MeprUtils::maybe_round_to_minimum_amount($prd->adjusted_price()));
     }
     else {
-      $this->price = $prd->adjusted_price();
+      $this->price = MeprUtils::maybe_round_to_minimum_amount($prd->adjusted_price());
     }
 
     // This will only happen with a real coupon
@@ -1143,10 +1144,10 @@ class MeprTransaction extends MeprBaseMetaModel implements MeprProductInterface,
       // We can't do this above because we don't want to
       // screw up the price before applying the trial override
       if($set_subtotal) {
-        $this->set_subtotal($prd->adjusted_price($cpn->post_title));
+        $this->set_subtotal(MeprUtils::maybe_round_to_minimum_amount($prd->adjusted_price($cpn->post_title)));
       }
       else {
-        $this->price = $prd->adjusted_price($cpn->post_title);
+        $this->price = MeprUtils::maybe_round_to_minimum_amount($prd->adjusted_price($cpn->post_title));
       }
     }
 

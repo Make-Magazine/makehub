@@ -8,16 +8,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityRevisions\Monolog\Processor;
+namespace GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Processor;
 
 /**
  * Injects memory_get_peak_usage in all records
  *
- * @see GravityKit\GravityRevisions\Monolog\Processor\MemoryProcessor::__construct() for options
+ * @see GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Processor\MemoryProcessor::__construct() for options
  * @author Rob Jensen
  */
 class MemoryPeakUsageProcessor extends MemoryProcessor

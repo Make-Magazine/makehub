@@ -94,8 +94,8 @@ class EMIO_Admin_Import_Actions extends EMIO_Admin_Actions {
 								}
 								$EM_Notices->add_confirm( $msg, true );
 							}
-							if( !empty($result['errors']) ){
-								$errors = count($result['errors']);
+							if ( is_wp_error($result) || !empty($result['errors']) ) {
+								$errors = is_wp_error($result) ? count( $result->get_error_messages() ) : count($result['errors']);
 								$error_msg = _n('There was %d error during import:', 'There were %d errors during import:', $errors, 'events-manager-io');
 								$EM_Notices->add_error(sprintf($error_msg, $errors), true);
 								$EM_Notices->add_error($result['errors'], true);

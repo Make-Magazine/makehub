@@ -134,15 +134,16 @@ class Skin_Feed extends Skin_Base {
 			$this->add_control(
 				'show_filters',
 				array(
-					'label'        => __( 'Show Filters', 'uael' ),
-					'type'         => Controls_Manager::SWITCHER,
-					'label_on'     => __( 'Yes', 'uael' ),
-					'label_off'    => __( 'No', 'uael' ),
-					'return_value' => 'yes',
-					'default'      => 'no',
-					'condition'    => array(
+					'label'              => __( 'Show Filters', 'uael' ),
+					'type'               => Controls_Manager::SWITCHER,
+					'label_on'           => __( 'Yes', 'uael' ),
+					'label_off'          => __( 'No', 'uael' ),
+					'return_value'       => 'yes',
+					'default'            => 'no',
+					'condition'          => array(
 						'query_type' => 'custom',
 					),
+					'frontend_available' => true,
 				)
 			);
 
@@ -1855,7 +1856,7 @@ class Skin_Feed extends Skin_Base {
 
 		$skin = Skin_Init::get_instance( $this->get_id() );
 
-		echo wp_kses_post( $skin->render( $this->get_id(), $settings, $this->parent->get_id() ) );
+		echo wp_kses_post( sanitize_text_field( $skin->render( $this->get_id(), $settings, $this->parent->get_id() ) ) );
 	}
 
 }

@@ -103,7 +103,7 @@ function gv_revisions_parent_id_entry_column_filter( $value = '', $form_id = 0, 
 
 	if ( is_wp_error( $entry ) ) {
 
-		GravityKitFoundation::logger()->error( sprintf( '[%s] Entry not found at ID #%d', __METHOD__, $entry_or_entry_id ) );
+		GravityKitFoundation::logger()->error( sprintf( '[%s] Entry not found at ID #%d', __METHOD__, $revision['gv_revision_parent_id'] ) );
 
 		return esc_html( $entry->get_error_message() );
 	}

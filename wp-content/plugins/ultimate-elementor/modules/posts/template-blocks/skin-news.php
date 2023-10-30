@@ -238,7 +238,7 @@ class Skin_News extends Skin_Style {
 		$this->add_render_attribute( 'outer_wrapper', 'data-offset-top', $offset_top );
 		?>
 
-		<div <?php echo wp_kses_post( $this->get_render_attribute_string( 'outer_wrapper' ) ); ?> <?php echo wp_kses_post( $this->get_slider_attr() ); ?>>
+		<div <?php echo wp_kses_post( sanitize_text_field( $this->get_render_attribute_string( 'outer_wrapper' ) ) ); ?> <?php echo wp_kses_post( sanitize_text_field( $this->get_slider_attr() ) ); ?>>
 
 			<?php
 			if ( 0 === $count ) {
@@ -297,7 +297,7 @@ class Skin_News extends Skin_Style {
 
 		check_ajax_referer( 'uael-posts-widget-nonce', 'nonce' );
 
-		$category = ( isset( $_POST['category'] ) ) ? $_POST['category'] : '';
+		$category = ( isset( $_POST['category'] ) ) ? sanitize_text_field( $_POST['category'] ) : '';
 
 		self::$settings  = $widget->get_settings();
 		self::$query_obj = new Build_Post_Query( $style_id, self::$settings, $category );

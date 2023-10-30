@@ -16,7 +16,7 @@ function emio_input_checkbox_items($name, $array, $saved_values, $horizontal = t
 	foreach($array as $key => $item) {
 		$checked = "";
 		if (in_array($key, $saved_values)) $checked = "checked='checked'";
-		$output .= "<label><input type='checkbox' name='".esc_attr($name)."' value='".esc_attr($key)."' $checked> ".esc_html($item)."</label>&nbsp; ";
+		$output .= "<label><input type='checkbox' name='".esc_attr($name)."[]' value='".esc_attr($key)."' $checked> ".esc_html($item)."</label>&nbsp; ";
 		if(!$horizontal)
 			$output .= "<br>\n";
 	}
@@ -83,15 +83,15 @@ function emio_input_radio($name, $options, $option = '', $title='') {
 <?php
 }
 
-function emio_input_radio_binary($title, $name, $value='', $description='', $option_names = '', $trigger='') {
+function emio_input_radio_binary($title, $name, $value='', $description='', $option_names = '', $trigger='', $disabled = false) {
 	if( empty($option_names) ) $option_names = array(0 => __('No','events-manager'), 1 => __('Yes','events-manager'));
 	$trigger_att = ($trigger) ? 'data-trigger="'.esc_attr($trigger).'" class="em-trigger"':'';
 	?>
    	<tr valign="top" id='<?php echo $name;?>_row'>
    		<th scope="row"><?php echo esc_html($title); ?></th>
    		<td>
-   			<label><?php echo $option_names[1]; ?> <input id="<?php echo esc_attr($name) ?>_yes" name="<?php echo esc_attr($name) ?>" type="radio" value="1" <?php if($value) echo "checked='checked'"; echo $trigger_att; ?> ></label>&nbsp;&nbsp;&nbsp;
-			<label><?php echo $option_names[0]; ?> <input  id="<?php echo esc_attr($name) ?>_no" name="<?php echo esc_attr($name) ?>" type="radio" value="0" <?php if(!$value) echo "checked='checked'"; echo $trigger_att; ?> ></label>
+   			<label><?php echo $option_names[1]; ?> <input id="<?php echo esc_attr($name) ?>_yes" name="<?php echo esc_attr($name) ?>" type="radio" value="1" <?php if($value) echo "checked"; echo $trigger_att; ?> <?php if($disabled) echo "disabled"; ?>></label>&nbsp;&nbsp;&nbsp;
+			<label><?php echo $option_names[0]; ?> <input  id="<?php echo esc_attr($name) ?>_no" name="<?php echo esc_attr($name) ?>" type="radio" value="0" <?php if(!$value) echo "checked"; echo $trigger_att; ?> <?php if($disabled) echo "disabled"; ?>></label>
 		    <?php if(!empty($description)): ?><p><em><?php echo $description; ?></em></p><?php endif; ?>
 		</td>
    	</tr>

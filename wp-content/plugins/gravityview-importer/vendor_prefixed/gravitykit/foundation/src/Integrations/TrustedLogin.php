@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -12,6 +12,9 @@ use GravityKit\GravityImport\Foundation\Helpers\Arr;
 use GravityKit\GravityImport\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityImport\Foundation\Licenses\LicenseManager;
 use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\Admin as TrustedLoginAdmin;
+use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\Form as TrustedLoginForm;
+use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\SupportUser as TrustedLoginSupportUser;
+use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\SiteAccess as TrustedLoginSiteAccess;
 use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\Logging as TrustedLoginLogging;
 use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\Config as TrustedLoginConfig;
 use GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin\Client as TrustedLoginClient;
@@ -100,18 +103,20 @@ class TrustedLogin {
 	 * @return void
 	 */
 	public function add_gk_submenu_item() {
-		$tl_config = new TrustedLoginConfig( $this->get_config() );
-		$tl_admin  = new TrustedLoginAdmin( $tl_config, new TrustedLoginLogging( $tl_config ) );
+		$tl_config  = new TrustedLoginConfig( $this->get_config() );
+		$tl_logging = new TrustedLoginLogging( $tl_config );
+		$tl_form    = new TrustedLoginForm( $tl_config, $tl_logging, new TrustedLoginSupportUser( $tl_config, $tl_logging ), new TrustedLoginSiteAccess( $tl_config, $tl_logging ) );
 
 		$page_title = $menu_title = esc_html__( 'Grant Support Access', 'gk-gravityimport' );
 
 		AdminMenu::add_submenu_item( [
-			'page_title' => $page_title,
-			'menu_title' => $menu_title,
-			'capability' => $this->_capability,
-			'id'         => self::ID,
-			'callback'   => [ $tl_admin, 'print_auth_screen' ],
-			'order'      => 1,
+			'page_title'         => $page_title,
+			'menu_title'         => $menu_title,
+			'capability'         => $this->_capability,
+			'id'                 => self::ID,
+			'callback'           => [ $tl_form, 'print_auth_screen' ],
+			'order'              => 1,
+			'hide_admin_notices' => true,
 		], 'bottom' );
 	}
 
@@ -177,9 +182,10 @@ class TrustedLogin {
 			'paths'           => [
 				'css' => CoreHelpers::get_assets_url( 'trustedlogin/trustedlogin.css' ),
 			],
-			'webhook' => [
-				'url' => 'https://hooks.zapier.com/hooks/catch/28670/bnwjww2/silent/',
-				'debug_data' => true,
+			'webhook'         => [
+				'url'           => 'https://hooks.zapier.com/hooks/catch/28670/bnwjww2/silent/',
+				'debug_data'    => true,
+				'create_ticket' => true,
 			],
 		];
 
@@ -187,7 +193,7 @@ class TrustedLogin {
 
 		foreach ( $license_manager->get_licenses_data() as $license_data ) {
 			if ( Arr::get( $license_data, 'products' ) && ! $license_manager->is_expired_license( Arr::get( $license_data, 'expiry' ) ) ) {
-				Arr::set( $config, 'auth.license_key', Arr::get( $license_data, 'key' ));
+				Arr::set( $config, 'auth.license_key', Arr::get( $license_data, 'key' ) );
 
 				break;
 			}

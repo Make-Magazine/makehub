@@ -8,11 +8,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Formatter;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Formatter;
 
 /**
  * Encodes message information into JSON in a format compatible with Loggly.
@@ -36,7 +36,7 @@ class LogglyFormatter extends JsonFormatter
      * Appends the 'timestamp' parameter for indexing by Loggly.
      *
      * @see https://www.loggly.com/docs/automated-parsing/#json
-     * @see \GravityKit\GravityEdit\Monolog\Formatter\JsonFormatter::format()
+     * @see \GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Formatter\JsonFormatter::format()
      */
     public function format(array $record)
     {

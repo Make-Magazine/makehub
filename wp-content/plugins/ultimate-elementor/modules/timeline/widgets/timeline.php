@@ -1058,7 +1058,7 @@ class Timeline extends Common_Widget {
 				'type'        => Controls_Manager::REPEATER,
 				'show_label'  => true,
 				'fields'      => $repeater->get_controls(),
-				'title_field' => '{{{ timeline_single_date }}}',
+				'title_field' => '{{ timeline_single_date }}',
 				'default'     => array(
 					array(
 						'timeline_single_date'    => __( 'January 1, 2014', 'uael' ),
@@ -2348,7 +2348,7 @@ class Timeline extends Common_Widget {
 				<?php
 				$skin = Skin_Init::get_instance( $node_id );
 
-				echo wp_kses_post( $skin->render( $settings, $node_id, $dynamic ) );
+				echo wp_kses_post( sanitize_text_field( $skin->render( $settings, $node_id, $dynamic ) ) );
 				?>
 			</div>
 			<?php

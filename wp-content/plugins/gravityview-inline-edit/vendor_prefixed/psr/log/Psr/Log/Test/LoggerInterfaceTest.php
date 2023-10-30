@@ -2,14 +2,14 @@
 /**
  * @license MIT
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Psr\Log\Test;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\Test;
 
-use GravityKit\GravityEdit\Psr\Log\LoggerInterface;
-use GravityKit\GravityEdit\Psr\Log\LogLevel;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,7 +38,7 @@ abstract class LoggerInterfaceTest extends TestCase
 
     public function testImplements()
     {
-        $this->assertInstanceOf('GravityKit\GravityEdit\Psr\Log\LoggerInterface', $this->getLogger());
+        $this->assertInstanceOf('GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LoggerInterface', $this->getLogger());
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class LoggerInterfaceTest extends TestCase
     }
 
     /**
-     * @expectedException \GravityKit\GravityEdit\Psr\Log\InvalidArgumentException
+     * @expectedException \GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\InvalidArgumentException
      */
     public function testThrowsOnInvalidLevel()
     {
@@ -92,9 +92,9 @@ abstract class LoggerInterfaceTest extends TestCase
     public function testObjectCastToString()
     {
         if (method_exists($this, 'createPartialMock')) {
-            $dummy = $this->createPartialMock('GravityKit\GravityEdit\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->createPartialMock('GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         } else {
-            $dummy = $this->getMock('GravityKit\GravityEdit\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->getMock('GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         }
         $dummy->expects($this->once())
             ->method('__toString')

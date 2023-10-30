@@ -339,12 +339,12 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       }
       else {
         if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
-          $amount = $prd->price;
+          $amount = $txn->total;
           $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount);
         }
         else {
           $remove_tax = $calculate_taxes && $tax_inclusive && $txn->tax_rate > 0;
-          $amount = $remove_tax ? ($prd->price/(1+($txn->tax_rate/100))) : $prd->price;
+          $amount = $remove_tax ? ($txn->total/(1+($txn->tax_rate/100))) : $txn->total;
         }
       }
 

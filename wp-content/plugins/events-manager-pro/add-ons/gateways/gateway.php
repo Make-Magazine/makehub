@@ -132,6 +132,21 @@ class Gateway {
 	 * @var bool For legacy gateways.
 	 */
 	public static $legacy = false;
+	/**
+	 * Name of option storing the API credentials of this gatewaym default is em_{static::$gateway}_api, test creds always prefixed with _test
+	 * @var string
+	 */
+	public static $api_option_name;
+	/**
+	 * New gateway updates should enable this to support the latest test modes, and account for test modes where relevant.
+	 * @var bool
+	 */
+	public static $supports_test_mode = false;
+	/**
+	 * If set to 'live' or 'test' the mode of this gateway will be forced into Live Mode or Test Mode respectively.
+	 * @var string
+	 */
+	public static $force_mode;
 	
 	// TODO create generic settings location and admin like booking form content text field, api settings, etc.
 	// TODO create way for base gateways to hold admin settings etc.
@@ -226,6 +241,34 @@ class Gateway {
 	public static function payment_form_header( $id ){}
 	
 	public static function payment_form_info( $id ){
+		$test_mode = static::is_test_mode();
+		if ( $test_mode ) {
+			echo '<div class="em-notice em-notice-info">';
+			if( is_array($test_mode) ){
+				// limited test mode
+				$reasons = array();
+				if( !empty($test_mode['ip']) ) {
+					$reasons[] = esc_html__('Your IP matches a Limited Test Mode filter.', 'em-pro');
+				}
+				if( !empty($test_mode['user']) ) {
+					$reasons[] = esc_html__('Your user ID matches a Limited Test Mode filter.', 'em-pro');
+				}
+				if( !empty($test_mode['event']) ) {
+					$reasons[] = esc_html__('This event matches a Limited Test Mode filter.', 'em-pro');
+				}
+				echo '<p>' . esc_html__('This gateway is in Limited Test Mode, meaning any visitors matching limit settings will see this message. You are currently in test mode because:', 'em-pro') . '</p>';
+				echo '<ul style="margin-bottom:0; padding-bottom: 0;">';
+				foreach( $reasons as $reason ){
+					echo '<li>'.$reason.'</li>';
+				}
+				echo '</ul>';
+				echo '<p>' . esc_html__('Visitors who do not match a limited condition will not see this message and will continue to use this gateway in Live Mode.', 'em-pro') . '</p>';
+			} else {
+				// regular test mode
+				esc_html_e('This gateway is currently in Test Mode, only test payment methods can be used.', 'em-pro');
+			}
+			echo '</div>';
+		}
 		echo static::get_option('form'); // outputs html content defined in settings
 	}
 	
@@ -258,6 +301,9 @@ class Gateway {
 			}
 			$data_items[] = 'data-' . $prop . '="' . esc_attr($value) . '"';
 		}
+		if ( static::is_test_mode() ) {
+			$data_items[] = 'data-test-mode="1"';
+		}
 		$props = 'value="' . static::$gateway . '" ' . implode( ' ', $data_items );
 		$html = '';
 		if( $type === 'select' ) {
@@ -268,7 +314,7 @@ class Gateway {
 			ob_start();
 			?>
 			<div class="em-payment-gateway-option-radio">
-				<input type="radio" name="gateway" <?php echo $props; ?>>
+				<input type="radio" name="gateway" <?php echo $props; ?> class="em-payment-gateway-option em-payment-gateway">
 				<?php echo static::payment_form_selector_radio_label(); ?>
 			</div>
 			<?php
@@ -322,6 +368,11 @@ class Gateway {
 				$route = array_merge( $route, static::$rest_api['notify'] );
 			}
 			register_rest_route( 'events-manager/v1', '/gateways/'.static::$gateway.'/notify', $route );
+			
+			if( static::$supports_test_mode ) {
+				$route['callback'] = array( static::class, 'handle_api_notify_test' );
+				register_rest_route( 'events-manager/v1', '/gateways/'.static::$gateway.'/notify_test', $route );
+			}
 		}
 		// cancellation API
 		if( !empty(static::$rest_api['cancel']) ){
@@ -350,7 +401,7 @@ class Gateway {
 	}
 	
 	/**
-	 * Return a WP REST result for handling a payment return
+	 * Return a WP REST result for handling a payment notification webhook
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -358,6 +409,19 @@ class Gateway {
 	public static function handle_api_notify( $request ) {
 		$message = 'Missing POST variables. Identification is not possible. If you are not '.static::$title.' and are visiting this page directly in your browser, this error does not indicate a problem, but simply means Events Manager is correctly set up and ready to receive communication from '.static::$title.' only.';
 		return new WP_REST_Response( array('message' => $message), 200 );
+	}
+	
+	/**
+	 * Return a WP REST result for handling a payment notification webhook in test mode
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public static function handle_api_notify_test( $request ) {
+		$force_mode = static::force_mode('test');
+		$return = static::handle_api_notify( $request );
+		static::$force_mode = $force_mode;
+		return $return;
 	}
 	
 	/**
@@ -428,7 +492,8 @@ class Gateway {
 	 * @return string
 	 */
 	public static function get_api_notify_url(){
-		$url = get_rest_url( get_current_blog_id(), 'events-manager/v1/gateways/'.static::$gateway.'/notify' );
+		$endpoint = static::is_test_mode() ? 'notify_test' : 'notify';
+		$url = get_rest_url( get_current_blog_id(), 'events-manager/v1/gateways/'.static::$gateway.'/'.$endpoint );
 		if( em_constant('EM_GATEWAY_API_DOMAIN') ){
 			// localhost testing allows you to set up a tunnel like ngrok or localxpose
 			$url = preg_replace('/https?:\/\/[^\/]+/', constant('EM_GATEWAY_API_DOMAIN'), $url);
@@ -594,7 +659,7 @@ class Gateway {
 	 * @return boolean
 	 */
 	public static function em_booking_is_reserved( $result, $EM_Booking ){
-		if($EM_Booking->booking_status == static::$status && static::uses_gateway($EM_Booking) && get_option('dbem_bookings_approval_reserved')){
+		if( $EM_Booking->booking_status == static::$status && static::uses_gateway($EM_Booking) && get_option('dbem_bookings_approval_reserved') ){
 			return true;
 		}
 		return $result;
@@ -641,6 +706,12 @@ class Gateway {
 		}
 		add_action('em_template_my_bookings_header', array( static::class, 'thank_you_message'));
 		add_action('em_booking_form_top', array( static::class, 'thank_you_message'));
+		
+		// load current event if booking_id or event_id supplied so that test mode can be determined
+		add_action('em_template_my_bookings_header', array( '\EM\Payments\Gateways', 'load_current_event'), 9);
+		add_action('em_booking_form_top', array( '\EM\Payments\Gateways', 'load_current_event'), 9);
+		add_action('em_template_my_bookings_header', array( '\EM\Payments\Gateways', 'unload_current_event'), 11);
+		add_action('em_booking_form_top', array( '\EM\Payments\Gateways', 'unload_current_event'), 11);
 	}
 	
 	/**
@@ -665,7 +736,11 @@ class Gateway {
 	 */
 	public static function get_return_url( $EM_Booking = null ){
 		if( get_option('em_'. static::$gateway . "_return" ) ){
-			return get_option('em_'. static::$gateway . "_return" );
+			$return_url = get_option('em_'. static::$gateway . "_return" );
+			if( !empty($EM_Booking) ){
+				$return_url = add_query_arg( ['booking_id' => $EM_Booking->booking_id], $return_url );
+			}
+			return $return_url;
 		}else{
 			if( get_option('dbem_multiple_bookings') ){
 				//if MB mode, redirect to checkout page
@@ -684,6 +759,9 @@ class Gateway {
 				//no thank you message, but we redirect anyway
 				$my_bookings_url = get_home_url();
 			}
+		}
+		if( !empty($EM_Booking) ){
+			$my_bookings_url = add_query_arg( ['booking_id' => $EM_Booking->booking_id], $my_bookings_url );
 		}
 		//add the flag for displaying a message and return
 		return add_query_arg('payment_complete', static::$gateway, $my_bookings_url);
@@ -819,6 +897,27 @@ class Gateway {
  * --------------------------------------------------*/
 	
 	/**
+	 * Gets the API keys whether in live or test mode.
+	 * @param $args
+	 *
+	 * @return false|array
+	 */
+	public static function get_api_keys( ...$args ){
+		// handle passed $args, older PHP versions can pass array as argument for associative array, until PHP 8 is the norm and we can pass named variables
+		if( !empty($args[0]) && is_array($args[0]) ) {
+			$args = $args[0];
+		}
+		$mode = isset($args['mode']) ? $args['mode'] : false;
+		$option_name = static::$api_option_name ?: 'em_' . static::$gateway . '_api';
+		if ( $mode === 'live' || static::is_live_mode() ) {
+			$keys = get_option( $option_name );
+		} else {
+			$keys = get_option( $option_name . '_test' );
+		}
+		return $keys;
+	}
+	
+	/**
 	 * Returns unique ID for use in transaction order meta for easy searching/linking of booking to transactions, combines uuid with a booking ID for extra uniqueness in event of gateway being used in other software
 	 * @param EM_Booking $EM_Booking
 	 *
@@ -881,22 +980,132 @@ class Gateway {
 		return $active;
 	}
 	
+	public static function check_conditions( $check ) {
+		$matches = true; // if no checks, then it's true
+		if ( !empty($check['ips']) || !empty($check['users']) || !empty($check['events']) ) {
+			// false until proven true
+			$matches = array();
+			// check against IP limits
+			if( !is_array($check['ips']) ) $check['ips'] = empty($check['ips']) ? array() : explode(',', $check['ips']);
+			if ( in_array( $_SERVER['REMOTE_ADDR'], $check['ips'] ) ) {
+				$matches['ip'] = true;
+			}
+			// check against User limtis
+			if( !is_array($check['users']) ) $check['users'] = empty($check['users']) ? array() : explode(',', $check['users']);
+			if ( is_user_logged_in() ) {
+				if ( in_array( get_current_user_id(), $check['users'] ) ) {
+					$matches['user'] = true;
+				}
+			}
+			// check against event type
+			$current_event_id = Gateways::$current_event_id;
+			if( !is_array($check['events']) ) $check['events'] = empty($check['events']) ? array() : explode(',', $check['events']);
+			if ( $current_event_id && in_array( $current_event_id, $check['events'] ) ) {
+				$matches['event'] = true;
+			}
+			if( empty($matches) ){
+				$matches = false;
+			}
+		}
+		return $matches;
+	}
+	
+	/**
+	 * If gateway supports sandbox/live mode, returns true if in live/production mode. Returns a boolean value or an array if in limited test mode.
+	 *
+	 * @return bool|array
+	 */
+	public static function is_displayable(){
+		$is_displayable = true;
+		if( static::is_test_mode() ){
+			// check against IP and User ID
+			$check = array(
+				'ips' => get_option('em_'. static::$gateway . '_test_hide_ips'),
+				'users' => get_option('em_'. static::$gateway . '_test_hide_users'),
+				'events' => get_option('em_'. static::$gateway . '_test_hide_events'),
+			);
+			$is_displayable = static::check_conditions( $check );
+		}
+		return $is_displayable;
+	}
+	
 	/**
 	 * If gateway supports sandbox/live mode, returns true if in sandbox/test mode.
 	 *
+	 * @deprecated
+	 * @use static::is_test_mode()
 	 * @return bool
 	 */
 	public static function is_sandbox(){
-		return get_option('em_'. static::$gateway . "_mode" ) !== 'live';
+		return static::is_test_mode();
 	}
 	
 	/**
 	 * If gateway supports sandbox/live mode, returns true if in live/production mode.
 	 *
+	 * @deprecated
+	 * @use static::is_live_mode()
 	 * @return bool
 	 */
 	public static function is_live(){
-		return get_option('em_'. static::$gateway . "_mode" ) === 'live';
+		return static::is_live_mode();
+	}
+	
+	/**
+	 * If gateway supports sandbox/live mode, returns true if in live/production mode. Returns a boolean value or an array if in limited test mode.
+	 *
+	 * @return bool|array
+	 */
+	public static function is_test_mode( $check_limited = true ){
+		if( static::$force_mode ) return static::$force_mode === 'test'; // forced mode is set, return whatever it says
+		$is_test_mode = get_option('em_'. static::$gateway . "_mode" ) !== 'live';
+		if( $is_test_mode && $check_limited && get_option('em_'. static::$gateway . '_test_limited') ) {
+			// get all the checks and see if any are truthy, meaning limited mode is on
+			$check = array(
+				'ips' => explode( ',', str_replace(' ', '', get_option('em_'. static::$gateway . '_test_ips')) ),
+				'users' => explode( ',', str_replace(' ', '', get_option('em_'. static::$gateway . '_test_users')) ),
+				'events' => explode( ',', str_replace(' ', '', get_option('em_'. static::$gateway . '_test_events')) ),
+			);
+			$is_test_mode = static::check_conditions( $check );
+		}
+		return $is_test_mode;
+	}
+	
+	public static function is_live_mode(  $check_limited = true  ){
+		if( static::$force_mode ) return static::$force_mode === 'live'; // forced mode is set, return whatever it says
+		// check if pure live mode, otherwise if limited test mode is active but not applicable in this instance
+		return get_option('em_'. static::$gateway . "_mode" ) === 'live' || !self::is_test_mode( $check_limited );
+	}
+	
+	public static function is_mode( $mode ){
+		// get the mode, then test against $mode
+		return static::get_mode() === $mode;
+	}
+	
+	public static function get_mode(){
+		$current_mode = get_option('em_'. static::$gateway . "_mode" ) === 'live' ? 'live' : 'test';
+		if ( $current_mode === 'test' && static::$supports_test_mode ) {
+			if ( get_option('em_'. static::$gateway . '_test_limited') ) {
+				$ips = str_replace(' ', '', get_option('em_'. static::$gateway . '_test_ips'));
+				$users = str_replace(' ', '', get_option('em_'. static::$gateway . '_test_users'));
+				$events = str_replace(' ', '', get_option('em_'. static::$gateway . '_test_events'));
+				if( !empty($ips) || !empty($users) || !empty($events) ) {
+					$current_mode = 'limited';
+				}
+			}
+		}
+		return $current_mode;
+	}
+	
+	public static function force_mode( $object ){
+		$force_mode = static::$force_mode;
+		if ( $object instanceof EM_Booking ) {
+			$EM_Booking = $object;
+			static::$force_mode = empty($EM_Booking->booking_meta['test']) ? 'live' : 'test';
+		} elseif ( $object === 'live' || $object === 'test' ) {
+			static::$force_mode = $object;
+		}
+		return $force_mode;
 	}
 	
 	/* ------------------------------------------------------------------------------------------------------------------------------------------------------

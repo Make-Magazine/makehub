@@ -1,15 +1,15 @@
 <?php
 /*
 Plugin Name: Events Manager I/O
-Version: 1.1.1
+Version: 1.2
 Plugin URI: http://wp-events-plugin.com
-Description: Add-On for for importing and exporting events from various soources for the Events Manager WordPress plugin.
+Description: Add-On for importing and exporting events from various soources for the Events Manager WordPress plugin.
 Author: Pixelite
 Author URI: http://pixelite.com
 */
 
 /*
-Copyright (c) 2020, Pixelite SL
+Copyright (c) 2023, Pixelite SL
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
 // Setting constants
-define('EMIO_VERSION', '1.1.1'); //self expanatory
+define('EMIO_VERSION', '1.2'); //self expanatory
 define('EMIO_API_VERSION', '1.0'); //the API of our classes may have breaking changes and this is used to check against formats and their declared support for compatibility
 define('EMIO_DIR', dirname( __FILE__ )); //an absolute path to this directory
 define('EMIO_DIR_URI', trailingslashit(plugins_url('',__FILE__))); //an absolute path to this directory

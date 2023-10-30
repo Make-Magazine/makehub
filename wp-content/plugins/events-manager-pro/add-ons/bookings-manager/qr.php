@@ -1,13 +1,12 @@
 <?php
 namespace EM_Pro;
-use QRCode;
+use QRCode, EM\Feature;
 
 class QR {
 	
 	public static function init() {
-		if (get_option('dbem_bookings_qr', 1)) {
-			add_filter('em_ticket_booking_output_placeholder', '\EM_Pro\QR::em_ticket_booking_output_placeholder', 10, 3);
-		}
+		Feature::register('qr');
+		add_filter('em_ticket_booking_output_placeholder', '\EM_Pro\QR::em_ticket_booking_output_placeholder', 10, 3);
 		// rule flushes are handled by EM itself, we can just add our endpoints
 		if (!empty($_REQUEST[static::get_endpoint()])) {
 			static::deliver_qr();

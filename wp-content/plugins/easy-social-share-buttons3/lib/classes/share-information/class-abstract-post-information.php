@@ -159,7 +159,7 @@ abstract class ESSB_Post_Information {
         
         $url = ESSB_Site_Share_Information::attach_affiliate_to_url($url);
         
-        return array ( 
+        $r = array ( 
             'url' => $url, 
             'title' => $this->prepare_text_value($this->title), 
             'image' => $this->image, 
@@ -177,8 +177,20 @@ abstract class ESSB_Post_Information {
             'short_url' => '', 
             'pinterest_image' => $this->pinterest_image, 
             'pinterest_desc' => $this->prepare_text_value($this->pinterest_message), 
-            'pinterest_id' => $this->pinterest_id 
+            'pinterest_id' => $this->pinterest_id,
+            // Added 8.2
+            'single_post_id' => $this->post_id
         );
+        
+        /**
+         * @since 8.2 
+         * Additional filter for the single post sharing information
+         */
+        if (has_filter("essb_single_post_compile_share_object")) {
+            $r = apply_filters("essb_single_post_compile_share_object", $r);
+        }
+        
+        return $r;
     }
 
 
@@ -234,6 +246,11 @@ abstract class ESSB_Post_Information {
             
             $title = trim( essb_core_convert_smart_quotes( htmlspecialchars_decode($title)));;
         }
+        
+        /**
+         * @since 9.2 Support for additional variables
+         */
+        $title = $this->apply_additional_variables($title);
         
         return $title;
     }
@@ -530,10 +547,20 @@ abstract class ESSB_Post_Information {
      * @return string
      */
     public function opengraph_value($param = '') {
-        if ($param == 'title') {            
+        if ($param == 'title') {  
+            
+            if (has_filter('essb_pre_get_opengraph_title')) {
+                $this->opengraph_title = trim( apply_filters( 'essb_pre_get_opengraph_title', $this->opengraph_title ) );
+            }
+            
             return $this->prepare_text_value($this->opengraph_title);
         }
         else if ($param == 'description') {
+
+            if (has_filter('essb_pre_get_opengraph_description')) {
+                $this->opengraph_description = trim( apply_filters( 'essb_pre_get_opengraph_description', $this->opengraph_description ) );
+            }
+           
             return $this->prepare_text_value($this->opengraph_description);
         }
         else if ($param == 'image') {
@@ -553,9 +580,18 @@ abstract class ESSB_Post_Information {
      */
     public function twittercard_value($param = '') {
         if ($param == 'title') {
+            if (has_filter('essb_pre_get_twitter_card_title')) {
+                $this->twitter_card_title = trim( apply_filters( 'essb_pre_get_twitter_card_title', $this->twitter_card_title ) );
+            }
+            
             return $this->prepare_text_value($this->twitter_card_title);
         }
         else if ($param == 'description') {
+            
+            if (has_filter('essb_pre_get_twitter_card_description')) {
+                $this->twitter_card_description = trim( apply_filters( 'essb_pre_get_twitter_card_description', $this->twitter_card_description ) );
+            }
+            
             return $this->prepare_text_value($this->twitter_card_description);
         }
         else if ($param == 'image') {
@@ -698,5 +734,16 @@ abstract class ESSB_Post_Information {
      */
     public function wpseo_detected () {
         return defined('WPSEO_VERSION') ? true: false;
+    }
+    
+    public function apply_additional_variables($text = '') {
+        
+        $text = str_replace('%currentyear%', date("Y"), $text);
+        
+        if (has_filter("essb_single_post_share_information_variables")) {
+            $text = apply_filters("essb_single_post_share_information_variables", $text);
+        }
+        
+        return $text;
     }
 }

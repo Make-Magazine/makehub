@@ -103,6 +103,14 @@ class EMIO_Import_Admin extends EMIO_Item_Admin {
 				$EMIO_Import->meta['fuzzy_location']['placeholder_format'] = wp_kses_data($_POST['fuzzy_location_placeholder_format']);
 			}
 		}
+		//save whether to add new taxonomies
+		$taxonomies = EM_Object::get_taxonomies();
+		foreach( $taxonomies as $tax_name => $tax ){
+			if( isset($_POST['emio_taxonomies_new_'.$tax_name]) ) {
+				$EMIO_Import->meta['taxonomies_new'][ $tax['name'] ] = $_POST[ 'emio_taxonomies_new_' . $tax_name ] == 1 && current_user_can( 'edit_event_categories' );
+			}
+			// don't unset so admins could enable this setting for an import
+		}
 	}
 	
 	
@@ -176,6 +184,7 @@ class EMIO_Import_Admin extends EMIO_Item_Admin {
 		//filter by or import into category
 		if( empty($EMIO_Import->meta['taxonomies']) ) $EMIO_Import->meta['taxonomies'] = array();
 		static::field_taxonomies( $EMIO_Import, 'emio_taxonomies_', $EMIO_Import->meta['taxonomies'], __('Add Import %s', 'events-manager-io'), __('Imported items will be assigned these selected %s upon import.', 'events-manager-io'));
+		static::field_taxonomies_new( $EMIO_Import, 'emio_taxonomies_new_', $EMIO_Import->meta['taxonomies'], __('Create New %s', 'events-manager-io'), __('If an imported item contains new %1$s, they will be created if enabled.', 'events-manager-io'));
 		
 		do_action('emio_import_admin_settings_after_actions', $EMIO_Import);
 		do_action('emio_import_admin_settings_after_actions_'.$EMIO_Import::$format, $EMIO_Import);
@@ -206,5 +215,33 @@ class EMIO_Import_Admin extends EMIO_Item_Admin {
 		do_action('emio_import_admin_settings_after_filters_'.$EMIO_Import::$format, $EMIO_Import);
 		
 		/* END  Filter Options */
+	}
+	
+	/**
+	 * @param EMIO_Item $EMIO_Item
+	 * @param string $id
+	 * @param array $values
+	 * @param string $label
+	 * @param string $description
+	 */
+	public static function field_taxonomies_new($EMIO_Item, $id = 'emio_taxonomies_', $values = array(), $label = '', $description = '' ){
+		$taxonomies = EM_Object::get_taxonomies();
+		foreach( $taxonomies as $tax_name => $tax ){
+			$taxonomy = get_taxonomy($tax['name']);
+			$classes = array();
+			if( in_array(EM_POST_TYPE_EVENT, $tax['context']) ) $classes[] = 'event-option';
+			if( in_array(EM_POST_TYPE_LOCATION, $tax['context']) ) $classes[] = 'location-option';
+			?>
+			<?php if( user_can($EMIO_Item->user_id, 'edit_event_categories') || current_user_can('edit_event_categories') ): ?>
+				<?php emio_input_radio_binary(sprintf($label, $taxonomy->labels->name), $id.$tax_name, !empty($EMIO_Item->meta['taxonomies_new'][$tax['name']]), sprintf($description, $taxonomy->labels->name)); ?>
+			<?php else: ?>
+				<?php emio_input_radio_binary(sprintf($label, $taxonomy->labels->name), $id.$tax_name, !empty($EMIO_Item->meta['taxonomies_new'][$tax['name']]), sprintf($description, $taxonomy->labels->name) . '<br>' . sprintf(esc_html__('You must have permissions to create or edit %s for this option to be availble to you.', 'events-manager'), $taxonomy->labels->name), '', '' , true); ?>
+			<?php endif; ?>
+			<?php
+			do_action('emio_item_admin_after_taxonomy_new'. $tax['name'], $EMIO_Item);
+			do_action('emio_item_admin_after_taxonomy_new_'. $tax['name'] .'_'.$EMIO_Item::$format, $EMIO_Item);
+		}
+		do_action('emio_item_admin_after_taxonomies_new', $EMIO_Item);
+		do_action('emio_item_admin_after_taxonomies_new_'.$EMIO_Item::$format, $EMIO_Item);
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityEdit\Foundation\ThirdParty\TrustedLogin;
@@ -18,7 +18,7 @@ use RuntimeException;
  * Originally written for use with wpSearch
  *
  * Usage:
- * $log = new Katzgrau\KLogger\Logger('/var/log/', GravityKit\GravityEdit\Psr\Log\LogLevel::INFO);
+ * $log = new Katzgrau\KLogger\Logger('/var/log/', GravityKit\GravityEdit\Foundation\ThirdParty\Psr\Log\LogLevel::INFO);
  * $log->info('Returned a million search results'); //Prints to the log file
  * $log->error('Oh dear.'); //Prints to the log file
  * $log->debug('x = 5'); //Prints nothing due to current severity threshhold

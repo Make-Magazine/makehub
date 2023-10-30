@@ -1,7 +1,7 @@
 === GravityImport ===
 Tags: gravitykit, gravityview, gravity forms, import
 Requires at least: 5.0
-Tested up to: 6.1
+Tested up to: 6.3
 Stable tag: trunk
 Contributors: The GravityKit Team
 License: GPL 3 or higher
@@ -11,7 +11,7 @@ The best way to import entries into Gravity Forms. Proud to be a Gravity Forms C
 
 == Description ==
 
-Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.com](https://www.gravitykit.com/extensions/gravity-forms-entry-importer/).
+Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.com](https://www.gravitykit.com/products/gravity-forms-entry-importer/).
 
 == Installation ==
 
@@ -20,6 +20,21 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.c
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.4.9 on September 7, 2023 =
+
+* Fixed: Auto-mapping of the User IP field not working
+* Improved: Support for RTL languages
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.2.2
+
+= 2.4.8 on July 12, 2023 =
+
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.1.1
+
+= 2.4.7 on May 3, 2023 =
+
+* Fixed: Incompatibility with some plugins/themes that use Laravel components
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.0.12
 
 = 2.4.6 on March 9, 2023 =
 
@@ -103,7 +118,7 @@ __Developer Updates:__
 
 = 2.2.5 on October 1, 2021 =
 
-* Fixed: Import would fail if [GravityExport](https://www.gravitykit.com/extensions/gravityexport/) is installed
+* Fixed: Import would fail if [GravityExport](https://www.gravitykit.com/products/gravityexport/) is installed
 
 = 2.2.4 on August 31, 2021 =
 
@@ -143,7 +158,7 @@ __Developer Updates:__
 = 2.1.9 on July 28, 2020 =
 
 * Added support for Gravity Forms 2.5
-* Updated: Polish translation (thanks, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+* Updated: Polish translation (thanks, Dariusz!)
 
 = 2.1.8 on May 5, 2020 =
 
@@ -217,7 +232,7 @@ __Developer Updates:__
 * Fixed: Importing into sites when not using "pretty permalinks"
 * Fixed: Fix sequential field ID assignment bug
 * Fixed: Conflict with the WishList Member Debug Mode
-* Updated: Polish translation (thanks, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+* Updated: Polish translation (thanks, Dariusz!)
 
 = 2.1 on September 19, 2019 =
 
@@ -231,7 +246,7 @@ __Developer Updates:__
 * Fixed: Sub-labels for new Address fields were not being properly set
 * Fixed: Skip completely empty rows
 * Fixed: Import stats are now localized properly
-* Updated: 100% Polish translation! (thank you, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+* Updated: 100% Polish translation! (thank you, Dariusz!)
 
 __Developer Updates:__
 
@@ -277,7 +292,7 @@ __Developer Updates:__
 
 = 2.0.1 on July 31, 2019 =
 
-* Added: Export List fields as JSON, which makes it much easier to import. [Here's how!](https://docs.gravityview.co/article/615-exporting-and-importing-list-fields)
+* Added: Export List fields as JSON, which makes it much easier to import. [Here's how!](https://docs.gravitykit.com/article/615-exporting-and-importing-list-fields)
 * Improved: Compact display makes it easier to preview entries at a glance
 * Improved: Error reporting
     - Make it easy to contact support when plugin errors occur
@@ -301,7 +316,7 @@ __Developer Updates:__
 * Renamed v1 filters that weren't migrated:
     * `gravityview/import/process/row/error` is now `gravityview-importer/add-entry/error`
     * `gravityview-importer/invalid-row` is now `gravityview/import/process/row/skipped`
-* A doc is coming soon with v1 to v2 filter and action details. If you have any questions, [ask support](mailto:support@gravityview.co).
+* A doc is coming soon with v1 to v2 filter and action details. If you have any questions, [ask support](mailto:support@gravitykit.com).
 
 = 2.0 on July 24, 2019 =
 
@@ -309,15 +324,15 @@ We have been working on this update to the Entry Importer for over 8 months, and
 
 **A powerful new version - tons of new functionality!**
 
-- [Create new fields when importing to existing forms](https://docs.gravityview.co/article/604-add-new-field-during-import)
-- [Create a new form from a CSV during import](https://docs.gravityview.co/article/605-create-new-gravity-form-csv)
+- [Create new fields when importing to existing forms](https://docs.gravitykit.com/article/604-add-new-field-during-import)
+- [Create a new form from a CSV during import](https://docs.gravitykit.com/article/605-create-new-gravity-form-csv)
 - Supports importing:
-    - [Multi-Column List fields](https://docs.gravityview.co/article/612-importing-list-fields) (yep, this works great!)
+    - [Multi-Column List fields](https://docs.gravitykit.com/article/612-importing-list-fields) (yep, this works great!)
     - Signature fields
     - Quiz, Poll, and Survey fields
 - And so much more!
 
-[Read all the docs here](https://docs.gravityview.co/category/255-gravity-forms-importer)
+[Read all the docs here](https://docs.gravitykit.com/category/255-gravity-forms-importer)
 
 _Special thanks to Vlad and Gennady for their hard work on this release!_
 
@@ -329,7 +344,7 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 
 * Fixed: Issue with incomplete or outdated information being passed to Gravity Forms hooks. This fixes an issue with Gravity Flow automation triggers. (Thanks, Steve Henty with Gravity Flow!)
 * Fixed: Issue uploading CSV files that contain non-Latin characters in the filename
-* We're nearly done with Import Entries Version 2.0 - a complete re-write! Enable beta updates to get early access. [Here's how to enable beta updates!](https://docs.gravityview.co/article/571-how)
+* We're nearly done with Import Entries Version 2.0 - a complete re-write! Enable beta updates to get early access. [Here's how to enable beta updates!](https://docs.gravitykit.com/article/571-how)
 
 = 1.3.5.1 on October 15, 2018 =
 
@@ -342,8 +357,8 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * Fixed: Gravity Forms Zapier Add-On feeds were not appearing in the Feeds list
 * Fixed: Fatal error on plugin page if the server doesn't support `iconv()`
 * Updated translations - thank you, translators!
-    - Polish translated by [@dariusz.zielonka](https://www.transifex.com/user/profile/dariusz.zielonka/)
-    - Russian translated by [@awsswa59](https://www.transifex.com/user/profile/awsswa59/)
+    - Polish translated by @dariusz.zielonka
+    - Russian translated by @awsswa59
 * We skipped Version 1.3.4, you're not imagining things
 
 = 1.3.3 on January 30, 2017 =
@@ -398,7 +413,7 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * Fixed: Javascript conflict with other Gravity Forms Addon feed configuration screens
 
 = 1.1 on June 27 =
-* Added: Update existing entry details by specifying an Entry ID field. [Read more](http://docs.gravityview.co/article/257-formatting-guide-csv-import#field-pre-defined-text#field-entry-id)
+* Added: Update existing entry details by specifying an Entry ID field. [Read more](https://docs.gravitykit.com/article/257-formatting-guide-csv-import#field-pre-defined-text#field-entry-id)
 * Fixed: Issue imported fields with `0` or `0.00` values
 * Fixed: Issue where imports fail because of the "mapped fields were empty" error
 * Fixed: Date Field formats respect field "Date Format" settings
@@ -408,7 +423,7 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * Added: Developer actions `gravityview-importer/add-entry/added` and `gravityview-importer/add-entry/error` that are triggered after each entry is imported
 * Fixed: Duplicate "Use Default Values" configuration option
 * Improved file format handling to use the blog encoding as the "To" format
-* Updated the [formatting guide for Multi Select fields](http://docs.gravityview.co/article/257-formatting-guide-csv-import#field-pre-defined-text)
+* Updated the [formatting guide for Multi Select fields](https://docs.gravitykit.com/article/257-formatting-guide-csv-import#field-pre-defined-text)
 * Tweak: Only show Admin settings when Update Entry & Update Post fields are mapped
 * Tweak: Fixed incorrect existing entry count
 * Fixed: If not using PHP 5.3 or higher, show a notice
@@ -443,8 +458,8 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * Fixed: Show all import-blocking errors for each row in the report, not just one per row
 * Fixed: Show better phone formatting error
 * Updated translations:
-    - Bengali (thanks [@tareqhi](https://www.transifex.com/accounts/profile/tareqhi/)!)
-    - Hungarian (thanks [@Darqebus](https://www.transifex.com/accounts/profile/Darqebus/)!)
+    - Bengali (thanks @tareqhi)
+    - Hungarian (thanks @Darqebus)
 
 = 1.0.2 =
 * Fixed: Fatal error when handling import in some installations
@@ -452,7 +467,7 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 * Updated: Translations
 
 = 1.0.1 Beta =
-* Allow for changing character set of imported file ([read how](http://docs.gravityview.co/article/258-exporting-a-csv-from-excel#charset))
+* Allow for changing character set of imported file ([read how](https://docs.gravitykit.com/article/258-exporting-a-csv-from-excel#charset))
 * Fixed PHP notices and a fatal error
 * Don't show "Download File with Errors" button when there are no added entries
 * Fix support for TSV files, allow Text files
@@ -464,4 +479,4 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 == Upgrade Notice ==
 
 
-= 1681311166-4249 =
+= 1698694699-4249 =

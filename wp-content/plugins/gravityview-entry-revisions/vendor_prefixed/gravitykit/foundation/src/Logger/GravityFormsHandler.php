@@ -2,14 +2,14 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
 namespace GravityKit\GravityRevisions\Foundation\Logger;
 
-use GravityKit\GravityRevisions\Monolog\Logger as MonologLogger;
-use GravityKit\GravityRevisions\Monolog\Handler\AbstractProcessingHandler;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Logger as MonologLogger;
+use GravityKit\GravityRevisions\Foundation\ThirdParty\Monolog\Handler\AbstractProcessingHandler;
 use GFForms;
 use GFLogging;
 use GFAddOn;

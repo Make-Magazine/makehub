@@ -234,7 +234,7 @@ class Trigger {
 					foreach( $object as $item ){
 						$results[$i.'_'.$action_type][] = $action::handle( $item, $action_data, $runtime_data );
 					}
-				}else{
+				}elseif( class_exists($action) ){
 					$results[$i.'_'.$action_type] = $action::handle( $object, $action_data, $runtime_data );
 				}
 				$i++;

@@ -161,9 +161,8 @@ class MpElementor {
           <div class="elementor-column elementor-col-100 elementor-top-column elementor-element" data-element_type="column">
             <div class="elementor-widget-wrap elementor-element-populated">
               <div class="elementor-element elementor-widget elementor-widget-text-editor" data-element_type="widget" data-widget_type="text-editor.default">
-                  <div class="elementor-widget-container">
-                    <?php echo $output; ?>
-                  </div>
+                <div class="elementor-widget-container">
+                  <?php echo $output; ?>
                 </div>
               </div>
             </div>

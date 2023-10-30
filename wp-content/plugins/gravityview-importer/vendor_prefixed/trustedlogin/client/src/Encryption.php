@@ -7,7 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityImport\Foundation\ThirdParty\TrustedLogin;
@@ -47,7 +47,7 @@ final class Encryption {
 	/**
 	 * @var string Endpoint path to Vendor public key.
 	 */
-	private $vendor_public_key_endpoint = 'wp-json/trustedlogin/v1/public_key';
+	private $vendor_public_key_endpoint = '/trustedlogin/v1/public_key';
 
 	/**
 	 * Encryption constructor.
@@ -75,6 +75,35 @@ final class Encryption {
 			'tl_' . $this->config->ns() . '_vendor_public_key',
 			$this->config
 		);
+	}
+
+	/**
+	 * Returns true if the site supports encryption using the required Sodium functions.
+	 *
+	 * These functions are available by extension in PHP 7.0 & 7.1, built-in to PHP 7.2+ and WordPress 5.2+.
+	 *
+	 * @since 1.4.0
+	 *
+	 * @return bool True: supports encryption. False: does not support encryption.
+	 */
+	static public function meets_requirements() {
+
+		$required_functions = array(
+			'random_bytes',
+			'sodium_hex2bin',
+			'sodium_crypto_box',
+			'sodium_crypto_secretbox',
+			'sodium_crypto_generichash',
+			'sodium_crypto_box_keypair_from_secretkey_and_publickey',
+		);
+
+		foreach ( $required_functions as $function ) {
+			if ( ! function_exists( $function ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -118,14 +147,14 @@ final class Encryption {
 		}
 
 		if ( ! function_exists( 'openssl_random_pseudo_bytes' ) ) {
-			return new WP_Error( 'generate_hash_failed', 'Could not generate a secure hash with random_bytes or openssl.' );
+			return new \WP_Error( 'generate_hash_failed', 'Could not generate a secure hash with random_bytes or openssl.' );
 		}
 
 		$crypto_strong = false;
 		$hash          = openssl_random_pseudo_bytes( $byte_length, $crypto_strong );
 
 		if ( ! $crypto_strong ) {
-			return new WP_Error( 'openssl_not_strong_crypto', 'Site could not generate a secure hash with OpenSSL.' );
+			return new \WP_Error( 'openssl_not_strong_crypto', 'Site could not generate a secure hash with OpenSSL.' );
 		}
 
 		return $hash;
@@ -139,29 +168,29 @@ final class Encryption {
 	static public function hash( $string, $length = 16 ) {
 
 		if ( ! function_exists( 'sodium_crypto_generichash' ) ) {
-			return new WP_Error( 'sodium_crypto_generichash_not_available', 'sodium_crypto_generichash not available' );
+			return new \WP_Error( 'sodium_crypto_generichash_not_available', 'sodium_crypto_generichash not available' );
 		}
 
 		try {
 			$hash_bin = sodium_crypto_generichash( $string, '', (int) $length );
 			$hash     = sodium_bin2hex( $hash_bin );
 		} catch ( \TypeError $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_generichash_typeerror',
 				sprintf( 'Error while generating hash: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
 		} catch ( \Error $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_generichash_error',
 				sprintf( 'Error while generating hash: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
 		} catch ( \SodiumException $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_generichash_sodium',
 				sprintf( 'Error while generating hash: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
 		} catch ( \Exception $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_generichash',
 				sprintf( 'Error while generating hash: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
@@ -216,6 +245,35 @@ final class Encryption {
 	}
 
 	/**
+	 * Returns the URL for the vendor public key endpoint.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return string URL for the vendor public key endpoint, after being filtered.
+	 */
+	public function get_remote_encryption_key_url() {
+
+		$vendor_website = $this->config->get_setting( 'vendor/website', '' );
+
+		/**
+		 * @see https://docs.trustedlogin.com/Client/hooks#trustedloginnamespacevendorpublic_keywebsite
+		 * @since 1.3.2
+		 * @param string $public_key_website Root URL of the website from where the vendor's public key is fetched. May be different than the vendor/website configuration setting.
+		 */
+		$public_key_website = apply_filters( 'trustedlogin/' . $this->config->ns() . '/vendor/public_key/website', $vendor_website );
+
+		/**
+		 * @see https://docs.trustedlogin.com/Client/hooks#trustedloginnamespacevendorpublic_keyendpoint
+		 * @param string $key_endpoint Endpoint path on vendor (software vendor's) site.
+		 */
+		$key_endpoint = apply_filters( 'trustedlogin/' . $this->config->ns() . '/vendor/public_key/endpoint', $this->vendor_public_key_endpoint );
+
+		$public_key_url = add_query_arg( array( 'rest_route' => $key_endpoint ), trailingslashit( $public_key_website ) );
+
+		return $public_key_url;
+	}
+
+	/**
 	 * Fetches the Public Key from the `TrustedLogin-vendor` plugin on support website.
 	 *
 	 * @since 1.0.0
@@ -223,21 +281,6 @@ final class Encryption {
 	 * @return string|WP_Error  If successful, will return the Public Key string. Otherwise WP_Error on failure.
 	 */
 	private function get_remote_encryption_key() {
-
-		$vendor_website = $this->config->get_setting( 'vendor/website', '' );
-
-		/**
-		 * @param string $public_key_website Root URL of the website from where the vendor's public key is fetched. May be different than the vendor/website configuration setting.
-		 * @since 1.3.2
-		 */
-		$public_key_website = apply_filters( 'trustedlogin/' . $this->config->ns() . '/vendor/public_key/website', $vendor_website );
-
-		/**
-		 * @param string $key_endpoint Endpoint path on vendor (software vendor's) site
-		 */
-		$public_key_endpoint = apply_filters( 'trustedlogin/' . $this->config->ns() . '/vendor/public_key/endpoint', $this->vendor_public_key_endpoint );
-
-		$url = trailingslashit( $public_key_website ) . $public_key_endpoint;
 
 		$headers = array(
 			'Accept'       => 'application/json',
@@ -251,6 +294,8 @@ final class Encryption {
 			'headers'     => $headers
 		);
 
+		$url = $this->get_remote_encryption_key_url();
+
 		$response = wp_remote_request( $url, $request_options );
 
 		$response_json = $this->remote->handle_response( $response, array( 'publicKey' ) );
@@ -258,7 +303,7 @@ final class Encryption {
 		if ( is_wp_error( $response_json ) ) {
 
 			if ( 'not_found' == $response_json->get_error_code() ){
-				return new WP_Error( 'not_found', __( 'Encryption key could not be fetched, Vendor site returned 404.', 'gk-gravityimport' ) );
+				return new \WP_Error( 'not_found', __( 'Encryption key could not be fetched, Vendor site returned 404.', 'gk-gravityimport' ) );
 			}
 
 			return $response_json;
@@ -283,11 +328,11 @@ final class Encryption {
 	public function encrypt( $data, $nonce, $alice_secret_key ) {
 
 		if ( empty( $data ) ) {
-			return new WP_Error( 'no_data', 'No data provided.' );
+			return new \WP_Error( 'no_data', 'No data provided.' );
 		}
 
 		if ( ! function_exists( 'sodium_crypto_secretbox' ) ) {
-			return new WP_Error( 'sodium_crypto_secretbox_not_available', 'lib_sodium not available' );
+			return new \WP_Error( 'sodium_crypto_secretbox_not_available', 'lib_sodium not available' );
 		}
 
 		$bob_public_key = $this->get_vendor_public_key();
@@ -302,17 +347,17 @@ final class Encryption {
 			$encrypted       = sodium_crypto_box( $data, $nonce, $alice_to_bob_kp );
 
 		} catch ( \SodiumException $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_cryptobox',
 				sprintf( 'Error while encrypting the envelope: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
 		} catch ( \RangeException $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_cryptobox_rangeexception',
 				sprintf( 'Error while encrypting the envelope: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
 		} catch ( \TypeError $e ) {
-			return new WP_Error(
+			return new \WP_Error(
 				'encryption_failed_cryptobox_typeerror',
 				sprintf( 'Error while encrypting the envelope: %s (%s)', $e->getMessage(), $e->getCode() )
 			);
@@ -331,13 +376,13 @@ final class Encryption {
 	public function get_nonce() {
 
 		if ( ! function_exists( 'random_bytes' ) ) {
-			return new WP_Error( 'missing_function', 'No random_bytes function installed.' );
+			return new \WP_Error( 'missing_function', 'No random_bytes function installed.' );
 		}
 
 		try {
 			$nonce = random_bytes( SODIUM_CRYPTO_SECRETBOX_NONCEBYTES );
 		} catch ( \Exception $e ) {
-			return new WP_Error( 'encryption_failed_randombytes', sprintf( 'Unable to generate encryption nonce: %s (%s)', $e->getMessage(), $e->getCode() ) );
+			return new \WP_Error( 'encryption_failed_randombytes', sprintf( 'Unable to generate encryption nonce: %s (%s)', $e->getMessage(), $e->getCode() ) );
 		}
 
 		return $nonce;
@@ -361,7 +406,7 @@ final class Encryption {
 	public function generate_keys() {
 
 		if ( ! function_exists( 'sodium_crypto_box_keypair' ) ) {
-			return new WP_Error( 'sodium_crypto_secretbox_not_available', 'lib_sodium not available' );
+			return new \WP_Error( 'sodium_crypto_secretbox_not_available', 'lib_sodium not available' );
 		}
 
 		// In our build Alice = Client & Bob = Vendor.

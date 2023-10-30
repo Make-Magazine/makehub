@@ -4,11 +4,11 @@ Plugin Name: Vimeography Theme: Hero
 Plugin URI: https://vimeography.com/themes
 Theme Name: Hero
 Theme URI:  https://vimeography.com/themes/hero
-Version: 2.0.6
+Version: 2.1.1
 Description: Hero displays your videos in a modern gallery layout for your portfolio or membership site.
 Author: Dave Kiss
 Author URI: https://vimeography.com
-Copyright: 2018 Dave Kiss
+Copyright: 2020 Dave Kiss
 */
 
 if ( ! class_exists('Vimeography_Themes_Hero') ) {
@@ -24,7 +24,7 @@ if ( ! class_exists('Vimeography_Themes_Hero') ) {
      *
      * @var string
      */
-    public $version = '2.0.6';
+    public $version = '2.1.1';
 
 
     /**

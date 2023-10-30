@@ -13,7 +13,50 @@ class Gateways_Admin{
 		//Gateways and user fields
 		add_action('admin_init', array(get_called_class(), 'customer_fields_admin_actions'),9); //before bookings
 		add_action('emp_forms_admin_page', array(get_called_class(), 'customer_fields_admin'),30);
+		add_action('wp_ajax_em_toggle_gateway_mode', array( static::class, 'ajax_toggle_mode'),30);
 		static::legacy_check();
+		
+		if ( !empty($_REQUEST['page']) && $_REQUEST['page'] === 'events-manager-gateways' ) {
+			add_action('admin_enqueue_scripts', array( static::class, 'admin_enqueue') );
+		}
+	}
+	
+	public static function admin_enqueue() {
+		wp_enqueue_script('events-manager-gateway-admin', plugins_url('gateways-admin.js',__FILE__), array(), EMP_VERSION);
+		wp_enqueue_style('events-manager-gateway-admin', plugins_url('gateways-admin.css',__FILE__), array(), EMP_VERSION);
+	}
+	
+	public static function ajax_toggle_mode(){
+		$result = array('success' => false);
+		if( !empty($_REQUEST['gateway']) && !empty($_REQUEST['nonce']) && wp_verify_nonce($_REQUEST['nonce'], 'em_gateway_toggle_'.$_REQUEST['gateway']) ) {
+			// get the gateway and status
+			$Gateway = Gateways::get($_REQUEST['gateway']);
+			if( class_exists($Gateway) ) {
+				$result['status'] = get_option( "em_{$Gateway::$gateway}_mode" ) === 'live';
+				if ( $result['status'] ) {
+					$result['success'] = update_option( "em_{$Gateway::$gateway}_mode", 'sandbox' );
+				} else {
+					$result['success'] = update_option( "em_{$Gateway::$gateway}_mode", 'live' );
+				}
+				$result['status'] = get_option( "em_{$Gateway::$gateway}_mode" ) === 'live';
+				if( !$result['success'] ) {
+					$result['message'] = 'Unknown error trying to update option, please contact a site administrator about this issue.';
+				}
+				$live_status = $result['status'] ? 'live' : 'test';
+				if ( $Gateway::$supports_test_mode ) {
+					if ( $live_status === 'test' && get_option('em_'. $Gateway::$gateway . "_test_limited") ) {
+						$live_status = 'limited';
+					}
+				}
+				$result['mode'] = $live_status;
+			} else {
+				$result['message'] = 'Gateway not found.';
+			}
+		}else{
+			$result['message'] = 'Missing gateway or invalid nonce data.';
+		}
+		echo json_encode($result);
+		die();
 	}
 	
 	public static function legacy_check(){
@@ -97,24 +140,30 @@ class Gateways_Admin{
 					return; // break; so we don't show the list below
 			}
 		}
-		$messages = array();
-		$messages[1] = __('Gateway activated.', 'em-pro');
-		$messages[2] = __('Gateway not activated.', 'em-pro');
-		$messages[3] = __('Gateway deactivated.', 'em-pro');
-		$messages[4] = __('Gateway not deactivated.', 'em-pro');
-		$messages[5] = __('Gateway activation toggled.', 'em-pro');
 		?>
 		<div class='wrap'>
 			<h1><?php _e('Edit Gateways','em-pro'); ?></h1>
-			<?php
-			if ( isset($_GET['msg']) && !empty($messages[$_GET['msg']]) ) echo '<div id="message" class="updated fade"><p>' . $messages[$_GET['msg']] . '</p></div>';
-			?>
+			<?php if ( get_option('dbem_gateway_use_buttons') && !Gateways::buttons_mode_possible() ): ?>
+				<div class="gateway-notice gateway-notice-info has-icon">
+					<span class="em-icon em-icon-info"></span>
+					<p>
+						<?php
+							$settings_page = sprintf( '<a href="'.EM_ADMIN_URL.'&amp;page=events-manager-options#bookings+gateway-options">%s</a>', __('Settings', 'events-manager') );
+							echo sprintf( esc_html__('You have enabled %1$s in your %2$s page, however you have enabled a gateway that is not button-enabled. %1$s will be disabled whilst these gateways remain active.', 'em-pro'), esc_html__('Quick Pay Buttons'), $settings_page );
+						?>
+					</p>
+				</div>
+			<?php endif; ?>
 			<form method="post" action="" id="posts-filter">
 				<div class="tablenav">
 					<div class="alignleft actions">
 						<select name="action">
 							<option selected="selected" value=""><?php _e('Bulk Actions'); ?></option>
 							<option value="toggle"><?php _e('Toggle activation'); ?></option>
+							<option value="activate"><?php _e('Activate'); ?></option>
+							<option value="deactivate"><?php _e('Deactivate'); ?></option>
+							<option value="test-mode"><?php _e('Enable Test Mode'); ?></option>
+							<option value="live-mode"><?php _e('Enable Live Mode'); ?></option>
 						</select>
 						<input type="submit" class="button-secondary action" value="<?php _e('Apply','em-pro'); ?>">		
 					</div>		
@@ -127,6 +176,7 @@ class Gateways_Admin{
 					$columns = array(	
 						"name" => __('Gateway Name','em-pro'),
 						"active" =>	__('Active','em-pro'),
+						'test' => __('Mode', 'em-pro'),
 						"transactions" => __('Transactions','em-pro')
 					);
 					$columns = apply_filters('em_gateways_columns', $columns);
@@ -201,6 +251,18 @@ class Gateways_Admin{
 											}
 										?>
 									</td>
+									<td class="column-test">
+										<?php
+											$live_status = $Gateway::get_mode();
+											if( $live_status === 'live' ) {
+												echo '<span class="gateway-mode gateway-mode-live" data-mode="' . $live_status . '">' . esc_html__( 'Live Mode', 'em-pro' ) . '</span> ';
+											} elseif( $live_status === 'limited' ) {
+												echo '<span class="gateway-mode gateway-mode-test" data-mode="' . $live_status . '">' . esc_html__( 'Limited Test Mode', 'em-pro' ) . '</span> ';
+											} elseif( $live_status === 'test' ) {
+												echo '<span class="gateway-mode gateway-mode-live" data-mode="' . $live_status . '">' . esc_html__( 'Test Mode', 'em-pro' ) . '</span> ';
+											}
+										?>
+									</td>
 									<td class="column-transactions">
 										<a href='<?php echo EM_ADMIN_URL; ?>&amp;page=<?php echo $page; ?>&amp;action=transactions&amp;gateway=<?php echo $gateway; ?>'><?php _e('View transactions','em-pro'); ?></a>
 									</td>
@@ -225,6 +287,7 @@ class Gateways_Admin{
 	}
 			
 	public static function handle_gateways_panel_updates() {
+		global $EM_Notices;
 		if( !empty($_REQUEST['gateway']) && !empty($_REQUEST['action']) ){
 			$gateway = $_REQUEST['gateway'];
 			if ( Gateways::is_registered($gateway) ) {
@@ -233,37 +296,77 @@ class Gateways_Admin{
 					case 'deactivate' :
 						check_admin_referer ( 'deactivate-'.$Gateway::$gateway );
 						if ( $Gateway::admin()::deactivate() ) {
-							wp_safe_redirect ( add_query_arg ( 'msg', 3, em_wp_get_referer () ) );
+							$EM_Notices->add_confirm(__('Gateway deactivated.', 'em-pro'), true);
 						} else {
-							wp_safe_redirect ( add_query_arg ( 'msg', 4, em_wp_get_referer () ) );
+							$EM_Notices->add_error(__('Gateway not deactivated.', 'em-pro'), true);
 						}
+						wp_safe_redirect ( em_wp_get_referer() );
 						break;
 					case 'activate' :
 						check_admin_referer ( 'activate-'.$Gateway::$gateway );
 						if ( $Gateway::admin()::activate() ) {
-							wp_safe_redirect ( add_query_arg ( 'msg', 1, em_wp_get_referer () ) );
+							$EM_Notices->add_confirm(__('Gateway activated.', 'em-pro'), true);
 						} else {
-							wp_safe_redirect ( add_query_arg ( 'msg', 2, em_wp_get_referer () ) );
+							$EM_Notices->add_error(__('Gateway not activated.', 'em-pro'), true);
 						}
+						wp_safe_redirect ( em_wp_get_referer() );
 						break;
 					case 'updated' :
 						check_admin_referer ( 'updated-'.$Gateway::$gateway );
 						if ( $Gateway::admin()::update() ) {
-							wp_safe_redirect ( add_query_arg ( 'msg', 'updated', em_wp_get_referer () ) );
+							$EM_Notices->add_confirm(esc_html__('Gateway updated.', 'em-pro'), true);
 						} else {
-							wp_safe_redirect ( add_query_arg ( 'msg', 'error', em_wp_get_referer () ) );
+							$EM_Notices->add_error(esc_html__('Gateway not updated.', 'em-pro'), true);
 						}
+						wp_safe_redirect ( em_wp_get_referer() );
 						break;
 				}
 			}
-		} elseif( !empty($_REQUEST['gateways']) && is_array($_REQUEST['gateways']) && $_REQUEST['action'] == 'toggle' ) {
+		} elseif( !empty($_REQUEST['gateways']) && is_array($_REQUEST['gateways']) && !empty($_REQUEST['action']) ) {
 			check_admin_referer( 'emp-gateways' );
-			foreach ( $_REQUEST['gateways'] as $gateway ) {
-				if ( Gateways::is_registered($gateway) ) {
-					Gateways::get($gateway)::admin()::toggle();
-				}
+			switch ( $_REQUEST['action'] ) {
+				case 'toggle' :
+					foreach ( $_REQUEST['gateways'] as $gateway ) {
+						if ( Gateways::is_registered($gateway) ) {
+							Gateways::get($gateway)::admin()::toggle();
+						}
+					}
+					$EM_Notices->add_confirm( __('Gateway activation toggled.', 'em-pro'), true );
+					break;
+				case 'activate' :
+					foreach ( $_REQUEST['gateways'] as $gateway ) {
+						if ( Gateways::is_registered($gateway) ) {
+							Gateways::get($gateway)::admin()::activate();
+						}
+					}
+					$EM_Notices->add_confirm( __('Gateways activated.', 'em-pro'), true );
+					break;
+				case 'deactivate' :
+					foreach ( $_REQUEST['gateways'] as $gateway ) {
+						if ( Gateways::is_registered($gateway) ) {
+							Gateways::get($gateway)::admin()::deactivate();
+						}
+					}
+					$EM_Notices->add_confirm( __('Gateways deactivated.', 'em-pro'), true );
+					break;
+				case 'live-mode' :
+					foreach ( $_REQUEST['gateways'] as $gateway ) {
+						if ( Gateways::is_registered($gateway) ) {
+							update_option('em_'. $gateway . '_mode', 'live');
+						}
+					}
+					$EM_Notices->add_confirm( __('Gateways now in Live Mode.', 'em-pro'), true );
+					break;
+				case 'test-mode' :
+					foreach ( $_REQUEST['gateways'] as $gateway ) {
+						if ( Gateways::is_registered($gateway) ) {
+							update_option('em_'. $gateway . '_mode', 'test');
+						}
+					}
+					$EM_Notices->add_confirm( __('Gateways now in Test Mode.', 'em-pro'), true );
+					break;
 			}
-			wp_safe_redirect ( add_query_arg ( 'msg', 5, em_wp_get_referer () ) );
+			wp_safe_redirect ( em_wp_get_referer() );
 		}
 	}
 	

@@ -2,11 +2,11 @@
 /**
  * @license MIT
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Psr\Log;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log;
 
 /**
  * This is a simple Logger trait that classes unable to extend AbstractLogger
@@ -142,7 +142,7 @@ trait LoggerTrait
      *
      * @return void
      *
-     * @throws \GravityKit\GravityImport\Psr\Log\InvalidArgumentException
+     * @throws \GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\InvalidArgumentException
      */
     abstract public function log($level, $message, array $context = array());
 }

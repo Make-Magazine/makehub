@@ -6,6 +6,7 @@ require_once(__DIR__ . '/../jobs/MeprAuthorizeRetryJob.php');
 
 class MeprAuthorizeWebhooks {
   private $gateway_settings;
+  /** @var MeprAuthorizeAPI|MeprArtificialAuthorizeNetProfileHttpClient $authorize_api */
   private $authorize_api;
 
   public function __construct($gateway_settings, $authorize_api = null) {
@@ -32,7 +33,7 @@ class MeprAuthorizeWebhooks {
           MeprUtils::debug_log('Authorize.net auth_transaction: ' . MeprUtils::object_to_string($auth_transaction));
           switch($request_json->eventType) {
             case 'net.authorize.payment.authcapture.created':
-            case 'net.authorize.payment.capture.created':
+            case 'net.authorize.paymrecord_subscription_paymentent.capture.created':
             case 'net.authorize.payment.fraud.approved':
               if($request_json->payload->responseCode > 1) {
                 return $this->record_payment_failure($auth_transaction->transaction);
@@ -119,6 +120,14 @@ class MeprAuthorizeWebhooks {
     return false;
   }
 
+  public function log( $data ) {
+    if ( ! defined( 'WP_MEPR_DEBUG' ) ) {
+      return;
+    }
+
+    file_put_contents( WP_CONTENT_DIR . '/authorize-net.log', print_r( $data, true ) . PHP_EOL, FILE_APPEND );
+  }
+
   /**
   * Handle successful payment webhook notifications (responseCode 1)
   * Only used for recurring payments through ARB
@@ -138,6 +147,8 @@ class MeprAuthorizeWebhooks {
       return false;
     }
 
+    $this->log('New recurring payment came');
+    $this->log($auth_transaction);
     if(!$sub = MeprSubscription::get_one_by_subscr_id($auth_transaction->subscription->id)) {
       return false;
     }

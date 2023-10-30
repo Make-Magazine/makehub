@@ -2,11 +2,11 @@
 /**
  * @license MIT
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Psr\Log;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log;
 
 /**
  * Describes a logger instance.
@@ -125,7 +125,7 @@ interface LoggerInterface
      *
      * @return void
      *
-     * @throws \GravityKit\GravityImport\Psr\Log\InvalidArgumentException
+     * @throws \GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\InvalidArgumentException
      */
     public function log($level, $message, array $context = array());
 }

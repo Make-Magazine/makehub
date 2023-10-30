@@ -519,7 +519,7 @@ class Video_Gallery extends Common_Widget {
 						),
 
 					),
-					'title_field' => '{{{ title }}}',
+					'title_field' => '{{ title }}',
 				)
 			);
 
@@ -2245,7 +2245,9 @@ class Video_Gallery extends Common_Widget {
 				$vid_id = $matches[1];
 			}
 		} elseif ( 'vimeo' === $item['type'] ) {
-			$vid_id = preg_replace( '/[^\/]+[^0-9]|(\/)/', '', rtrim( $video_url, '/' ) );
+			if ( preg_match( '%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $video_url, $regs ) ) {
+				$vid_id = $regs[3];
+			}
 		} elseif ( 'wistia' === $item['type'] ) {
 			$vid_id = $this->getStringBetween( $video_url, 'wvideo=', '"' );
 		}
@@ -2261,9 +2263,11 @@ class Video_Gallery extends Common_Widget {
 
 			} elseif ( 'vimeo' === $item['type'] ) {
 
-				if ( '' !== $vid_id && 0 !== $vid_id ) {
+				$vid_id_image = preg_replace( '/[^\/]+[^0-9]|(\/)/', '', rtrim( $video_url, '/' ) );
 
-					$response = wp_remote_get( "https://vimeo.com/api/v2/video/$vid_id.php" );
+				if ( '' !== $vid_id_image && 0 !== $vid_id_image ) {
+
+					$response = wp_remote_get( "https://vimeo.com/api/v2/video/$vid_id_image.php" );
 
 					if ( is_wp_error( $response ) || 200 !== $response['response']['code'] ) {
 						return;
@@ -2336,7 +2340,7 @@ class Video_Gallery extends Common_Widget {
 			<?php } ?>
 		<?php } else { ?>
 			<img class="uael-vg__dummy-image" alt="" />
-			<img class="uael-vg__play-image <?php echo 'elementor-animation-' . esc_attr( $settings['hover_animation_img'] ); ?>" src="<?php echo esc_attr( $settings['play_img']['url'] ); ?>" alt="<?php echo wp_kses_post( Control_Media::get_image_alt( $settings['play_img'] ) ); ?>"/>
+			<img class="uael-vg__play-image <?php echo 'elementor-animation-' . esc_attr( $settings['hover_animation_img'] ); ?>" src="<?php echo esc_url( $settings['play_img']['url'] ); ?>" alt="<?php echo wp_kses_post( Control_Media::get_image_alt( $settings['play_img'] ) ); ?>"/>
 
 			<?php
 		}
@@ -2443,6 +2447,18 @@ class Video_Gallery extends Common_Widget {
 
 					case 'vimeo':
 						$vurl = 'https://player.vimeo.com/video/' . $url['video_id'] . '?autoplay=1&version=3&enablejsapi=1';
+
+						/**
+						 * Support Vimeo unlisted and private videos
+						 */
+						$h_param   = array();
+						$video_url = $item['video_url'];
+						preg_match( '/(?|(?:[\?|\&]h={1})([\w]+)|\d\/([\w]+))/', $video_url, $h_param );
+
+						if ( ! empty( $h_param ) ) {
+							$vurl .= '&h=' . $h_param[1];
+						}
+
 						break;
 
 					case 'wistia':
@@ -2636,7 +2652,7 @@ class Video_Gallery extends Common_Widget {
 						foreach ( $filters as $key => $value ) {
 							$special_char = preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $value ) );
 							?>
-							<li class="uael-video__gallery-filter" data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"><?php echo esc_attr( $value ); ?></li>
+							<li class="uael-video__gallery-filter" data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"><?php echo esc_html( $value ); ?></li>
 						<?php } ?>
 					</ul>
 
@@ -2646,8 +2662,11 @@ class Video_Gallery extends Common_Widget {
 
 							<ul class="uael-filters-dropdown-list uael-video__gallery-filters" data-default="<?php echo esc_attr( $default ); ?>">
 								<li class="uael-filters-dropdown-item uael-video__gallery-filter uael-filter__current" data-filter="*"><?php echo wp_kses_post( $settings['filters_all_text'] ); ?></li>
-								<?php foreach ( $filters as $key => $value ) { ?>
-									<li class="uael-filters-dropdown-item uael-video__gallery-filter" data-filter="<?php echo '.' . esc_attr( $key ); ?>"><?php echo esc_attr( $value ); ?></li>
+								<?php
+								foreach ( $filters as $key => $value ) {
+									$special_char = preg_replace( '/[^a-zA-Z0-9]/', '-', strtolower( $value ) );
+									?>
+									<li class="uael-filters-dropdown-item uael-video__gallery-filter " data-filter="<?php echo '.filter-' . esc_attr( $special_char ); ?>"><?php echo esc_html( $value ); ?></li>
 								<?php } ?>
 							</ul>
 						</div>
@@ -2706,9 +2725,9 @@ class Video_Gallery extends Common_Widget {
 				?>
 				<div class="uael-builder-msg elementor-alert elementor-alert-warning">
 					<?php if ( $is_custom && '' === $custom_thumbnail_url ) { ?>
-						<span class="elementor-alert-description"><?php esc_attr_e( 'Please set a custom thumbnail to display video gallery schema properly.', 'uael' ); ?></span>
+						<span class="elementor-alert-description"><?php esc_html_e( 'Please set a custom thumbnail to display video gallery schema properly.', 'uael' ); ?></span>
 					<?php } else { ?>
-						<span class="elementor-alert-description"><?php esc_attr_e( 'Some fields are empty under the video gallery schema section. Please fill in all required fields.', 'uael' ); ?></span>
+						<span class="elementor-alert-description"><?php esc_html_e( 'Some fields are empty under the video gallery schema section. Please fill in all required fields.', 'uael' ); ?></span>
 					<?php } ?>
 				</div>
 				<?php
@@ -2738,7 +2757,7 @@ class Video_Gallery extends Common_Widget {
 			$this->render_gallery_filters();
 		}
 
-		echo '<div ' . wp_kses_post( $this->get_render_attribute_string( 'wrap' ) ) . ' ' . wp_kses_post( $this->get_slider_attr() ) . '>';
+		echo '<div ' . wp_kses_post( sanitize_text_field( $this->get_render_attribute_string( 'wrap' ) ) ) . ' ' . wp_kses_post( sanitize_text_field( $this->get_slider_attr() ) ) . '>';
 
 			$this->render_gallery_inner_data();
 

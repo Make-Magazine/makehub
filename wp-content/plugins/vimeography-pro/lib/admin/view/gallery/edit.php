@@ -34,7 +34,7 @@ class Vimeography_Pro_Gallery_Edit extends Vimeography_Gallery_Edit {
     global $wpdb;
 
     $results = $wpdb->get_results('
-      SELECT per_page, sort, direction, playlist, allow_downloads, enable_search FROM ' . $wpdb->vimeography_pro_meta . ' pro
+      SELECT per_page, sort, direction, playlist, allow_downloads, enable_search, enable_tags FROM ' . $wpdb->vimeography_pro_meta . ' pro
       WHERE pro.gallery_id = ' . $this->_gallery_id . '
       LIMIT 1;
     ');
@@ -54,6 +54,7 @@ class Vimeography_Pro_Gallery_Edit extends Vimeography_Gallery_Edit {
       $gallery[0]->playlist  = intval($results[0]->playlist) == 1 ? TRUE : FALSE;
       $gallery[0]->allow_downloads = intval($results[0]->allow_downloads) == 1 ? TRUE : FALSE;
       $gallery[0]->enable_search = intval($results[0]->enable_search) == 1 ? TRUE : FALSE;
+      $gallery[0]->enable_tags = intval($results[0]->enable_tags) == 1 ? TRUE : FALSE;
     }
 
     return $gallery;
@@ -84,6 +85,7 @@ class Vimeography_Pro_Gallery_Edit extends Vimeography_Gallery_Edit {
         $input['enable_playlist'] = isset( $input['enable_playlist'] ) ? 1 : 0;
         $input['allow_downloads'] = isset( $input['allow_downloads'] ) ? 1 : 0;
         $input['enable_search']   = isset( $input['enable_search'] ) ? 1 : 0;
+        $input['enable_tags']     = isset( $input['enable_tags'] ) ? 1 : 0;
         $input['direction']       = isset( $input['reverse_order'] ) ? 'asc' : 'desc';
 
         $result = $wpdb->update(
@@ -94,13 +96,15 @@ class Vimeography_Pro_Gallery_Edit extends Vimeography_Gallery_Edit {
             'direction' => $input['direction'],
             'playlist'  => $input['enable_playlist'],
             'allow_downloads' => $input['allow_downloads'],
-            'enable_search' => $input['enable_search']
+            'enable_search' => $input['enable_search'],
+            'enable_tags'   => $input['enable_tags']
           ),
           array( 'gallery_id' => $id ),
           array(
             '%d',
             '%s',
             '%s',
+            '%d',
             '%d',
             '%d',
             '%d'

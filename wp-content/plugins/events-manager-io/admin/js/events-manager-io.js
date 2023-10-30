@@ -128,17 +128,17 @@ jQuery(document).ready( function($){
 
 	//Settings Page
 	if( $('.events-manager-io-settings').length > 0 ){
-		$(".postbox > h3").click(function(){ $(this).parent().toggleClass('closed'); });
+		$(".postbox > h3").on('click', function(){ $(this).parent().toggleClass('closed'); });
 		$(".postbox").addClass('closed');
 		//Navigation Tabs
-		$('.tabs-active .nav-tab-wrapper .nav-tab').click(function(){
+		$('.tabs-active .nav-tab-wrapper .nav-tab').on('click', function(){
 			el = $(this);
 			elid = el.attr('id');
 			$('.emio-settings-group').hide();
 			$('.'+elid).show();
 			$(".postbox").addClass('closed');
 		});
-		$('.nav-tab-wrapper .nav-tab').click(function(){
+		$('.nav-tab-wrapper .nav-tab').on('click', function(){
 			$('.nav-tab-wrapper .nav-tab').removeClass('nav-tab-active').blur();
 			$(this).addClass('nav-tab-active');
 		});
@@ -159,8 +159,8 @@ jQuery(document).ready( function($){
 			document.location = navUrl+"#general";
 			$('a#emio-settings-general').trigger('click');
 		}
-		$('.nav-tab-link').click(function(){ $($(this).attr('rel')).trigger('click'); }); //links to mimick tabs
-		$('input[type="submit"]').click(function(){
+		$('.nav-tab-link').on('click', function(){ $($(this).attr('rel')).trigger('click'); }); //links to mimick tabs
+		$('input[type="submit"]').on('click', function(){
 			var el = $(this).parents('.postbox').first();
 			var docloc = document.location.toString().split('#');
 			var newloc = docloc[0];

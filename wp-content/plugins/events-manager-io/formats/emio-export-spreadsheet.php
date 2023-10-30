@@ -86,7 +86,7 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 			if( $this->scope == 'locations' ){
 				//build and output headers headers
 				$EM_Location = current($items); /* @var EM_Location $EM_Location */
-				$location_headers = $EM_Location->to_array();
+				$location_headers['location_image'] = '';
 				//add taxonomies
 				$this->taxonomies_array = EM_Object::get_taxonomies();
 				foreach( $this->taxonomies_array as $taxonomy ){
@@ -102,6 +102,8 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 						$location_headers[$location_att] = '';
 					}
 				}
+				//add general location meta JSON
+				$event_headers['location_meta'] = '';
 				//pass on the export header columns for output
 				$this->export_header_row( array_keys($location_headers) );
 				//create a data template for subsequent rows so everything lines up
@@ -111,6 +113,7 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 				//output headers
 				$EM_Event = current($items); /* @var EM_Event $EM_Event */
 				$event_headers = $EM_Event->to_array();
+				$event_headers['event_image'] = '';
 				//add taxonomies
 				$this->taxonomies_array = EM_Object::get_taxonomies();
 				foreach( $this->taxonomies_array as $taxonomy ){
@@ -126,7 +129,14 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 						$event_headers[$event_att] = '';
 					}
 				}
+				//add general event meta as a separate JSON field
+				$event_headers['event_meta'] = '';
+				//add location meta
 				if( $this->scope == 'events+locations' || $this->scope == 'all' ){
+					// if event locations are enabled, add a json array for that too
+					if( !empty(EM_Event_Locations\Event_Locations::get_types()) ){
+						$event_headers['event_location'] = '';
+					}
 					$EM_Location = new EM_Location();
 					foreach( $EM_Location->to_array() as $k => $v ){
 						if( in_array($k, array('post_id', 'blog_id', 'post_content')) ){
@@ -134,6 +144,8 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 						}
 						$event_headers[$k] = '';
 					}
+					$event_headers['location_image'] = '';
+					$event_headers['location_meta'] = '';
 				}
 				//pass on the export header columns for output
 				$this->export_header_row( array_keys($event_headers) );
@@ -155,6 +167,9 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 		$event_row = $this->row_template;
 		//add regular array rows to template row
 		$event_array = $EM_Event->to_array();
+		if( $EM_Event->get_image_url() ) {
+			$event_array['event_image'] = $EM_Event->get_image_url();
+		}
 		foreach( $event_array as $k => $v ){
 			if( isset($event_row[$k]) ) $event_row[$k] = $v;
 		}
@@ -169,14 +184,25 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 			}
 			$event_row[$taxonomy['name']] = implode(',', $event_taxonomy_terms);
 		}
-		//add custom meta fields
-		if( get_option('dbem_attributes_enabled') ){
-			foreach( $EM_Event->event_attributes as $event_att ){
-				if( isset($event_row[$event_att]) ){
-					$event_row[$event_att] = $EM_Event->event_attributes[$event_att];
-				}
+		// add event attibutes
+		$event_row['event_meta'] = array();
+		foreach( $EM_Event->event_attributes as $k => $meta_value ){
+			if( isset($event_row[$k]) ){
+				$event_row[$k] = $meta_value;
+			}else{
+				$event_row['event_meta'][$k] = $meta_value;
 			}
 		}
+		// add event meta as well
+		foreach( $EM_Event->get_event_meta() as $event_meta_key => $event_meta_val ){
+			// make sure it's not an event_location field, event field or attribute, the rest can go
+			$ignore_fields = array('_edit_lock', '_edit_last', '_thumbnail_id', '_event_end_local', '_event_rsvp_end', '_event_start_local'); //ignore some known and unecessary fields
+			$field_name = substr($event_meta_key, 1);
+			if( $event_meta_key[0] == '_' && is_string($field_name) && !in_array($event_meta_key, $ignore_fields) && !array_key_exists($field_name, $event_array) && !preg_match('/^_event_location_/', $event_meta_key) ) {
+				$event_row['event_meta'][$event_meta_key] = $event_meta_val[0];
+			}
+		}
+		$event_row['event_meta'] = empty($event_row['event_meta']) ? '' : json_encode($event_row['event_meta']);
 		//add location fields if needed
 		if( $this->scope == 'events+locations' || $this->scope == 'all' ){
 			if( $EM_Event->location_id ){
@@ -189,6 +215,11 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 						$event_row[$k] = $v;
 					}
 				}
+				if( !empty($location_array['location_attributes']) ){
+					$event_row['location_attributes'] = json_encode($location_array['location_attributes']);
+				}
+			}elseif( $EM_Event->has_event_location() ){
+				$event_row['event_location'] = json_encode($EM_Event->get_event_location()->data);
 			}
 		}
 		//now output event row
@@ -210,6 +241,9 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 		$location_row = $this->row_template;
 		//add regular array rows to template row
 		$location_array = $EM_Location->to_array();
+		if( $EM_Location->get_image_url() ) {
+			$location_array['location_image'] = $EM_Location->get_image_url();
+		}
 		foreach( $location_array as $k => $v ){
 			if( isset($location_row[$k]) ) $location_row[$k] = $v;
 		}
@@ -225,13 +259,17 @@ class EMIO_Export_Spreadsheet extends EMIO_Export {
 			$location_row[$taxonomy['name']] = implode(',', $location_taxonomy_terms);
 		}
 		//add custom meta fields
-		if( get_option('dbem_attributes_enabled') ){
-			foreach( $EM_Location->location_attributes as $location_att ){
-				if( isset($location_row[$location_att]) ){
-					$location_row[$location_att] = $EM_Location->location_attributes[$location_att];
+		$location_row['location_meta'] = array();
+		foreach( $EM_Location->location_attributes as $k => $meta_value ){
+			if( isset($location_row[$k]) ){
+				if( is_array($meta_value) ){
+					$location_row[$k] = json_encode($meta_value);
+				}else{
+					$location_row['location_meta'] = $meta_value;
 				}
 			}
 		}
+		$location_row['location_meta'] = empty($location_row['location_meta']) ? '' : json_encode($location_row['location_meta']);
 		//now save row to object for output at end of current loop
 		$this->sheet_rows[$EM_Location->location_id] = $location_row;
 		if( $update_id !== null ){

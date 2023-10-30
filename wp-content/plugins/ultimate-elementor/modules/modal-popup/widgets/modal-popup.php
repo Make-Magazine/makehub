@@ -2340,7 +2340,7 @@ class Modal_Popup extends Common_Widget {
 				break;
 
 			case 'video':
-				global $wp_embed;
+				global $wp_embed; // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.VariableRedeclaration
 				$output_html = $wp_embed->autoembed( $dynamic_settings['ct_video'] );
 				break;
 			case 'iframe':
@@ -2392,6 +2392,7 @@ class Modal_Popup extends Common_Widget {
 		$url    = apply_filters( 'uael_modal_video_url', $settings['video_url'], $settings );
 		$vid_id = '';
 		$html   = '<div class="uael-video-wrap">';
+		$thumb  = '';
 
 		$embed_param = $this->get_embed_params();
 		$video_data  = $this->get_url( $embed_param, $node_id );
@@ -2442,18 +2443,28 @@ class Modal_Popup extends Common_Widget {
 
 		} elseif ( 'vimeo' === $settings['content_type'] ) {
 
-			$vid_id = preg_replace( '/[^\/]+[^0-9]|(\/)/', '', rtrim( $url, '/' ) );
+			if ( preg_match( '%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $regs ) ) {
+				$vid_id = $regs[3];
+			}
 
-			if ( '' !== $vid_id && 0 !== $vid_id ) {
+			$vid_id_image = preg_replace( '/[^\/]+[^0-9]|(\/)/', '', rtrim( $url, '/' ) );
 
-				$response = wp_remote_get( "https://vimeo.com/api/v2/video/$vid_id.php" );
+			if ( '' !== $vid_id_image && 0 !== $vid_id_image ) {
+
+				$response = wp_remote_get( "https://vimeo.com/api/v2/video/$vid_id_image.php" );
 
 				if ( is_wp_error( $response ) ) {
 					return;
 				}
-				$vimeo = maybe_unserialize( $response['body'] );
-				$thumb = $vimeo[0]['thumbnail_large'];
+				$body  = wp_remote_retrieve_body( $response );
+				$vimeo = json_decode( $body, true );
 
+				if ( is_array( $vimeo ) && isset( $vimeo[0]['thumbnail_large'] ) ) {
+					$thumb = $vimeo[0]['thumbnail_large'];
+				}
+			}
+
+			if ( '' !== $vid_id && 0 !== $vid_id ) {
 				$html .= '<div class="uael-modal-iframe uael-video-player" data-src="vimeo" data-id="' . $vid_id . '" data-thumb="' . $thumb . '" data-sourcelink="https://player.vimeo.com/video/' . $vid_id . $video_data . '" data-play-icon="' . $play_icon . '" ></div>';
 			}
 		}
@@ -2631,8 +2642,8 @@ class Modal_Popup extends Common_Widget {
 
 			?>
 			<div class="uael-builder-msg" style="text-align: center;">
-				<h5><?php esc_attr_e( 'Modal Popup - ID ', 'uael' ); ?><?php echo esc_attr( $this->get_id() ); ?></h5>
-				<p><?php esc_attr_e( 'Click here to edit the "Modal Popup" settings. This text will not be visible on frontend.', 'uael' ); ?></p>
+				<h5><?php esc_html_e( 'Modal Popup - ID ', 'uael' ); ?><?php echo esc_html( $this->get_id() ); ?></h5>
+				<p><?php esc_html_e( 'Click here to edit the "Modal Popup" settings. This text will not be visible on frontend.', 'uael' ); ?></p>
 			</div>
 			<?php
 
@@ -2741,7 +2752,7 @@ class Modal_Popup extends Common_Widget {
 				'data-custom-id'        => $this->get_settings_for_display( 'modal_custom_id' ),
 				'data-content'          => $settings['content_type'],
 				'data-autoplay'         => $settings['video_autoplay'],
-				'data-device'           => ( false !== ( stripos( $_SERVER['HTTP_USER_AGENT'], 'iPhone' ) ) ? 'true' : 'false' ),
+				'data-device'           => ( isset( $_SERVER['HTTP_USER_AGENT'] ) && false !== ( stripos( sanitize_text_field( $_SERVER['HTTP_USER_AGENT'] ), 'iPhone' ) ) ? 'true' : 'false' ), // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
 				'data-async'            => ( 'yes' === $settings['async_iframe'] ) ? true : false,
 			)
 		);
@@ -2824,6 +2835,17 @@ class Modal_Popup extends Common_Widget {
 				$params['muted']    = 1;
 			} else {
 				$params['autoplay'] = 0;
+			}
+
+			/**
+			 * Support Vimeo unlisted and private videos
+			 */
+			$h_param   = array();
+			$video_url = $settings['video_url'];
+			preg_match( '/(?|(?:[\?|\&]h={1})([\w]+)|\d\/([\w]+))/', $video_url, $h_param );
+
+			if ( ! empty( $h_param ) ) {
+				$params['h'] = $h_param[1];
 			}
 		}
 		return $params;

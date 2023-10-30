@@ -7,12 +7,11 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by GravityKit on 20-February-2023 using Strauss.
+ * Modified by GravityKit on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 namespace GravityKit\GravityRevisions\Foundation\ThirdParty\TrustedLogin;
 
-use GravityKit\GravityRevisions\Katzgrau\KLogger\Logger;
 
 class Logging {
 
@@ -57,12 +56,6 @@ class Logging {
 	 */
 	private function setup_klogger( $config ) {
 
-		if ( ! class_exists( 'GravityKit\GravityRevisions\Katzgrau\KLogger\Logger' ) ) {
-
-			$this->log( 'KLogger not found.', __METHOD__, 'error' );
-
-			return false;
-		}
 
 		$logging_directory = null;
 
@@ -131,6 +124,22 @@ class Logging {
 		}
 
 		return $klogger;
+	}
+
+	/**
+	 * Returns the full path to the log file
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return null|string Path to log file, if exists; null if not instantiated.
+	 */
+	public function get_log_file_path() {
+
+		if ( ! $this->klogger instanceof Logger ) {
+			return null;
+		}
+
+		return $this->klogger->getLogFilePath();
 	}
 
 	/**

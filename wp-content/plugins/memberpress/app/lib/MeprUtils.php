@@ -910,7 +910,7 @@ class MeprUtils {
         $last_path = $new_path;
 
         // Enclose fields containing $delimiter, $enclosure or whitespace
-        if($enclose_all or preg_match("/(?:${delimiter_esc}|${enclosure_esc}|\s)/", $field)) {
+  if($enclose_all or preg_match("/(?:{$delimiter_esc}|{$enclosure_esc}|\s)/", $field)) {
           $output[$new_path] = $enclosure . str_replace($enclosure, $enclosure . $enclosure, $field) . $enclosure;
         }
         else {
@@ -2425,5 +2425,54 @@ class MeprUtils {
       default:
         return true;
     }
+  }
+
+  /**
+   * Returns the minimum charge amount for the currently configured currency, or false if there is no minimum.
+   *
+   * We are aligning with the Stripe minimum charge amounts from:
+   * https://stripe.com/docs/currencies#minimum-and-maximum-charge-amounts
+   *
+   * @return float|int|false
+   */
+  public static function get_minimum_amount() {
+    static $minimum_amount;
+
+    if($minimum_amount === null) {
+      $mepr_options = MeprOptions::fetch();
+      $currency_code = strtoupper(MeprHooks::apply_filters('mepr_minimum_charge_currency', $mepr_options->currency_code));
+
+      $minimums = require MEPR_DATA_PATH . '/minimum_charge_amounts.php';
+      $minimum_amount = isset($minimums[$currency_code]) ? $minimums[$currency_code] : false;
+    }
+
+    return $minimum_amount;
+  }
+
+  /**
+   * Returns the minimum amount if the given amount is above zero and below the minimum charge amount.
+   *
+   * @param string|float|int $amount
+   * @return string|float|int
+   */
+  public static function maybe_round_to_minimum_amount($amount) {
+    if($amount > 0) {
+      $minimum_amount = self::get_minimum_amount();
+
+      if($minimum_amount && $amount < $minimum_amount) {
+        $amount = $minimum_amount;
+      }
+    }
+
+    return $amount;
+  }
+
+  /**
+   * Get the HTML for the 'NEW' badge
+   *
+   * @return string
+   */
+  public static function new_badge() {
+    return sprintf('<span class="mepr-new-badge">%s</span>', esc_html__('NEW', 'memberpress'));
   }
 } // End class

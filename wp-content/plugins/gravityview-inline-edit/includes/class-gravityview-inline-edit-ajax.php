@@ -104,7 +104,7 @@ final class GravityView_Inline_Edit_AJAX {
 			wp_send_json_error( new WP_Error( 'fileupload_validation_failed', esc_html( sprintf( __( '%s is required.', 'gravityview-inline-edit', 'gk-gravityedit' ), _x( 'This field', 'The value used when saying what information is required. For example, "[This field] is required."', 'gravityview-inline-edit', 'gk-gravityedit' ) ) ) ) );
 		}
 
-		$files = isset( $_FILES ) ? $_FILES : [];
+		$files = isset( $_FILES ) ? $_FILES : array();
 
 		if ( $gf_field->isRequired && empty( $files ) ) {
 			// translators: %s is replaced by the name of the required item.
@@ -113,11 +113,14 @@ final class GravityView_Inline_Edit_AJAX {
 
 		// Remove if nothing is uploaded
 		if ( empty( $files ) ) {
+			$this->remove_previously_uploaded_files( $entry_id, $field_id, $gf_field );
 			$result = GFAPI::update_entry_field( $entry_id, $field_id, '' );
-			wp_send_json_success( array(
-				'removed' => true,
-				'message' => esc_html__( 'Empty', 'gravityview-inline-edit', 'gk-gravityedit' ),
-			) );
+			wp_send_json_success(
+				array(
+					'removed' => true,
+					'message' => esc_html__( 'Empty', 'gravityview-inline-edit', 'gk-gravityedit' ),
+				)
+			);
 		}
 
 		$uploaded_files = $files;
@@ -140,25 +143,31 @@ final class GravityView_Inline_Edit_AJAX {
 			wp_send_json_error( new WP_Error( 'fileupload_validation_failed', $gf_field->validation_message ) );
 		}
 
+		$this->remove_previously_uploaded_files( $entry_id, $field_id, $gf_field );
+
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';
 
-		$upload_dir  = wp_upload_dir();
-		$upload_path = $upload_dir['path'] . DIRECTORY_SEPARATOR;
-		$urls        = array();
+		// Change upload path.
+		$gf_upload_path = GF_Field_FileUpload::get_upload_root_info( $form_id );
+		add_filter( 'upload_dir', function( $upload ) use ( $gf_upload_path ) {
+
+			$upload['path'] = $gf_upload_path['path'];
+			$upload['url']  = $gf_upload_path['url'];
+
+			return $upload;
+		} );
+
+		$urls = array();
 		foreach ( $files as $file ) {
+			$upload = wp_handle_upload( $file, array( 'test_form' => false ) );
 
-			// We have to set the $_FILES array to the current file so that wp_handle_upload() can work.
-			$_FILES        = array( 'upload' => $file );
-
-			$attachment_id = media_handle_upload( 'upload', 0 );
-
-			if ( is_wp_error( $attachment_id ) ) {
-				wp_send_json_error( $attachment_id );
+			if ( is_wp_error( $upload ) ) {
+				wp_send_json_error( $upload );
 			}
 
-			$urls[] = wp_get_attachment_url( $attachment_id );
+			$urls[] = $upload['url'];
 		}
 
 		$field_value = $urls;
@@ -181,7 +190,7 @@ final class GravityView_Inline_Edit_AJAX {
 		if ( empty( $view_id ) || ! function_exists( 'gravityview_get_files_array' ) || ! class_exists( '\GV\View' ) ) {
 
 			if ( ! class_exists( 'GF_Entry_List' ) ) {
-				require_once( GFCommon::get_base_path() . '/entry_list.php' );
+				require_once GFCommon::get_base_path() . '/entry_list.php';
 			}
 
 			// JSON-encoded values don't work when using GFEntryList::get_icon_url( $file_path ).
@@ -232,6 +241,37 @@ final class GravityView_Inline_Edit_AJAX {
 	}
 
 	/**
+	 * Remove previously uploaded files.
+	 *
+	 * @since 2.0
+	 *
+	 * @param int  $entry_id
+	 * @param int  $field_id
+	 * @param \GF_Field $gf_field
+	 *
+	 * @return void
+	 */
+	private function remove_previously_uploaded_files( $entry_id, $field_id, $gf_field ) {
+
+		if ( ! $gf_field->multipleFiles ) {
+			RGFormsModel::delete_file( $entry_id, $field_id );
+			return;
+		}
+
+		$entry      = \GFAPI::get_entry( $entry_id );
+		$value_json = RGFormsModel::get_lead_field_value( $entry, $gf_field );
+
+		if ( empty( $value_json ) ) {
+			return;
+		}
+
+		$old_files = json_decode( $value_json, true );
+		foreach ( $old_files as $file_index => $file ) {
+			RGFormsModel::delete_file( $entry_id, $field_id, $file_index );
+		}
+	}
+
+	/**
 	 * Get users for created_by field.
 	 *
 	 * @since 1.8
@@ -254,7 +294,7 @@ final class GravityView_Inline_Edit_AJAX {
 		$args = array(
 			'search'         => '*' . esc_attr( $search ) . '*',
 			'search_columns' => array( 'user_login', 'user_email', 'display_name', 'user_nicename' ),
-			'fields' => array( 'ID', 'display_name' ),
+			'fields'         => array( 'ID', 'display_name' ),
 		);
 
 		$user_query = new WP_User_Query( $args );
@@ -447,7 +487,7 @@ final class GravityView_Inline_Edit_AJAX {
 				$value = $post_value;
 
 				if ( count( $value ) > 1 && ( empty( $value[1] ) || empty( $value[2] ) ) ) {
-					//We define a custom error message here because `$gf_field->validate` (used below), fails silently for this use-case. With count( $value ) > 1, we check if we are in single field mode
+					// We define a custom error message here because `$gf_field->validate` (used below), fails silently for this use-case. With count( $value ) > 1, we check if we are in single field mode
 					wp_send_json( new WP_Error( 'invalid_time', __( 'Please enter a valid time.', 'gk-gravityedit' ) ) );
 				}
 

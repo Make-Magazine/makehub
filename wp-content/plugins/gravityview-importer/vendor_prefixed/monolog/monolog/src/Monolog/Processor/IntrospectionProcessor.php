@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Monolog\Processor;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Processor;
 
-use GravityKit\GravityImport\Monolog\Logger;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Logger;
 
 /**
  * Injects line/file:class/function where the log message came from
@@ -43,7 +43,7 @@ class IntrospectionProcessor implements ProcessorInterface
     public function __construct($level = Logger::DEBUG, array $skipClassesPartials = array(), $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
-        $this->skipClassesPartials = array_merge(array('GravityKit\\GravityImport\\Monolog\\'), $skipClassesPartials);
+        $this->skipClassesPartials = array_merge(array('GravityKit\\GravityImport\\Foundation\\ThirdParty\\Monolog\\'), $skipClassesPartials);
         $this->skipStackFramesCount = $skipStackFramesCount;
     }
 

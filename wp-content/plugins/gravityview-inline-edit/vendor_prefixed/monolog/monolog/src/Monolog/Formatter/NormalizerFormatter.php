@@ -8,14 +8,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Formatter;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Formatter;
 
 use Exception;
-use GravityKit\GravityEdit\Monolog\Utils;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Utils;
 
 /**
  * Normalizes incoming records to remove objects/resources so it's easier to dump to various targets
@@ -38,7 +38,7 @@ class NormalizerFormatter implements FormatterInterface
         $this->dateFormat = $dateFormat ?: static::SIMPLE_DATE;
         $this->maxDepth = $maxDepth;
         if (!function_exists('json_encode')) {
-            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityEdit\Monolog\'s NormalizerFormatter');
+            throw new \RuntimeException('PHP\'s json extension is required to use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\'s NormalizerFormatter');
         }
     }
 

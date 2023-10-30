@@ -1,0 +1,24 @@
+{
+  "name": "vimeography-pro",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "archive": "git archive --format zip --output ~/dropbox/vimeography/ZIPs/2.0/vimeography-pro-next.zip --prefix vimeography-pro/ master"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davekiss/vimeography-pro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davekiss/vimeography-pro/issues"
+  },
+  "homepage": "https://github.com/davekiss/vimeography-pro#readme"
+}

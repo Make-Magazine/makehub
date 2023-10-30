@@ -1,7 +1,7 @@
 <?php
 namespace EM\Payments\Authorize_AIM;
 
-use AuthorizeNetAIM;
+use AuthorizeNetAIM, EM\Payments\Gateways;
 use EM_Booking, EM_Event, EM_Pro, EM;
 use WP_REST_Response, WP_REST_Request, WP_Error;
 
@@ -26,6 +26,9 @@ class Gateway extends EM\Payments\Gateway {
 	public static $payment_return = true;
 
 	public static $registered_timer = 0;
+	
+	public static $supports_test_mode = true;
+	
 	/**
 	 * Sets up gateaway and adds relevant actions/filters 
 	 */
@@ -65,6 +68,7 @@ class Gateway extends EM\Payments\Gateway {
 	 * @param boolean $post_validation
 	 */
 	public static function booking_add( $EM_Event, $EM_Booking, $post_validation = false ){
+		Gateways::switch_current_event( $EM_Booking );
 		static::$registered_timer = current_time('timestamp', 1);
 		parent::booking_add($EM_Event, $EM_Booking, $post_validation);
 		if( $post_validation && empty($EM_Booking->booking_id) ){
@@ -74,6 +78,7 @@ class Gateway extends EM\Payments\Gateway {
 		    	add_filter('em_booking_save', array(static::class, 'em_booking_save'),2,2);
 			}		    	
 		}
+		Gateways::restore_current_event();
 	}
 	
 	/**
@@ -82,6 +87,7 @@ class Gateway extends EM\Payments\Gateway {
 	 * @param EM_Booking $EM_Booking
 	 */
 	public static function em_booking_save( $result, $EM_Booking ){
+		Gateways::switch_current_event( $EM_Booking );
 		global $wpdb, $wp_rewrite, $EM_Notices;
 		//make sure booking save was successful before we try anything
 		if( $result ){
@@ -119,6 +125,7 @@ class Gateway extends EM\Payments\Gateway {
 					return false;
 				}
 			}
+			Gateways::restore_current_event();
 		}
 		return $result;
 	}
@@ -149,9 +156,17 @@ class Gateway extends EM\Payments\Gateway {
 	 * Handles the silent post URL
 	 */
 	public static function handle_payment_return(){
-		//Make sure this is Authorize.net and process silent post
 		$post = wp_unslash($_POST);
-		$anet_api_creds = get_option('em_'. static::$gateway . '_api');
+		// check if we're in test or live mode before we verify anything since we need to check keys
+		$force_mode = static::$force_mode;
+		if( !static::$force_mode && !empty($post['invoice_num']) ) {
+			$EM_Booking = em_get_booking($post['invoice_num']);
+			if( !empty($EM_Booking->booking_meta['test']) ) {
+				$force_mode = static::force_mode('test');
+			}
+		}
+		//Make sure this is Authorize.net and process silent post
+		$anet_api_creds = static::get_api_keys();
         if( !empty($anet_api_creds['signature'])  && !empty($post['x_SHA2_Hash']) ){
         	//Authorize.net uses SHA512 hashes now, so we prefer this method if site admin has set it up.
 	        $sha2_data_keys =   array(
@@ -185,6 +200,7 @@ class Gateway extends EM\Payments\Gateway {
 	        echo "No SHA2 Hash Provided.";
 	        EM_Pro::log( array('Silent Post Notification - No SHA2 Hash Provided.', '$_POST'=> $_POST), static::$gateway );
         }
+		static::$force_mode = $force_mode;
 	}
 	
 	/**
@@ -195,7 +211,7 @@ class Gateway extends EM\Payments\Gateway {
 	 */
 	public static function handle_api_notify( $request ) {
 		$headers = $request->get_headers();
-		$anet_api_creds = get_option('em_'. static::$gateway . '_api');
+		$anet_api_creds = static::get_api_keys();
 		$notification = $request->get_json_params();
 		$body = $request->get_body();
 		if( empty($anet_api_creds['signature']) ){
@@ -221,7 +237,7 @@ class Gateway extends EM\Payments\Gateway {
 						'content-type' => 'application/json;',
 					),
 				);
-				if(get_option('em_'.static::$gateway.'_mode') == 'live'){
+				if ( static::is_live_mode() ) {
 					$transaction_request = wp_remote_post('https://api.authorize.net/xml/v1/request.api', $post_args);
 				}else{
 					$transaction_request = wp_remote_post('https://apitest.authorize.net/xml/v1/request.api', $post_args);
@@ -370,7 +386,7 @@ class Gateway extends EM\Payments\Gateway {
 			require_once('anet_php_sdk/AuthorizeNet.php'); 
 		}       
         //Basic Credentials
-		$api_options = get_option('em_'.static::$gateway.'_api');
+		$api_options = static::get_api_keys();
 		$api_login = !empty($api_options['login']) ? $api_options['login'] : '';
 		$api_key = !empty($api_options['key']) ? $api_options['key'] : '';
 		$sale = new AuthorizeNetAIM($api_login, $api_key);
@@ -388,6 +404,7 @@ class Gateway extends EM\Payments\Gateway {
 	 */
 	public static function authorize_and_capture($EM_Booking){
 		global $EM_Notices;
+		Gateways::switch_current_event( $EM_Booking );
 		$sale = static::get_api();
 
         //Get transaction ID for authorization/capture
@@ -476,15 +493,19 @@ class Gateway extends EM\Payments\Gateway {
 	        EM_Pro::log( array('Capture transaction failed - '.$response->response_reason_text, '$response'=> $response), static::$gateway );
         }
         //Return transaction_id or false
-		return apply_filters('em_gateway_authorize_aim_authorize', $result, $EM_Booking, static::class);
+		$return = apply_filters('em_gateway_authorize_aim_authorize', $result, $EM_Booking, static::class);
+		Gateways::restore_current_event();
+		return $return;
 	}
 	
 	public static function void($EM_Booking){
+		Gateways::switch_current_event( $EM_Booking );
 		if( !empty($EM_Booking->booking_meta[static::$gateway]) ){
 	        $capture = static::get_api();
 	        $capture->amount = $EM_Booking->booking_meta[static::$gateway]['amount'];
 	        $capture->void();
 		}
+		Gateways::restore_current_event();
 	}
 }
 Gateway::init();

@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by __root__ on 05-April-2023 using Strauss.
+ * Modified by __root__ on 19-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityEdit\Monolog\Processor;
+namespace GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Processor;
 
-use GravityKit\GravityEdit\Monolog\Utils;
+use GravityKit\GravityEdit\Foundation\ThirdParty\Monolog\Utils;
 
 /**
  * Processes a record's message according to PSR-3 rules

@@ -2,14 +2,14 @@
 /**
  * @license MIT
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Psr\Log\Test;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\Test;
 
-use GravityKit\GravityImport\Psr\Log\LoggerInterface;
-use GravityKit\GravityImport\Psr\Log\LogLevel;
+use GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\LoggerInterface;
+use GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\LogLevel;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -38,7 +38,7 @@ abstract class LoggerInterfaceTest extends TestCase
 
     public function testImplements()
     {
-        $this->assertInstanceOf('GravityKit\GravityImport\Psr\Log\LoggerInterface', $this->getLogger());
+        $this->assertInstanceOf('GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\LoggerInterface', $this->getLogger());
     }
 
     /**
@@ -72,7 +72,7 @@ abstract class LoggerInterfaceTest extends TestCase
     }
 
     /**
-     * @expectedException \GravityKit\GravityImport\Psr\Log\InvalidArgumentException
+     * @expectedException \GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\InvalidArgumentException
      */
     public function testThrowsOnInvalidLevel()
     {
@@ -92,9 +92,9 @@ abstract class LoggerInterfaceTest extends TestCase
     public function testObjectCastToString()
     {
         if (method_exists($this, 'createPartialMock')) {
-            $dummy = $this->createPartialMock('GravityKit\GravityImport\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->createPartialMock('GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         } else {
-            $dummy = $this->getMock('GravityKit\GravityImport\Psr\Log\Test\DummyTest', array('__toString'));
+            $dummy = $this->getMock('GravityKit\GravityImport\Foundation\ThirdParty\Psr\Log\Test\DummyTest', array('__toString'));
         }
         $dummy->expects($this->once())
             ->method('__toString')

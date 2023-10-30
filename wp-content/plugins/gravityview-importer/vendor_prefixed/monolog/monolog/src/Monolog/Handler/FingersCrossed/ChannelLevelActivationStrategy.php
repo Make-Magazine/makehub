@@ -8,13 +8,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
- * Modified by The GravityKit Team on 10-March-2023 using Strauss.
+ * Modified by The GravityKit Team on 07-September-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
-namespace GravityKit\GravityImport\Monolog\Handler\FingersCrossed;
+namespace GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Handler\FingersCrossed;
 
-use GravityKit\GravityImport\Monolog\Logger;
+use GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Logger;
 
 /**
  * Channel and Error level based monolog activation strategy. Allows to trigger activation
@@ -48,7 +48,7 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
     public function __construct($defaultActionLevel, $channelToActionLevel = array())
     {
         $this->defaultActionLevel = Logger::toMonologLevel($defaultActionLevel);
-        $this->channelToActionLevel = array_map('GravityKit\GravityImport\Monolog\Logger::toMonologLevel', $channelToActionLevel);
+        $this->channelToActionLevel = array_map('GravityKit\GravityImport\Foundation\ThirdParty\Monolog\Logger::toMonologLevel', $channelToActionLevel);
     }
 
     public function isHandlerActivated(array $record)

@@ -7,7 +7,7 @@ class EMIO_Location extends EMIO_CPT {
 	 * Optional. If supplied, all other items in this array are ignored and this is used instead to load an existing location ID.
 	 * @var int
 	 */
-	public $location_id;
+	public $id;
 	/**
 	 * Optional If fuzzy location is enabled for this import format, this value is assumed as a full address representation and will be used to split address name, street, country etc.
 	 * If $name is also set, it's assumed tis does not contain the location name and is just an address.
@@ -89,8 +89,8 @@ class EMIO_Location extends EMIO_CPT {
 		if( empty($this->object) ){
 			if( !empty($this->post_id) ){
 				$this->object = em_get_location( $this->post_id, 'post_id' );
-			}elseif( !empty($this->location_id) ){
-				$this->object = em_get_location( $this->location_id );
+			}elseif( !empty($this->id) ){
+				$this->object = em_get_location( $this->id );
 			}else{
 				$this->object = new EM_Location();
 			}

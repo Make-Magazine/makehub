@@ -134,7 +134,7 @@ class EMIO_Logs_List_Table extends EMIO_List_Table {
 				'edit' => '<a href="'.get_edit_post_link( $item['post_id'] ).'">'. __('Edit','events-manager-io') .'</a>',
 			);
 		}else{
-			$msg = esc_html__('No information about this location, it was most likely deleted.', 'events-manager-io');
+			$msg = esc_html__('No information about this location, it was most likely deleted or never created.', 'events-manager-io');
 			if( $msg != $item['name'] ){
 				$actions['msg'] = "<em>$msg</em>";
 			}
@@ -266,7 +266,7 @@ class EMIO_Logs_List_Table extends EMIO_List_Table {
 			}else{
 				$link = $row['log_desc'];
 				if( !$link ){
-					$link = esc_html__('No information about this event, it was most likely deleted.', 'events-manager-io');
+					$link = esc_html__('No information about this event, it was most likely deleted or never created.', 'events-manager-io');
 				}
 			}
 			if( !empty($row['url']) ){
@@ -282,7 +282,7 @@ class EMIO_Logs_List_Table extends EMIO_List_Table {
 			}else{
 				$link = $row['log_desc'];
 				if( !$link ){
-					$link = esc_html__('No information about this location, it was most likely deleted.', 'events-manager-io');
+					$link = esc_html__('No information about this location, it was most likely deleted or never created.', 'events-manager-io');
 				}
 			}
 			$log['type'] = __('Location', 'events-manager');

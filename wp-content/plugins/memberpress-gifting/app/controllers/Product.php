@@ -18,6 +18,7 @@ class Product extends lib\BaseCtrl {
     add_filter('mepr_subscription_product', array($this, 'remove_gift_from_group'), 10, 2 );
     add_filter('mepr_transaction_product', array($this, 'remove_gift_from_group'), 10, 2 );
     add_filter('mepr_transaction_product', array($this, 'gift_product_one_time_payment'), 10, 2 );
+    add_filter('mepr_product_is_one_time_payment', array($this, 'override_product_one_time_payment'));
   }
 
 
@@ -61,7 +62,22 @@ class Product extends lib\BaseCtrl {
     return $product;
   }
 
+  /**
+   * Set the product to be a one-time payment when the gift checkbox is checked
+   *
+   * @param bool $is_one_time_payment
+   * @return bool
+   */
+  public function override_product_one_time_payment($is_one_time_payment) {
+    if(isset($_POST['mpgft-signup-gift-checkbox']) && "on" == $_POST['mpgft-signup-gift-checkbox']) {
+      $is_one_time_payment = true;
+    }
+    elseif(isset($_POST['mpgft_gift_checkbox']) && "true" == $_POST['mpgft_gift_checkbox']) {
+      $is_one_time_payment = true;
+    }
 
+    return $is_one_time_payment;
+  }
 
   /**
    * Adjust product price

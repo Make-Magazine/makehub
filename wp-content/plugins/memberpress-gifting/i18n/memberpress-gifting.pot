@@ -2,16 +2,16 @@
 # This file is distributed under the same license as the Memberpress Gifting plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Memberpress Gifting 1.1.21\n"
+"Project-Id-Version: Memberpress Gifting 1.1.24\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-gifting\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-06-15T21:01:40+00:00\n"
+"POT-Creation-Date: 2023-09-19T14:34:33-06:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: memberpress-gifting\n"
 
 #. Plugin Name of the plugin
@@ -63,7 +63,7 @@ msgstr ""
 msgid "Oops, Copy Failed!"
 msgstr ""
 
-#: app/controllers/Checkout.php:380
+#: app/controllers/Checkout.php:385
 msgctxt "ui"
 msgid "Since you already have an active membership, we are assuming that this is a gift purchase."
 msgstr ""
@@ -142,12 +142,12 @@ msgstr ""
 msgid "Your test email was successfully sent."
 msgstr ""
 
-#: app/controllers/Product.php:104
-#: app/controllers/Product.php:107
+#: app/controllers/Product.php:120
+#: app/controllers/Product.php:123
 msgid "Allow this membership to be gifted"
 msgstr ""
 
-#: app/controllers/Product.php:108
+#: app/controllers/Product.php:124
 msgid "When this box is checked, the Membership can be purchased as a gift for another member."
 msgstr ""
 

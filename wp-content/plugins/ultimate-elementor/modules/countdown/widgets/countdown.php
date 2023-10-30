@@ -1411,7 +1411,7 @@ class Countdown extends Common_Widget {
 		}
 
 		if ( isset( $_COOKIE[ 'uael-timer-distance-' . $id ] ) ) {
-			if ( 'hide' === $settings['expire_actions'] && 0 > $_COOKIE[ 'uael-timer-distance-' . $id ] && false === $edit_mode ) {
+			if ( 'hide' === $settings['expire_actions'] && 0 > $_COOKIE[ 'uael-timer-distance-' . $id ] && false === $edit_mode ) { // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
 				$this->add_render_attribute( 'countdown', 'class', 'uael-countdown-hide' );
 			}
 		}
@@ -1456,7 +1456,7 @@ class Countdown extends Common_Widget {
 						<?php } ?>
 					<?php } ?>
 					<div class="uael-expire-message-wrapper">
-						<div class='uael-expire-show-message'><?php echo wp_kses_post( $settings['message_after_expire'] ); ?></div>
+						<div class='uael-expire-show-message'><?php echo wp_kses_post( sanitize_text_field( $settings['message_after_expire'] ) ); ?></div>
 					</div>
 			</div>
 		</div>

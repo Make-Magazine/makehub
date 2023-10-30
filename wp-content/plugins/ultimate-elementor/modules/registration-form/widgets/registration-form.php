@@ -169,7 +169,8 @@ class RegistrationForm extends Common_Widget {
 			$wp_roles = get_editable_roles(); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
-		$roles      = isset( $wp_roles->roles ) ? $wp_roles->roles : array();
+		$roles = isset( $wp_roles->roles ) ? $wp_roles->roles : array();
+		unset( $roles['administrator'] );
 		$user_roles = array();
 
 		$user_roles['default'] = __( 'Default', 'uael' );
@@ -374,7 +375,7 @@ class RegistrationForm extends Common_Widget {
 							'width'       => '100',
 						),
 					),
-					'title_field' => '{{{ field_label }}}',
+					'title_field' => '{{ field_label }}',
 				)
 			);
 
@@ -2670,7 +2671,7 @@ class RegistrationForm extends Common_Widget {
 													<?php } ?>
 											<?php } ?>
 											<?php if ( empty( $settings['button_text'] ) ) { ?>
-												<span class="elementor-screen-only"><?php esc_attr_e( 'Submit', 'uael' ); ?></span>
+												<span class="elementor-screen-only"><?php esc_html_e( 'Submit', 'uael' ); ?></span>
 											<?php } ?>
 										</span>
 									<?php if ( ! empty( $settings['button_text'] ) ) : ?>
@@ -2735,11 +2736,11 @@ class RegistrationForm extends Common_Widget {
 						if ( 'yes' === $settings['preview_message'] && $is_editor ) {
 							if ( 'default' === $settings['message_wrap_style'] ) {
 								?>
-								<div class="uael-reg-preview-message elementor-alert success"><?php echo esc_attr__( 'This is a success message preview!', 'uael' ); ?></div>
-								<div class="uael-reg-preview-message elementor-alert error"><?php echo esc_attr__( 'This is a error message preview!', 'uael' ); ?></div>
+								<div class="uael-reg-preview-message elementor-alert success"><?php echo esc_html__( 'This is a success message preview!', 'uael' ); ?></div>
+								<div class="uael-reg-preview-message elementor-alert error"><?php echo esc_html__( 'This is a error message preview!', 'uael' ); ?></div>
 							<?php } else { ?>
-								<div class="uael-reg-preview-message success"><?php echo esc_attr__( 'This is a success message preview!', 'uael' ); ?></div>
-								<div class="uael-reg-preview-message error"><?php echo esc_attr__( 'This is a error message preview!', 'uael' ); ?></div>
+								<div class="uael-reg-preview-message success"><?php echo esc_html__( 'This is a success message preview!', 'uael' ); ?></div>
+								<div class="uael-reg-preview-message error"><?php echo esc_html__( 'This is a error message preview!', 'uael' ); ?></div>
 							<?php } ?>
 						<?php } ?>
 						<div <?php echo wp_kses_post( $this->get_render_attribute_string( 'validation_messages' ) ); ?>></div>

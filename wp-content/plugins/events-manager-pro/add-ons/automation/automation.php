@@ -7,42 +7,6 @@ class Automation {
 	public static $actions = array();
 	
 	public static function init(){
-		global $wpdb;
-		// TODO remove this
-		/*
-		$wpdb->insert(EM_AUTOMATION_TABLE, array('name' => 'Event Reminder 6 Hours',
-			'type' => 'event-time',
-			'listener' => 'cron',
-			'trigger_data' => serialize(array(
-				'time' => array(
-					'amount' => 1,
-					'type' => 'hours',
-					'when' => 'after',
-				),
-				'filter' => array(
-					'output' => 'bookings'
-				),
-			)),
-			'action_data' => serialize(array(
-				array(
-					'type' => 'email',
-					'data' => array(
-						'who' => 'registrant',
-						'subject' => '#_EVENTNAME - did you enjoy it?',
-						'message' => 'Hello #_BOOKINGNAME, <br><br> #_EVENTNAME started at #_EVENTSTARTTIME today. Are you ready?',
-						'reply_to' => 'owner',
-						'attachments' => false,
-					),
-				),
-				array(
-					'type' => 'webhook',
-					'data' => array(
-						'url' => 'https://hooks.zapier.com/hooks/catch/13531524/b02eqz3/',
-					),
-				),
-			)),
-		));
-		*/
 		
 		// load default actions and triggers
 		include('actions/action.php');
@@ -117,55 +81,3 @@ class Automation {
 	}
 }
 Automation::init();
-
-
-// add base event info
-/*
-$EM_Event = new \EM_Event();
-$EM_Event->recurrence = 1;
-foreach( $EM_Event->fields as $key => $field ){
-	if( !empty($field['name']) ){
-		if( preg_match('/^recurrence_/', $key) && $key !== 'recurrence_id' ) {
-				if( empty($event['recurrence']) ){
-					$event['recurrence'] = array();
-				}
-				$event['recurrence'][preg_replace('/^recurrence_/', '', $key)] = "!$EM_Event->" . $key."!";
-		}elseif( preg_match('/^event_rsvp_/', $key) ) {
-			if( empty($event['rsvp']) ){
-				$event['rsvp'] = array();
-			}
-			$event['rsvp'][preg_replace('/^event_rsvp_/', '', $key)] = '$EM_Event->' . $key;
-		}elseif( $key !== 'recurrence' && $key !== 'event_rsvp' ){
-			$event[$field['name']] = "!$EM_Event->" . $key."!";
-		}
-	}else{
-		$event[str_replace('event_', '', $key)] = "!$EM_Event->" . $key."!";
-	}
-}
-ksort($event);
-echo '<pre>'. var_export($event, true) . '</pre>';
-
-$EM_Booking = new \EM_Booking();
-foreach( $EM_Booking->fields as $key => $field ){
-	if( !empty($field['name']) ){
-		if( preg_match('/^recurrence_/', $key) && $key !== 'recurrence_id' ) {
-			if( empty($event['recurrence']) ){
-				$event['recurrence'] = array();
-			}
-			$event['recurrence'][preg_replace('/^recurrence_/', '', $key)] = "!\$EM_Booking->" . $key."!";
-		}elseif( preg_match('/^event_rsvp_/', $key) ) {
-			if( empty($event['rsvp']) ){
-				$event['rsvp'] = array();
-			}
-			$event['rsvp'][preg_replace('/^event_rsvp_/', '', $key)] = '$EM_Booking->' . $key;
-		}elseif( $key !== 'recurrence' && $key !== 'event_rsvp' ){
-			$event[$field['name']] = "!\$EM_Booking->" . $key."!";
-		}
-	}else{
-		$event[str_replace('event_', '', $key)] = "!\$EM_Booking->" . $key."!";
-	}
-}
-ksort($event);
-echo '<pre>'. var_export($event, true) . '</pre>';
-die();
-*/

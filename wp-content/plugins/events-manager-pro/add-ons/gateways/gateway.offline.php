@@ -73,6 +73,14 @@ class Gateway extends \EM\Payments\Gateway {
 		return $vars;
 	}
 	
+	public static function is_live_mode ( $check_limited = true ) {
+		return true;
+	}
+	
+	public static function is_test_mode ( $check_limited = true ) {
+		return false;
+	}
+	
 	/* 
 	 * --------------------------------------------------
 	 * Booking Interception - functions that modify booking object behaviour
