@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by gravityview on 07-April-2023 using Strauss.
+ * Modified by gravityview on 25-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -12,8 +12,9 @@ use GravityKit\GravityView\Foundation\Helpers\Core as CoreHelpers;
 use GravityKit\GravityView\Foundation\ThirdParty\Illuminate\Validation;
 use GravityKit\GravityView\Foundation\ThirdParty\Illuminate\Filesystem;
 use GravityKit\GravityView\Foundation\ThirdParty\Illuminate\Translation;
+use Exception;
 
-class ValidatorException extends \Exception { }
+class ValidatorException extends Exception { }
 
 class SettingsValidator {
 	/**
@@ -82,7 +83,7 @@ class SettingsValidator {
 			if ( ! is_array( $parameters ) ) {
 				return false;
 			}
-			
+
 
 			return in_array( $parameters[0], $value );
 		} );
@@ -119,7 +120,7 @@ class SettingsValidator {
 			if ( ! $validator->fails() ) {
 				return true;
 			}
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			throw new ValidatorException( $e->getMessage() );
 		}
 
@@ -169,7 +170,7 @@ class SettingsValidator {
 				 * @param array  $setting           Original setting.
 				 * @param string $value_to_validate Value to validate.
 				 */
-				do_action( "gk/foundation/settings/${plugin}/validation/${setting['id']}", $setting, $value_to_validate );
+				do_action( "gk/foundation/settings/{$plugin}/validation/{$setting['id']}", $setting, $value_to_validate );
 
 				$validated_settings[ $setting['id'] ] = $value_to_validate;
 

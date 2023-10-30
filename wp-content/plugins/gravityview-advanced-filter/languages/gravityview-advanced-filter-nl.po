@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: GravityView Advanced Filter\n"
-"Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
+"Report-Msgid-Bugs-To: https://www.gravitykit.com/support/\n"
 "POT-Creation-Date: 2016-01-21 18:05:06+00:00\n"
 "PO-Revision-Date: 2020-11-04 12:09+0000\n"
 "Last-Translator: Desiree Graste <desiree@mamamentje.nl>\n"

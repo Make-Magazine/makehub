@@ -3,8 +3,8 @@
  * @file class-gravityview-entry-approval.php
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      https://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      https://www.gravitykit.com
  * @copyright Copyright 2016, Katz Web Services, Inc.
  *
  * @since 1.18
@@ -98,7 +98,7 @@ class GravityView_Entry_Approval {
 			return;
 		}
 
-		$form = GFAPI::get_form( $entry['form_id'] );
+		$form = GVCommon::get_form( $entry['form_id'] );
 
 		if ( ! $form ) {
 			gravityview()->log->error( 'Form not found at ID #{form_id} for entry #{entry_id}', array( 'form_id' => $entry['form_id'], 'entry_id' => $entry_id ) );

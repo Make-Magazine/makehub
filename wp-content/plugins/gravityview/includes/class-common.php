@@ -4,8 +4,8 @@
  *
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  *
  * @since 1.5.2
@@ -25,20 +25,26 @@ class GVCommon {
 	 * @return array|false Array: Form object returned from Gravity Forms; False: no form ID specified or Gravity Forms isn't active.
 	 */
 	public static function get_form( $form_id ) {
+
 		if ( empty( $form_id ) ) {
 			return false;
 		}
 
-		// Only get_form_meta is cached. ::facepalm::
-		if ( class_exists( 'GFFormsModel' ) ) {
-			return GFFormsModel::get_form_meta( $form_id );
+		if ( ! class_exists( 'GFAPI' ) ) {
+			return false;
 		}
 
-		if ( class_exists( 'GFAPI' ) ) {
-			return GFAPI::get_form( $form_id );
+		static $forms = array();
+
+		if ( isset( $forms[ $form_id ] ) ) {
+			return $forms[ $form_id ];
 		}
 
-		return false;
+		$form = \GFAPI::get_form( $form_id );
+
+		$forms[ $form_id ] = $form;
+
+		return $form;
 	}
 
 	/**
@@ -113,11 +119,12 @@ class GVCommon {
 	 */
 	public static function get_all_views( $args = array() ) {
 
-		$default_params = array(
+		$default_params = [
 			'post_type'      => 'gravityview',
 			'posts_per_page' => -1,
 			'post_status'    => 'publish',
-		);
+			'exclude'        => [],
+		];
 
 		$params = wp_parse_args( $args, $default_params );
 
@@ -146,7 +153,7 @@ class GVCommon {
 		$form = false;
 
 		if ( $entry ) {
-			$form = GFAPI::get_form( $entry['form_id'] );
+			$form = GVCommon::get_form( $entry['form_id'] );
 		}
 
 		return $form;
@@ -316,7 +323,6 @@ class GVCommon {
 	 *
 	 * @since 2.17
 	 *
-	 * @uses GFAPI::get_form()
 	 * @used-by \GV\View_Settings::defaults()
 	 *
 	 * @param bool   $active      True if active forms are returned. False to get inactive forms. Defaults to true.
@@ -371,15 +377,16 @@ class GVCommon {
 	 *
 	 * @see GFAPI::get_forms()
 	 *
-	 * @since 1.19 Allow "any" $active status option
-	 * @since 2.7.2 Allow sorting forms using wp_list_sort()
+	 * @since 1.19 Allow "any" $active status option.
+	 * @since 2.7.2 Allow sorting forms using wp_list_sort().
+	 * @since 2.17.6 Added `gravityview/common/get_forms` filter.
 	 *
-	 * @param bool|string  $active Status of forms. Use `any` to get array of forms with any status. Default: `true`
-	 * @param bool         $trash Include forms in trash? Default: `false`
+	 * @param bool|string  $active Status of forms. Use `any` to get array of forms with any status. Default: `true`.
+	 * @param bool         $trash Include forms in trash? Default: `false`.
 	 * @param string|array $order_by Optional. Either the field name to order by or an array of multiple orderby fields as $orderby => $order.
 	 * @param string       $order Optional. Either 'ASC' or 'DESC'. Only used if $orderby is a string.
 	 *
-	 * @return array Empty array if GFAPI class isn't available or no forms. Otherwise, the array of Forms
+	 * @return array Empty array if GFAPI class isn't available or no forms. Otherwise, the array of Forms.
 	 */
 	public static function get_forms( $active = true, $trash = false, $order_by = 'id', $order = 'ASC' ) {
 		$forms = array();
@@ -396,6 +403,21 @@ class GVCommon {
 		}
 
 		$forms = wp_list_sort( $forms, $order_by, $order, true );
+
+		/**
+		 * @filter `gk/gravityview/common/get_forms` Modify the forms returned by GFAPI::get_forms()
+		 *
+		 * @since 2.17.6
+		 *
+		 * @param array $forms Array of forms, with form ID as the key.
+		 * @param bool|string $active Status of forms. Use `any` to get array of forms with any status. Default: `true`.
+		 * @param bool $trash Include forms in trash? Default: `false`.
+		 * @param string|array $order_by Optional. Either the field name to order by or an array of multiple orderby fields as $orderby => $order.
+		 * @param string $order Optional. Either 'ASC' or 'DESC'. Only used if $orderby is a string.
+		 *
+		 * @return array Modified array of forms.
+		 */
+		$forms = apply_filters( 'gk/gravityview/common/get_forms', $forms, $active, $trash, $order_by, $order );
 
 		return $forms;
 	}
@@ -542,11 +564,11 @@ class GVCommon {
 	 */
 	public static function get_entry_ids( $form_id, $search_criteria = array() ) {
 
-		if ( ! class_exists( 'GFFormsModel' ) ) {
+		if ( ! class_exists( 'GFAPI' ) ) {
 			return;
 		}
 
-		return GFFormsModel::search_lead_ids( $form_id, $search_criteria );
+		return GFAPI::get_entry_ids( $form_id, $search_criteria );
 	}
 
 	/**
@@ -655,7 +677,7 @@ class GVCommon {
 	 * @param mixed     $passed_criteria (default: null)
 	 * @param mixed     &$total Optional. An output parameter containing the total number of entries. Pass a non-null value to generate the total count. (default: null)
 	 *
-	 * @deprecated See \GV\View::get_entries.
+	 * @deprecated {@see \GV\View::get_entries}
 	 *
 	 * @return mixed False: Error fetching entries. Array: Multi-dimensional array of Gravity Forms entry arrays
 	 */
@@ -828,6 +850,11 @@ class GVCommon {
 		// fetch the entry
 		$entry = GFAPI::get_entry( $entry_id );
 
+		if ( is_wp_error( $entry ) ) {
+			gravityview()->log->error( '{error}', array( 'error' => $entry->get_error_message() ) );
+			return false;
+		}
+
 		/**
 		 * @filter `gravityview/common/get_entry/check_entry_display` Override whether to check entry display rules against filters
 		 * @since 1.16.2
@@ -852,6 +879,7 @@ class GVCommon {
 
 		if ( is_wp_error( $entry ) ) {
 			gravityview()->log->error( '{error}', array( 'error' => $entry->get_error_message() ) );
+
 			return false;
 		}
 
@@ -866,7 +894,7 @@ class GVCommon {
 	 * @since 1.13 You can define context, which displays/hides based on what's being displayed (single, multiple, edit)
 	 * @since 1.22.1 Added 'in' and 'not_in' for JSON-encoded array values, serialized non-strings
 	 *
-	 * @see https://docs.gravityview.co/article/252-gvlogic-shortcode
+	 * @see https://docs.gravitykit.com/article/252-gvlogic-shortcode
 	 * @uses GFFormsModel::matches_operation
 	 * @since 1.7.5
 	 *
@@ -900,7 +928,7 @@ class GVCommon {
 					break;
 			}
 
-			$val1 = in_array( gravityview_get_context(), $matching_contexts ) ? $val2 : false;
+			$val1 = in_array( gravityview_get_context(), $matching_contexts, true ) ? $val2 : false;
 		}
 
 		// Attempt to parse dates.
@@ -1002,12 +1030,17 @@ class GVCommon {
 	 */
 	public static function check_entry_display( $entry, $view = null ) {
 
+		// Check whether Embed Only is enabled. If we're on a CPT, the entry is not allowed to be displayed.
+		if ( gravityview()->request->is_view() && $view && $view->settings->get( 'embed_only' ) ) {
+			return new WP_Error( 'gravityview/embed_only' );
+		}
+
 		if ( ! $entry || is_wp_error( $entry ) ) {
 			return new WP_Error( 'entry_not_found', 'Entry was not found.', $entry );
 		}
 
 		if ( empty( $entry['form_id'] ) ) {
-			return new WP_Error( 'form_id_not_set', '[apply_filters_to_entry] Entry is empty!', $entry );
+			return new WP_Error( 'form_id_not_set', '[check_entry_display] Form ID is not set for the entry.', $entry );
 		}
 
 		if ( is_null( $view ) ) {
@@ -1301,15 +1334,17 @@ class GVCommon {
 	 * Get the views for a particular form
 	 *
 	 * @since 1.15.2 Add $args array and limit posts_per_page to 500
+	 * @since 2.19   Added $include_joins param
 	 *
 	 * @uses get_posts()
 	 *
 	 * @param  int   $form_id Gravity Forms form ID
 	 * @param  array $args Pass args sent to get_posts()
+	 * @param  bool  $include_joins Whether to include forms that are joined to the View
 	 *
 	 * @return array          Array with view details, as returned by get_posts()
 	 */
-	public static function get_connected_views( $form_id, $args = array() ) {
+	public static function get_connected_views( $form_id, $args = array(), $include_joins = true ) {
 
 		global $wpdb;
 
@@ -1321,6 +1356,10 @@ class GVCommon {
 		);
 		$args     = wp_parse_args( $args, $defaults );
 		$views    = get_posts( $args );
+
+		if( ! $include_joins ) {
+			return $views;
+		}
 
 		$views_with_joins = $wpdb->get_results( "SELECT `post_id`, `meta_value` FROM $wpdb->postmeta WHERE `meta_key` = '_gravityview_form_joins'" );
 
@@ -1340,14 +1379,17 @@ class GVCommon {
 			}
 		}
 
-		if ( $joined_forms ) {
-			$joined_args = array(
-				'post_type'      => 'gravityview',
-				'posts_per_page' => $args['posts_per_page'],
-				'post__in'       => $joined_forms,
-			);
-			$views       = array_merge( $views, get_posts( $joined_args ) );
+		if ( ! $joined_forms ) {
+			return $views;
 		}
+
+		$joined_args = array(
+			'post_type'      => 'gravityview',
+			'posts_per_page' => $args['posts_per_page'],
+			'post__in'       => $joined_forms,
+		);
+
+		$views = array_merge( $views, get_posts( $joined_args ) );
 
 		return $views;
 	}

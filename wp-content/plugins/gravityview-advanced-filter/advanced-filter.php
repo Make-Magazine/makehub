@@ -3,7 +3,7 @@
 Plugin Name: GravityView - Advanced Filter Extension
 Plugin URI: https://www.gravitykit.com/extensions/advanced-filter/?utm_source=advanced-filter&utm_content=plugin_uri&utm_medium=meta&utm_campaign=internal
 Description: Filter which entries are shown in a View based on their values.
-Version: 2.2
+Version: 2.4.1
 Author: GravityKit
 Author URI: https://www.gravitykit.com/?utm_source=advanced-filter&utm_medium=meta&utm_content=author_uri&utm_campaign=internal
 Text Domain: gravityview-advanced-filter
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die;
 }
 
-define( 'GRAVITYKIT_ADVANCED_FILTERING_VERSION', '2.2' );
+define( 'GRAVITYKIT_ADVANCED_FILTERING_VERSION', '2.4.1' );
 
 add_action( 'plugins_loaded', 'gv_extension_advanced_filtering_load' );
 
@@ -76,6 +76,70 @@ function gv_extension_advanced_filtering_load() {
 		 * @type string Field meta name for output displayed when conditions are not met`
 		 */
 		const CONDITIONAL_LOGIC_FAIL_OUTPUT_META = 'conditional_logic_fail_output';
+
+		/**
+		 * Disables filter groups and group conditions based on a 1-index value.
+		 *
+		 * @param array    $filters The filters.
+		 * @param \GV\View $view    The View.
+		 *
+		 * @return array The filters with the disabled filters set to `null`.
+		 */
+		private static function disable_filters( $filters, $view ) {
+			/**
+			 * @filter `gk/advanced-filter/disabled-filters` Add disabled filters.
+			 *
+			 * @param array<string> Array containing groups / fields to be disabled.
+			 * @param \GV\View $view The View.
+			 *
+			 * To disable a group, you add the group number. To disable a field, provide the field number inside the group.
+			 * For example: `['2', '3.4']` would disable the second group completely and the 4th field in the 3rd group.
+			 */
+			$disabled_filters = apply_filters( 'gk/advanced-filter/disabled-filters', [], $view );
+			if ( ! $disabled_filters || ! is_array( $filters ) ) {
+				return $filters;
+			}
+
+			foreach ( $filters['conditions'] as $group_i => $group ) {
+				foreach ( $group['conditions'] as $condition_i => $condition ) {
+					$field_identifier = sprintf( '%d.%d', $group_i + 1, $condition_i + 1 );
+					if ( array_intersect( $disabled_filters, array( $field_identifier, $group_i + 1 ) ) ) {
+						$filters['conditions'][ $group_i ]['conditions'][ $condition_i ] = null;
+					}
+				}
+			}
+
+			return $filters;
+		}
+
+		/**
+		 * Whether The current user is an admin, according to provided capabilities.
+		 *
+		 * @since $ver$
+		 *
+		 * @param \GV\View $view The View.
+		 *
+		 * @return bool
+		 */
+		private static function has_admin_caps( $view ) {
+			/**
+			 * Customise the capabilities that define an Administrator able to view entries in frontend when filtered by Created_by
+			 *
+			 * @since 1.0.9
+			 *
+			 * @param array|string $capabilities List of admin capabilities
+			 *
+			 * @param int          $post_id      View ID where the filter is set
+			 *
+			 */
+			$view_all_entries_caps = apply_filters( 'gravityview/adv_filter/admin_caps', array(
+				'manage_options',
+				'gravityforms_view_entries',
+				'gravityview_edit_others_entries'
+			), $view->ID );
+
+			return GVCommon::has_cap( $view_all_entries_caps );
+		}
 
 		function add_hooks() {
 
@@ -334,14 +398,23 @@ HTML;
 				}
 
 				if ( isset( $filter['value'] ) ) {
+					$remove_admin_fields = 0;
 
 					$form = array();
 					if ( $view instanceof \GV\View ) {
 						$form = $view->form->form;
 					}
 
+					// Check if filter should be disabled for admins, and remove that modifier.
+					$filter['value'] = str_replace( ':disabled_admin', '', $filter['value'], $remove_admin_fields );
+
 					// Replace merge tags
 					$filter['value'] = self::process_merge_tags( $filter['value'], $form );
+
+					if ( $remove_admin_fields && self::has_admin_caps( $view ) ) {
+						// User is admin and this filter should be ignored.
+						$filter = null;
+					}
 				}
 
 				if ( $filter && in_array( $filter['key'], array( 'date_created', 'date_updated', 'payment_date' ), true ) ) {
@@ -408,6 +481,8 @@ HTML;
 			gravityview()->log->debug( 'Advanced filters raw:', array( 'data' => $filters ) );
 
 			$filters = self::convert_filters_to_nested( $filters ); // Convert to v2
+			$filters = self::disable_filters( $filters, $view );
+
 			self::augment_filters( $filters, $view ); // Modify logic as needed
 			self::prune_filters( $filters ); // Cleanup
 
@@ -487,6 +562,7 @@ HTML;
 		 *
 		 */
 		public static function convert_to_gf_conditions( &$filter, $view ) {
+			global $wpdb;
 
 			if ( ! empty( $filter['mode'] ) && isset( $filter['conditions'] ) ) {
 				/** We are in a logic definition */
@@ -509,7 +585,7 @@ HTML;
 				}
 
 				$form_id = \GV\Utils::get( $filter, 'form_id', $view->form->ID );
-				$key = \GV\Utils::get( $filter, 'key' );
+				$key     = \GV\Utils::get( $filter, 'key' );
 
 				$field = GFAPI::get_field( $form_id, $key );
 
@@ -534,8 +610,40 @@ HTML;
 					$filter = $cast_to_decimal( $filter );
 				}
 
+				if ( is_numeric( $key ) && in_array( $filter->operator, [ $filter::EQ, $filter::NEQ, $filter::GT, $filter::LT ] ) && '' === $_filter_value ) {
+					/*
+					 * 1. GF force-casts all numeric fields to float even if the value is empty, so '' becomes '0.0' and is later dropped when converted to SQL.
+					 *    The resulting query is "CAST(`m2`.`meta_value` AS DECIMAL(65, 6)" (i.e., matches all entries) rather than CAST(`m2`.`meta_value` AS DECIMAL(65, 6) = '' (i.e., matches only entries with empty values)
+					 *    Ref: https://github.com/gravityforms/gravityforms/blob/2cb2c07d5c61dbc876ec34709e6a57b6a212d2c4/includes/query/class-gf-query.php#L184,L193
+					 * 2. On some systems meta_key value may not be wrapped in quotes, so 3 will match 3c241b8b, for example. As such, we need to force strict comparison.
+					 *
+					 * This would have been easily implemented using OR/WHERE conditions. However, since GF_Query may perform joins when it builds the final query,
+					 * using just column names will result in an "ambiguous column" error and there is no way to get the join aliases at this particular juncture.
+					*/
+					$exists_query = $wpdb->prepare(
+						"EXISTS ( SELECT 1 FROM %i WHERE `meta_key` = '%d' AND `meta_value` {$filter->operator} '' AND `entry_id` = %i.`id` )",
+						GFFormsModel::get_entry_meta_table_name(),
+						$key,
+						$_tmp_query->_alias( null, $view->form->ID )
+					);
+
+					$not_exists_query =  $filter->operator === $filter::NEQ ? '' : $wpdb->prepare(
+						"OR NOT EXISTS ( SELECT 1 FROM %i WHERE `meta_key` = '%d' AND `entry_id` = %i.`id` )",
+						GFFormsModel::get_entry_meta_table_name(),
+						$key,
+						$_tmp_query->_alias( null, $view->form->ID )
+					); // This is required because GF does not save entry meta for empty values.
+
+					$query = sprintf(
+						'%s %s',
+						$exists_query,
+						$not_exists_query
+					);
+
+					$filter = new GF_Query_Condition( new GF_Query_Call( '', [ $query ] ) );
+				}
+
 				if ( is_numeric( $key ) && in_array( $filter->operator, array( $filter::NLIKE, $filter::NBETWEEN, $filter::NEQ, $filter::NIN ) ) && '' !== $_filter_value ) {
-					global $wpdb;
 					$subquery = $wpdb->prepare( sprintf( "SELECT 1 FROM `%s` WHERE (`meta_key` LIKE %%s OR `meta_key` = %%d) AND `entry_id` = `%s`.`id`",
 						GFFormsModel::get_entry_meta_table_name(), $_tmp_query->_alias( null, $view->form->ID ) ),
 						sprintf( '%d.%%', $key ), $key );
@@ -582,7 +690,7 @@ HTML;
 		static function get_user_id_value( $filter, $view ) {
 			switch ( $filter['key'] ) {
 				case 'created_by':
-					$lock_filter = self::get_lock_filter();
+					$lock_filter          = self::get_lock_filter();
 					$lock_filter['value'] = -1;
 
 					switch ( $filter['value'] ) {
@@ -595,18 +703,7 @@ HTML;
 
 							break;
 						case 'created_by_or_admin':
-							/**
-							 * Customise the capabilities that define an Administrator able to view entries in frontend when filtered by Created_by
-							 *
-							 * @since 1.0.9
-							 *
-							 * @param int          $post_id      View ID where the filter is set
-							 *
-							 * @param array|string $capabilities List of admin capabilities
-							 */
-							$view_all_entries_caps = apply_filters( 'gravityview/adv_filter/admin_caps', array( 'manage_options', 'gravityforms_view_entries', 'gravityview_edit_others_entries' ), $view->ID );
-
-							if ( GVCommon::has_cap( $view_all_entries_caps ) ) {
+							if ( self::has_admin_caps( $view ) ) {
 								return null; // Administrative role, all good, no created_by filtering at all
 							}
 
@@ -985,6 +1082,15 @@ HTML;
 			// Fixes issue on Views screen when deleting a view
 			if ( empty( $form ) ) {
 				return;
+			}
+
+			// Adding default pre render hook for plugins to update the fields before choice retrieval.
+			$form = gf_apply_filters( [ 'gform_pre_render', $form_id ], $form, false, [] );
+
+			// Remove conditional logic filter from populate anything, to allow prefilling of the choices.
+			if ( function_exists( 'gp_populate_anything' ) ) {
+				$populate_anything = gp_populate_anything();
+				remove_filter( 'gform_field_filters', [ $populate_anything, 'conditional_logic_field_filters' ] );
 			}
 
 			$field_filters = GFCommon::get_field_filter_settings( $form );

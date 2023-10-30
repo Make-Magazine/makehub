@@ -7,8 +7,8 @@
  * @since     1.5.1
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  */
 
@@ -54,6 +54,8 @@ final class GravityView_Delete_Entry {
 		if ( is_admin() ) {
 			$this->load_components( 'admin' );
 		}
+
+		require_once trailingslashit( self::$file ) . 'class-gravityview-field-delete-link.php';
 
 		$this->add_hooks();
 	}
@@ -390,7 +392,7 @@ final class GravityView_Delete_Entry {
 
 		if ( (int) $view->settings->get( 'delete_redirect' ) === self::REDIRECT_TO_URL_VALUE ) {
 
-			$form                 = GFAPI::get_form( $entry['form_id'] );
+			$form                 = GVCommon::get_form( $entry['form_id'] );
 			$redirect_url_setting = $view->settings->get( 'delete_redirect_url' );
 			$redirect_url         = GFCommon::replace_variables( $redirect_url_setting, $form, $entry, false, false, false, 'text' );
 

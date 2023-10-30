@@ -1,7 +1,7 @@
 === GravityView - Advanced Filter Extension ===
 Tags: gravitykit
 Requires at least: 4.4
-Tested up to: 6.2
+Tested up to: 6.3
 Stable tag: trunk
 Contributors: The GravityKit Team
 License: GPL 3 or higher
@@ -23,6 +23,24 @@ UI was written using [Svelte](https://svelte.dev/) and requires compilation. Mak
 3. Compile assets by running `npm run build`
 
 == Changelog ==
+
+= 2.4.1 on September 29, 2023 =
+
+* Fixed: Regression introduced in 2.4 where the "is empty" and "is not empty" conditions would return incorrect results
+
+= 2.4 on September 21, 2023 =
+
+* Fixed: Incorrect results could be returned when the form has an upload field with the multiple files option enabled
+* Fixed: Filtering numeric fields (e.g., Number) with empty values using the "is empty" condition would return all entries
+
+= 2.3 on July 6, 2023 =
+
+* Added: Filters containing Merge Tags suffixed with `:disabled_admin` are ignored when the current user is an Admin. e.g. `{user:id:disabled_admin}` ([learn more about this modifier](https://docs.gravitykit.com/article/946-the-disabledadmin-merge-tag-modifier))
+* Improved: Choices filled by [GP Populate Anything](https://gravitywiz.com/documentation/gravity-forms-populate-anything/?ref=263) can now be selected
+
+__Developer Updates:__
+
+* Added: `gk/advanced-filter/disabled-filters` WordPress filter to modify Advanced Filtering filter groups and filters
 
 = 2.2 on March 22, 2023 =
 
@@ -132,13 +150,13 @@ UI was written using [Svelte](https://svelte.dev/) and requires compilation. Mak
 * Translations: Added Polish translation. Thank you, Dariusz Z!
 * Updated: Now requires GravityView 2.0 and WordPress 4.4
 * No longer works with the [Internet Explorer browser](https://www.microsoft.com/en-us/microsoft-365/windows/end-of-ie-support)
-* Developers: [Read what changed from 1.3 to 2.0](https://docs.gravityview.co/article/677-advanced-filters-upgrade)
+* Developers: [Read what changed from 1.3 to 2.0](https://docs.gravitykit.com/article/677-advanced-filters-upgrade)
 
 = 1.3 on July 11, 2018 =
 
 * Added: Filter entries by the role of the entry creator - big thanks to [Naomi C. Bush from gravity+](https://gravityplus.pro)!
 * Added: Filter by the roles of the currently logged-in user
-* Added: Filter by entry Approval Status without needing the Approval form field - [Learn how to filter by approval status](https://docs.gravityview.co/article/470-filtering-by-entry-approval-status)
+* Added: Filter by entry Approval Status without needing the Approval form field - [Learn how to filter by approval status](https://docs.gravitykit.com/article/470-filtering-by-entry-approval-status)
 
 = 1.2 on May 23, 2018 =
 
@@ -251,4 +269,4 @@ Fixed: With Gravity Forms 2.3, when using "Created By" filters, the search mode 
 * Liftoff!
 
 
-= 1681311223-4249 =
+= 1698441000-4249 =

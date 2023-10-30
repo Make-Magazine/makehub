@@ -1,5 +1,9 @@
 <?php
+
 namespace GV;
+
+use GravityKit\GravityView\Foundation\Helpers\Arr;
+use GF_Query;
 
 /** If this file is called directly, abort. */
 if ( ! defined( 'GRAVITYVIEW_DIR' ) ) {
@@ -203,7 +207,7 @@ class View implements \ArrayAccess {
 			'rewrite'             => array(
 				/**
 				 * @filter `gravityview_slug` Modify the url part for a View.
-				 * @see https://docs.gravityview.co/article/62-changing-the-view-slug
+				 * @see https://docs.gravitykit.com/article/62-changing-the-view-slug
 				 * @param string $slug The slug shown in the URL
 				 */
 				'slug' => apply_filters( 'gravityview_slug', 'view' ),
@@ -533,7 +537,6 @@ class View implements \ArrayAccess {
 		$joins = array();
 
 		if ( ! gravityview()->plugin->supports( Plugin::FEATURE_JOINS ) ) {
-			gravityview()->log->info( 'Cannot get joined forms; joins feature not supported.' );
 			return $joins;
 		}
 
@@ -583,7 +586,6 @@ class View implements \ArrayAccess {
 		$forms = array();
 
 		if ( ! gravityview()->plugin->supports( Plugin::FEATURE_JOINS ) ) {
-			gravityview()->log->info( 'Cannot get joined forms; joins feature not supported.' );
 			return $forms;
 		}
 
@@ -1314,17 +1316,21 @@ class View implements \ArrayAccess {
 
 			gravityview()->log->debug( 'GF_Query parameters: ', array( 'data' => Utils::gf_query_debug( $query ) ) );
 
+			$result = $this->run_db_query( $query );
+
+			list ( $db_entries, $query ) = $result;
+
 			/**
 			 * Map from Gravity Forms entries arrays to an Entry_Collection.
 			 */
 			if ( count( $this->joins ) ) {
-				foreach ( $query->get() as $entry ) {
+				foreach ( $db_entries as $entry ) {
 					$entries->add(
 						Multi_Entry::from_entries( array_map( '\GV\GF_Entry::from_entry', $entry ) )
 					);
 				}
 			} else {
-				array_map( array( $entries, 'add' ), array_map( '\GV\GF_Entry::from_entry', $query->get() ) );
+				array_map( array( $entries, 'add' ), array_map( '\GV\GF_Entry::from_entry', $db_entries ) );
 			}
 
 			if ( isset( $gf_query_sql_callback ) ) {
@@ -1368,6 +1374,48 @@ class View implements \ArrayAccess {
 		 * @param \GV\Request $request The request.
 		 */
 		return apply_filters( 'gravityview/view/entries', $entries, $this, $request );
+	}
+
+	/**
+	 * Queries database and conditionally caches results.
+	 *
+	 * @since 2.18.2
+	 *
+	 * @param GF_Query $query
+	 *
+	 * @return array{0: array, 1: GF_Query} Array of entries and the query object. The latter may be needed as it is modified during the query.
+	 */
+	private function run_db_query( GF_Query $query ) {
+		/**
+		 * Controls whether the query is cached.
+		 *
+		 * @filter gk/gravityview/view/entries/cache
+		 *
+		 * @since  2.18.2
+		 *
+		 * @param bool $enable_caching Default: true.
+		 */
+		if ( ! apply_filters( 'gk/gravityview/view/entries/cache', true ) ) {
+			$db_entries = $query->get();
+
+			return [
+				$db_entries,
+				$query,
+			];
+		}
+
+		$query_hash = md5( serialize( $query->_introspect() ) );
+
+		if ( ! Arr::get( self::$cache, $query_hash ) ) {
+			$db_entries = $query->get();
+
+			self::$cache[ $query_hash ] = [
+				$db_entries,
+				$query,
+			];
+		}
+
+		return self::$cache[ $query_hash ];
 	}
 
 	/**

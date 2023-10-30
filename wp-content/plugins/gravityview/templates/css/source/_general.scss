@@ -4,7 +4,7 @@
  * @package   GravityView
  * @author    Zack Katz <zack@katzwebservices.com>
  * @license   GPL2
- * @link      https://gravityview.co
+ * @link      https://www.gravitykit.com
  * @copyright Copyright 2016, Katz Web Services, Inc.
  *
  * @since 1.17
@@ -26,7 +26,6 @@ a.gv-sort {
 }
 
 // Used to hide elements (e.g. Hide View data until search is performed)
-.gv-hidden,
-.hidden {
+.gv-hidden {
   display: none;
 }

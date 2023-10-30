@@ -175,6 +175,10 @@ textarea {
 	border: 1px solid #ededed;
 }
 
+.mce-primary button {
+	background: $color-blue;
+}
+
 // user facing wywiwyg
 .mce-tinymce {
 	.mce-widget[aria-label="LearnDash Shortcodes"], .mce-widget[aria-label="Add Vimeography Gallery"] { display: none; }

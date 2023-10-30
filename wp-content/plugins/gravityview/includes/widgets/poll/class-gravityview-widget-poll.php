@@ -22,6 +22,7 @@ class GravityView_Widget_Poll extends GravityView_Widget {
 	function __construct() {
 
 		$this->widget_id = 'poll';
+		$this->icon = 'dashicons-chart-bar';
 		$this->widget_description = __('Displays the results of Poll Fields that exist in the form.', 'gk-gravityview' );
 		$this->widget_subtitle = sprintf( _x('Note: this will display poll results for %sall form entries%s, not only the entries displayed in the View.', 'The string placeholders are for emphasis HTML', 'gk-gravityview' ), '<em>', '</em>' );
 
@@ -93,7 +94,12 @@ class GravityView_Widget_Poll extends GravityView_Widget {
 
 		$GFPolls->localize_scripts();
 
-		wp_enqueue_style('gpoll_css', $GFPolls->get_base_url() . '/css/gpoll.css', null, $GFPolls->_version);
+		if( version_compare( $GFPolls->_version, '4.0', '>=' ) ) {
+			wp_enqueue_style('gpoll_css', $GFPolls->get_base_url() . '/assets/css/dist/theme.css', null, $GFPolls->_version);
+		} else {
+			wp_enqueue_style('gpoll_css', $GFPolls->get_base_url() . '/css/gpoll.css', null, $GFPolls->_version);
+		}
+
 	}
 
 	/**

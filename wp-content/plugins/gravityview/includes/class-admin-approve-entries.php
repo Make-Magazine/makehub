@@ -3,8 +3,8 @@
  * @file class-admin-approve-entries.php
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  *
  * @since 1.0.0
@@ -396,7 +396,7 @@ class GravityView_Admin_ApproveEntries {
 			'unapprove_title' => GravityView_Entry_Approval_Status::get_title_attr('unapproved'),
             'approve_title' => GravityView_Entry_Approval_Status::get_title_attr('disapproved'),
 			'disapprove_title' => GravityView_Entry_Approval_Status::get_title_attr('approved'),
-			'column_title' => __( 'Show entry in directory view?', 'gk-gravityview'),
+			'column_title' => esc_html__( 'GravityView entry approval status', 'gk-gravityview'),
 			'column_link' => esc_url( $this->get_sort_link() ),
             'status_popover_template' => GravityView_Entry_Approval::get_popover_template(),
 			'status_popover_placement' => GravityView_Entry_Approval::get_popover_placement(),
@@ -448,7 +448,7 @@ class GravityView_Admin_ApproveEntries {
 
 		if( $hide_if_no_connections ) {
 
-			$connected_views = gravityview_get_connected_views( $form_id );
+			$connected_views = gravityview_get_connected_views( $form_id, ['posts_per_page' => 1 ], false );
 
 			if( empty( $connected_views ) ) {
 				$show_approve_column = false;

@@ -4,8 +4,8 @@
  *
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  *
  * @since 1.0.0
@@ -831,7 +831,7 @@ class GravityView_Admin_Views {
 		// if in zone directory or single
 		if( in_array( $zone, array( 'directory', 'single' ), true ) ) {
 
-			$meta_fields = GravityView_Fields::get_all( array( 'meta', 'gravityview', 'add-ons' ) );
+			$meta_fields = GravityView_Fields::get_all( array( 'meta', 'gravityview', 'add-ons' ), $zone );
 
 			$entry_default_fields = array();
 
@@ -883,7 +883,7 @@ class GravityView_Admin_Views {
 			$fields = array( 'custom' => $fields['custom'] ) + $fields;
 		}
 
-		$gv_fields = GravityView_Fields::get_all();
+		$gv_fields = GravityView_Fields::get_all( '', $zone );
 
 		foreach ( $fields as &$field ) {
 			foreach ( $gv_fields as $gv_field ) {
@@ -1410,8 +1410,11 @@ class GravityView_Admin_Views {
 			'field_loaderror'             => __( 'Error while adding the field. Please try again or contact GravityView support.', 'gk-gravityview' ),
 			'remove_all_fields'           => __( 'Would you like to remove all fields in this zone?', 'gk-gravityview' ),
 			'foundation_licenses_router'  => array_merge(
-				GravityKitFoundation::get_ajax_params( 'licenses' ),
-				array( 'ajaxRoute' => 'activate_product' )
+				GravityKitFoundation::ajax_router()->get_ajax_params( 'licenses' ),
+				[
+					'ajaxRoute' => 'activate_product',
+					'frontendFoundationVersion' => GravityKitFoundation::VERSION,
+				]
 			)
 		) );
 

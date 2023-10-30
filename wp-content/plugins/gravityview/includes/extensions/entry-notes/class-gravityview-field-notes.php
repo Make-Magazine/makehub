@@ -6,7 +6,7 @@
  * @license     GPL2+
  * @since       1.17
  * @author      Katz Web Services, Inc.
- * @link        https://gravityview.co
+ * @link        https://www.gravitykit.com
  * @copyright   Copyright 2016, Katz Web Services, Inc.
  */
 
@@ -370,7 +370,7 @@ class GravityView_Field_Notes extends GravityView_Field {
 			'notes' => array(
 				'type' => 'checkboxes',
 				'label' => __('Note Settings', 'gk-gravityview'),
-				'desc' => sprintf( _x('Only users with specific capabilities will be able to view, add and delete notes. %sRead more%s.', '%s is opening and closing HTML link', 'gk-gravityview' ), '<a href="https://docs.gravityview.co/article/311-gravityview-capabilities">', '</a>' ),
+				'desc' => sprintf( _x('Only users with specific capabilities will be able to view, add and delete notes. %sRead more%s.', '%s is opening and closing HTML link', 'gk-gravityview' ), '<a href="https://docs.gravitykit.com/article/311-gravityview-capabilities">', '</a>' ),
 				'options' => array(
 					'view' => array(
 						'label' => __( 'Display notes?', 'gk-gravityview' ),
@@ -823,7 +823,7 @@ class GravityView_Field_Notes extends GravityView_Field {
 
 			GVCommon::send_email( $from, $to, $bcc, $reply_to, $subject, $message, $from_name, $message_format, '', $entry, false );
 
-			$form  = isset( $entry['form_id'] ) ? GFAPI::get_form( $entry['form_id'] ) : array();
+			$form  = isset( $entry['form_id'] ) ? GVCommon::get_form( $entry['form_id'] ) : array();
 
 			/**
 			 * @see https://www.gravityhelp.com/documentation/article/10146-2/ It's here for compatibility with Gravity Forms

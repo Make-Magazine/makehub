@@ -4,8 +4,8 @@
  *
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  *
  * @since 1.0.0
@@ -98,6 +98,8 @@
 			vcfg.currentFormId = vcfg.gvSelectForm.val();
 			vcfg.currentTemplateId = $("#gravityview_directory_template").val();
 
+			vcfg.directAccessSelect = $( '#gv-direct-access-select' );
+
 			// Start by showing/hiding on load
 			vcfg.toggleInitialVisibility( vcfg );
 
@@ -144,6 +146,15 @@
 
 				// When user clicks into the shortcode example field, select the example.
 				.on( 'click', ".gv-shortcode input", vcfg.selectText )
+
+				// Show the direct access options and hide the toggle button when opened.
+				.on( 'click', "#gv-direct-access .edit-direct-access", vcfg.editDirectAccess )
+
+				// Cancel direct access selection area and hide it from view.
+				.on( 'click', "#gv-direct-access-select .cancel-direct-access", vcfg.cancelDirectAccess )
+
+				// Set the selected direct access setting as current.
+				.on( 'click', "#gv-direct-access-select .save-direct-access", vcfg.updateDirectAccess )
 
 				// When changing forms, update the form info helper links
 				.on( 'gravityview_form_change', vcfg.updateFormLinks )
@@ -603,6 +614,77 @@
 			return false;
 		},
 
+		/**
+		 * @param  {jQueryEvent} e jQuery event object.
+		 * @since TODO
+		 * @return {void}
+		 */
+		editDirectAccess: function ( e ) {
+			var vcfg = viewConfiguration;
+
+			e.preventDefault();
+
+			if ( vcfg.directAccessSelect.is( ':visible' ) ) {
+				return;
+			}
+
+			vcfg.directAccessSelect.slideDown( 'fast', function () {
+				vcfg.directAccessSelect.find( 'input[type="radio"]' ).first().trigger( 'focus' );
+			} );
+
+			$( this ).hide();
+		},
+
+		/**
+		 * Cancel direct access selection area and hide it from view.
+		 *
+		 * @param  {jQueryEvent} e jQuery event object.
+		 * @since TODO
+		 * @return {void}
+		 */
+		cancelDirectAccess: function ( e ) {
+			viewConfiguration.directAccessSelect.slideUp( 'fast' );
+
+			$( '#gv-direct-access-display strong' ).text( function () {
+				return $( this ).data( 'initial-label' );
+			} );
+
+			$( '#gv-direct-access .edit-direct-access' ).show().trigger( 'focus' );
+
+			e.preventDefault();
+		},
+
+		/**
+		 * Set the selected direct access setting as current.
+		 * @since TODO
+		 * @param {jQueryEvent} e jQuery event object.
+		 */
+		updateDirectAccess: function ( e ) {
+			let checked = false,
+				selectedDirectAccess = viewConfiguration.directAccessSelect.find( 'input:radio:checked' );
+
+			viewConfiguration.directAccessSelect.slideUp('fast');
+
+			$('#gv-direct-access .edit-direct-access').show().trigger( 'focus' );
+
+			checked = 'embed' === selectedDirectAccess.val();
+
+			// Update the _actual_ setting in the Permissions tab.
+			$( '#gravityview_se_embed_only' ).prop( 'checked', checked );
+
+			// Update the display label.
+			$('#gv-direct-access-display strong').text( selectedDirectAccess.data( 'display-label' ) );
+
+			// Update the class on the container to reflect the current setting.
+			$('#gv-direct-access').toggleClass('embed-only', checked );
+
+			e.preventDefault();
+		},
+
+		/**
+		 * @param  {jQueryEvent} e jQuery event object.
+		 * @param {viewConfiguration} vcfg
+		 */
 		toggleInitialVisibility: function ( vcfg ) {
 
 			// There are no Gravity Forms forms
@@ -964,12 +1046,26 @@
 			var vcfg = viewConfiguration;
 
 			$( 'textarea.code:visible', dialog ).each( function () {
-				var editor = wp.codeEditor.initialize( $( this ), {
-					undoDepth: 1000
-				} );
 
-				// Leave room for
+				// Define a default configuration
+				const codemirrorConfig = $.extend( true, {}, wp.codeEditor.defaultSettings );
+
+				let attributeValue = $( this ).data( 'codemirror' );
+				if ( attributeValue ) {
+					codemirrorConfig.codemirror = $.extend( {}, codemirrorConfig.codemirror, attributeValue );
+				}
+
+				// And then instantiate CodeMirror using those settings, which will then extend the WP defaults.
+				let editor = wp.codeEditor.initialize( $( this ), codemirrorConfig );
+
+				// If Merge Tags aren't enabled, don't continue.
+				if ( ! $( this ).hasClass( 'merge-tag-support' ) && ! $( this ).hasClass( 'gv-merge-tag-support' ) ) {
+					return;
+				}
+
+				// Leave room for Merge Tags icon.
 				editor.codemirror.setSize( '95%' );
+
 				var $textarea = $( this );
 				var editorId = $textarea.attr( 'id' );
 				var mergeTags = window.gfMergeTags.getAutoCompleteMergeTags( $textarea );
@@ -1298,7 +1394,7 @@
 					vcfg.selectTemplateContinue( slugmatch );
 				}
 			} else {
-				// revert back to how things before before clicking "use a form preset"
+				// revert back to how things were before clicking "use a form preset"
 				vcfg.toggleViewTypeMetabox();
 				vcfg.showViewConfig();
 			}
@@ -1376,13 +1472,14 @@
 				vcfg.performingAjaxAction = true;
 				$( '.gv-view-template-notice' ).hide();
 
-				const { _wpNonce: nonce, _wpAjaxAction: action, _wpAjaxUrl: url, ajaxRouter } = window.gvGlobals.foundation_licenses_router;
+				const { _wpNonce: nonce, _wpAjaxAction: action, _wpAjaxUrl: url, ajaxRouter, frontendFoundationVersion } = window.gvGlobals.foundation_licenses_router;
 
 				const request = {
 					nonce,
 					action,
 					ajaxRouter,
 					ajaxRoute,
+					frontendFoundationVersion,
 					payload
 				};
 
@@ -1428,7 +1525,7 @@
 				}
 
 				$.when( server_request( 'activate_product', {
-						path: $link.attr( 'data-template-path' ),
+						text_domain: $link.attr( 'data-template-text-domain' ),
 					} ) )
 					.then( on_success )
 					.always( do_always )
@@ -2511,6 +2608,16 @@
 		 */
 		initTabs: function() {
 
+			// Save the state on a per-post basis
+			let cookie_key = 'gv-active-setting-tab-' + $( '#post_ID' ).val();
+
+			// The default tab is the first (0)
+			let active_settings_tab = $.cookie( cookie_key );
+
+			if ( false === viewConfiguration.getCookieVal( active_settings_tab ) ) {
+				active_settings_tab = 0;
+			}
+
 			viewGeneralSettings.metaboxObj
 				// What happens after tabs are generated
 				.on( 'tabscreate', viewGeneralSettings.tabsCreate )
@@ -2518,8 +2625,25 @@
 				// Force the sort metabox to be directly under the view configuration. Damn 3rd party metaboxes!
 				.insertAfter( $('#gravityview_view_config') )
 
-				// Make vertical tabs
-				.tabs()
+				// Make tabs
+				.tabs( {
+					active: active_settings_tab,
+					create: function ( event, ui ) {
+						// When the Custom Code tab is active on-load, we need a small amount of
+						// time before instantiating CodeMirror.
+						setTimeout( function() {
+							viewConfiguration.setupCodeMirror( ui.panel );
+						}, 50 );
+					},
+					activate: function ( event, ui ) {
+						// When the tab is activated, set a new cookie
+						$.cookie( cookie_key, ui.newTab.index(), {
+							path: gvGlobals.admin_cookiepath
+						} );
+
+						viewConfiguration.setupCodeMirror( ui.newPanel );
+					}
+				} )
 				.addClass( "ui-tabs-vertical ui-helper-clearfix" )
 				.find('li')
 				.removeClass( "ui-corner-top" );

@@ -414,9 +414,12 @@ class GF_Pending_Activations {
 		$action = ! $action ? rgpost( 'action' ) != -1 ? rgpost( 'action' ) : rgpost( 'action2' ) : $action;
 
 		$items      = rgpost( 'item' ) ? array( rgpost( 'item' ) ) : rgpost( 'items' );
-		$item_count = count( $items );
 		$messages   = array();
 		$errors     = array();
+
+		if ( empty( $items ) ) {
+			return;
+		}
 
 		foreach ( $items as $key ) {
 			switch ( $action ) {

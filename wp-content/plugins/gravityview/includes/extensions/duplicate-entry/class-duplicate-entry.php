@@ -7,8 +7,8 @@
  * @since     2.5
  * @package   GravityView
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      http://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  */
 
@@ -472,7 +472,7 @@ final class GravityView_Duplicate_Entry {
 			return new WP_Error( 'gravityview-duplicate-entry-missing', __( 'The entry does not exist.', 'gk-gravityview' ) );
 		}
 
-		$form = GFAPI::get_form( $entry['form_id'] );
+		$form = GVCommon::get_form( $entry['form_id'] );
 
 		$row['id'] = null;
 		$row['date_created'] = date( 'Y-m-d H:i:s', time() );

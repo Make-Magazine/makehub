@@ -9,22 +9,23 @@
  *
  * 0. If you haven't already, sign up for a TrustedLogin account {@see https://www.trustedlogin.com}
  * 1. Namespace the installation ({@see https://www.trustedlogin.com/configuration/} to learn how)
- * 2. Instantiate this class with a configuration array (really, {@see https://www.trustedlogin.com/configuration/} for more info)
+ * 2. Instantiate this class with a configuration object (really, go see {@see https://www.trustedlogin.com/configuration/} for more info)
  *
  * Class Client
  *
  * @package GravityKit\GravityView\Foundation\ThirdParty\TrustedLogin\Client
  *
- * @copyright 2021 Katz Web Services, Inc.
+ * @copyright 2023 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by gravityview on 07-April-2023 using Strauss.
+ * Modified by gravityview on 25-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
+
 namespace GravityKit\GravityView\Foundation\ThirdParty\TrustedLogin;
 
 // Exit if accessed directly
-if ( ! defined('ABSPATH') ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -40,7 +41,7 @@ final class Client {
 	 * @var string The current SDK version.
 	 * @since 1.0.0
 	 */
-	const VERSION = '1.4.0';
+	const VERSION = '1.6.1';
 
 	/**
 	 * @var Config
@@ -92,6 +93,7 @@ final class Client {
 	 */
 	private $site_access;
 
+
 	/**
 	 * TrustedLogin constructor.
 	 *
@@ -129,13 +131,16 @@ final class Client {
 
 		$this->support_user = new SupportUser( $this->config, $this->logging );
 
-		$this->admin = new Admin( $this->config, $this->logging );
+		$this->site_access = new SiteAccess( $this->config, $this->logging );
+
+		$form = new Form( $this->config, $this->logging, $this->support_user, $this->site_access );
+
+		$this->admin = new Admin( $this->config, $form, $this->support_user );
 
 		$this->ajax = new Ajax( $this->config, $this->logging );
 
 		$this->remote = new Remote( $this->config, $this->logging );
 
-		$this->site_access = new SiteAccess( $this->config, $this->logging );
 
 		if ( $init ) {
 			$this->init();
@@ -165,7 +170,7 @@ final class Client {
 
 		// Disables namespaced client if `TRUSTEDLOGIN_DISABLE_{NS}` is defined and truthy.
 		if ( defined( 'TRUSTEDLOGIN_DISABLE_' . strtoupper( $ns ) ) && constant( 'TRUSTEDLOGIN_DISABLE_' . strtoupper( $ns ) ) ) {
-			return new WP_Error( 'disabled_for_namespace', 'TrustedLogin has been disabled for this namespace using the TRUSTEDLOGIN_DISABLE_' . $ns .' constant.' );
+			return new WP_Error( 'disabled_for_namespace', 'TrustedLogin has been disabled for this namespace using the TRUSTEDLOGIN_DISABLE_' . $ns . ' constant.' );
 		}
 
 		$meets_requirements = Encryption::meets_requirements();
@@ -208,9 +213,14 @@ final class Client {
 	/**
 	 * This creates a TrustedLogin user ✨
 	 *
+	 * @since 1.5.0 Added $ticket_data parameter.
+	 *
+	 * @param bool $include_debug_data Whether to include debug data in the response.
+	 * @param array|null $ticket_data If provided, customer-provided data associated with the access request.
+	 *
 	 * @return array|WP_Error
 	 */
-	public function grant_access( $include_debug_data = false ) {
+	public function grant_access( $include_debug_data = false, $ticket_data = null ) {
 
 		if ( ! self::$valid_config ) {
 			return new \WP_Error( 'invalid_configuration', 'TrustedLogin has not been properly configured or instantiated.', array( 'error_code' => 424 ) );
@@ -344,7 +354,10 @@ final class Client {
 
 		if ( is_wp_error( $created ) ) {
 
-			$this->logging->log( sprintf( 'There was an issue creating access (%s): %s', $created->get_error_code(), $created->get_error_message() ), __METHOD__, 'error' );
+			// get_all_error_data() is only available in WP 5.6+
+			$error_data = is_callable( array( $created, 'get_all_error_data' ) ) ? $created->get_all_error_data() : $created->get_error_data();
+
+			$this->logging->log( sprintf( 'There was an issue creating access (%s): %s', $created->get_error_code(), $created->get_error_message() ), __METHOD__, 'error', $error_data );
 
 			$created->add_data( array( 'status_code' => 503 ) );
 
@@ -367,6 +380,10 @@ final class Client {
 
 		if ( $include_debug_data ) {
 			$action_data['debug_data'] = $this->get_debug_data();
+		}
+
+		if ( $ticket_data ) {
+			$action_data['ticket'] = $ticket_data;
 		}
 
 		/**
@@ -442,11 +459,17 @@ final class Client {
 
 		try {
 
-			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			add_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 			$updated = $this->site_access->sync_secret( $secret_id, $site_identifier_hash, 'extend' );
 
-			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array( $this, 'add_meta_to_envelope' ) );
+			remove_filter( 'trustedlogin/' . $this->config->ns() . '/envelope/meta', array(
+				$this,
+				'add_meta_to_envelope'
+			) );
 
 		} catch ( Exception $e ) {
 
@@ -476,10 +499,10 @@ final class Client {
 		 * @usedby Remote::maybe_send_webhook()
 		 */
 		do_action( 'trustedlogin/' . $this->config->ns() . '/access/extended', array(
-			'url'    => get_site_url(),
-			'ns' => $this->config->ns(),
-			'action' => 'extended',
-			'ref' => self::get_reference_id(),
+			'url'        => get_site_url(),
+			'ns'         => $this->config->ns(),
+			'action'     => 'extended',
+			'ref'        => self::get_reference_id(),
 			'access_key' => $this->site_access->get_access_key(),
 		) );
 
@@ -519,8 +542,8 @@ final class Client {
 		}
 
 		$site_identifier_hash = $this->support_user->get_site_hash( $user );
-		$endpoint_hash = $this->endpoint->get_hash( $site_identifier_hash );
-		$secret_id = $this->endpoint->generate_secret_id( $site_identifier_hash, $endpoint_hash );
+		$endpoint_hash        = $this->endpoint->get_hash( $site_identifier_hash );
+		$secret_id            = $this->endpoint->generate_secret_id( $site_identifier_hash, $endpoint_hash );
 
 		// Revoke site in SaaS
 		$site_revoked = $this->site_access->revoke( $secret_id, $this->remote );
@@ -544,6 +567,7 @@ final class Client {
 
 		if ( ! empty( $should_be_deleted ) ) {
 			$this->logging->log( 'User #' . $should_be_deleted->ID . ' was not removed', __METHOD__, 'error' );
+
 			return new \WP_Error( 'support_user_not_deleted', esc_html__( 'The support user was not deleted.', 'gk-gravityview' ) );
 		}
 
@@ -552,7 +576,7 @@ final class Client {
 		 */
 		do_action( 'trustedlogin/' . $this->config->ns() . '/access/revoked', array(
 			'url'    => get_site_url(),
-			'ns' => $this->config->ns(),
+			'ns'     => $this->config->ns(),
 			'action' => 'revoked',
 		) );
 

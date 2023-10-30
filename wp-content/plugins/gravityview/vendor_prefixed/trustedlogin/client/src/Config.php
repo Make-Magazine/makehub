@@ -7,13 +7,14 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by gravityview on 07-April-2023 using Strauss.
+ * Modified by gravityview on 25-October-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
+
 namespace GravityKit\GravityView\Foundation\ThirdParty\TrustedLogin;
 
 // Exit if accessed directly
-if ( ! defined('ABSPATH') ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -30,24 +31,24 @@ final class Config {
 
 	/**
 	 * @var array Default settings values
-	 * @link https://www.trustedlogin.com/configuration/ Read the configuration settings documentation
 	 * @since 1.0.0
+	 * @link https://www.trustedlogin.com/configuration/ Read the configuration settings documentation
 	 */
 	private $default_settings = array(
-		'auth' => array(
-			'api_key' => null,
+		'auth'           => array(
+			'api_key'     => null,
 			'license_key' => null,
 		),
-		'caps' => array(
-			'add' => array(),
+		'caps'           => array(
+			'add'    => array(),
 			'remove' => array(),
 		),
-		'decay' => WEEK_IN_SECONDS,
-		'logging' => array(
-			'enabled' => false,
+		'decay'          => WEEK_IN_SECONDS,
+		'logging'        => array(
+			'enabled'   => false,
 			'directory' => null,
 			'threshold' => 'notice',
-			'options' => array(
+			'options'   => array(
 				'extension'      => 'log',
 				'dateFormat'     => 'Y-m-d G:i:s.u',
 				'filename'       => null, // Overridden in Logging.php
@@ -56,33 +57,38 @@ final class Config {
 				'appendContext'  => true,
 			),
 		),
-		'menu' => array(
-			'slug' => null,
-			'title' => null,
+		'menu'           => array(
+			'slug'     => null,
+			'title'    => null,
 			'priority' => null,
 			'icon_url' => '',
 			'position' => null,
 		),
-		'paths' => array(
+		'paths'          => array(
 			'css' => null,
 			'js'  => null, // Default is defined in get_default_settings()
 		),
 		'reassign_posts' => true,
-		'require_ssl' => true,
-		'role' => 'editor',
-		'vendor' => array(
-			'namespace' => null,
-			'title' => null,
-			'email' => null,
-			'website' => null,
-			'support_url' => null,
-			'display_name' => null,
-			'logo_url' => null,
+		'require_ssl'    => true,
+		'role'           => 'editor',
+		'clone_role'     => true,
+		'terms_of_service' => array(
+			'url' => null,
+		),
+		'vendor'         => array(
+			'namespace'             => null,
+			'title'                 => null,
+			'email'                 => null,
+			'website'               => null,
+			'support_url'           => null,
+			'display_name'          => null,
+			'logo_url'              => null,
 			'about_live_access_url' => null,
 		),
-		'webhook' => array(
-			'url' => null,
-			'debug_data' => false,
+		'webhook'        => array(
+			'url'           => null,
+			'debug_data'    => false,
+			'create_ticket' => false,
 		),
 	);
 
@@ -116,7 +122,10 @@ final class Config {
 	 */
 	public function validate() {
 
-		if ( in_array( __NAMESPACE__, array( 'ReplaceMe', 'ReplaceMe\GravityView\TrustedLogin' ) ) && ! defined('TL_DOING_TESTS') ) {
+		if ( in_array( __NAMESPACE__, array(
+				'ReplaceMe',
+				'ReplaceMe\GravityView\TrustedLogin',
+			) ) && ! defined( 'TL_DOING_TESTS' ) ) {
 			throw new Exception( 'Developer: make sure to change the namespace for the TrustedLogin class. See https://trustedlogin.com/configuration/ for more information.', 501 );
 		}
 
@@ -126,8 +135,10 @@ final class Config {
 			$errors[] = new \WP_Error( 'missing_configuration', 'You need to set an API key. Get yours at https://app.trustedlogin.com' );
 		}
 
-		if ( isset( $this->settings['vendor']['website'] ) && 'https://www.example.com' === $this->settings['vendor']['website'] && ! defined('TL_DOING_TESTS') ) {
-			$errors[] = new \WP_Error( 'missing_configuration', 'You need to configure the "website" URL to point to the URL where the Vendor plugin is installed.' );
+		if ( isset( $this->settings['vendor']['website'] ) ) {
+			if ( 'https://www.example.com' === $this->settings['vendor']['website'] && ! defined( 'TL_DOING_TESTS' ) ) {
+				$errors[] = new \WP_Error( 'missing_configuration', 'You need to configure the "website" URL to point to the URL where the Vendor plugin is installed.' );
+			}
 		}
 
 		foreach ( array( 'namespace', 'title', 'website', 'support_url', 'email' ) as $required_vendor_field ) {
@@ -150,6 +161,7 @@ final class Config {
 
 			/**
 			 * This seems like a reasonable max limit on the ns length.
+			 *
 			 * @see https://developer.wordpress.org/reference/functions/set_transient/#more-information
 			 */
 			if ( strlen( $this->settings['vendor']['namespace'] ) > 96 ) {
@@ -161,7 +173,7 @@ final class Config {
 			}
 		}
 
-		if ( isset( $this->settings['vendor'][ 'email' ] ) && ! filter_var( $this->settings['vendor'][ 'email' ], FILTER_VALIDATE_EMAIL ) ) {
+		if ( isset( $this->settings['vendor']['email'] ) && ! filter_var( $this->settings['vendor']['email'], FILTER_VALIDATE_EMAIL ) ) {
 			$errors[] = new \WP_Error( 'invalid_configuration', 'An invalid `vendor/email` setting was passed to the TrustedLogin Client.' );
 		}
 
@@ -181,11 +193,23 @@ final class Config {
 			}
 		}
 
-		$added_caps = $this->get_setting( 'caps/add', array(), $this->settings );
+		if ( false !== $this->get_setting( 'clone_role', true, $this->settings ) ) {
+			$added_caps = $this->get_setting( 'caps/add', array(), $this->settings );
 
-		foreach ( SupportRole::$prevented_caps as $invalid_cap ) {
-			if ( array_key_exists( $invalid_cap, $added_caps ) ) {
-				$errors[] = new \WP_Error( 'invalid_configuration', 'TrustedLogin users cannot be allowed to: ' . $invalid_cap );
+			foreach ( SupportRole::$prevented_caps as $invalid_cap ) {
+				if ( array_key_exists( $invalid_cap, $added_caps ) ) {
+					$errors[] = new \WP_Error( 'invalid_configuration', 'TrustedLogin users cannot be allowed to: ' . $invalid_cap );
+				}
+			}
+		} else {
+			$added_caps = $this->get_setting( 'caps/add', array(), $this->settings );
+			$removed_caps = $this->get_setting( 'caps/remove', array(), $this->settings );
+
+			$added_caps = array_filter( $added_caps );
+			$removed_caps = array_filter( $removed_caps );
+
+			if ( ! empty( $added_caps ) || ! empty( $removed_caps ) ) {
+				$errors[] = new \WP_Error( 'invalid_configuration', 'When `clone_role` is disabled, TrustedLogin cannot add or remove capabilities.' );
 			}
 		}
 
@@ -339,6 +363,17 @@ final class Config {
 	}
 
 	/**
+	 * Returns the full settings array
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return array Settings as passed to the constructor.
+	 */
+	public function get_settings() {
+		return $this->settings;
+	}
+
+	/**
 	 * Gets a specific property value within a multidimensional array.
 	 *
 	 * @param array $array The array to search in.
@@ -378,15 +413,20 @@ final class Config {
 			return $default;
 		}
 
-		if ( isset( $array[ $prop ] ) ) {
-			$value = $array[ $prop ];
-		} else {
-			$value = $default;
+		// Directly fetch the value if it exists, otherwise use the default.
+		$value = isset( $array[ $prop ] ) ? $array[ $prop ] : $default;
+
+		// Special handling for zero and false.
+		if ( 0 === $value || false === $value ) {
+			return $value;
 		}
 
-		$value_is_zero = 0 === $value;
+		// If the value is empty and a default is provided, use the default.
+		if ( empty( $value ) && null !== $default ) {
+			return $default;
+		}
 
-		return ( empty( $value ) && ! $value_is_zero ) && $default !== null ? $default : $value;
+		return $value;
 	}
 
 	/**
@@ -407,6 +447,7 @@ final class Config {
 		/**
 		 * @internal Do not rely on this!!!!
 		 * @todo Remove this
+		 *
 		 * @param bool $return Does this site meet the SSL requirement?
 		 */
 		return apply_filters( 'trustedlogin/' . $this->ns() . '/meets_ssl_requirement', $return );

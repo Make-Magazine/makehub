@@ -1432,7 +1432,13 @@ class GF_User_Registration extends GFFeedAddOn {
 		$user_id = wp_update_user( $user );
 		$role    = rgar( $meta, 'role' );
 
-		// if a role is provied and it is not the 'preserve' option, update the role
+		if ( ! empty( $user_data['password_hash'] ) ) {
+			$this->log( sprintf( 'Setting hashed password for user ID %d.', $user_id ) );
+			$this->set_hashed_password( $user_id, $user_data['password_hash'] );
+			clean_user_cache( $user_id );
+		}
+
+		// if a role is provided and it is not the 'preserve' option, update the role
 		if ( $role && $role != 'gfur_preserve_role' ) {
 			$this->log( sprintf( 'Setting role: %s', $role ) );
 			$user_obj->set_role( $role );
