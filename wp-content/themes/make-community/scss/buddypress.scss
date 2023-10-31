@@ -389,7 +389,7 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 }
 #profile-edit-form {
 	input[type="button"].ed_button, input[type="text"], input[type="date"], input[type="time"], input[type="datetime-local"], input[type="week"], input[type="month"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="tel"], input[type="number"], textarea#comment {
-		background: #fff;
+		background: #fff !important;
 	}
 	
 }

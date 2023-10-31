@@ -120,12 +120,14 @@ add_filter( 'bp_get_activity_show_filters_options', function ( $filters ) {
 	return false;
 } );
 
+/* This is what was preventing school maker faire membership from getting assigned correctly
 function redirect_after_join_group( $group_id, $user_id ) {
     $group = groups_get_group( array( 'group_id' => $group_id ) );
     bp_core_redirect( bp_get_groups_directory_permalink() . $group->slug );
 }
 add_action( 'groups_join_group', 'redirect_after_join_group', 9999, 2 );
 add_action( 'groups_membership_accepted', 'redirect_after_join_group', 9999, 2 );
+*/
 
 /*function remove_message_count( $count, $nav_item, $displayed_nav ) {
     if ( $displayed_nav == 'personal' ) {
