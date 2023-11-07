@@ -139,5 +139,6 @@ li.gform_validation_container, li.gform_hidden {
     margin-top: 0px !important;
 }
 .gfield_checkbox input[type="checkbox"] + label::before {
-	background: inherit !important;
+	background: inherit;
 }
+
