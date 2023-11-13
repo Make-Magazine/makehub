@@ -42,9 +42,9 @@ function makerspace_to_community($entry, $form) {
 
     //set member type to makerspace
     switch_to_blog(1);
-    $member_type = bp_set_member_type($user_id, 'maker_space');
-    
-    $tt_ids = wp_set_object_terms($user_id, 'maker_space', bp_get_member_type_tax_name());
+        $blog_id = get_current_blog_id();
+        $blog_url = get_site_url( $blog_id );
+        basicCurl( $blog_url . '?auth=m50667&wpid=' . get_current_user_id() );
     restore_current_blog();
 
     GLOBAL $wpdb;
@@ -144,7 +144,7 @@ function makerspace_to_community($entry, $form) {
     // Insert xprofile field visibility state for user level.
     update_user_meta($user_id, 'bp_xprofile_visibility_levels', $xprofile_fields_visibility);
 
-    if (isset($bpmeta)) {
+    /*if (isset($bpmeta)) {
         //Added an entry in user_meta table for current user meta key is last_activity
         bp_update_user_last_activity($user_id, date('Y-m-d H:i:s'));
 
@@ -170,7 +170,7 @@ function makerspace_to_community($entry, $form) {
                 xprofile_set_field_data($bpmetakeyid, $user_id, $bpmetavalue);
             }
         }
-    }
+    }*/
 }
 
 function findUniqueUname($input = '') {
