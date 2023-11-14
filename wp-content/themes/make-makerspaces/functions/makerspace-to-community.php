@@ -34,7 +34,8 @@ function makerspace_to_community($entry, $form) {
             'user_url' => $entry[2],
             'display_name' => $entry[1],
             'user_nicename' => $username,
-            'user_login' => $username);
+            'user_login' => $username,
+            'user_pass' => $email);
         $user_id = wp_insert_user($userdata);
         wp_update_user(array('ID' => $user_id, 'role' => 'subscriber'));
         add_user_to_blog(1, $user_id, 'subscriber'); //add user to main blog           
