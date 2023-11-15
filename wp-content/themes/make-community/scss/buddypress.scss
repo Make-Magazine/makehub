@@ -426,10 +426,18 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		}
 	}
 }
-#my-account-personal-li, #my-feed-personal-li, #activity-rss-feed, .main-navs #settings-personal-li { 
+#my-account-personal-li, #my-feed-personal-li, #activity-rss-feed { 
 	display: none !important; 
 }
-\\
+
+// settings
+.settings-wrapper {
+	clear: both;
+	margin-bottom: 30px;
+	#submit { 
+		margin-bottom: 30px ;
+	}
+}
 
 .makeco-profile-fields {
 	.item.bg {
@@ -445,18 +453,19 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		}
 	}
 }
-#profile-edit-form {
+#profile-edit-form, .settings-tabs {
 	input[type="button"].ed_button, input[type="text"], input[type="date"], input[type="time"], input[type="datetime-local"], input[type="week"], input[type="month"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="tel"], input[type="number"], textarea#comment {
 		background: #fff !important;
 	}
-	ul.button-nav {
-		margin-bottom: -1px;
+	ul {
+		margin-bottom: -1px !important;
 		li {
 			padding: 10px 20px;
 			border: solid 1px #ccc;
 			border-bottom: 0px;
 			border-top-left-radius: 5px;
 			border-top-right-radius: 5px;
+			margin-right: 10px;
 			&.current {
 				background: #f1f1f1;
 			}
@@ -465,15 +474,15 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 			}
 		}
 	}
-	.profile-edit-form-fields {
-		border: solid 1px #ccc;
-		border-radius: 5px;
-		border-top-left-radius: 0px;
-		padding: 0px 15px 15px;
-		background: #f1f1f1;
-		.editfield {
-			background: #fcfcfc;
-		}
+}
+.profile-edit-form-fields, .settings-wrapper {
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	border-top-left-radius: 0px;
+	padding: 0px 15px 15px;
+	background: #f1f1f1;
+	.editfield {
+		background: #fcfcfc;
 	}
 }
 .profile.public {

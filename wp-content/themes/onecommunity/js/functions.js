@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
 "use strict";
     var viewport = window.innerWidth;
     var tabsCount = document.querySelectorAll('nav.main-navs ul li').length;
-    if (tabsCount > 8 && viewport > 1299) {
+    if (tabsCount > 9 && viewport > 1299) {
 
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
