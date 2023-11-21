@@ -295,7 +295,7 @@ div.pagination,
 }
 
 // Profile pages
-body:not(.my-profile) #my-feed-personal-li { display: none; }
+body:not(.my-account) #my-feed-personal-li { display: none; }
 .social-icons {
 	margin-top: 10px;
 	display: flex;
@@ -426,7 +426,7 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		}
 	}
 }
-#my-account-personal-li, #my-feed-personal-li, #activity-rss-feed { 
+#my-account-personal-li, #activity-rss-feed { 
 	display: none !important; 
 }
 
