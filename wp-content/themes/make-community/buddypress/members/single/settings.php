@@ -37,6 +37,9 @@ switch ( bp_current_action() ) :
 	case 'profile'        :
 		bp_get_template_part( 'members/single/settings/profile'        );
 		break;
+	case 'invites':
+		bp_get_template_part( 'members/single/settings/group-invites' );
+		break;
 	case 'data'           :
 		bp_get_template_part( 'members/single/settings/data'           );
 		break;
