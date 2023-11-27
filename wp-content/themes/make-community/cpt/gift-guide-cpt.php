@@ -19,19 +19,19 @@ add_action( 'init', 'register_cpt_gift_guide', 998, 3 );
 function register_cpt_gift_guide() {
 
 	$labels = array(
-		'name' => _x( 'Gift Guides', 'Gift Guide' ),
-		'singular_name' => _x( 'Gift Guide Product', 'Gift Guide' ),
-		'add_new' => _x( 'Add New', 'Gift Guide' ),
-		'add_new_item' => _x( 'Add New Gift Guide', 'Gift Guide' ),
-		'edit_item' => _x( 'Edit Gift Guide', 'Gift Guide' ),
-		'new_item' => _x( 'New Gift Guide', 'Gift Guide' ),
-		'view_item' => _x( 'View Gift Guide', 'Gift Guide' ),
-		'search_items' => _x( 'Search Gift Guides', 'Gift Guide' ),
-		'not_found' => _x( 'No Gift Guides found', 'Gift Guide' ),
-		'not_found_in_trash' => _x( 'No Gift Guides found in Trash', 'Gift Guide' ),
-		'parent_item_colon' => _x( 'Parent Gift Guide:', 'Gift Guide' ),
-		'menu_name' => _x( 'Gift Guides', 'Gift Guide' ),
-		'all_items' => _x( 'Gift Guide Products', 'Gift Guide' )
+		'name' => __( 'Gift Guides', 'makeco' ),
+		'singular_name' => __( 'Gift Guide Product', 'makeco' ),
+		'add_new' => __( 'Add New', 'makeco' ),
+		'add_new_item' => __( 'Add New Gift Guide', 'makeco' ),
+		'edit_item' => __( 'Edit Gift Guide', 'makeco' ),
+		'new_item' => __( 'New Gift Guide', 'makeco' ),
+		'view_item' => __( 'View Gift Guide', 'makeco' ),
+		'search_items' => __( 'Search Gift Guides', 'makeco' ),
+		'not_found' => __( 'No Gift Guides found', 'makeco' ),
+		'not_found_in_trash' => __( 'No Gift Guides found in Trash', 'makeco' ),
+		'parent_item_colon' => __( 'Parent Gift Guide:', 'makeco' ),
+		'menu_name' => __( 'Gift Guides', 'makeco' ),
+		'all_items' => __( 'Gift Guide Products', 'makeco' )
 	);
 
 	$args = array(
@@ -68,21 +68,21 @@ add_action( 'init', 'register_taxonomy_gift_guide_categories' );
 function register_taxonomy_gift_guide_categories() {
 
 	$labels = array(
-		'name' => _x( 'Gift Guide Categories', 'gift_guide_categories' ),
-		'singular_name' => _x( 'Gift Guide Category', 'gift_guide_categories' ),
-		'search_items' => _x( 'Gift Guide Categories', 'gift_guide_categories' ),
-		'popular_items' => _x( 'Gift Guide Content Categories', 'gift_guide_categories' ),
-		'all_items' => _x( 'All Gift Guide Categories', 'gift_guide_categories' ),
-		'parent_item' => _x( 'Parent Gift Guide Category', 'gift_guide_categories' ),
-		'parent_item_colon' => _x( 'Parent Gift Guide Category:', 'gift_guide_categories' ),
-		'edit_item' => _x( 'Edit Gift Guide Category', 'gift_guide_categories' ),
-		'update_item' => _x( 'Update Gift Guide Category', 'gift_guide_categories' ),
-		'add_new_item' => _x( 'Add New Gift Guide Category', 'gift_guide_categories' ),
-		'new_item_name' => _x( 'New Gift Guide Category', 'gift_guide_categories' ),
-		'separate_items_with_commas' => _x( 'Separate Gift Guide categories with commas', 'gift_guide_categories' ),
-		'add_or_remove_items' => _x( 'Add or remove Gift Guide Categories', 'gift_guide_categories' ),
-		'choose_from_most_used' => _x( 'Choose from most used Gift Guide Categories', 'gift_guide_categories' ),
-		'menu_name' => _x( 'Gift Guide Categories', 'gift_guide_categories' ),
+		'name' => __( 'Gift Guide Categories', 'makeco' ),
+		'singular_name' => __( 'Gift Guide Category', 'makeco' ),
+		'search_items' => __( 'Gift Guide Categories', 'makeco' ),
+		'popular_items' => __( 'Gift Guide Content Categories', 'makeco' ),
+		'all_items' => __( 'All Gift Guide Categories', 'makeco' ),
+		'parent_item' => __( 'Parent Gift Guide Category', 'makeco' ),
+		'parent_item_colon' => __( 'Parent Gift Guide Category:', 'makeco' ),
+		'edit_item' => __( 'Edit Gift Guide Category', 'makeco' ),
+		'update_item' => __( 'Update Gift Guide Category', 'makeco' ),
+		'add_new_item' => __( 'Add New Gift Guide Category', 'makeco' ),
+		'new_item_name' => __( 'New Gift Guide Category', 'makeco' ),
+		'separate_items_with_commas' => __( 'Separate Gift Guide categories with commas', 'makeco' ),
+		'add_or_remove_items' => __( 'Add or remove Gift Guide Categories', 'makeco' ),
+		'choose_from_most_used' => __( 'Choose from most used Gift Guide Categories', 'makeco' ),
+		'menu_name' => __( 'Gift Guide Categories', 'makeco' ),
 	);
 
 	$args = array(
@@ -131,21 +131,21 @@ add_action( 'init', 'register_taxonomy_audiences' );
 function register_taxonomy_audiences() {
 
 	$labels = array(
-		'name' => _x( 'Audiences', 'audiences' ),
-		'singular_name' => _x( 'Audience', 'audiences' ),
-		'search_items' => _x( 'Search Audience', 'audiences' ),
-		'popular_items' => _x( 'Popular Audiences', 'audiences' ),
-		'all_items' => _x( 'All Audiences', 'audiences' ),
-		'parent_item' => _x( 'Parent Audience', 'audiences' ),
-		'parent_item_colon' => _x( 'Parent Audience:', 'audiences' ),
-		'edit_item' => _x( 'Edit Audience', 'audiences' ),
-		'update_item' => _x( 'Update Audience', 'audiences' ),
-		'add_new_item' => _x( 'Add New Audience', 'audiences' ),
-		'new_item_name' => _x( 'New Audience', 'audiences' ),
-		'separate_items_with_commas' => _x( 'Separate Audiences with commas', 'audiences' ),
-		'add_or_remove_items' => _x( 'Add or remove Audiences', 'audiences' ),
-		'choose_from_most_used' => _x( 'Choose from most used Audiences', 'audiences' ),
-		'menu_name' => _x( 'Audiences', 'audiences' ),
+		'name' => __( 'Audiences', 'makeco' ),
+		'singular_name' => __( 'Audience', 'makeco' ),
+		'search_items' => __( 'Search Audience', 'makeco' ),
+		'popular_items' => __( 'Popular Audiences', 'makeco' ),
+		'all_items' => __( 'All Audiences', 'makeco' ),
+		'parent_item' => __( 'Parent Audience', 'makeco' ),
+		'parent_item_colon' => __( 'Parent Audience:', 'makeco' ),
+		'edit_item' => __( 'Edit Audience', 'makeco' ),
+		'update_item' => __( 'Update Audience', 'makeco' ),
+		'add_new_item' => __( 'Add New Audience', 'makeco' ),
+		'new_item_name' => __( 'New Audience', 'makeco' ),
+		'separate_items_with_commas' => __( 'Separate Audiences with commas', 'makeco' ),
+		'add_or_remove_items' => __( 'Add or remove Audiences', 'makeco' ),
+		'choose_from_most_used' => __( 'Choose from most used Audiences', 'makeco' ),
+		'menu_name' => __( 'Audiences', 'makeco' ),
 	);
 
 	$args = array(
@@ -188,21 +188,21 @@ add_action( 'init', 'register_taxonomy_gift_guide_years' );
 function register_taxonomy_gift_guide_years() {
 
 	$labels = array(
-		'name' => _x( 'Gift Guide Years', 'gift_guide_years' ),
-		'singular_name' => _x( 'Gift Guide Year', 'gift_guide_years' ),
-		'search_items' => _x( 'Search Gift Guide Year', 'gift_guide_years' ),
-		'popular_items' => _x( 'Popular Gift Guide Years', 'gift_guide_years' ),
-		'all_items' => _x( 'All Gift Guide Years', 'gift_guide_years' ),
-		'parent_item' => _x( 'Parent Gift Guide Year', 'gift_guide_years' ),
-		'parent_item_colon' => _x( 'Parent Gift Guide Year:', 'gift_guide_years' ),
-		'edit_item' => _x( 'Edit Gift Guide Year', 'gift_guide_years' ),
-		'update_item' => _x( 'Update Gift Guide Year', 'gift_guide_years' ),
-		'add_new_item' => _x( 'Add New Gift Guide Year', 'gift_guide_years' ),
-		'new_item_name' => _x( 'New Gift Guide Year', 'gift_guide_years' ),
-		'separate_items_with_commas' => _x( 'Separate Gift Guide Years with commas', 'gift_guide_years' ),
-		'add_or_remove_items' => _x( 'Add or remove Gift Guide Years', 'gift_guide_years' ),
-		'choose_from_most_used' => _x( 'Choose from most used Gift Guide Years', 'gift_guide_years' ),
-		'menu_name' => _x( 'Gift Guide Years', 'gift_guide_years' ),
+		'name' => __( 'Gift Guide Years', 'makeco' ),
+		'singular_name' => __( 'Gift Guide Year', 'makeco' ),
+		'search_items' => __( 'Search Gift Guide Year', 'makeco' ),
+		'popular_items' => __( 'Popular Gift Guide Years', 'makeco' ),
+		'all_items' => __( 'All Gift Guide Years', 'makeco' ),
+		'parent_item' => __( 'Parent Gift Guide Year', 'makeco' ),
+		'parent_item_colon' => __( 'Parent Gift Guide Year:', 'makeco' ),
+		'edit_item' => __( 'Edit Gift Guide Year', 'makeco' ),
+		'update_item' => __( 'Update Gift Guide Year', 'makeco' ),
+		'add_new_item' => __( 'Add New Gift Guide Year', 'makeco' ),
+		'new_item_name' => __( 'New Gift Guide Year', 'makeco' ),
+		'separate_items_with_commas' => __( 'Separate Gift Guide Years with commas', 'makeco' ),
+		'add_or_remove_items' => __( 'Add or remove Gift Guide Years', 'makeco' ),
+		'choose_from_most_used' => __( 'Choose from most used Gift Guide Years', 'makeco' ),
+		'menu_name' => __( 'Gift Guide Years', 'makeco' ),
 	);
 
 	$args = array(
