@@ -69,7 +69,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
         document.querySelectorAll('.object-nav-menu')[0].appendChild(document.querySelectorAll('.main-navs ul li')[i]);
         }
 
-    } else if (tabsCount > 3 && viewport < 767) {
+    } else if (tabsCount > 5 && viewport < 767) {
 
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
