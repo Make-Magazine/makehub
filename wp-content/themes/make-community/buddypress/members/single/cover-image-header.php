@@ -21,7 +21,7 @@
 <div id="cover" style="background-image:url('<?php echo esc_url($cover_url); ?>');">
 
 	<?php if(bp_is_my_profile()) { ?>
-		<a class="change-cover-photo" href="<?php bp_displayed_user_link(); ?>profile/change-cover-image/">
+		<a class="change-cover-photo" href="<?php bp_displayed_user_link(); ?>profile/change-cover-image/#object-nav">
 		</a>
 	<?php }
 	/*if ( bp_is_active( 'activity' ) {
@@ -40,7 +40,7 @@
 
 	<div id="item-header-avatar">
 		<?php if(bp_is_my_profile()) { ?>
-			<a class="change-avatar" href="<?php bp_displayed_user_link(); ?>profile/change-avatar">
+			<a class="change-avatar" href="<?php bp_displayed_user_link(); ?>profile/change-avatar/#object-nav">
 		<?php }else{ ?>
 			<a class="non-link" href="#">
 		<?php } ?>

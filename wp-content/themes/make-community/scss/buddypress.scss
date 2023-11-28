@@ -81,9 +81,24 @@ div.pagination,
 			flex-basis: initial;
 			margin-bottom: 2px !important;
 		}
+		@media screen and (max-width: 768px) {
+			li {
+				padding: 10px 7px !important;
+				&#messages-personal-li, &#friends-personal-li, &#mediapress-personal-li, &#groups-personal-li, &.object-nav-menu-button {
+					display: none;
+				}
+			}
+		}
 	}
 	li.object-nav-menu-button a.object-nav-menu-button-a {
 		height: 16px;
+	}
+}
+.buddypress nav#subnav {
+	@media screen and (max-width: 768px) {
+		#change-avatar-personal-li, #change-cover-image-personal-li  {
+			display: none;
+		}
 	}
 }
 
@@ -476,7 +491,7 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 	ul {
 		margin-bottom: -1px !important;
 		li {
-			padding: 10px 20px;
+			padding: 10px 15px;
 			border: solid 1px #ccc;
 			border-radius: 5px;
 			margin-right: 5px;

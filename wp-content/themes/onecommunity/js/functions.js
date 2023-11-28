@@ -33,7 +33,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
 "use strict";
     var viewport = window.innerWidth;
     var tabsCount = document.querySelectorAll('nav.main-navs ul li').length;
-    if (tabsCount > 9 && viewport > 1299) {
+    if (tabsCount > 8 && viewport > 1299) {
 
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
         document.querySelectorAll('.object-nav-menu')[0].appendChild(document.querySelectorAll('.main-navs ul li')[i]);
         }
 
-    } else if (tabsCount > 9 && viewport < 1300 && viewport > 767 ) {
+    } else if (tabsCount > 5 && viewport < 1300 && viewport > 767 ) {
 
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
@@ -69,7 +69,7 @@ window.addEventListener("DOMContentLoaded", function(event) {
         document.querySelectorAll('.object-nav-menu')[0].appendChild(document.querySelectorAll('.main-navs ul li')[i]);
         }
 
-    } else if (tabsCount > 9 && viewport < 767) {
+    } else if (tabsCount > 3 && viewport < 767) {
 
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
