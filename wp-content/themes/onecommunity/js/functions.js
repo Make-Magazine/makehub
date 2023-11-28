@@ -34,7 +34,6 @@ window.addEventListener("DOMContentLoaded", function(event) {
     var viewport = window.innerWidth;
     var tabsCount = document.querySelectorAll('nav.main-navs ul li').length;
     if (tabsCount > 8 && viewport > 1299) {
-
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
         var newEl2 = document.createElement('a');
@@ -52,7 +51,6 @@ window.addEventListener("DOMContentLoaded", function(event) {
         }
 
     } else if (tabsCount > 5 && viewport < 1300 && viewport > 767 ) {
-
         var newEl = document.createElement('li');
         newEl.className = "object-nav-menu-button";
         var newEl2 = document.createElement('a');
@@ -69,25 +67,9 @@ window.addEventListener("DOMContentLoaded", function(event) {
         document.querySelectorAll('.object-nav-menu')[0].appendChild(document.querySelectorAll('.main-navs ul li')[i]);
         }
 
-    } else if (tabsCount > 5 && viewport < 767) {
+    } else if (tabsCount > 4 && viewport < 767) {
 
-        var newEl = document.createElement('li');
-        newEl.className = "object-nav-menu-button";
-        var newEl2 = document.createElement('a');
-        newEl2.className = "object-nav-menu-button-a";
-        var newEl3 = document.createElement('div');
-        newEl3.className = "object-nav-menu";
-        let el = document.querySelectorAll('nav.main-navs ul li')[3];
-        var parentEl = el.parentNode;
-        parentEl.insertBefore(newEl, el);
-        newEl.appendChild(newEl2);
-        newEl.appendChild(newEl3);
-
-        for (var i = 4; i < tabsCount +1; i++) {
-        document.querySelectorAll('.object-nav-menu')[0].appendChild(document.querySelectorAll('.main-navs ul li')[i]);
-        }
-
-    }
+    } 
 
     if(document.querySelector(".object-nav-menu-button")){
         document.querySelector('.object-nav-menu-button').addEventListener('click', function() {
