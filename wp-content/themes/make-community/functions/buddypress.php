@@ -1,4 +1,11 @@
 <?php
+
+// default images
+define ( 'BP_AVATAR_DEFAULT', 'https://make.co/wp-content/universal-assets/v2/images/default-makey-big.png' );
+define ( 'BP_AVATAR_DEFAULT_THUMB', 'https://make.co/wp-content/universal-assets/v2/images/default-makey-big.png' );
+
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
 // Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
     return new BP_Email_Recipient( 'make@make.co' );

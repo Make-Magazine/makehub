@@ -155,6 +155,10 @@ body:not(.show-breadcrumbs):not(.single-gift-guides) .wrapper .breadcrumbs { dis
 	overflow: hidden;
 }
 
+.non-link {
+	pointer-events: none;
+}
+
 input[type=submit], input[type=button], button[type=submit]:not(.nouveau-search-submit):not(#user_messages_search_submit) {
 	color: #fff !important;
 	border: thin solid $color-blue !important;
