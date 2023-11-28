@@ -21,7 +21,7 @@
 			<img class="skip-lazy"  src="{{{data.url}}}" id="avatar-crop-preview"/>
 		</div>
 		<div id="avatar-crop-actions">
-			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Crop Image', 'buddypress' ); ?></a>
+			<a class="button avatar-crop-submit" href="#"><?php esc_html_e( 'Save Image', 'buddypress' ); ?></a>
 		</div>
 	</div>
 </script>

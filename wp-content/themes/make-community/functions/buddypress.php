@@ -1,4 +1,11 @@
 <?php
+
+// default images
+define ( 'BP_AVATAR_DEFAULT', 'https://make.co/wp-content/universal-assets/v2/images/default-makey-big.png' );
+define ( 'BP_AVATAR_DEFAULT_THUMB', 'https://make.co/wp-content/universal-assets/v2/images/default-makey-big.png' );
+
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
 // Set Buddypress emails from and reply to
 add_filter( 'bp_email_set_reply_to', function( $retval ) {
     return new BP_Email_Recipient( 'make@make.co' );
@@ -138,3 +145,14 @@ add_action( 'groups_membership_accepted', 'redirect_after_join_group', 9999, 2 )
     return $count;
 }
 add_filter( 'bp_nouveau_nav_has_count', 'remove_message_count', 99, 3 );*/
+
+// we're going to set the member type to maker_space
+add_action( 'init', 'set_makeco_member_type' );
+function set_makeco_member_type(){
+    if( $_GET['auth'] === 'm50667' ){ // Make sure this request is authorized by us
+        if( function_exists( 'bp_set_member_type' ) ){
+            $user_id = $_GET['wpid'];
+            bp_set_member_type($user_id, 'maker_space', true);
+        }
+    }
+}

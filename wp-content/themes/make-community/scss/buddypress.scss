@@ -71,9 +71,34 @@ div.pagination,
     width: 165px;
 }
 .buddypress .main-navs.bp-navs {
-	li { padding: 10px !important; }
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		background: white;
+		li { 
+			padding: 10px !important; 
+			flex: 1;
+			flex-basis: initial;
+			margin-bottom: 2px !important;
+		}
+		@media screen and (max-width: 768px) {
+			li {
+				padding: 10px 7px !important;
+				&#messages-personal-li, &#friends-personal-li, &#mediapress-personal-li, &#groups-personal-li, &#dashboard-personal-li, &.object-nav-menu-button {
+					display: none;
+				}
+			}
+		}
+	}
 	li.object-nav-menu-button a.object-nav-menu-button-a {
 		height: 16px;
+	}
+}
+.buddypress nav#subnav {
+	@media screen and (max-width: 768px) {
+		#change-avatar-personal-li, #change-cover-image-personal-li  {
+			display: none;
+		}
 	}
 }
 
@@ -295,6 +320,7 @@ div.pagination,
 }
 
 // Profile pages
+body:not(.my-account) #my-feed-personal-li { display: none; }
 .social-icons {
 	margin-top: 10px;
 	display: flex;
@@ -317,6 +343,39 @@ div.pagination,
 	#latest-update, .group-description {
 		background:rgba(0,0,0,.6);
 	}
+	.change-cover-photo {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		position: absolute;
+		z-index: 1;
+		&:hover {
+			&:before {
+				font-family: FontAwesome;
+				margin: 15px;
+				content: "\f030";
+				position: absolute;
+				font-size: 24px;
+				color: #fff;
+				text-shadow: black 1px 1px 10px;
+			}
+		}
+	}
+	#item-header-avatar .change-avatar {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		&:hover {
+			&:before {
+				font-family: FontAwesome;
+				content: "\f030";
+				position: absolute;
+				font-size: 24px;
+				color: #fff;
+				text-shadow: black 1px 1px 10px;
+			}
+		}
+	}
 	@media screen and (max-width: 770px) {
 		#latest-update { display: none; }
 		#item-header-wrappper {
@@ -328,6 +387,20 @@ div.pagination,
 		}
 	}
 }
+#avatar-crop-actions a.button.avatar-crop-submit, #bp-delete-cover-image-container button.bp-delete-cover-image {
+	background: $color-blue;
+	color: #fff;
+	border-radius: 3px;
+	border: 1px solid $color-blue;
+	min-height: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	&:hover {
+		background: #fff;
+		color: $color-blue;
+	}
+}
 .settings.bp-user {
 	#responseText {
 		display: flex;
@@ -335,12 +408,11 @@ div.pagination,
 		align-items: center;
 	}
 	// hide the change email form stuff until we revisit
-	h2.general-settings-screen, p.email-pwd-info, form#your-profile {
+	form#your-profile {
 		display: none;
 	}
 	input.change_password { float: left; }
 }
-.bp-widget.interests h3 { display: none; }
 
 // messages
 #message-threads {
@@ -370,8 +442,33 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 			margin-top: -20px;
 		}
 	}
+	.mp_wrapper {
+		#mepr-account-subscriptions-table, #mepr-account-payments-table {
+			td, th {
+				border-left: 0px !important;
+				border-right: 0px !important;
+			}
+		}
+	}
 }
-#my-account-personal-li, #my-feed-personal-li { display: none; }
+#my-account-personal-li, #activity-rss-feed { 
+	display: none !important; 
+}
+
+// settings
+.settings-wrapper {
+	clear: both;
+	margin-bottom: 30px;
+	display: flex;
+    flex-direction: column;
+	.bp-checkbox-wrap {
+		display: flex;
+		align-items: center;
+		label {
+			margin: 15px 0 15px
+		}
+	}
+}
 
 .makeco-profile-fields {
 	.item.bg {
@@ -387,16 +484,68 @@ li:has(.message-content:empty), li:has(.message-content > p:empty) { display: no
 		}
 	}
 }
-#profile-edit-form {
+#profile-edit-form, .settings-tabs {
 	input[type="button"].ed_button, input[type="text"], input[type="date"], input[type="time"], input[type="datetime-local"], input[type="week"], input[type="month"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="tel"], input[type="number"], textarea#comment {
 		background: #fff !important;
 	}
-	
+	ul {
+		margin-bottom: -1px !important;
+		li {
+			padding: 10px 15px;
+			border: solid 1px #ccc;
+			border-radius: 5px;
+			margin-right: 5px;
+			width: 100%;
+			&.current {
+				background: #f1f1f1;
+			}
+			a {
+				color: #333;
+			}
+			@media screen and (min-width: 768px){
+				border-bottom: 0px;
+				border-bottom-left-radius: 0px;
+				border-bottom-right-radius: 0px;
+				width: auto;
+			}
+		}
+	}
+}
+.profile-edit-form-fields, .settings-wrapper {
+	border: solid 1px #ccc;
+	border-radius: 5px;
+	border-top-left-radius: 0px;
+	padding: 0px 15px 15px;
+	background: #f1f1f1;
+	.editfield {
+		background: #fcfcfc;
+	}
+}
+.profile.public {
+	.bp-widget {
+		border: solid 1px #ccc;
+		border-radius: 5px;
+		padding: 0px 15px 15px;
+		margin-bottom: 15px;
+		background: #fafafa;
+		.profile-group-title {
+			border-bottom: solid 1px #ccc;
+			padding-bottom: 10px
+		}
+		table.profile-fields {
+			border: 0px;
+			tr, td {
+				background: #fafafa !important;
+				border: 0px;
+				td.label {
+					border-right: 0px;
+				}
+			}
+			
+		}
+	}
 }
 
-#activity-rss-feed { 
-	display: none; 
-}
 
 // subnavs
 .buddypress #subnav ul {
