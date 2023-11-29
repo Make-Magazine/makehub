@@ -50,7 +50,7 @@
 				</div>
 				<div class="paywall-wrapper">
 					<h4 class="paywall-header">Continue reading this article as a Community user</h4>
-					<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/cropped-make-community-logo.png" />
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/cropped-make-community-logo.png" width="250px" height="105px" />
 					<!--<div class="paywall-text">or become a Premium User to get access to exclusive videos, archived magazine content and more.</div>-->
 					<a href="/join" class="btn universal-btn">Learn More</a>
 				</div>
