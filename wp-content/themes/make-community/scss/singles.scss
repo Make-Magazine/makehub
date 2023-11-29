@@ -1,0 +1,23 @@
+.single .thumbnail {
+	margin-bottom: 10px;
+}
+.single article{
+	.paywall-wrapper {
+		position: fixed;
+		left: 0px;
+		width: 100%;
+		z-index: 999;
+		border: 0px;
+		border-radius: 0px;
+		box-shadow: 0px -9px 25px 0px rgba(0,0,0,0.75);
+	}
+}
+
+.comment-list {
+	ul.children li {
+		padding-left: 15px;
+	}
+}
+.comment-counter {
+	display: none;
+}

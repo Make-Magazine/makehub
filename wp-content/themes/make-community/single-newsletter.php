@@ -43,16 +43,10 @@
 				the_excerpt();
 			?>
 				</div>
-				<div class="paywall-message">
-					<span>To read the Full Story</span>
-					<a href="/join" class="btn universal-btn">Subscribe</a>
-					<a href="/wp-login.php" class="btn universal-btn login-btn">Sign In</a>
-				</div>
 				<div class="paywall-wrapper">
-					<h4 class="paywall-header">Continue reading this article as a Community user</h4>
+					<h4 class="paywall-header">To continue reading this article, <a href="/wp-login.php" class="login-btn">login</a></h4>
 					<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/cropped-make-community-logo.png" width="250px" height="105px" />
-					<!--<div class="paywall-text">or become a Premium User to get access to exclusive videos, archived magazine content and more.</div>-->
-					<a href="/join" class="btn universal-btn">Learn More</a>
+					<div class="paywall-text">Not a user? <a href="/join">Sign up now</a></div>
 				</div>
 			<?php
 		}

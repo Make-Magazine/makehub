@@ -60,24 +60,6 @@ body:not(.logged-in){
 	}
 }
 
-.paywall-message {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	gap: 15px;
-	span { 
-		width: 100%;
-		text-transform: uppercase;
-		text-align: center;
-	}
-	.btn {
-		min-width: 200px;
-		flex: 40%;
-		&:first-of-type {
-			padding-left: 15px;
-		}
-	}
-}
 .paywall-wrapper {
 	display: flex;
 	flex-direction: column;
@@ -92,15 +74,17 @@ body:not(.logged-in){
 		margin-top: 0px;
 		font-size: 28px;
 		font-family: "Roboto Bold";
-		color: $color-blue;
+		color: #333;
 		text-align: center;
 	}
 	.paywall-text {
 		margin-bottom: 15px;
 		text-align: center;
+		font-size: 20px;
 	}
 	.btn { 
 		width: 250px;
+		font-size: 20px;
 	}
 }
 .excerpt-wrapper {
