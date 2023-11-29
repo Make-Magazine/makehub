@@ -77,8 +77,8 @@
 
 		<?php
 		
-			// If comments are open or we have at least one comment AND the user has a proper membership, load up the comment template.
-			if ( (comments_open() || get_comments_number()) && current_user_can('mepr-active','rules:11718') ) {
+			// If comments are open or we have at least one comment, load up the comment template.
+			if ( comments_open() || get_comments_number() ) {
 				comments_template();
 			}
 		?>
