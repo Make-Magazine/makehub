@@ -60,6 +60,23 @@ body:not(.logged-in){
 	}
 }
 
+.paywall-message {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 15px;
+	span { 
+		width: 100%;
+		text-transform: uppercase;
+		text-align: center;
+	}
+	.btn {
+		min-width: 200px;
+		&:first-of-type {
+			padding-left: 15px;
+		}
+	}
+}
 .paywall-wrapper {
 	display: flex;
 	flex-direction: column;

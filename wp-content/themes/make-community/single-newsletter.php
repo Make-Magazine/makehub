@@ -34,7 +34,8 @@
 	<article>
 
 		<?php 
-		if (current_user_can('mepr-active','rules:11718')) {
+		$mepr_user = new MeprUser( get_current_user_id() );
+		if ($mepr_user->is_active()) {
 			the_content( esc_attr__('Read more','onecommunity') );
 		} else { ?>
 				<div class="excerpt-wrapper">
@@ -42,9 +43,15 @@
 				the_excerpt();
 			?>
 				</div>
+				<div class="paywall-message">
+					<span>To read the Full Story</span>
+					<a href="/join" class="btn universal-btn">Subscribe</a>
+					<a href="/wp-login.php" class="btn universal-btn login-btn">Sign In</a>
+				</div>
 				<div class="paywall-wrapper">
-					<h4 class="paywall-header">Want to Read More?</h4>
-					<div class="paywall-text">Become a Premium User. Get access to exclusive videos, archived magazine content and more.</div>
+					<h4 class="paywall-header">Continue reading this article as a Community user</h4>
+					<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/cropped-make-community-logo.png" />
+					<!--<div class="paywall-text">or become a Premium User to get access to exclusive videos, archived magazine content and more.</div>-->
 					<a href="/join" class="btn universal-btn">Learn More</a>
 				</div>
 			<?php
@@ -91,11 +98,12 @@
 		</article>
 
 		<?php
-		
+		if ($mepr_user->is_active()) {
 			// If comments are open or we have at least one comment, load up the comment template.
 			if ( comments_open() || get_comments_number() ) {
 				comments_template();
 			}
+		}
 		?>
 
 </main><!-- content -->
