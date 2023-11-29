@@ -181,7 +181,7 @@ function newsletters_toolbar_node( $admin_bar ) {
 		array(
 			'parent' => 'newsletters-menu',
 			'id'     => 'newsletters-submenu5',
-			'title'  => 'Newsletter Status',
+			'title'  => 'Newsletter Stats',
 			'href'   => '/wp-admin/admin.php?page=mailoptin-statistics'		
 		)
 	);    
