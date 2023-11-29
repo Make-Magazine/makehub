@@ -33,7 +33,22 @@
 
 	<article>
 
-		<?php the_content( esc_attr__('Read more','onecommunity') );
+		<?php 
+		if (current_user_can('mepr-active','rules:11718')) {
+			the_content( esc_attr__('Read more','onecommunity') );
+		} else { ?>
+				<div class="excerpt-wrapper">
+			<?php
+				the_excerpt();
+			?>
+				</div>
+				<div class="paywall-wrapper">
+					<h4 class="paywall-header">Want to Read More?</h4>
+					<div class="paywall-text">Become a Premium User. Get access to exclusive videos, archived magazine content and more.</div>
+					<a href="/join" class="btn universal-btn">Learn More</a>
+				</div>
+			<?php
+		}
 
 			wp_link_pages( array(
 				'before'      => '<div class="page-links"><span class="page-links-title">' . esc_attr__( 'Pages:', 'onecommunity' ) . '</span>',

@@ -60,12 +60,19 @@ if ( post_password_required() ) {
 
 	<?php
 	// commenting privileges are for premium members
-	if(current_user_can('mepr-active','rules:11718')) {
-		comment_form( array(
-			'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
-			'title_reply_after'  => '</h2>',
-		) );
-	}
-	?>
+	if(is_user_logged_in()) {
+		if(current_user_can('mepr-active','rules:11718')) {
+			comment_form( array(
+				'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
+				'title_reply_after'  => '</h2>',
+			) );
+		} else { ?>
+			<div class="paywall-wrapper">
+				<h4 class="paywall-header">Want to Join the Conversation?</h4>
+				<div class="paywall-text">Upgrade to a Premium User.<br />Get access to exclusive videos, archived magazine content and more.</div>
+				<a href="/register/premium-subscriber?upgrade=65WSJ3T3GY" class="btn universal-btn">Upgrade</a>
+			</div>
+	<?php } 
+	}?>
 
 </div><!-- .comments-area -->
