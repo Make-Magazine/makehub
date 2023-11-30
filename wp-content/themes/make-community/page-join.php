@@ -29,7 +29,46 @@ while ( have_posts() ) : the_post(); ?>
 						<?php } else { ?>
 							<h1>Become a Member of Make: Community</h1>
 							<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
-							<a href="/register/premium-subscriber" class="universal-btn-reversed membership-btn" onclick="pintrk('track', 'addtocart');">Join Today!</a>
+							<div class="membership-tables">
+								<div class="membership-table">
+									<ul class="membership-benefits">
+										<li class="membership-benefits-header">Community</li>
+										<li>Member & Makerspace Directories</li>
+										<li>Community Platform and Groups</li>
+										<li>Community and MakerShed newsletters</li>
+									</ul>
+									<a href="/register/community" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">Free</a>
+								</div>
+								<div class="membership-table">
+									<ul class="membership-benefits">
+										<li class="membership-benefits-header">Premium</li>
+										<li>Member & Makerspace Directories</li>
+										<li>Community Platform and Groups</li>
+										<li>Community and MakerShed newsletters</li>
+										<li>Digital Magazine Subscription</li>
+										<li>Print Magazine Subscription (US residents only)</li>
+										<li>Premium Videos – Education forum, Member Only events, and behind the scenes of make: cast, and much more</li>
+										<li>Digital access to all Make: magazine back issues</li>
+										<li>Member-only newsletter</li>
+									</ul>
+									<a href="/register/premium-subscriber" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">$59.99</a>
+								</div>
+								<div class="membership-table">
+									<ul class="membership-benefits">
+										<li class="membership-benefits-header">Multiseat Membership</li>
+										<li>5 subaccounts with the following benefits</li>
+										<li>Member & Makerspace Directories</li>
+										<li>Community Platform and Groups</li>
+										<li>Community and MakerShed newsletters</li>
+										<li>Digital Magazine Subscription</li>
+										<li>Print Magazine Subscription (US residents only, Primary Account only)</li>
+										<li>Premium Videos – Education forum, Member Only events, and behind the scenes of make: cast, and much more</li>
+										<li>Digital access to all Make: magazine back issues</li>
+										<li>Member-only newsletter</li>
+									</ul>
+									<a href="/register/multiseat-membership" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">$250</a>
+								</div>
+							</div>
 							<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 						<?php } ?>
 						</div>

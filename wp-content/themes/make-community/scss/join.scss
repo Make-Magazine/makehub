@@ -6,17 +6,10 @@
     article { margin-bottom: 0% !important; }
     p { font-size: 18px !important; }
     .entry-header {
-        background: url('../images/join-heros/5.png');
-        background-size: cover;
-        background-position: center;
-        height: 400px;
-        width: 170%;
-        margin-left: -35%;
-        margin-bottom: 0px;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;;
+        text-align: center;
         .header-text {
             margin: 15px;
             background: rgba(21, 23, 51,0.8);
@@ -48,14 +41,53 @@
             color: #fff;
             text-align: center;
         }
-        .membership-btn {
+        .membership-tables {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;;
+            gap: 15px;
+            margin-top: 30px;
+            .membership-table {
+                width: calc(33.333333% - 15px);
+                display: flex;
+                flex-direction: column;
+                background: #f1f1f1;
+                margin-bottom: 15px;
+                border-radius: 2px;
+                .membership-benefits {
+                    list-style: none;
+                    margin: 0;
+                    background: #f1f1f1;
+                    li {
+                        text-align: left;
+                        color: #333;
+                        padding: 5px 10px;
+                        font-weight: 500;
+                        &:nth-of-type(even) {
+                            background: #ccc;
+                        }
+                        &.membership-benefits-header {
+                            background: $color-blue;
+                            text-align: center;
+                            padding: 10px;
+                            font-size: 20px;
+                            color: #fff;
+                        }
+                    }
+                }
+                .membership-btn {
+                    margin-top: auto;
+                }
+            }
+        }
+        .membership-btn.upgrade {
             width: 95%;
             font-size: 32px;
             position: relative;
             margin: 30px 0;
             height: 90px;
-            &:after {
-                content: "$59.99";
+			&::after {
+                content: "$24.99";
                 font-size: 42px;
                 background: $color-blue;
                 border-radius: 100px;
@@ -73,14 +105,6 @@
                     top: -35px;
                     right: -20px;
                 }
-            }
-			&.upgrade::after {
-                content: "$24.99";
-			}
-			&.free::after {
-                content: "FREE";
-				top: -15px;
-				height: 120px;
 			}
         }
     }
@@ -184,14 +208,7 @@
             min-height: 290px;
         }
     }
-    .membership-benefits-box::after {
-        background: url(../images/join-heros/2-muted.jpg);
-        background-size: cover;
-    }
-    .membership-supports-box::after {
-        background: url(../images/join-heros/4-muted.jpg);
-        background-size: cover;
-    }
+
     .corporate-membership-box {
         position: relative;
     }
