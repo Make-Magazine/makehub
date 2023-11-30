@@ -44,7 +44,7 @@
 			?>
 				</div>
 				<div class="paywall-wrapper">
-					<h4 class="paywall-header">To continue reading this article, <a href="/wp-login.php" class="login-btn">login</a></h4>
+					<h4 class="paywall-header">To continue reading this article, <a href="/wp-login.php" class="login-btn">log in.</a></h4>
 					<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/cropped-make-community-logo.png" width="250px" height="105px" />
 					<div class="paywall-text">Not a user? <a href="/join">Sign up now</a></div>
 				</div>
