@@ -26,7 +26,6 @@
             }
         }
         @media screen and (max-width: 768px) {
-            height: 500px;
             .header-text {
                 width: 100vw;
                 h1 {
@@ -45,19 +44,28 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;;
-            gap: 15px;
+            gap: 25px;
             margin-top: 30px;
             .membership-table {
-                width: calc(33.333333% - 15px);
+                width: calc(33.333333% - 35px);
+                min-width: 300px;
                 display: flex;
                 flex-direction: column;
                 background: #f1f1f1;
                 margin-bottom: 15px;
-                border-radius: 2px;
+                border-radius: 5px;
+                overflow: hidden;
+                transition: scale .5s;
+                &.featured {
+                    scale: 1.05;
+                }
+                &:hover {
+                    scale: 1.08;
+                }
                 .membership-benefits {
                     list-style: none;
                     margin: 0;
-                    background: #f1f1f1;
+                    margin-bottom: 15px;
                     li {
                         text-align: left;
                         color: #333;

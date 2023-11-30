@@ -30,16 +30,16 @@ while ( have_posts() ) : the_post(); ?>
 							<h1>Become a Member of Make: Community</h1>
 							<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
 							<div class="membership-tables">
-								<div class="membership-table">
+								<a href="/register/community" class="membership-table" onclick="pintrk('track', 'addtocart');">
 									<ul class="membership-benefits">
 										<li class="membership-benefits-header">Community</li>
 										<li>Member & Makerspace Directories</li>
 										<li>Community Platform and Groups</li>
 										<li>Community and MakerShed newsletters</li>
 									</ul>
-									<a href="/register/community" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">Free</a>
-								</div>
-								<div class="membership-table">
+									<div class="universal-btn membership-btn">Free</div>
+								</a>
+								<a href="/register/premium-subscriber" class="membership-table featured" onclick="pintrk('track', 'addtocart');">
 									<ul class="membership-benefits">
 										<li class="membership-benefits-header">Premium</li>
 										<li>Member & Makerspace Directories</li>
@@ -51,9 +51,9 @@ while ( have_posts() ) : the_post(); ?>
 										<li>Digital access to all Make: magazine back issues</li>
 										<li>Member-only newsletter</li>
 									</ul>
-									<a href="/register/premium-subscriber" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">$59.99</a>
-								</div>
-								<div class="membership-table">
+									<div class="universal-btn membership-btn">$59.99</div>
+								</a>
+								<a href="/register/multiseat-membership" class="membership-table" onclick="pintrk('track', 'addtocart');">
 									<ul class="membership-benefits">
 										<li class="membership-benefits-header">Multiseat Membership</li>
 										<li>5 subaccounts with the following benefits</li>
@@ -66,8 +66,8 @@ while ( have_posts() ) : the_post(); ?>
 										<li>Digital access to all Make: magazine back issues</li>
 										<li>Member-only newsletter</li>
 									</ul>
-									<a href="/register/multiseat-membership" class="universal-btn membership-btn" onclick="pintrk('track', 'addtocart');">$250</a>
-								</div>
+									<div class="universal-btn membership-btn">$250</div>
+								</a>
 							</div>
 							<div class="disclaimer">** Membership Fees are applied <b>annually</b>. **</div>
 						<?php } ?>
