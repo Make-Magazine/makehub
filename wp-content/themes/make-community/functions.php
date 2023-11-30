@@ -67,10 +67,10 @@ foreach (glob(dirname(__FILE__) . '/widgets/classes/*.php') as $file) {
 function remove_unnecessary_styles() {
     wp_dequeue_style( 'font-awesome' );
     
-    // unless user is admin user, they don't need the dashicons
+    /* unless user is admin user, they don't need the dashicons - NOTE: dashicons is used by plugins, need to see what else can be done to switch those plugins to fontawesome
     if (!current_user_can( 'manage_options' )) {
         wp_deregister_style('dashicons');
-    }
+    }*/
     
     // Check if LearnDash exists to prevent fatal errors.
     if ( class_exists( 'SFWD_LMS' ) ) {

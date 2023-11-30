@@ -39,7 +39,7 @@ function register_cpt_newsletter() {
 		'hierarchical' => false,
 		'description' => 'Newsletter Articles are used for a Substack like Newsletter from Make.co',
 		'supports' => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes' ),
-		'taxonomies' => array( 'newsletter_categories'),
+		'taxonomies' => array( 'newsletter_categories', 'post_tag'),
 		'public' => true,
 		'menu_icon' => 'dashicons-media-text',
 		'show_ui' => true,
