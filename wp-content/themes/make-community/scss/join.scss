@@ -12,8 +12,7 @@
         text-align: center;
         .header-text {
             margin: 15px;
-            background: rgba(21, 23, 51,0.8);
-            color: #fff;
+            background: #f1f1f1;
             position: relative;
             max-width: 1170px;
             width: 80vw;
@@ -37,7 +36,7 @@
             margin-top: 10px;
 			margin-bottom: 15px;
             font-weight: 700;
-            color: #fff;
+            color: #333;
             text-align: center;
         }
         .membership-tables {
@@ -51,16 +50,17 @@
                 min-width: 300px;
                 display: flex;
                 flex-direction: column;
-                background: #f1f1f1;
+                background: #fff;
                 margin-bottom: 15px;
                 border-radius: 5px;
                 overflow: hidden;
                 transition: scale .5s;
+                box-shadow: 1px 1px 6px #333;
                 &.featured {
-                    scale: 1.05;
+                    //scale: 1.05;
                 }
                 &:hover {
-                    scale: 1.08;
+                    scale: 1.05;
                 }
                 .membership-benefits {
                     list-style: none;
