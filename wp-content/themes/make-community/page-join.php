@@ -28,7 +28,7 @@ while ( have_posts() ) : the_post(); ?>
 							<?php } ?>
 						<?php } else { ?>
 							<h1>Become a Member of Make: Community</h1>
-							<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Login now.</span></h4></a>
+							<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Log in now.</span></h4></a>
 							<div class="membership-tables">
 								<a href="/register/community" class="membership-table" onclick="pintrk('track', 'addtocart');">
 									<ul class="membership-benefits">
