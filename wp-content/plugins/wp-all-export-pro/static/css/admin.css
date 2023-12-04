@@ -18,6 +18,96 @@
 	border: none;
 	cursor: pointer;
 }
+
+.wpallexport-plugin .wp-all-export-link-wrapper{
+	display: inline-block;
+	transition-duration: 0.3s;
+	transition-timing-function: ease;
+	transition-property: all;
+	color: #00b3b6;
+	text-decoration: none;
+	font-weight: 600;
+	line-height: 1.75;
+	font-size: 16px;
+	padding-bottom: 10px;
+	margin-left: 0!important;
+}
+
+.wpallexport-plugin .wp-all-export-link:hover, .wpallexport-plugin .wp-all-export-link:focus{
+	color: #007a7c;
+}
+
+/* Export Finished */
+
+.wpallexport-plugin .export-finished .wpallexport-content-section-wrap.rte-complete{
+	display: flex; align-items: center; justify-content: center;
+}
+
+.wpallexport-plugin .export-finished .wpallexport-content-section.rte-complete{
+	max-width: 700px;
+}
+
+.wpallexport-plugin .export-finished h2{
+	color:#425f9a;
+	font-size:24px;
+	margin-bottom: 20px;
+}
+
+.wpallexport-plugin .export-finished{
+	padding-top: 10px;
+	text-align:left;
+}
+
+.wpallexport-plugin .export-finished .input{
+	padding-top:20px;
+	text-align:center;
+}
+
+.wpallexport-plugin .export-finished  .wpallexport-admin-link.rte-complete{
+	text-align: left;
+	margin: -10px 0 -20px 0;
+}
+
+.wpallexport-plugin .export-finished  .wpallexport-admin-link-padded.rte-complete{
+	text-align: left;
+	margin: -10px 0 26px 0;
+}
+
+.wpallexport-plugin .export-finished .wp-all-export-link-wrapper{
+
+	margin-left:20px;
+}
+
+.wpallexport-plugin .wp-all-export-link-text{
+	font-weight: 500;
+	font-size: 16px;
+	text-decoration: none;
+	float:left;
+	text-align: left;
+	margin-left: 0!important;
+}
+
+.wpallexport-plugin .wp-all-export-link-arrow{
+	margin-left: 5px;
+	position:relative;
+	height: 9px;
+
+}
+
+.wpallexport-plugin .admin-page-link .wp-all-export-link-text{
+	font-size: 14px;
+}
+
+.wpallexport-plugin .admin-page-link .wp-all-export-link-arrow{
+	top: -2px;
+}
+
+.wpallexport-plugin .wp-all-export-paragraph{
+	font-size: 16px;
+	color: #777;
+	text-align:left;
+}
+
 .wpallexport-plugin .wp_all_export_custom_xml_help,
 .wpallexport-plugin .wp_all_export_scheduling_help
 {
@@ -204,13 +294,17 @@
 	width: 100%;
 	border: 4px dashed #bbb;
 }
+.wpallexport-plugin .columns-to-export-content ol {
+	position: relative;
+}
 .wpallexport-plugin .columns-to-export-content ol li.placeholder{
 	font-size: 20px;	
 	line-height: 26px;
 	margin-bottom: 0;
-	margin-left: 25% !important;
+	margin-left: calc(50% - 225px) !important;
+	top: calc(50% - 39px);
+	position: absolute;
 	margin-right: auto;
-	margin-top: 7% !important;
 	text-align: center;
 	width: 450px;
 }
@@ -946,7 +1040,7 @@ a.wpallexport-import-to-format span.wpallexport-import-to-title {
 	top: 0;
 }
 .wpallexport-plugin .wpallexport-template .wpallexport-section input[type="text"], 
-.wpallexport-plugin .options .wpallexport-section input[type="text"],
+.wpallexport-plugin .options .wpallexport-section input[type="text"], .wpallexport-plugin .edit .wpallexport-section input[type="text"],
 .wpallexport-plugin .wp-pointer-content input[type="text"]
 {
 	font-size: 14px;
@@ -4456,4 +4550,132 @@ input label {
 
 .wpallexport-plugin .download-import-templates h2 {
 	margin-bottom: 10px;
+}
+
+.open_cron_scheduling-disabled {
+	color: #555 !important;
+	text-decoration: none;
+}
+
+/**
+ * Generate Secure URL
+ */
+
+#wpae-secure-url-container {
+
+	padding: 20px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 696px;
+	margin: auto;
+}
+
+#wpae-generate-token {
+
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	margin-top: 0 !important;
+	background-color: #435F9A;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	margin-left: 0;
+	outline: none;
+}
+
+#wpae-secure-url {
+
+	width: 350px;
+	margin-right: 0;
+	padding: 9px;
+	border: none;
+	flex: 1;
+	border-radius: 0 3px 3px 0;
+}
+
+
+.wpallexport-settings-page .wpallexport-content-section {
+	margin-top: 10px;
+
+}
+
+.wpallexport-settings-page .wpallexport-collapsed-header {
+	padding-left: 25px !important;
+}
+
+.wpallexport-settings-page .wpallexport-collapsed-content {
+	padding: 0 !important;
+}
+
+.wpallexport-settings-page .form-table {
+	max-width:none;
+}
+
+.wpallexport-settings-page .input.wpallexport_realtime_show_bom {
+	margin:5px 0;
+	max-width: 900px;
+}
+
+.wpallexport-settings-page .input.wpallexport_realtime_show_bom > div{
+
+	margin-left: 24px;
+	margin-bottom: 15px;
+}
+
+.wpallexport-settings-page .input.wpallexport_realtime_show_bom > div p{
+
+	margin-bottom: 10px;
+	font-size: 12px;
+	line-height: 22px;
+}
+
+.wpallexport-settings-page .wpae-hidden {
+	display:none;
+}
+
+.wpallexport-settings-page .input {
+	margin:5px 0;
+}
+
+
+.wpallexport-settings-page .wpallexport-help {
+	position: relative;
+	top: 0 !important;
+}
+
+
+.wpallexport-settings-page .wpallexport-help.upper {
+	position: relative;
+	top: -2px !important;
+}
+
+.wpallexport-settings-page .switcher-target-split_large_exports {
+	display:block;
+	clear: both;
+	width: 100%;
+}
+
+.wpallexport-settings-page .wp_all_export_sub_input {
+	width: 50px;
+}
+
+.wpallexport-settings-page .wp_all_export_sub_input.records_per_iteration {
+	width: 40px !important;
+}
+
+
+
+.wpallexport-settings-page label.save_import_as_label {
+	width: 103px;
+}
+
+.wpallexport-settings-page input.friendly-name {
+	vertical-align:middle;
+	background:#fff !important;
+	width: 350px;
+}
+
+.wpallexport-settings-page .wpae-align-right {
+	text-align:right;
 }

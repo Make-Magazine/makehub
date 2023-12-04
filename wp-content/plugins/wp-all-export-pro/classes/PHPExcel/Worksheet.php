@@ -480,7 +480,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
     /**
      * Sort collection of cells
      *
-     * @return PHPExcel_Worksheet
+     * @return array|PHPExcel_Worksheet
      */
     public function sortCellCollection()
     {
@@ -1370,7 +1370,6 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
     /**
      * Get default style of workbook.
      *
-     * @deprecated
      * @return PHPExcel_Style
      * @throws PHPExcel_Exception
      */
@@ -1474,7 +1473,7 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      * @param $pValue PHPExcel_Style_Conditional[]
      * @return PHPExcel_Worksheet
      */
-    public function setConditionalStyles($pCoordinate = 'A1', $pValue)
+    public function setConditionalStyles($pCoordinate, $pValue)
     {
         $this->conditionalStylesCollection[strtoupper($pCoordinate)] = $pValue;
         return $this;
@@ -2901,7 +2900,8 @@ class PHPExcel_Worksheet implements PHPExcel_IComparable
      * Define the code name of the sheet
      *
      * @param null|string Same rule as Title minus space not allowed (but, like Excel, change silently space to underscore)
-     * @return objWorksheet
+     *
+ * @return objWorksheet|PHPExcel_Worksheet
      * @throws PHPExcel_Exception
     */
     public function setCodeName($pValue = null)

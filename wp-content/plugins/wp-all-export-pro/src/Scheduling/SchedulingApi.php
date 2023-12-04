@@ -56,10 +56,12 @@ class SchedulingApi
         );
 
         if ($response instanceof \WP_Error) {
-            return false;
+            return [];
         }
 
-        return json_decode($response['body']);
+        $body = json_decode($response['body']);
+
+		return empty($body) ? [] : $body;
     }
 
     public function getSchedule($scheduleId)

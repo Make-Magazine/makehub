@@ -512,7 +512,7 @@ class PHPExcel_Calculation_DateTime
                 }
             }
         }
-        if ((count($t1) == 1) && (strpos($t, ':') != false)) {
+        if ((count($t1) == 1) && (strpos($t, ':') !== false)) {
             //    We've been fed a time value without any date
             return 0.0;
         } elseif (count($t1) == 2) {
@@ -527,14 +527,14 @@ class PHPExcel_Calculation_DateTime
         $dateValue = implode(' ', $t1);
 
         $PHPDateArray = date_parse($dateValue);
-        if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
+        if ($PHPDateArray['error_count'] > 0) {
             $testVal1 = strtok($dateValue, '- ');
             if ($testVal1 !== false) {
                 $testVal2 = strtok('- ');
                 if ($testVal2 !== false) {
                     $testVal3 = strtok('- ');
                     if ($testVal3 === false) {
-                        $testVal3 = strftime('%Y');
+                        $testVal3 = \date('Y');
                     }
                 } else {
                     return PHPExcel_Calculation_Functions::VALUE();
@@ -543,27 +543,27 @@ class PHPExcel_Calculation_DateTime
                 return PHPExcel_Calculation_Functions::VALUE();
             }
             $PHPDateArray = date_parse($testVal1.'-'.$testVal2.'-'.$testVal3);
-            if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
+            if ($PHPDateArray['error_count'] > 0) {
                 $PHPDateArray = date_parse($testVal2.'-'.$testVal1.'-'.$testVal3);
-                if (($PHPDateArray === false) || ($PHPDateArray['error_count'] > 0)) {
+                if ($PHPDateArray['error_count'] > 0) {
                     return PHPExcel_Calculation_Functions::VALUE();
                 }
             }
         }
 
-        if (($PHPDateArray !== false) && ($PHPDateArray['error_count'] == 0)) {
+        if ($PHPDateArray['error_count'] == 0) {
             // Execute function
             if ($PHPDateArray['year'] == '') {
-                $PHPDateArray['year'] = strftime('%Y');
+                $PHPDateArray['year'] = \date('Y');
             }
             if ($PHPDateArray['year'] < 1900) {
                 return PHPExcel_Calculation_Functions::VALUE();
             }
             if ($PHPDateArray['month'] == '') {
-                $PHPDateArray['month'] = strftime('%m');
+                $PHPDateArray['month'] = \date('m');
             }
             if ($PHPDateArray['day'] == '') {
-                $PHPDateArray['day'] = strftime('%d');
+                $PHPDateArray['day'] = \date('d');
             }
             $excelDateValue = floor(
                 PHPExcel_Shared_Date::FormattedPHPToExcel(
@@ -617,7 +617,7 @@ class PHPExcel_Calculation_DateTime
         $timeValue = str_replace(array('/', '.'), array('-', '-'), $timeValue);
 
         $PHPDateArray = date_parse($timeValue);
-        if (($PHPDateArray !== false) && ($PHPDateArray['error_count'] == 0)) {
+        if ($PHPDateArray['error_count'] == 0) {
             if (PHPExcel_Calculation_Functions::getCompatibilityMode() == PHPExcel_Calculation_Functions::COMPATIBILITY_OPENOFFICE) {
                 $excelDateValue = PHPExcel_Shared_Date::FormattedPHPToExcel(
                     $PHPDateArray['year'],

@@ -433,7 +433,7 @@ class SingularValueDecomposition
      *    Return the left singular vectors
      *
      *    @access public
-     *    @return U
+     * @return Matrix|U
      */
     public function getU()
     {
@@ -445,7 +445,7 @@ class SingularValueDecomposition
      *    Return the right singular vectors
      *
      *    @access public
-     *    @return V
+     * @return Matrix|V
      */
     public function getV()
     {
@@ -457,7 +457,7 @@ class SingularValueDecomposition
      *    Return the one-dimensional array of singular values
      *
      *    @access public
-     *    @return diagonal of S.
+     * @return array|diagonal
      */
     public function getSingularValues()
     {
@@ -469,7 +469,7 @@ class SingularValueDecomposition
      *    Return the diagonal matrix of singular values
      *
      *    @access public
-     *    @return S
+     * @return Matrix|S
      */
     public function getS()
     {
@@ -499,7 +499,7 @@ class SingularValueDecomposition
      *    Two norm condition number
      *
      *    @access public
-     *    @return max(S)/min(S)
+     * @return float|int|max
      */
     public function cond()
     {

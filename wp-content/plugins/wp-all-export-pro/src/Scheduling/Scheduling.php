@@ -83,6 +83,11 @@ class Scheduling
      */
     public function handleScheduling($id, $post)
     {
+
+        if (!$this->checkLicense()) {
+            return false;
+        }
+
         $schedulingEnabled = $post['scheduling_enable'];
    
         if ($schedulingEnabled == 1) {
@@ -188,7 +193,7 @@ class Scheduling
                 }
 
                 $timeParts = explode(':', $time);
-                $hour = $timeParts[0];
+                $hour = (int)$timeParts[0];
                 $min = (int)$timeParts[1];
 
                 if (strpos($time, 'pm') !== false && $hour < 12) {

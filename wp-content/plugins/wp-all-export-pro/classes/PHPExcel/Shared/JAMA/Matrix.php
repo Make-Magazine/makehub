@@ -160,11 +160,13 @@ class PHPExcel_Shared_JAMA_Matrix
      *    getMatrix
      *
      *    Get a submatrix
+     *
      *    @param int $i0 Initial row index
      *    @param int $iF Final row index
      *    @param int $j0 Initial column index
      *    @param int $jF Final column index
-     *    @return Matrix Submatrix
+     *
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function getMatrix()
     {
@@ -360,10 +362,12 @@ class PHPExcel_Shared_JAMA_Matrix
      *    diagonal
      *
      *    Generate a diagonal matrix
+     *
      *    @param int $m Row dimension
      *    @param int $n Column dimension
      *    @param mixed $c Diagonal value
-     *    @return Matrix Diagonal matrix
+     *
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function diagonal($m = null, $n = null, $c = 1)
     {
@@ -420,7 +424,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    transpose
      *
      *    Tranpose matrix
-     *    @return Matrix Transposed matrix
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function transpose()
     {
@@ -463,8 +467,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *    plus
      *
      *    A + B
+     *
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function plus()
     {
@@ -503,8 +509,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *    plusEquals
      *
      *    A = A + B
-     *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *
+     * @param mixed $B Matrix/Array
+     *
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function plusEquals()
     {
@@ -557,8 +565,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *    minus
      *
      *    A - B
-     *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *
+     * @param mixed $B Matrix/Array
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function minus()
     {
@@ -597,8 +607,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *    minusEquals
      *
      *    A = A - B
-     *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *
+     * @param mixed $B Matrix/Array
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function minusEquals()
     {
@@ -652,8 +664,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Element-by-element multiplication
      *    Cij = Aij * Bij
-     *    @param mixed $B Matrix/Array
-     *    @return Matrix Matrix Cij
+     *
+     * @param mixed $B Matrix/Array
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayTimes()
     {
@@ -693,8 +707,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Element-by-element multiplication
      *    Aij = Aij * Bij
+     *
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Matrix Aij
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayTimesEquals()
     {
@@ -748,8 +764,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Element-by-element right division
      *    A / B
+     *
      *    @param Matrix $B Matrix B
-     *    @return Matrix Division result
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayRightDivide()
     {
@@ -809,8 +827,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Element-by-element right division
      *    Aij = Aij / Bij
+     *
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Matrix Aij
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayRightDivideEquals()
     {
@@ -846,13 +866,13 @@ class PHPExcel_Shared_JAMA_Matrix
     }
 
 
-    /**
-     *    arrayLeftDivide
-     *
-     *    Element-by-element Left division
+	/**
+	 *    arrayLeftDivide
+	 *
+	 *    Element-by-element Left division
      *    A / B
      *    @param Matrix $B Matrix B
-     *    @return Matrix Division result
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayLeftDivide()
     {
@@ -893,8 +913,10 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    Element-by-element Left division
      *    Aij = Aij / Bij
+     *
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Matrix Aij
+     *
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function arrayLeftDivideEquals()
     {
@@ -925,17 +947,17 @@ class PHPExcel_Shared_JAMA_Matrix
             }
             return $M;
         } else {
-            throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
+            throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION );
         }
     }
 
 
-    /**
+	/**
      *    times
      *
      *    Matrix multiplication
      *    @param mixed $n Matrix/Array/Scalar
-     *    @return Matrix Product
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function times()
     {
@@ -1021,7 +1043,7 @@ class PHPExcel_Shared_JAMA_Matrix
                     break;
             }
         } else {
-            throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
+            throw new PHPExcel_Calculation_Exception( self::POLYMORPHIC_ARGUMENT_EXCEPTION );
         }
     }
 
@@ -1030,7 +1052,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    A = A ^ B
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function power()
     {
@@ -1075,7 +1097,7 @@ class PHPExcel_Shared_JAMA_Matrix
             }
             return $this;
         } else {
-            throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
+            throw new PHPExcel_Calculation_Exception( self::POLYMORPHIC_ARGUMENT_EXCEPTION );
         }
     }
 
@@ -1084,7 +1106,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *
      *    A = A & B
      *    @param mixed $B Matrix/Array
-     *    @return Matrix Sum
+     *    @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function concat()
     {
@@ -1114,7 +1136,7 @@ class PHPExcel_Shared_JAMA_Matrix
             }
             return $this;
         } else {
-            throw new PHPExcel_Calculation_Exception(self::POLYMORPHIC_ARGUMENT_EXCEPTION);
+            throw new PHPExcel_Calculation_Exception( self::POLYMORPHIC_ARGUMENT_EXCEPTION);
         }
     }
 
@@ -1122,7 +1144,7 @@ class PHPExcel_Shared_JAMA_Matrix
      *    Solve A*X = B.
      *
      *    @param Matrix $B Right hand side
-     *    @return Matrix ... Solution if A is square, least squares solution otherwise
+     *    @return Matrix|X
      */
     public function solve($B)
     {

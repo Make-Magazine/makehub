@@ -283,8 +283,9 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
      *    Set AutoFilter Rule Type
      *
      *    @param    string        $pRuleType
-     *    @throws    PHPExcel_Exception
-     *    @return PHPExcel_Worksheet_AutoFilter_Column
+     *
+     *    @return PHPExcel_Worksheet_AutoFilter_Column|PHPExcel_Worksheet_AutoFilter_Column_Rule
+     * @throws    PHPExcel_Exception
      */
     public function setRuleType($pRuleType = self::AUTOFILTER_RULETYPE_FILTER)
     {

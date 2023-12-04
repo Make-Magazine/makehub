@@ -33,8 +33,9 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
     const UNDERLINE_DOUBLEACCOUNTING = 'doubleAccounting';
     const UNDERLINE_SINGLE           = 'single';
     const UNDERLINE_SINGLEACCOUNTING = 'singleAccounting';
+	public $colorIndex;
 
-    /**
+	/**
      * Font Name
      *
      * @var string

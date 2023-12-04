@@ -93,6 +93,10 @@ class FilteringCPT extends FilteringBase
                 $rule->element = 'post_author';
                 $this->queryWhere .= "{$this->wpdb->posts}.$rule->element " . $this->parse_condition($rule, true);
                 break;
+            case 'parent_slug':
+                $this->queryJoin[] = " INNER JOIN {$this->wpdb->posts} AS pmxe_parent ON ({$this->wpdb->posts}.post_parent = pmxe_parent.ID) ";
+                $this->queryWhere .= "pmxe_parent.post_name " . $this->parse_condition($rule, false);
+                break;
             case 'user_login':
             case 'user_nicename':
             case 'user_email':

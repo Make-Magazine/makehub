@@ -76,7 +76,7 @@ class AgeGroup extends Field
     }
 
     /**
-     * @return string
+     * @return array|string|\WP_Post
      * @throws \Exception
      */
     private function getProduct()

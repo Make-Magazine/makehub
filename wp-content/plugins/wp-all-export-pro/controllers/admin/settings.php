@@ -23,7 +23,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
 
     public function index_action()
     {
-        global $wp_roles;
+        global $wp_roles, $wpdb;
 
         $this->data['post'] = $post = $this->input->post(PMXE_Plugin::getInstance()->getOption());
 
@@ -54,10 +54,26 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
             $this->data['is_license_active'] = true;
         }
 
+
         $this->data['is_scheduling_license_active'] = false;
         if (!empty($post['scheduling_license_status']) && $post['scheduling_license_status'] == 'valid') {
             $this->data['is_scheduling_license_active'] = true;
         }
+
+        $this->data['exportList'] = [];
+
+        $table_prefix = PMXE_Plugin::getInstance()->getTablePrefix();
+        $exports = $wpdb->get_results("SELECT * FROM {$table_prefix}exports ORDER BY `registered_on` DESC");
+
+        foreach($exports as $exportPost) {
+            $this->data['exportList'][] = [
+                'id' => $exportPost->id,
+                'name' => $exportPost->friendly_name
+            ];
+        }
+
+        $this->data['triggerTestData'] = get_option('wpae_trigger_test_data', 1);
+        $this->data['zapierSpecificExport'] = get_option('wpae_zapier_specific_export', 0);
 
         if ($this->input->post('is_templates_submitted')) { // delete templates form
 
@@ -188,7 +204,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
                                             unset($template_data['id']);
                                             $template->clear()->set($template_data)->insert();
                                         }
-                                        wp_redirect(add_query_arg('pmxe_nt', urlencode(sprintf(_n('%d template imported', '%d templates imported', count($templates_data), 'wp_all_export_plugin'), count($templates_data))), $this->baseUrl));
+                                        wp_redirect(esc_url_raw(add_query_arg('pmxe_nt', urlencode(sprintf(_n('%d template imported', '%d templates imported', count($templates_data), 'wp_all_export_plugin'), count($templates_data))), $this->baseUrl)));
                                         die();
                                     }
                                 }
@@ -210,7 +226,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
                     foreach ($templates_ids as $template_id) {
                         $template->clear()->set('id', $template_id)->delete();
                     }
-                    wp_redirect(add_query_arg('pmxe_nt', urlencode(sprintf(_n('%d template deleted', '%d templates deleted', count($templates_ids), 'wp_all_export_plugin'), count($templates_ids))), $this->baseUrl));
+                    wp_redirect(esc_url_raw(add_query_arg('pmxe_nt', urlencode(sprintf(_n('%d template deleted', '%d templates deleted', count($templates_ids), 'wp_all_export_plugin'), count($templates_ids))), $this->baseUrl)));
                     die();
                 }
                 if ($this->input->post('export_templates')) {
@@ -297,7 +313,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
 
             isset($_POST['pmxe_license_activate']) and $this->activate_licenses();
 
-            wp_redirect(add_query_arg('pmxe_nt', urlencode(__('Settings saved', 'wp_all_export_plugin')), $this->baseUrl));
+            wp_redirect(esc_url_raw(add_query_arg('pmxe_nt', urlencode(__('Settings saved', 'wp_all_export_plugin')), $this->baseUrl)));
             die();
         }
     }
@@ -318,7 +334,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
 
                 $role = get_role($role_id);
 
-                if ($role->has_cap('manage_options')) {
+                if ($role->has_cap(PMXE_Plugin::$capabilities)) {
                     continue;
                 }
 
@@ -332,7 +348,7 @@ class PMXE_Admin_Settings extends PMXE_Controller_Admin
 
             PMXE_Plugin::getInstance()->updateOption(array('client_mode_roles' => $client_mode_roles));
 
-            wp_redirect(add_query_arg('pmxe_nt', urlencode(__('Settings saved', 'wp_all_export_plugin')), $this->baseUrl));
+            wp_redirect(esc_url_raw(add_query_arg('pmxe_nt', urlencode(__('Settings saved', 'wp_all_export_plugin')), $this->baseUrl)));
 
             die();
         }

@@ -85,8 +85,9 @@ class PHPExcel_Shared_OLE
      * @var  int  number of octets per block
     */
     public $smallBlockSize;
+	private $bigBlockThreshold;
 
-    /**
+	/**
      * Reads an OLE container from the contents of the file given.
      *
      * @acces public

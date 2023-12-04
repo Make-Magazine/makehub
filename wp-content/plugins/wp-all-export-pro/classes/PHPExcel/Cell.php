@@ -91,7 +91,7 @@ class PHPExcel_Cell
     /**
      *    Send notification to the cache controller
      *
-     *    @return void
+     * @return PHPExcel_Cell|void
      **/
     public function notifyCacheController()
     {
@@ -259,7 +259,6 @@ class PHPExcel_Cell
     /**
      *    Get calculated cell value
      *
-     *    @deprecated        Since version 1.7.8 for planned changes to cell for array formula handling
      *
      *    @param    boolean $resetLog  Whether the calculation engine logger should be reset or not
      *    @return    mixed
@@ -519,7 +518,7 @@ class PHPExcel_Cell
     /**
      *    If this cell is in a merge range, then return the range
      *
-     *    @return string
+     * @return array|string
      */
     public function getMergeRange()
     {
@@ -1004,7 +1003,7 @@ class PHPExcel_Cell
     }
 
     /**
-     *    @deprecated        Since version 1.7.8 for planned changes to cell for array formula handling
+     *
      */
     public function setFormulaAttributes($pAttributes)
     {
@@ -1013,7 +1012,7 @@ class PHPExcel_Cell
     }
 
     /**
-     *    @deprecated        Since version 1.7.8 for planned changes to cell for array formula handling
+     *
      */
     public function getFormulaAttributes()
     {

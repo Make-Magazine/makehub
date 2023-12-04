@@ -181,8 +181,10 @@ class WpaeXmlProcessor
                         $tagValues[$snippet] = $snippetValue;
 
 
-                        if (count($tagValues[$snippet]) > $maxTagValues) {
-                            $maxTagValues = count($tagValues[$snippet]);
+                        if(is_array($tagValues[$snippet])) {
+                            if (count($tagValues[$snippet]) > $maxTagValues) {
+                                $maxTagValues = count($tagValues[$snippet]);
+                            }
                         }
                     }
                     //We have arrays
@@ -291,7 +293,7 @@ class WpaeXmlProcessor
         foreach ($snippets as $snippet) {
             $isCdataString = '<![CDATA' . $snippet;
 
-            if (strpos($this->xml, $isCdataString) === false) {
+            if (strpos($this->xml ?? '', $isCdataString) === false) {
                 $results[] = $snippet;
             }
         }
@@ -670,7 +672,8 @@ class WpaeXmlProcessor
      * Cloning DOMNode with including child DOMNode elements
      *
      * @param $node
-     * @return \DOMNode*
+     *
+     * @return DOMNode|string
      */
     private function cloneNode(DOMNode $node, $snippet, $snippetValues){
 

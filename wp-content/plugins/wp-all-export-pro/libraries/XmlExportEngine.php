@@ -221,6 +221,7 @@ if (!class_exists('XmlExportEngine')) {
         public static $is_comment_export = false;
         public static $is_taxonomy_export = false;
         public static $is_woo_review_export = false;
+        public static $is_woo_order_export = false;
         public static $is_custom_addon_export = false;
 
         public static $post_types = array();
@@ -408,6 +409,8 @@ if (!class_exists('XmlExportEngine')) {
 
                 self::$is_woo_review_export = (in_array('shop_review', self::$post_types)) ? true : false;
 
+                self::$is_woo_order_export = (in_array('shop_order', self::$post_types)) ? true : false;
+
                 self::$is_taxonomy_export = (in_array('taxonomies', self::$post_types)) ? true : false;
 
                 if (count(self::$post_types) === 1) {
@@ -556,12 +559,17 @@ if (!class_exists('XmlExportEngine')) {
 
             // Prepare existing taxonomies
             if ('specific' == $this->post['export_type'] && !self::$is_user_export && !self::$is_woo_customer_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
-                $this->_existing_taxonomies = wp_all_export_get_existing_taxonomies_by_cpt(self::$post_types[0]);
 
-                $this->_existing_meta_keys = wp_all_export_get_existing_meta_by_cpt(self::$post_types[0]);
+                $post_types = self::$post_types;
+                if(!is_array($post_types)) {
+                    $post_types = array($post_types);
+                }
+                $this->_existing_taxonomies = wp_all_export_get_existing_taxonomies_by_cpt($post_types[0]);
+                $this->_existing_meta_keys = wp_all_export_get_existing_meta_by_cpt($post_types[0]);
             }
             if ('advanced' == $this->post['export_type'] && !self::$is_user_export && !self::$is_comment_export && !self::$is_woo_review_export && !self::$is_taxonomy_export) {
-                $meta_keys = $wpdb->get_results("SELECT DISTINCT meta_key FROM {$table_prefix}postmeta WHERE {$table_prefix}postmeta.meta_key NOT LIKE '_edit%' AND {$table_prefix}postmeta.meta_key NOT LIKE '_oembed_%' LIMIT 1000");
+                $meta_query_limit = apply_filters('wp_all_export_meta_query_limit', 1000);
+                $meta_keys = $wpdb->get_results("SELECT DISTINCT meta_key FROM {$table_prefix}postmeta WHERE {$table_prefix}postmeta.meta_key NOT LIKE '_edit%' AND {$table_prefix}postmeta.meta_key NOT LIKE '_oembed_%' LIMIT $meta_query_limit");
                 if (!empty($meta_keys)) {
                     $exclude_keys = array('_first_variation_attributes', '_is_first_variation_created');
                     foreach ($meta_keys as $meta_key) {
@@ -753,8 +761,8 @@ if (!class_exists('XmlExportEngine')) {
                         $sort_fields['cc_value'][] = $fields['cc_value'][$j];
                         $sort_fields['cc_name'][] = $fields['cc_name'][$j];
                         $sort_fields['cc_settings'][] = $fields['cc_settings'][$j];
-                        $sort_fields['cc_combine_multiple_fields'][] = isset($fields['cc_combine_multiple_fields'][$j]) ? $fields['cc_combine_multiple_fields'][$j] : 0;
-                        $sort_fields['cc_combine_multiple_fields_value'][] = isset($fields['cc_combine_multiple_fields_value'][$j]) ? $fields['cc_combine_multiple_fields_value'][$j] : 0;
+                        $sort_fields['cc_combine_multiple_fields'][] = $fields['cc_combine_multiple_fields'][ $j ] ?? 0;
+                        $sort_fields['cc_combine_multiple_fields_value'][] = $fields['cc_combine_multiple_fields_value'][ $j ] ?? 0;
                         break;
                     }
                 }

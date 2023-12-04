@@ -36,13 +36,13 @@ function pmxe_wp_ajax_wpae_available_rules(){
 			?>										
 
 				<!-- Taxonomies -->
-				<option value="in"><?php echo esc_html('In', 'wp_all_export_plugin') . ' ' . ucwords(str_replace(array("product_tx", "tx_", "_"), array("", "", " "), $post['selected'])); ?></option>
-				<option value="not_in"><?php echo esc_html('Not In', 'wp_all_export_plugin') . ' ' . ucwords(str_replace(array("product_tx", "tx_", "_"), array("", "", " "), $post['selected'])); ?></option>
+				<option value="in"><?php echo esc_html__('In', 'wp_all_export_plugin') . ' ' . esc_html(ucwords(str_replace(array("product_tx", "tx_", "_"), array("", "", " "), $post['selected']))); ?></option>
+				<option value="not_in"><?php echo esc_html__('Not In', 'wp_all_export_plugin') . ' ' . esc_html(ucwords(str_replace(array("product_tx", "tx_", "_"), array("", "", " "), $post['selected']))); ?></option>
 
 			
 			<?php
 		}
-		elseif( in_array($post['selected'], array('post_date', 'post_modified', 'user_registered', 'comment_date', 'cf__completed_date')) || $is_date )
+		elseif( in_array($post['selected'], array('post_date', 'post_modified', 'user_registered', 'comment_date', 'cf__completed_date', '_date_paid')) || $is_date )
 		{
 			?>
 			<option value="equals"><?php esc_html_e('equals', 'wp_all_export_plugin'); ?></option>

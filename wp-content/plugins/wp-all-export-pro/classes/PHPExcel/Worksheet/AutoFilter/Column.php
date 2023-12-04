@@ -269,7 +269,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
     /**
      * Get AutoFilter Column Attributes
      *
-     * @return string
+     * @return array|string
      */
     public function getAttributes()
     {

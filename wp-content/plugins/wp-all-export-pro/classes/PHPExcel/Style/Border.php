@@ -42,8 +42,9 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
     const BORDER_SLANTDASHDOT     = 'slantDashDot';
     const BORDER_THICK            = 'thick';
     const BORDER_THIN             = 'thin';
+	public $colorIndex;
 
-    /**
+	/**
      * Border style
      *
      * @var string

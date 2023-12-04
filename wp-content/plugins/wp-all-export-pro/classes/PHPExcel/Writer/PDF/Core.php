@@ -254,7 +254,8 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
      *  Set Paper Size
      *
      *  @param  string  $pValue Paper size
-     *  @return PHPExcel_Writer_PDF
+     *
+     * @return PHPExcel_Writer_PDF|PHPExcel_Writer_PDF_Core
      */
     public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER)
     {
@@ -276,7 +277,8 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
      *  Set Orientation
      *
      *  @param string $pValue  Page orientation
-     *  @return PHPExcel_Writer_PDF
+     *
+     * @return PHPExcel_Writer_PDF|PHPExcel_Writer_PDF_Core
      */
     public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT)
     {
@@ -298,8 +300,9 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
      *  Set temporary storage directory
      *
      *  @param     string        $pValue        Temporary storage directory
-     *  @throws    PHPExcel_Writer_Exception    when directory does not exist
-     *  @return    PHPExcel_Writer_PDF
+     *
+     *  @return PHPExcel_Writer_PDF|PHPExcel_Writer_PDF_Core
+     *@throws    PHPExcel_Writer_Exception    when directory does not exist
      */
     public function setTempDir($pValue = '')
     {

@@ -460,7 +460,7 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
 //                    echo '<b>'.$key.'</b><br />';
                     switch ($key) {
                         case 'table-header-rows':
-                            foreach ($rowData as $key => $cellData) {
+                            foreach ($rowData as $hdr_key => $cellData) {
                                 $rowData = $cellData;
                                 break;
                             }
@@ -468,7 +468,7 @@ class PHPExcel_Reader_OOCalc extends PHPExcel_Reader_Abstract implements PHPExce
                             $rowDataTableAttributes = $rowData->attributes($namespacesContent['table']);
                             $rowRepeats = (isset($rowDataTableAttributes['number-rows-repeated'])) ? $rowDataTableAttributes['number-rows-repeated'] : 1;
                             $columnID = 'A';
-                            foreach ($rowData as $key => $cellData) {
+                            foreach ($rowData as $row_key => $cellData) {
                                 if ($this->getReadFilter() !== null) {
                                     if (!$this->getReadFilter()->readCell($columnID, $rowID, $worksheetName)) {
                                         continue;

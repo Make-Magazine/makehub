@@ -2659,7 +2659,9 @@ class PclZip
         $v_data_header = unpack('a1id1/a1id2/a1cm/a1flag/Vmtime/a1xfl/a1os', $v_binary_data);
 
         // ----- Check some parameters
-        $v_data_header['os'] = bin2hex($v_data_header['os']);
+	    if( false !== $v_data_header ) {
+		    $v_data_header['os'] = bin2hex( $v_data_header['os'] );
+	    }
 
         // ----- Read the gzip file footer
         @fseek($v_file_compressed, filesize($v_gzip_temp_name)-8);
@@ -4837,8 +4839,8 @@ class PclZip
     {
         $v_result=1;
 
-        // ----- Look if function exists
-        if ((!function_exists("get_magic_quotes_runtime")) || (!function_exists("set_magic_quotes_runtime"))) {
+        // ----- Look if function exists or if functions are deprecated/removed in running PHP version.
+	    if (version_compare(PHP_VERSION, '7.4.0', '>=') || (!function_exists("set_magic_quotes_runtime"))) {
             return $v_result;
         }
 

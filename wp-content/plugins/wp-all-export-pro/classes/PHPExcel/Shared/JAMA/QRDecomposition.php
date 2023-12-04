@@ -112,7 +112,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
     /**
      *    Return the Householder vectors
      *
-     *    @return Matrix Lower trapezoidal matrix whose columns define the reflections
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function getH()
     {
@@ -131,7 +131,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
     /**
      *    Return the upper triangular factor
      *
-     *    @return Matrix upper triangular factor
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function getR()
     {
@@ -152,7 +152,7 @@ class PHPExcel_Shared_JAMA_QRDecomposition
     /**
      *    Generate and return the (economy-sized) orthogonal factor
      *
-     *    @return Matrix orthogonal factor
+     * @return Matrix|PHPExcel_Shared_JAMA_Matrix
      */
     public function getQ()
     {

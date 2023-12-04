@@ -108,7 +108,8 @@ class PHPExcel_Calculation_LookupRef
      *        =COLUMN([cellAddress])
      *
      * @param    cellAddress        A reference to a range of cells for which you want the column numbers
-     * @return    integer or array of integer
+     *
+     * @return array|int
      */
     public static function COLUMN($cellAddress = null)
     {
@@ -185,7 +186,8 @@ class PHPExcel_Calculation_LookupRef
      *        =ROW([cellAddress])
      *
      * @param    cellAddress        A reference to a range of cells for which you want the row numbers
-     * @return    integer or array of integer
+     *
+     * @return array|int
      */
     public static function ROW($cellAddress = null)
     {
@@ -717,7 +719,7 @@ class PHPExcel_Calculation_LookupRef
         }
 
         if (!$not_exact_match) {
-            uasort($lookup_array, array('self', 'vlookupSort'));
+            uasort($lookup_array, array(self::class, 'vlookupSort'));
         }
 
         $rowNumber = $rowValue = false;

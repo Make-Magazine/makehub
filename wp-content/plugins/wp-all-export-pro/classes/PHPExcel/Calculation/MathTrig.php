@@ -580,9 +580,11 @@ class PHPExcel_Calculation_MathTrig
      *        MINVERSE(array)
      *
      * @access    public
-     * @category Mathematical and Trigonometric Functions
+     *
      * @param    array    $matrixValues    A matrix of values
-     * @return    array
+     *
+     * @return array|string
+     *@category Mathematical and Trigonometric Functions
      */
     public static function MINVERSE($matrixValues)
     {
@@ -627,7 +629,8 @@ class PHPExcel_Calculation_MathTrig
      *
      * @param    array    $matrixData1    A matrix of values
      * @param    array    $matrixData2    A matrix of values
-     * @return    array
+     *
+     * @return array|string
      */
     public static function MMULT($matrixData1, $matrixData2)
     {

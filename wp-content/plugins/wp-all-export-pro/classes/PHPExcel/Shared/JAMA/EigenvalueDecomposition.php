@@ -66,8 +66,9 @@ class EigenvalueDecomposition
     */
     private $cdivr;
     private $cdivi;
+	private $A;
 
-    /**
+	/**
      *    Symmetric Householder reduction to tridiagonal form.
      *
      *    @access private
@@ -813,7 +814,7 @@ class EigenvalueDecomposition
      *    Return the eigenvector matrix
      *
      *    @access public
-     *    @return V
+     * @return Matrix|V
      */
     public function getV()
     {
@@ -824,7 +825,7 @@ class EigenvalueDecomposition
      *    Return the real parts of the eigenvalues
      *
      *    @access public
-     *    @return real(diag(D))
+     * @return array|real
      */
     public function getRealEigenvalues()
     {
@@ -835,7 +836,7 @@ class EigenvalueDecomposition
      *    Return the imaginary parts of the eigenvalues
      *
      *    @access public
-     *    @return imag(diag(D))
+     * @return array|imag
      */
     public function getImagEigenvalues()
     {
@@ -846,7 +847,7 @@ class EigenvalueDecomposition
      *    Return the block diagonal eigenvalue matrix
      *
      *    @access public
-     *    @return D
+     * @return D|Matrix
      */
     public function getD()
     {

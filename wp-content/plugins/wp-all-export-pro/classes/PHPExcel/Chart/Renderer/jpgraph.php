@@ -531,7 +531,7 @@ class PHPExcel_Chart_Renderer_jpgraph
         foreach ($plotOrder as $i => $v) {
             $dataValuesX = $this->chart->getPlotArea()->getPlotGroupByIndex($groupID)->getPlotValuesByIndex($v)->getDataValues();
             foreach ($dataValuesX as $j => $dataValueX) {
-                $dataValues[$plotOrder[$i]][$j] = $dataValueX;
+                $dataValues[ $v ][$j] = $dataValueX;
             }
         }
         if (empty($dataValues)) {

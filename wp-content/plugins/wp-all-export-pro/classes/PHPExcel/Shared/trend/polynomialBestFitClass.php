@@ -45,9 +45,14 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
      * @var    int
      **/
     protected $order = 0;
+	/**
+	 * @var true
+	 */
+	private $_error;
+	private $_slope;
 
 
-    /**
+	/**
      * Return the order of this polynomial
      *
      * @return     int
@@ -117,7 +122,8 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
      * Return the Slope of the line
      *
      * @param     int        $dp        Number of places of decimal precision to display
-     * @return     string
+     *
+     * @return array|string
      **/
     public function getSlope($dp = 0)
     {
@@ -206,7 +212,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
      */
     public function __construct($order, $yValues, $xValues = array(), $const = true)
     {
-        if (parent::__construct($yValues, $xValues) !== false) {
+        if (parent::__construct($yValues, $xValues) === null) {
             if ($order < $this->valueCount) {
                 $this->bestFitType .= '_'.$order;
                 $this->order = $order;

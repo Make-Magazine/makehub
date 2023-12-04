@@ -2,6 +2,7 @@
 
 if (!class_exists('XmlExportCustomRecord')) {
     final class XmlExportCustomRecord {
+		private static $engine = false;
 
         private $default_fields = [];
 
@@ -16,7 +17,13 @@ if (!class_exists('XmlExportCustomRecord')) {
         public static $is_active = true;
 
         public function __construct() {
-            if (XmlExportEngine::$exportOptions['export_type'] == 'specific' and strpos(XmlExportEngine::$exportOptions['cpt'][0], 'custom_') !== 0) {
+
+            $cpt = XmlExportEngine::$exportOptions['cpt'];
+
+            if(!is_array($cpt)) {
+                $cpt = [$cpt];
+            }
+            if (XmlExportEngine::$exportOptions['export_type'] == 'specific' and strpos($cpt[0], 'custom_') !== 0) {
                 self::$is_active = false;
                 return;
             }
@@ -36,9 +43,13 @@ if (!class_exists('XmlExportCustomRecord')) {
         }
 
         public static function prepare_data($record, $exportOptions, $xmlWriter, $implode_delimiter, $preview) {
+
             $article = array();
 
-            if (wp_all_export_is_compatible() && isset($exportOptions['is_generate_import']) && $exportOptions['is_generate_import'] && $exportOptions['import_id']) {
+            if (
+                $exportOptions['is_generate_import'] && wp_all_export_is_compatible()
+                && (!isset($exportOptions['enable_real_time_exports']) || !$exportOptions['enable_real_time_exports']) && $exportOptions['import_id']
+            ){
                 $postRecord = new PMXI_Post_Record();
                 $postRecord->clear();
                 $postRecord->getBy(array(
@@ -50,7 +61,8 @@ if (!class_exists('XmlExportCustomRecord')) {
                     $postRecord->set(array(
                         'post_id' => $record->id,
                         'import_id' => $exportOptions['import_id'],
-                        'unique_key' => $record->id
+                        'unique_key' => $record->id,
+                        'product_key' => ''
                     ))->save();
                 }
                 unset($postRecord);
@@ -103,10 +115,17 @@ if (!class_exists('XmlExportCustomRecord')) {
                     $combineMultipleFieldsValue = stripslashes($combineMultipleFieldsValue);
                     $snippetParser = new \Wpae\App\Service\SnippetParser();
                     $snippets = $snippetParser->parseSnippets($combineMultipleFieldsValue);
-                    $engine = new XmlExportEngine(XmlExportEngine::$exportOptions);
-                    $engine->init_available_data();
-                    $engine->init_additional_data();
-                    $snippets = $engine->get_fields_options($snippets);
+
+                    // Re-use the engine object if we've already initialized it as it's costly.
+	                if(!is_object(self::$engine)){
+
+		                self::$engine = new XmlExportEngine(XmlExportEngine::$exportOptions);
+		                self::$engine->init_available_data();
+		                self::$engine->init_additional_data();
+
+	                }
+
+                    $snippets = self::$engine->get_fields_options($snippets);
 
                     $articleData = self::prepare_data($record, $snippets, $xmlWriter, $implode_delimiter, $preview);
 

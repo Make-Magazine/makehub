@@ -124,7 +124,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Return the current cache storage class
      *
-     * @return PHPExcel_CachedObjectStorage_ICache|null
+     * @return PHPExcel_CachedObjectStorage_ICache|string|null
      **/
     public static function getCacheStorageClass()
     {
@@ -196,7 +196,8 @@ class PHPExcel_CachedObjectStorageFactory
      * Initialise the cache storage
      *
      * @param    PHPExcel_Worksheet     $parent        Enable cell caching for this worksheet
-     * @return    PHPExcel_CachedObjectStorage_ICache
+     *
+     * @return false|PHPExcel_CachedObjectStorage_ICache
      **/
     public static function getInstance(PHPExcel_Worksheet $parent)
     {

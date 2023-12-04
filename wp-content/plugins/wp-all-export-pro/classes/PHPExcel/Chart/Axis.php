@@ -129,8 +129,9 @@ class PHPExcel_Chart_Axis extends PHPExcel_Chart_Properties
     private $softEdges = array(
         'size' => null
     );
+	private $orientation;
 
-    /**
+	/**
      * Get Series Data Type
      *
      * @return  string

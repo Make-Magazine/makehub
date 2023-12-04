@@ -12,7 +12,7 @@ function pmxe_wp_ajax_save_functions(){
 
 	$uploads   = wp_upload_dir();
 	$functions = $uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
-
+	$functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
 	$input = new PMXE_Input();
 	
 	$post = $input->post('data', '');

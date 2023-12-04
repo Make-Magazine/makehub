@@ -51,7 +51,19 @@ class CombineFields
 
                 $function = preg_replace('/\{(.*?)\}/i', "''", $function);
 
-                $combineMultipleFieldsValue = str_replace('[' . $originalFunction. ']', eval('return '.$function.';'), $combineMultipleFieldsValue);
+	            try {
+		            $combineMultipleFieldsValue = str_replace('[' . $originalFunction. ']', eval('return '.$function.';'), $combineMultipleFieldsValue);
+	            }catch( \Throwable $e ){
+					// If WP_DEBUG is true then log the errors. Otherwise just ignore them as it's probably just exported data related.
+		            if( defined('WP_DEBUG') && WP_DEBUG ) {
+			            $identifier = date( 'Y-m-d H:i:s' ) . ' WP All Export user provided function failure: ';
+			            error_log( $identifier . $e->getMessage() );
+			            error_log( $identifier . $e->getTraceAsString() );
+		            }
+
+	            }
+
+
 
             }
         }

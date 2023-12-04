@@ -119,6 +119,91 @@ class AddonService
     }
 
 
+    public function wooCommerceRealTimeExportsExistAndAddonNotInstalled()
+    {
+        $exports = new \PMXE_Export_List();
+        $exports->getBy('parent_id', 0)->convertRecords();
+
+        foreach ($exports as $item) {
+
+            if(!isset($item['options']['cpt'])) {
+                continue;
+            }
+
+            if(!is_array($item['options']['cpt'])) {
+                $item['options']['cpt'] = array($item['options']['cpt']);
+            }
+
+            if (
+            (
+                (
+                    (in_array('product', $item['options']['cpt']) && !$this->isWooCommerceProductAddonActive() && \class_exists('WooCommerce')) ||
+                    in_array('product_variation', $item['options']['cpt']) ||
+                    (in_array('shop_order', $item['options']['cpt']) && !$this->isWooCommerceOrderAddonActive()) ||
+                    in_array('shop_review', $item['options']['cpt']) ||
+                    in_array('shop_coupon', $item['options']['cpt'])
+                )
+                && !$this->isWooCommerceAddonActive() && isset($item['options']['enable_real_time_exports']) && $item['options']['enable_real_time_exports'])
+            ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    public function userRealTimeExportsExistAndAddonNotInstalled()
+    {
+
+        $exports = new \PMXE_Export_List();
+        $exports->getBy('parent_id', 0)->convertRecords();
+
+        foreach ($exports as $item) {
+
+            if(!isset($item['options']['cpt'])) {
+                continue;
+            }
+
+            if(!is_array($item['options']['cpt'])) {
+                $item['options']['cpt'] = array($item['options']['cpt']);
+            }
+
+            if (
+                ((in_array('users', $item['options']['cpt']) || in_array('shop_customer', $item['options']['cpt'])) && !$this->isUserAddonActive()) ||
+                ($item['options']['export_type'] == 'advanced' && $item['options']['wp_query_selector'] == 'wp_user_query' && !$this->isUserAddonActive() && isset($item['options']['enable_real_time_exports']) && $item['options']['enable_real_time_exports'])
+            ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    public function acfRealTimeExportsExistAndNotInstalled()
+    {
+        if($this->isAcfAddonActive()) {
+            return false;
+        }
+
+        $exports = new \PMXE_Export_List();
+        $exports->getBy('parent_id', 0)->convertRecords();
+
+        foreach ($exports as $item) {
+
+            if(isset($item['options']['enable_real_time_exports']) && $item['options']['enable_real_time_exports']) {
+                if (isset($item->options['cc_type']) && is_array($item->options['cc_type']) && in_array('acf', $item->options['cc_type'])) {
+                    return true;
+                }
+            }
+
+
+        }
+
+        return false;
+    }
+
 
     public function acfExportsExistAndNotInstalled()
     {
@@ -131,7 +216,7 @@ class AddonService
 
         foreach ($exports as $item) {
 
-            if(is_array($item->options['cc_type']) && in_array('acf', $item->options['cc_type'])) {
+            if(isset($item->options['cc_type']) && is_array($item->options['cc_type']) && in_array('acf', $item->options['cc_type'])) {
                 return true;
             }
 

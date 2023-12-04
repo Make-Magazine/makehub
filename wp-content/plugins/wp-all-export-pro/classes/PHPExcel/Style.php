@@ -148,7 +148,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
     /**
      * Get parent. Only used for style supervisor
      *
-     * @return PHPExcel
+     * @return PHPExcel|PHPExcel_Style
      */
     public function getParent()
     {

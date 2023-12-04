@@ -250,7 +250,7 @@ class PHPExcel_Chart_DataSeries
     /**
      * Get Plot Label by Index
      *
-     * @return PHPExcel_Chart_DataSeriesValues
+     * @return false|PHPExcel_Chart_DataSeriesValues
      */
     public function getPlotLabelByIndex($index)
     {
@@ -276,7 +276,7 @@ class PHPExcel_Chart_DataSeries
     /**
      * Get Plot Category by Index
      *
-     * @return PHPExcel_Chart_DataSeriesValues
+     * @return false|PHPExcel_Chart_DataSeriesValues
      */
     public function getPlotCategoryByIndex($index)
     {
@@ -324,7 +324,7 @@ class PHPExcel_Chart_DataSeries
     /**
      * Get Plot Values by Index
      *
-     * @return PHPExcel_Chart_DataSeriesValues
+     * @return false|PHPExcel_Chart_DataSeriesValues
      */
     public function getPlotValuesByIndex($index)
     {

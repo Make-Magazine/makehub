@@ -190,8 +190,10 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
      * @var array
      */
     public $fontHashIndex;
+	private $_preCalculateFormulas;
+	private $_print_headers;
 
-    /**
+	/**
      * Constructor
      *
      * @param int        &$str_total        Total number of strings
@@ -1085,13 +1087,15 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
      * these cases for the sake of simpler code.
      *
      * @access private
-     * @see writeUrl()
+     *
      * @param integer $row1   Start row
      * @param integer $col1   Start column
      * @param integer $row2   End row
      * @param integer $col2   End column
      * @param string  $url    URL string
-     * @return integer
+     *
+     * @return int|void
+     * @see writeUrl()
      */
     public function writeUrlExternal($row1, $col1, $row2, $col2, $url)
     {

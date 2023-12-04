@@ -83,7 +83,11 @@ class FilteringFactory
                     throw new AddonNotFoundException(\__('The WooCommerce add-on is required. If you already own it, you can download the add-on here: <a href="https://www.wpallimport.com/portal/downloads" target="_blank">https://www.wpallimport.com/portal/downloads</a>', \PMXE_Plugin::LANGUAGE_DOMAIN));
                 }
 
-                return new \Wpae\Pro\Filtering\FilteringOrders();
+                if ( class_exists('Automattic\WooCommerce\Utilities\OrderUtil') && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled() ) {
+                    return new \Wpae\Pro\Filtering\FilteringOrdersHPOS();
+                } else {
+                    return new \Wpae\Pro\Filtering\FilteringOrders();
+                }
             }
         }
         return new FilteringCPT();

@@ -63,7 +63,7 @@ class PHPExcel_Chart_PlotArea
     /**
      * Get Number of Plot Groups
      *
-     * @return array of PHPExcel_Chart_DataSeries
+     * @return array|int
      */
     public function getPlotGroupCount()
     {

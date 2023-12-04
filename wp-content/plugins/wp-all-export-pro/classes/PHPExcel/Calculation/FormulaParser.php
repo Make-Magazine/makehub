@@ -117,7 +117,8 @@ class PHPExcel_Calculation_FormulaParser
      * Get Token
      *
      * @param     int        $pId    Token id
-     * @return    string
+     *
+     * @return PHPExcel_Calculation_FormulaToken|string
      * @throws  PHPExcel_Calculation_Exception
      */
     public function getToken($pId = 0)

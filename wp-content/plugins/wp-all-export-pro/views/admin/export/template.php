@@ -65,6 +65,9 @@ if($is_rapid_addon_export) {
 				<input type="hidden" name="sub_post_type_to_export" value="<?php echo $post['sub_post_type_to_export'];?>">
 				<input type="hidden" name="export_only_modified_stuff" value="<?php echo $post['export_only_modified_stuff'];?>" />
 				<input type="hidden" name="export_only_new_stuff" value="<?php echo $post['export_only_new_stuff'];?>" />
+                <?php if(isset($post['enable_real_time_exports']) && $post['enable_real_time_exports']) { ?>
+                    <input type="hidden" name="enable_real_time_exports" id="enable_real_time_exports" value="1" />
+                <?php } ?>
 
 				<?php 
 				$selected_post_type = '';
@@ -119,8 +122,8 @@ if($is_rapid_addon_export) {
 																	<input type="hidden" name="cc_value[]" value="<?php echo esc_attr($post['cc_value'][$ID]); ?>"/>
 																	<input type="hidden" name="cc_name[]" value="<?php echo XmlExportEngine::sanitizeFieldName(esc_attr($field_name)); ?>"/>
 																	<input type="hidden" name="cc_settings[]" value="<?php echo (!empty($post['cc_settings'][$ID])) ? esc_attr($post['cc_settings'][$ID]) : 0; ?>"/>
-																	<input type="hidden" name="cc_combine_multiple_fields[]" value="<?php echo (!empty($post['cc_combine_multiple_fields'][$ID])) ? esc_attr($post['cc_combine_multiple_fields'][$ID]) : 0; ?>"/>
-																	<input type="hidden" name="cc_combine_multiple_fields_value[]" value="<?php echo (!empty($post['cc_combine_multiple_fields_value'][$ID])) ? esc_attr($post['cc_combine_multiple_fields_value'][$ID]) : 0; ?>"/>
+																	<input type="hidden" name="cc_combine_multiple_fields[]" value="<?php echo (!empty($post['cc_combine_multiple_fields'][$ID])) ? esc_attr($post['cc_combine_multiple_fields'][$ID]) : ''; ?>"/>
+																	<input type="hidden" name="cc_combine_multiple_fields_value[]" value="<?php echo (!empty($post['cc_combine_multiple_fields_value'][$ID])) ? esc_attr($post['cc_combine_multiple_fields_value'][$ID]) : ''; ?>"/>
 																</div>
 															</li>
 															<?php
@@ -182,22 +185,22 @@ if($is_rapid_addon_export) {
 									<input type="hidden" name="cc_value[]" value=""/>
 									<input type="hidden" name="cc_name[]" value=""/>
 									<input type="hidden" name="cc_settings[]" value="0"/>
-									<input type="hidden" name="cc_combine_multiple_fields[]" value="0"/>
-									<input type="hidden" name="cc_combine_multiple_fields_value[]" value="0"/>
+									<input type="hidden" name="cc_combine_multiple_fields[]" value=""/>
+									<input type="hidden" name="cc_combine_multiple_fields_value[]" value=""/>
 								</div>
 
-								<!-- Warning Messages -->
-								<?php if ( XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() &&  ! XmlExportWooCommerceOrder::$is_active && ! XmlExportComment::$is_active && !XmlExportWooCommerceReview::$is_active && ! XmlExportTaxonomy::$is_active ) : ?>
-								<div class="wp-all-export-warning" <?php if ( empty($post['ids']) or count($post['ids']) > 1 ) echo 'style="display:none;"'; ?>>
-									<p></p>
-									<input type="hidden" id="warning_template" value="<?php esc_html_e("Warning: without %s you won't be able to re-import this data back to this site using WP All Import.", "wp_all_export_plugin"); ?>"/>
-                                    <button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button>
-								</div>
-								<?php endif; ?>
+                                <!-- Warning Messages -->
+                                <?php if ( (($addons->isWooCommerceAddonActive() || $addons->isWooCommerceOrderAddonActive()) && ! XmlExportWooCommerceOrder::$is_active) && ! XmlExportComment::$is_active && ! XmlExportTaxonomy::$is_active ) : ?>
+                                    <div class="wp-all-export-warning" <?php if ( empty($post['ids']) or count($post['ids']) > 1 ) echo 'style="display:none;"'; ?>>
+                                        <p></p>
+                                        <input type="hidden" id="warning_template" value="<?php esc_html_e("Warning: without %s you won't be able to re-import this data back to this site using WP All Import.", "wp_all_export_plugin"); ?>"/>
+                                        <button class="notice-dismiss" type="button"><span class="screen-reader-text">Dismiss this notice.</span></button>
+                                    </div>
+                                <?php endif; ?>
 
-								<?php if ( XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() && XmlExportWooCommerce::$is_active ) : ?>
-								<input type="hidden" id="is_product_export" value="1"/>													
-								<?php endif; ?>
+                                <?php if ( ($addons->isWooCommerceAddonActive() || $addons->isWooCommerceProductAddonActive()) && in_array('product', XmlExportEngine::$post_types) ) : ?>
+                                    <input type="hidden" id="is_product_export" value="1"/>
+                                <?php endif; ?>
 
 								<?php if ( XmlExportEngine::get_addons_service()->isWooCommerceAddonActive() && empty($post['cpt']) && ! XmlExportWooCommerceOrder::$is_active && ! $addons->isUserAddonActiveAndIsUserExport() && ! XmlExportComment::$is_active && !XmlExportWooCommerceReview::$is_active && ! XmlExportTaxonomy::$is_active ) : ?>
 								<input type="hidden" id="is_wp_query" value="1"/>								
@@ -430,7 +433,7 @@ if($is_rapid_addon_export) {
 											<div class="input">
 												<select name="xml_template_type" class="xml_template_type">
 													<option value="simple" <?php if ($post['xml_template_type'] == 'simple') echo 'selected="selected"';?>><?php esc_html_e('Simple XML Feed', 'wp_all_export_plugin'); ?></option>
-													<option value="custom" <?php if ($post['xml_template_type'] == 'custom') echo 'selected="selected"';?>><?php esc_html_e('Custom XML Feed', 'wp_all_export_plugin'); ?></option>
+													<option value="custom" <?php if ($post['export_to'] === 'xml' && $post['xml_template_type'] == 'custom') echo 'selected="selected"';?>><?php esc_html_e('Custom XML Feed', 'wp_all_export_plugin'); ?></option>
 													<?php
 													if(in_array('product', $post['cpt'])) {
 														?>
@@ -551,6 +554,7 @@ if($is_rapid_addon_export) {
                 <?php
                 $uploads = wp_upload_dir();
                 $functions = $uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
+                $functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
                 $functions_content = file_get_contents($functions);
                 ?>
 
@@ -628,11 +632,11 @@ if($is_rapid_addon_export) {
                                class="back rad3"
                                style="float:none;"><?php esc_html_e('Back to Manage Exports', 'wp_all_export_plugin') ?></a>
                         <?php else: ?>
-                            <a href="<?php echo esc_url(add_query_arg('action', 'index', $this->baseUrl)); ?>"
+                            <a href="<?php echo esc_url_raw(add_query_arg('action', 'index', $this->baseUrl)); ?>"
                                class="back rad3"><?php esc_html_e('Back', 'wp_all_export_plugin') ?></a>
                         <?php endif; ?>
                         <input type="submit" class="button button-primary button-hero wpallexport-large-button"
-                               value="<?php esc_html_e(($this->isWizard) ? 'Continue' : 'Update Template', 'wp_all_export_plugin') ?>"/>
+                               value="<?php esc_html_e(($this->isWizard) ? 'Continue' : (isset($post['enable_real_time_exports']) && $post['enable_real_time_exports']  ? 'Save &amp; Run Export' : 'Update Template'), 'wp_all_export_plugin') ?>"/>
                     </div>
 
                 </div>

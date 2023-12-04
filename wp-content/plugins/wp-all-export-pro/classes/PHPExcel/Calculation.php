@@ -2066,9 +2066,10 @@ class PHPExcel_Calculation
             'functionCall' => 'self::mkMatrix'
         )
     );
+	private $_debugLog;
 
 
-    public function __construct(PHPExcel $workbook = null)
+	public function __construct(PHPExcel $workbook = null)
     {
         $this->delta = 1 * pow(10, 0 - ini_get('precision'));
 
@@ -3507,7 +3508,7 @@ class PHPExcel_Calculation
     // evaluate postfix notation
     private function processTokenStack($tokens, $cellID = null, PHPExcel_Cell $pCell = null)
     {
-        if ($tokens == false) {
+        if ( ! $tokens ) {
             return false;
         }
 

@@ -35,6 +35,13 @@ class SchedulingController extends BaseController
         $export = new \PMXE_Export_Record();
         $export->getById($exportId);
 
+        if(isset($export->options['enable_real_time_exports']) && $export->options['enable_real_time_exports'] ) {
+            wp_send_json(array(
+                'status'     => 403,
+                'message'    => sprintf(esc_html__('This export is configured to run as records are created and cannot be run via this method.', 'wp_all_export_plugin'), $id)
+            ));
+        }
+
         $this->disableExportsThatDontHaveAddon($export);
 
         if ($export->isEmpty()) {
@@ -71,6 +78,13 @@ class SchedulingController extends BaseController
 
         $export = new \PMXE_Export_Record();
         $export->getById($exportId);
+
+        if(isset($export->options['enable_real_time_exports']) && $export->options['enable_real_time_exports'] ) {
+            wp_send_json(array(
+                'status'     => 403,
+                'message'    => sprintf(esc_html__('his export is configured to run as records are created and cannot be run via this method.', 'wp_all_export_plugin'), $id)
+            ));
+        }
 
         $this->disableExportsThatDontHaveAddon($export);
 

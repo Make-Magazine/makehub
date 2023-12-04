@@ -410,8 +410,10 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
      * @var string
      */
     private $md5Ctxt = null;
+	private $textObjRef;
+	private $_baseCell;
 
-    /**
+	/**
      * Create a new PHPExcel_Reader_Excel5 instance
      */
     public function __construct()

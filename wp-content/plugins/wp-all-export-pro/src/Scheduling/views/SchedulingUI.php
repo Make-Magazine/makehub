@@ -1,3 +1,8 @@
+<?php
+if(!defined('ABSPATH')) {
+    die();
+}
+?>
 <style type="text/css">
     .days-of-week {
         margin-left: 5px;
@@ -295,7 +300,7 @@ $export_id = $export->id;
                     };
                 };
 
-                $('#weekly li').click(function () {
+                $('#weekly li').on('click', function () {
 
                     $('#weekly li').removeClass('error');
 
@@ -316,7 +321,7 @@ $export_id = $export->id;
 
                 });
 
-                $('#monthly li').click(function () {
+                $('#monthly li').on('click', function () {
 
                     $('#monthly li').removeClass('error');
                     $(this).parent().parent().find('.days-of-week li').removeClass('selected');
@@ -325,7 +330,7 @@ $export_id = $export->id;
                     $('#monthly_days').val($(this).data('day'));
                 });
 
-                $('input[name="scheduling_run_on"]').change(function () {
+                $('input[name="scheduling_run_on"]').on('change', function () {
                     var val = $('input[name="scheduling_run_on"]:checked').val();
                     if (val == "weekly") {
 
@@ -370,7 +375,7 @@ $export_id = $export->id;
 
                 $('#timezone').chosen({width: '320px'});
 
-                $('.wpae-export-complete-save-button').click(function (e) {
+                $('.wpae-export-complete-save-button').on('click', function (e) {
 
                     if($('.wpae-save-button').hasClass('disabled')) {
                         return false;
@@ -439,7 +444,7 @@ $export_id = $export->id;
 
                 var saveSubscription = false;
 
-                $('#add-subscription').click(function(){
+                $('#add-subscription').on('click', function(){
 
                     $('#add-subscription-field').show();
                     $('#add-subscription-field').animate({width:'400px'}, 225);
@@ -456,7 +461,7 @@ $export_id = $export->id;
                     return false;
                 });
 
-                $('#subscribe-button').click(function(){
+                $('#subscribe-button').on('click', function(){
 
                     if(saveSubscription) {
                         $('#subscribe-button .easing-spinner').show();
@@ -515,7 +520,7 @@ $export_id = $export->id;
                 });
             });
             // help scheduling template
-            $('.help_scheduling').click(function(){
+            $('.help_scheduling').on('click', function(){
 
                 $('.wp-all-export-scheduling-help').css('left', ($( document ).width()/2) - 255 ).show();
                 $('#wp-all-export-scheduling-help-inner').css('max-height', $( window ).height()-150).show();
@@ -523,7 +528,7 @@ $export_id = $export->id;
                 return false;
             });
 
-            $('.wp_all_export_scheduling_help').find('h3').click(function(){
+            $('.wp_all_export_scheduling_help').find('h3').on('click', function(){
                 var $action = $(this).find('span').html();
                 $('.wp_all_export_scheduling_help').find('h3').each(function(){
                     $(this).find('span').html("+");
@@ -561,8 +566,10 @@ $export_id = $export->id;
                             <span class="connection-icon" style="margin-left: 8px; height: 16px;">
 															<?php include_once('ConnectionIcon.php'); ?>
 														</span>
-                            <?php if (!$scheduling->checkConnection()) { ?>
-                                <span class="wpai-license" style="margin-left: 8px; font-weight: normal; font-weight: normal; <?php if(!$hasActiveLicense) { ?> display: none; <?php }?>"><span class="unable-to-connect">Unable to connect, please contact support.</span></span>
+                            <?php if($schedulingExportOptions['scheduling_enable'] == 1) { ?>
+                                <?php if (!$scheduling->checkConnection()) { ?>
+                                    <span class="wpai-license" style="margin-left: 8px; font-weight: normal; font-weight: normal; <?php if(!$hasActiveLicense) { ?> display: none; <?php }?>"><span class="unable-to-connect">Unable to connect, please contact support.</span></span>
+                                <?php } ?>
                             <?php } ?>
                         </h4>
                     </label>

@@ -49,8 +49,10 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
     const FILL_PATTERN_LIGHTUP         = 'lightUp';
     const FILL_PATTERN_LIGHTVERTICAL   = 'lightVertical';
     const FILL_PATTERN_MEDIUMGRAY      = 'mediumGray';
+	public $endcolorIndex;
+	public $startcolorIndex;
 
-    /**
+	/**
      * Fill type
      *
      * @var string

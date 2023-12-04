@@ -181,7 +181,11 @@ function pmxe_wp_ajax_wpae_preview(){
             }
             remove_action('comments_clauses', 'wp_all_export_comments_clauses');
 
+        } else if(in_array('shop_order', $exportOptions['cpt']) && PMXE_Plugin::hposEnabled()) {
+            $exportQuery = new \Wpae\WordPress\OrderQuery();
+
         }
+
 		else
 		{
 		    if(strpos($exportOptions['cpt'][0], 'custom_') === 0) {
@@ -243,7 +247,8 @@ function pmxe_wp_ajax_wpae_preview(){
 		$wp_uploads = wp_upload_dir();
 
 		$functions = $wp_uploads['basedir'] . DIRECTORY_SEPARATOR . WP_ALL_EXPORT_UPLOADS_BASE_DIRECTORY . DIRECTORY_SEPARATOR . 'functions.php';
-		if ( @file_exists($functions) ) {
+		$functions = apply_filters( 'wp_all_export_functions_file_path', $functions );
+        if ( @file_exists($functions) ) {
 			require_once $functions;
 		}
 

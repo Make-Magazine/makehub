@@ -2014,7 +2014,8 @@ class PHPExcel_Calculation_Statistical
      * @param    array of mixed        Data Series X
      * @param    boolean                A logical value specifying whether to force the intersect to equal 0.
      * @param    boolean                A logical value specifying whether to return additional regression statistics.
-     * @return    array
+     *
+     * @return array|string
      */
     public static function LINEST($yValues, $xValues = null, $const = true, $stats = false)
     {
@@ -2074,7 +2075,8 @@ class PHPExcel_Calculation_Statistical
      * @param    array of mixed        Data Series X
      * @param    boolean                A logical value specifying whether to force the intersect to equal 0.
      * @param    boolean                A logical value specifying whether to return additional regression statistics.
-     * @return    array
+     *
+     * @return array|string
      */
     public static function LOGEST($yValues, $xValues = null, $const = true, $stats = false)
     {

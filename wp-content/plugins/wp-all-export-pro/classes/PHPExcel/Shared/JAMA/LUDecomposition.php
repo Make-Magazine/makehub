@@ -122,7 +122,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
     /**
      *    Get lower triangular factor.
      *
-     *    @return array Lower triangular factor
+     * @return array|PHPExcel_Shared_JAMA_Matrix
      */
     public function getL()
     {
@@ -143,7 +143,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
     /**
      *    Get upper triangular factor.
      *
-     *    @return array Upper triangular factor
+     * @return array|PHPExcel_Shared_JAMA_Matrix
      */
     public function getU()
     {
@@ -182,7 +182,7 @@ class PHPExcel_Shared_JAMA_LUDecomposition
     /**
      *    Is the matrix nonsingular?
      *
-     *    @return true if U, and hence A, is nonsingular.
+     * @return bool
      */
     public function isNonsingular()
     {

@@ -222,7 +222,8 @@ class PHPExcel_Shared_Excel5
      * @param integer $offsetY Vertical offset in pixels
      * @param integer $width Width in pixels
      * @param integer $height Height in pixels
-     * @return array
+     *
+     * @return array|void
      */
     public static function oneAnchor2twoAnchor($sheet, $coordinates, $offsetX, $offsetY, $width, $height)
     {

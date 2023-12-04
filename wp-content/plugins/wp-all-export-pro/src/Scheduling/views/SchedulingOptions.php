@@ -1,4 +1,9 @@
 <?php
+if(!defined('ABSPATH')) {
+    die();
+}
+?>
+<?php
 $scheduling = \Wpae\Scheduling\Scheduling::create();
 $schedulingExportOptions = $export->options;
 $hasActiveLicense = $scheduling->checkLicense();
@@ -293,7 +298,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
 
 
 
-                $('#weekly li').click(function () {
+                $('#weekly li').on('click', function () {
 
                     $('#weekly li').removeClass('error');
 
@@ -314,7 +319,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
 
                 });
 
-                $('#monthly li').click(function () {
+                $('#monthly li').on('click', function () {
 
                     $('#monthly li').removeClass('error');
                     $(this).parent().parent().find('.days-of-week li').removeClass('selected');
@@ -323,7 +328,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                     $('#monthly_days').val($(this).data('day'));
                 });
 
-                $('input[name="scheduling_run_on"]').change(function () {
+                $('input[name="scheduling_run_on"]').on('change', function () {
                     var val = $('input[name="scheduling_run_on"]:checked').val();
                     if (val == "weekly") {
 
@@ -369,7 +374,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                 $('#timezone').chosen({width: '320px'});
 
 
-                $('.wpae-save-button').click(function (e) {
+                $('.wpae-save-button').on('click', function (e) {
 
                     var initialValue = $(this).find('.save-text').html();
                     var schedulingEnable = $('input[name="scheduling_enable"]:checked').val() == 1;
@@ -409,7 +414,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                         e.preventDefault();
                         return false;
                     }
-                    
+
                     var $button = $(this);
 
                     var formData = $('#scheduling-form :input').serializeArray();
@@ -419,31 +424,22 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                     formData.push({name: 'element_id', value: <?php echo intval($export_id); ?>});
                     formData.push({name: 'scheduling_enable', value: $('input[name="scheduling_enable"]:checked').val()});
 
-                    $button.find('.easing-spinner').toggle();
-
                     $.ajax({
                         type: 'POST',
                         url: ajaxurl,
                         data: formData,
                         success: function (response) {
-                            $button.find('.easing-spinner').toggle();
-                            $button.find('.save-text').html(initialValue);
-                            $button.find('svg').show();
 
-                            setTimeout(function(){
-                                var submitEvent = $.Event('wpae-scheduling-options-form:submit');
-                                $(document).trigger(submitEvent);
-                            }, 1000);
+                            var submitEvent = $.Event('wpae-scheduling-options-form:submit');
+                            $(document).trigger(submitEvent);
 
                         },
                         error: function () {
-                            $button.find('.easing-spinner').toggle();
-                            $button.find('.save-text').html(initialValue);
                         }
                     });
                 });
 
-                $('.wp_all_export_confirm_and_run').click(function(e){
+                $('.wp_all_export_confirm_and_run').on('click', function(e){
 
                     e.preventDefault();
 
@@ -547,7 +543,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
 
                 var saveSubscription = false;
 
-                $('#add-subscription').click(function(){
+                $('#add-subscription').on('click', function(){
 
                     $('#add-subscription-field').show();
                     $('#add-subscription-field').animate({width:'400px'}, 225);
@@ -565,7 +561,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                     return false;
                 });
 
-                $('#subscribe-button').click(function(){
+                $('#subscribe-button').on('click', function(){
 
                     if(saveSubscription) {
                         $('#subscribe-button .easing-spinner').show();
@@ -625,7 +621,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                 });
             });
             // help scheduling template
-            $('.help_scheduling').click(function(){
+            $('.help_scheduling').on('click', function(){
 
                 $('.wp-all-export-scheduling-help').css('left', ($( document ).width()/2) - 255 ).show();
                 $('#wp-all-export-scheduling-help-inner').css('max-height', $( window ).height()-150).show();
@@ -633,7 +629,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                 return false;
             });
 
-            $('.wp_all_export_scheduling_help').find('h3').click(function(){
+            $('.wp_all_export_scheduling_help').find('h3').on('click', function(){
                 var $action = $(this).find('span').html();
                 $('.wp_all_export_scheduling_help').find('h3').each(function(){
                     $(this).find('span').html("+");
@@ -653,8 +649,7 @@ $options = \PMXE_Plugin::getInstance()->getOption();
 
 </script>
 <?php require __DIR__.'/CommonJs.php'; ?>
-<div class="wpallexport-collapsed wpallexport-section wpallexport-file-options closed"
-     style="margin-top: -10px; margin-bottom: 10px;">
+<div class="wpallexport-collapsed wpallexport-section wpallexport-file-options closed wpallexport-scheduling" style="margin-top: -10px; margin-bottom: 10px; <?php if($post['enable_real_time_exports']) { ?> display: none; <?php } ?>">
     <div id="scheduling-form">
 
         <div class="wpallexport-content-section" style="padding-bottom: 15px; margin-bottom: 10px;">
@@ -680,8 +675,10 @@ $options = \PMXE_Plugin::getInstance()->getOption();
                                 <span class="connection-icon" style="margin-left: 8px; height: 16px;">
 															<?php include_once('ConnectionIcon.php'); ?>
 														</span>
-                                <?php if (!$scheduling->checkConnection()) { ?>
-                                    <span class="wpai-license" style="margin-left: 8px; font-weight: normal; <?php if(!$hasActiveLicense) { ?> display: none; <?php }?>"><span class="unable-to-connect">Unable to connect, please contact support.</span></span>
+                                <?php if($schedulingExportOptions['scheduling_enable'] == 1) { ?>
+                                    <?php if (!$scheduling->checkConnection()) { ?>
+                                        <span class="wpai-license" style="margin-left: 8px; font-weight: normal; <?php if(!$hasActiveLicense) { ?> display: none; <?php }?>"><span class="unable-to-connect">Unable to connect, please contact support.</span></span>
+                                    <?php } ?>
                                 <?php } ?>
                             </h4>
                         </label>

@@ -27,7 +27,7 @@ $l10n = array(
 			<div class="wpallexport-links">
 				<a href="http://www.wpallimport.com/support/" target="_blank"><?php esc_html_e('Support', 'wp_all_export_plugin'); ?></a> | <a href="http://www.wpallimport.com/documentation/" target="_blank"><?php esc_html_e('Documentation', 'wp_all_export_plugin'); ?></a>
 			</div>
-		</div>	
+		</div>
 		<div class="clear"></div>		
 	</div>			
 
@@ -118,8 +118,8 @@ $l10n = array(
                         ?>
                         <script type="text/javascript">
                             jQuery(document).ready(function(){
-                                jQuery('.wpae-save-button').click(function (e) {
-                                    jQuery('#wpae-options-form').submit();
+                                jQuery('.wpae-save-button').on('click', function (e) {
+                                    jQuery('#wpae-options-form').trigger('submit');
                                 });
                             });
                         </script>
@@ -132,17 +132,17 @@ $l10n = array(
                 </form>
                 <div style="color: #425F9A; font-size: 14px; font-weight: bold; margin: 0 0 15px; line-height: 25px; text-align: center;">
                     <div id="no-subscription" style="display: none;">
-                        <?php echo esc_html_e("Looks like you're trying out Automatic Scheduling!");?><br/>
-                        <?php echo esc_html_e("Your Automatic Scheduling settings won't be saved without a subscription.");?>
+                        <?php esc_html_e("Looks like you're trying out Automatic Scheduling!");?><br/>
+                        <?php esc_html_e("Your Automatic Scheduling settings won't be saved without a subscription.");?>
                     </div>
                 </div>
 					<div class="wpallexport-submit-buttons" style="text-align: center; <?php if ($this->isWizard) { ?> height: 60px; <?php } ?> ">
 
 						<?php if ($this->isWizard): ?>
-							<a href="<?php echo esc_url(apply_filters('pmxi_options_back_link', add_query_arg('action', 'template', $this->baseUrl), $this->isWizard)); ?>" class="back rad3"><?php esc_html_e('Back', 'wp_all_export_plugin') ?></a>
+                            <a href="<?php echo esc_url(apply_filters('pmxi_options_back_link', add_query_arg(['action'=>'template','_wpnonce_template' => wp_create_nonce('template')], $this->baseUrl), $this->isWizard)); ?>" class="back rad3"><?php esc_html_e('Back', 'wp_all_export_plugin') ?></a>
                             <?php include(__DIR__ . "/../../../src/Scheduling/views/SaveSchedulingButton.php"); ?>
 						<?php else: ?>		
-							<a href="<?php echo esc_url(apply_filters('pmxi_options_back_link', remove_query_arg('id', remove_query_arg('action', $this->baseUrl)), $this->isWizard)); ?>" class="back rad3"><?php esc_html_e('Back to Manage Exports', 'wp_all_export_plugin') ?></a>
+							<a href="<?php echo esc_url(apply_filters('pmxi_options_back_link', esc_url_raw(remove_query_arg('id', remove_query_arg('action', $this->baseUrl)), $this->isWizard))); ?>" class="back rad3"><?php esc_html_e('Back to Manage Exports', 'wp_all_export_plugin') ?></a>
                             <?php include(__DIR__ . "/../../../src/Scheduling/views/SaveSchedulingButton.php"); ?>
 						<?php endif ?>
 					</div>

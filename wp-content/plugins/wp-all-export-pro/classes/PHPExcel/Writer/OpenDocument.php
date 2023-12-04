@@ -179,8 +179,9 @@ class PHPExcel_Writer_OpenDocument extends PHPExcel_Writer_Abstract implements P
      * Set PHPExcel object
      *
      * @param  PHPExcel  $pPHPExcel  PHPExcel object
+     *
+     * @return PHPExcel_Writer_Excel2007|PHPExcel_Writer_OpenDocument
      * @throws PHPExcel_Writer_Exception
-     * @return PHPExcel_Writer_Excel2007
      */
     public function setPHPExcel(PHPExcel $pPHPExcel = null)
     {

@@ -804,7 +804,8 @@ class PHPExcel_Worksheet_PageSetup
      * Set first page number
      *
      * @param int $value
-     * @return PHPExcel_Worksheet_HeaderFooter
+     *
+     * @return PHPExcel_Worksheet_HeaderFooter|PHPExcel_Worksheet_PageSetup
      */
     public function setFirstPageNumber($value = null)
     {

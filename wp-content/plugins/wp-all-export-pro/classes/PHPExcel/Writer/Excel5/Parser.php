@@ -106,8 +106,16 @@ class PHPExcel_Writer_Excel5_Parser
      * @var array
      */
     public $references;
+	/**
+	 * @var array|array[]
+	 */
+	private $functions;
+	/**
+	 * @var array|int[]
+	 */
+	private $ptg;
 
-    /**
+	/**
      * The class constructor
      *
      */

@@ -3,7 +3,9 @@
 if (!class_exists('XmlExportTaxonomy')) {
     final class XmlExportTaxonomy
     {
-        private $init_fields = array(
+        private static $engine = false;
+
+    	private $init_fields = array(
             array(
                 'label' => 'term_id',
                 'name' => 'Term ID',
@@ -192,7 +194,8 @@ if (!class_exists('XmlExportTaxonomy')) {
                     $postRecord->set(array(
                         'post_id' => $term->term_id,
                         'import_id' => $exportOptions['import_id'],
-                        'unique_key' => $term->term_id
+                        'unique_key' => $term->term_id,
+	                    'product_key' => 'taxonomy_term'
                     ))->save();
                 }
                 unset($postRecord);
@@ -240,10 +243,16 @@ if (!class_exists('XmlExportTaxonomy')) {
                     $snippetParser = new \Wpae\App\Service\SnippetParser();
                     $snippets = $snippetParser->parseSnippets($combineMultipleFieldsValue);
 
-                    $engine = new XmlExportEngine(XmlExportEngine::$exportOptions);
-                    $engine->init_available_data();
-                    $engine->init_additional_data();
-                    $snippets = $engine->get_fields_options($snippets);
+	                // Re-use the engine object if we've already initialized it as it's costly.
+	                if(!is_object(self::$engine)){
+
+		                self::$engine = new XmlExportEngine(XmlExportEngine::$exportOptions);
+		                self::$engine->init_available_data();
+		                self::$engine->init_additional_data();
+
+	                }
+
+                    $snippets = self::$engine->get_fields_options($snippets);
 
                     $articleData = self::prepare_data($term, $snippets, $xmlWriter = false, $acfs, $implode_delimiter, $preview);
 
