@@ -42,49 +42,86 @@
         .membership-tables {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;;
+            justify-content: center;
             gap: 25px;
-            margin-top: 30px;
-            .membership-table {
+            margin-top: 80px;
+            a {
                 width: calc(33.333333% - 35px);
-                min-width: 300px;
+                background: #fff;
+                margin-bottom: 35px;
+                padding: 15px;
+                padding-bottom: 0px;
+                border: solid $color-blue 7px;
+                border-bottom-left-radius: 35px;
+                border-bottom-right-radius: 35px;
+                transition: scale .5s;
                 display: flex;
                 flex-direction: column;
-                background: #fff;
-                margin-bottom: 15px;
-                border-radius: 5px;
-                overflow: hidden;
-                transition: scale .5s;
-                box-shadow: 1px 1px 6px #333;
+                position: relative;
                 &.featured {
-                    //scale: 1.05;
+                    top: -50px;
                 }
                 &:hover {
                     scale: 1.05;
                 }
+                .membership-table {
+                    display: flex;
+                    flex-direction: column;
+                    flex: 1;
+                    min-width: 100%;
+                    img {
+                        margin-bottom: 15px;
+                    }
+                }
+                .membership-benefits-header {
+                    text-align: center;
+                    text-transform: uppercase;
+                    font-size: 40px;
+                    font-family: "Roboto Bold";
+                    color: #333;
+                }
                 .membership-benefits {
-                    list-style: none;
-                    margin: 0;
                     margin-bottom: 15px;
+                    list-style: disc;
                     li {
                         text-align: left;
                         color: #333;
-                        padding: 5px 10px;
                         font-weight: 500;
-                        &:nth-of-type(even) {
-                            background: #e1e1e1;
-                        }
-                        &.membership-benefits-header {
-                            background: $color-blue;
-                            text-align: center;
-                            padding: 10px;
-                            font-size: 20px;
-                            color: #fff;
-                        }
                     }
                 }
                 .membership-btn {
+                    font-size: 24px;
+                    font-family: "Roboto Bold";
+                    border-width: 7px;
+                    height: 75px;
+                    margin-bottom: -7px !important;
                     margin-top: auto;
+                    margin-left: -22px;
+                    margin-right: -22px;
+                    border-radius: 35px;
+                    position: relative;
+                    z-index: 99;
+                }
+                .membership-shadow {
+                    width: 100%;
+                    position: absolute;
+                    z-index: 0;
+                    margin-left: -15px;
+                    top: 78%;
+                    height: 300px;
+                    background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 60%, rgba(0, 212, 255, 0) 70%);
+                    transform: scaleY(0.2);
+                }
+                @media screen and (max-width: 1230px) {
+                    width: 100%;
+                    margin-bottom: 15px;
+                    box-shadow: 0px 20px 17px -12px rgba(153,153,153,1);
+                    &.featured {
+                        top: 0px;
+                    }
+                    .membership-shadow {
+                       display: none;
+                    }
                 }
             }
         }

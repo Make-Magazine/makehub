@@ -30,46 +30,57 @@ while ( have_posts() ) : the_post(); ?>
 							<h1>Become a Member of Make: Community</h1>
 							<a href="javascript:void();" class="login-btn"><h4>Already a member? <span class="underline">Log in now.</span></h4></a>
 							<div class="membership-tables">
-								<a href="/register/community" class="membership-table" onclick="pintrk('track', 'addtocart');">
-									<ul class="membership-benefits">
-										<li class="membership-benefits-header">Community</li>
-										<li>Community & Makerspace Directories</li>
-										<li>Community Platform and Groups</li>
-										<li>Community and Maker Shed newsletters</li>
-									</ul>
-									<div class="universal-btn membership-btn">Free</div>
+								<a href="/register/community" onclick="pintrk('track', 'addtocart');">
+									<div class="membership-table">
+										<h3 class="membership-benefits-header">Community</h3>
+										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-community-membership.png" width="100%" alt="Get a Premium Make: Free Membership" />
+										<ul class="membership-benefits">
+											<li>Member Directory</li>
+											<li>Maker Space Directory</li>
+											<li>Make: Online Platform</li>
+											<li>Interest Groups</li>
+											<li>Make: Newsletter</li>
+											<li>Maker Shed Newsletter</li>
+										</ul>
+										<div class="universal-btn membership-btn">Free</div>
+									</div>
+									<div class="membership-shadow"></div>
 								</a>
-								<a href="/register/premium-subscriber" class="membership-table featured" onclick="pintrk('track', 'addtocart');">
-									<ul class="membership-benefits">
-										<li class="membership-benefits-header">Premium</li>
-										<li>Community & Makerspace Directories</li>
-										<li>Community Platform and Groups</li>
-										<li>Community and Maker Shed newsletters</li>
-										<li>Digital Magazine Subscription</li>
-										<li>Print Magazine Subscription (US residents only)</li>
-										<li>Premium Videos – Education forum, Premium Only events, and behind the scenes of Make: cast, and much more</li>
-										<li>Digital access to all Make: Magazine back issues</li>
-										<li>Premium-only newsletter</li>
-									</ul>
-									<div class="universal-btn membership-btn">$59.99</div>
+								<a href="/register/premium-subscriber" class="featured" onclick="pintrk('track', 'addtocart');">
+									<div class="membership-table">
+										<h3 class="membership-benefits-header">Premium</h3>
+										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-premium-membership.png" width="100%" alt="Get a Premium Make: Community Membership" />
+										<ul class="membership-benefits">
+											<li>Community Access +</li>
+											<li>Complete Make: Digital Archive</li>
+											<li>Print Make: Subscription<sup>*</sup></li>
+											<li>Digital Make: Subscription</li>
+											<li>Member only Videos</li>
+											<li>Member Newsletter</li>
+										</ul>
+										<div class="universal-btn membership-btn">$59.99 per year</div>
+									</div>
+									<div class="membership-shadow"></div>
 								</a>
-								<a href="/register/multiseat-membership" class="membership-table" onclick="pintrk('track', 'addtocart');">
-									<ul class="membership-benefits">
-										<li class="membership-benefits-header">Multiseat</li>
-										<li>5 subaccounts with the following benefits</li>
-										<li>Community & Makerspace Directories</li>
-										<li>Community Platform and Groups</li>
-										<li>Community and Maker Shed newsletters</li>
-										<li>Digital Magazine Subscription</li>
-										<li>Print Magazine Subscription (US residents only, Primary Account only)</li>
-										<li>Premium Videos – Education forum, Premium Only events, and behind the scenes of Make: cast, and much more</li>
-										<li>Digital access to all Make: Magazine back issues</li>
-										<li>Premium-only newsletter</li>
-									</ul>
-									<div class="universal-btn membership-btn">$250</div>
+								<a href="/register/multiseat-membership" onclick="pintrk('track', 'addtocart');">
+									<div class="membership-table">
+										<h3 class="membership-benefits-header">Multi-seat</h3>
+										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-multi-seat-membership.png" width="100%" alt="Get a Multiseat Make: Community Membership" />
+										<ul class="membership-benefits">
+											<li>Community Access +</li>
+											<li>5 Sub Accounts</li>
+											<li>Complete Make: Digital Archive</li>
+											<li>Print Make: Subscription<sup>*</sup</li>
+											<li>Digital Make: Subscription</li>
+											<li>Member only Videos</li>
+											<li>Member Newsletter</li>
+										</ul>
+										<div class="universal-btn membership-btn">$249.99 per year</div>
+									</div>
+									<div class="membership-shadow"></div>
 								</a>
 							</div>
-							<div class="disclaimer">** Fees are applied <b>annually</b>. **</div>
+							<div class="disclaimer">* U.S. Residents Only</div>
 						<?php } ?>
 						</div>
 					<?php } // end MeprUtils if ?>
