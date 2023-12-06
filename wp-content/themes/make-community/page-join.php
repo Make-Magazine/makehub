@@ -47,7 +47,7 @@ while ( have_posts() ) : the_post(); ?>
 											<li>Print Make: Subscription<sup>*</sup></li>
 											<li>Digital Make: Subscription</li>
 											<li>Member only Videos</li>
-											<li>Member Newsletter</li>
+											<li>Founder Newsletter</li>
 										</ul>
 										<div class="universal-btn membership-btn">$24.99 first year**</div>
 									</div>
@@ -64,7 +64,7 @@ while ( have_posts() ) : the_post(); ?>
 											<li>Print Make: Subscription<sup>*</sup</li>
 											<li>Digital Make: Subscription</li>
 											<li>Member only Videos</li>
-											<li>Member Newsletter</li>
+											<li>Founder Newsletter</li>
 										</ul>
 										<div class="universal-btn membership-btn">$249.99 per year</div>
 									</div>
