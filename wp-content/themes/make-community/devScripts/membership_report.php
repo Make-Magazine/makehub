@@ -139,7 +139,6 @@ if($export_csv){
                     <!-- Transaction information -->
                     <td>Amount</td>
                     <td>Coupon Used</td>
-                    <td>Gifted Coupon ID</td>
                     <td>Created At</td>
                     <td>Expires</td>
                     <td>User ID</td>
@@ -160,31 +159,32 @@ if($export_csv){
                     $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
                     $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
                     $gifted_coupon = ($row['gifted_coupon']!='NULL'?$row['gifted_coupon']:'');
+                    if(!$gifted_coupon) {
                     ?>
-                    <tr>
-                        <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
-                        <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['txn_type'];?></td>
-                        <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['parent_transaction_id'];?></td>                
-                        <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
-                        <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
-                        <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
-                        <td tabindex=<?php echo $tabIndex+4?>><?php echo $gifted_coupon;?></td>
-                        <td tabindex=<?php echo $tabIndex+5;?>><?php echo $row['created_at']?></td>
-                        <td tabindex=<?php echo $tabIndex+6;?>><?php echo $row['expires_at']?></td>
-                        <!--User information -->
-                        <td tabindex=<?php echo $tabIndex+7;?>><a href="https://make.co/wp-admin/user-edit.php?user_id=<?php echo $row['user_id'];?>" target="_blank"><?php echo $row['user_id']?></a></td>
-                        <td tabindex=<?php echo $tabIndex+8;?>><?php echo $row['first_name'] . ' '.$row['last_name']?></td>
-                        <td tabindex=<?php echo $tabIndex+9;?>><?php echo $row['user_email'];?></td>
-                        <td tabindex=<?php echo $tabIndex+10;?>>
-                            <?php
-                            echo $address.'<br/>';
-                            echo ($address2!=''?$address2.'<br/>':'');
-                            echo $city.', '.$state.' '.$zip.'<br/>';
-                            echo $country;
-                            ?>
-                        </td>                        
-                    </tr>
+                        <tr>
+                            <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
+                            <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['txn_type'];?></td>
+                            <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['parent_transaction_id'];?></td>                
+                            <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
+                            <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
+                            <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
+                            <td tabindex=<?php echo $tabIndex+5;?>><?php echo $row['created_at']?></td>
+                            <td tabindex=<?php echo $tabIndex+6;?>><?php echo $row['expires_at']?></td>
+                            <!--User information -->
+                            <td tabindex=<?php echo $tabIndex+7;?>><a href="https://make.co/wp-admin/user-edit.php?user_id=<?php echo $row['user_id'];?>" target="_blank"><?php echo $row['user_id']?></a></td>
+                            <td tabindex=<?php echo $tabIndex+8;?>><?php echo $row['first_name'] . ' '.$row['last_name']?></td>
+                            <td tabindex=<?php echo $tabIndex+9;?>><?php echo $row['user_email'];?></td>
+                            <td tabindex=<?php echo $tabIndex+10;?>>
+                                <?php
+                                echo $address.'<br/>';
+                                echo ($address2!=''?$address2.'<br/>':'');
+                                echo $city.', '.$state.' '.$zip.'<br/>';
+                                echo $country;
+                                ?>
+                            </td>                        
+                        </tr>
                     <?php
+                    }
                      $tabIndex = $tabIndex+11;
                 }
                 ?>
