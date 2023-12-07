@@ -9,7 +9,6 @@
  * @since BuddyPress 2.5.0
  * @version 3.1.0
  *
- * @package BuddyBoss\Core
  */
 
 /*
@@ -350,7 +349,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td>
 									<div class="body_text_color body_text_size" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
-										{{sender.name}} <?php _e('sent you a new message', 'buddyboss'); ?>
+										{{sender.name}} <?php _e('sent you a new message', 'buddypress'); ?>
 									</div>
 								</td>
 							</tr>

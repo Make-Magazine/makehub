@@ -1,8 +1,6 @@
 <?php
 /**
  * @package Maker Camp
- * The parent theme functions are located at /buddyboss-theme/inc/theme/functions.php
- * Add your own functions at the bottom of this file.
  */
 /* * **************************** THEME SETUP ***************************** */
 
@@ -15,7 +13,7 @@ define('CHILD_THEME_URL', 'https://makercamp.make.co');
 /**
  * Sets up theme for translation
  *
- * @since Make Experiences 1.0.0
+ * @since Maker Camp 1.0.0
  */
 function maker_camp_languages() {
     /**
@@ -23,11 +21,7 @@ function maker_camp_languages() {
      * Translations can be added into the /languages/ directory.
      */
     // Translate text from the PARENT theme.
-    load_theme_textdomain('buddyboss-theme', get_stylesheet_directory() . '/languages');
-
-    // Translate text from the CHILD theme only.
-    // Change 'buddyboss-theme' instances in all child theme files to 'maker_camp'.
-    // load_theme_textdomain( 'maker_camp', get_stylesheet_directory() . '/languages' );
+    load_theme_textdomain('onecommunity', get_stylesheet_directory() . '/languages');
 }
 
 add_action('after_setup_theme', 'maker_camp_languages');
@@ -65,24 +59,6 @@ function load_admin_styles() {
 	wp_enqueue_style( 'admin_css' );
 }
 add_action('admin_enqueue_scripts', 'load_admin_styles');
-
-// fight back against buddyboss ruining our accessibility
-if ( ! function_exists( 'buddyboss_theme_viewport_meta' ) ) {
-    add_action( 'init', 'remove_bb_actions');
-    function remove_bb_actions() {
-        remove_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
-    }
-    add_action( 'wp_head', 'buddyboss_theme_viewport_meta' );
-    /**
-     * Add a viewport meta.
-     */
-    function buddyboss_theme_viewport_meta_custom() {
-        echo '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=1" />';
-    }
-    add_action( 'wp_head', 'buddyboss_theme_viewport_meta_custom' );
-}
-
-
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
 
