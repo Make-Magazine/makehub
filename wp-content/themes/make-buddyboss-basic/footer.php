@@ -10,23 +10,14 @@
  */
 
 ?>
-<?php do_action( THEME_HOOK_PREFIX . 'end_content' ); ?>
 
-</div><!-- .bb-grid -->
 </div><!-- .container -->
 </div><!-- #content -->
 
-<?php do_action( THEME_HOOK_PREFIX . 'after_content' ); ?>
-
-<?php do_action( THEME_HOOK_PREFIX . 'before_footer' ); ?>
-
-<?php //do_action( THEME_HOOK_PREFIX . 'footer' ); ?>
 <?php    require_once(WP_CONTENT_DIR.'/universal-assets/v2/page-elements/universal-footer.html'); ?>
-<?php do_action( THEME_HOOK_PREFIX . 'after_footer' ); ?>
 
 </div><!-- #page -->
 
-<?php do_action( THEME_HOOK_PREFIX . 'after_page' ); ?>
 
 <?php if(strpos($_SERVER['REQUEST_URI'], "maker-campus")) { ?>
 	<a href="/submit-event" id="makey-sign" target="blank">

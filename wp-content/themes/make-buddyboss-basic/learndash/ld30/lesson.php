@@ -36,15 +36,12 @@ add_filter('comments_array', 'learndash_remove_comments', 1, 2);
 $lesson_data = $post;
 if (empty($course_id)) {
     $course_id = learndash_get_course_id($lesson_data->ID);
-    if (empty($course_id)) {
-        $course_id = (int) buddyboss_theme()->learndash_helper()->ld_30_get_course_id($lesson_data->ID);
-    }
 }
 $lession_list = learndash_get_lesson_list($course_id, array('num' => -1));
 //$content                 = $lesson_data->post_content;
 $lesson_topics_completed = learndash_lesson_topics_completed($post->ID);
-$content_urls = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination($course_id, $lession_list);
-$pagination_urls = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url($content_urls);
+$content_urls = ld_custom_pagination($course_id, $lession_list);
+$pagination_urls = ld_custom_next_prev_url($content_urls);
 if (empty($course)) {
     if (empty($course_id)) {
         $course = learndash_get_course_id($lesson_data->ID);
@@ -70,13 +67,16 @@ if(isset($referrer_url['query'])) {
 	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
 	sort($referrer_params);
 }
+
 ?>
 
 <div id="learndash-content" class="container-fluid">
 
     <div class="bb-grid grid">
-        <?php
+        <?php // only show sidebar if the project is tagged resource
+        if ( has_term('resource', 'ld_lesson_tag') ) :
             include locate_template('/learndash/ld30/learndash-sidebar.php');
+        endif;
         ?>
 
         <div id="learndash-page-content" class="lesson-page">
@@ -157,18 +157,10 @@ if(isset($referrer_url['query'])) {
                                         <?php } ?>
                                     <div class="learndash_next_prev_link">
                                         <?php
-                                        if (isset($pagination_urls['prev']) && $pagination_urls['prev'] != '') {
-                                            echo $pagination_urls['prev'];
-                                        } else {
                                             echo '<span class="prev-link empty-post"></span>';
-                                        }
                                         ?>
                                         <?php
-                                        if ((isset($pagination_urls['next']) && apply_filters('learndash_show_next_link', learndash_is_lesson_complete($user_id, $post->ID), $user_id, $post->ID) && $pagination_urls['next'] != '') || (isset($pagination_urls['next']) && $course_settings['course_disable_lesson_progression'] === 'on' && $pagination_urls['next'] != '')) {
-                                            echo $pagination_urls['next'];
-                                        } else {
                                             echo '<span class="next-link empty-post"></span>';
-                                        }
                                         ?>
                                     </div>
                                 </div>
@@ -351,7 +343,7 @@ if(isset($referrer_url['query'])) {
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-							<?php if( !empty($terms) && !empty($terms["errors"]) ) {  ?>
+							<?php if( !empty($terms) && empty($terms["errors"]) ) {  ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
@@ -361,146 +353,8 @@ if(isset($referrer_url['query'])) {
 									<?php }
 									} ?>
 								</section>
-							<?php } //  Shopify code below ?>
-							<script type="text/javascript">
-							/*<![CDATA[*/
-							(function () {
-							  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-							  if (window.ShopifyBuy) {
-							    if (window.ShopifyBuy.UI) {
-							      ShopifyBuyInit();
-							    } else {
-							      loadScript();
-							    }
-							  } else {
-							    loadScript();
-							  }
-							  function loadScript() {
-							    var script = document.createElement('script');
-							    script.async = true;
-							    script.src = scriptURL;
-							    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-							    script.onload = ShopifyBuyInit;
-							  }
-							  function ShopifyBuyInit() {
-							    var client = ShopifyBuy.buildClient({
-							      domain: 'makershed.myshopify.com',
-							      storefrontAccessToken: 'd5afa3c85254acd69409972a027226b1',
-							    });
-							    ShopifyBuy.UI.onReady(client).then(function (ui) {
-							      ui.createComponent('product', {
-							        id: '7252580171969',
-							        node: document.getElementById('product-component-1656018448357'),
-							        moneyFormat: '%24%7B%7Bamount%7D%7D',
-							        options: {
-							  "product": {
-							    "styles": {
-							      "product": {
-							        "@media (min-width: 601px)": {
-							          "max-width": "calc(25% - 20px)",
-							          "margin-left": "20px",
-							          "margin-bottom": "50px"
-							        }
-							      },
-							      "button": {
-							        ":hover": {
-							          "background-color": "#1932d5"
-							        },
-							        "background-color": "#1c37ed",
-							        ":focus": {
-							          "background-color": "#1932d5"
-							        },
-							        "border-radius": "13px",
-							        "padding-left": "9px",
-							        "padding-right": "9px"
-							      }
-							    },
-							    "text": {
-							      "button": "Add to cart"
-							    }
-							  },
-							  "productSet": {
-							    "styles": {
-							      "products": {
-							        "@media (min-width: 601px)": {
-							          "margin-left": "-20px"
-							        }
-							      }
-							    }
-							  },
-							  "modalProduct": {
-							    "contents": {
-							      "img": false,
-							      "imgWithCarousel": true,
-							      "button": false,
-							      "buttonWithQuantity": true
-							    },
-							    "styles": {
-							      "product": {
-							        "@media (min-width: 601px)": {
-							          "max-width": "100%",
-							          "margin-left": "0px",
-							          "margin-bottom": "0px"
-							        }
-							      },
-							      "button": {
-							        ":hover": {
-							          "background-color": "#1932d5"
-							        },
-							        "background-color": "#1c37ed",
-							        ":focus": {
-							          "background-color": "#1932d5"
-							        },
-							        "border-radius": "13px",
-							        "padding-left": "9px",
-							        "padding-right": "9px"
-							      }
-							    },
-							    "text": {
-							      "button": "Add to cart"
-							    }
-							  },
-							  "option": {},
-							  "cart": {
-							    "styles": {
-							      "button": {
-							        ":hover": {
-							          "background-color": "#1932d5"
-							        },
-							        "background-color": "#1c37ed",
-							        ":focus": {
-							          "background-color": "#1932d5"
-							        },
-							        "border-radius": "13px"
-							      }
-							    },
-							    "text": {
-							      "total": "Subtotal",
-							      "notice": "Use code JIMMYD and SAVE 5%",
-							      "button": "Checkout"
-							    }
-							  },
-							  "toggle": {
-							    "styles": {
-							      "toggle": {
-							        "background-color": "#1c37ed",
-							        ":hover": {
-							          "background-color": "#1932d5"
-							        },
-							        ":focus": {
-							          "background-color": "#1932d5"
-							        }
-							      }
-							    }
-							  }
-							},
-							      });
-							    });
-							  }
-							})();
-							/*]]>*/
-							</script>
-							<div id='product-component-1656018448357'><i class="shopify-close-btn fas fa-angle-double-right"></i></div>
+							<?php }
+							?>
 
                         </div><?php /* .learndash_content_wrap */ ?>
 

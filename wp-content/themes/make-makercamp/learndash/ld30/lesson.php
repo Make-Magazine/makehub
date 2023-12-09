@@ -36,15 +36,12 @@ add_filter('comments_array', 'learndash_remove_comments', 1, 2);
 $lesson_data = $post;
 if (empty($course_id)) {
     $course_id = learndash_get_course_id($lesson_data->ID);
-    if (empty($course_id)) {
-        $course_id = (int) buddyboss_theme()->learndash_helper()->ld_30_get_course_id($lesson_data->ID);
-    }
 }
 $lession_list = learndash_get_lesson_list($course_id, array('num' => -1));
 //$content                 = $lesson_data->post_content;
 $lesson_topics_completed = learndash_lesson_topics_completed($post->ID);
-$content_urls = buddyboss_theme()->learndash_helper()->buddyboss_theme_ld_custom_pagination($course_id, $lession_list);
-$pagination_urls = buddyboss_theme()->learndash_helper()->buddyboss_theme_custom_next_prev_url($content_urls);
+$content_urls = ld_custom_pagination($course_id, $lession_list);
+$pagination_urls = ld_custom_next_prev_url($content_urls);
 if (empty($course)) {
     if (empty($course_id)) {
         $course = learndash_get_course_id($lesson_data->ID);
@@ -160,18 +157,10 @@ if(isset($referrer_url['query'])) {
                                         <?php } ?>
                                     <div class="learndash_next_prev_link">
                                         <?php
-                                        if (isset($pagination_urls['prev']) && $pagination_urls['prev'] != '') {
-                                            echo $pagination_urls['prev'];
-                                        } else {
                                             echo '<span class="prev-link empty-post"></span>';
-                                        }
                                         ?>
                                         <?php
-                                        if ((isset($pagination_urls['next']) && apply_filters('learndash_show_next_link', learndash_is_lesson_complete($user_id, $post->ID), $user_id, $post->ID) && $pagination_urls['next'] != '') || (isset($pagination_urls['next']) && $course_settings['course_disable_lesson_progression'] === 'on' && $pagination_urls['next'] != '')) {
-                                            echo $pagination_urls['next'];
-                                        } else {
                                             echo '<span class="next-link empty-post"></span>';
-                                        }
                                         ?>
                                     </div>
                                 </div>

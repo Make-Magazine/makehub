@@ -192,7 +192,6 @@ endif;
 
         <div class="bb-course-meta">
                     <?php
-                    if (buddyboss_theme_get_option('learndash_course_author')) {
                         $author_id = $lesson['post']->post_author;
                         
                         $avatar = bp_core_fetch_avatar(array('html' => false, 'item_id' => $author_id, 'email' => get_the_author_meta('email', $user_id),
@@ -206,7 +205,6 @@ endif;
                 <?php echo get_the_author_meta('display_name', $author_id); ?>
                     </a>
                 </strong>
-            <?php } ?>
         </div>
 
         <div class="ld-item-details">

@@ -6,7 +6,6 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
  *
- * @package BuddyBoss_Theme
  */
 ?>
 <!doctype html>
@@ -67,17 +66,8 @@
 
         <?php wp_body_open(); ?>
 
-<?php
-if (!is_singular('llms_my_certificate')):
-
-    do_action(THEME_HOOK_PREFIX . 'before_page');
-
-endif;
-?>
 
         <div id="page" class="site">
-
-            <?php do_action(THEME_HOOK_PREFIX . 'before_header'); ?>
 
                 <?php
                 // Universal Nav
@@ -99,13 +89,6 @@ endif;
                     ?>
                 </div>
 
-            <?php do_action(THEME_HOOK_PREFIX . 'after_header'); ?>
-
-            <?php do_action(THEME_HOOK_PREFIX . 'before_content'); ?>
-
             <div id="content" class="site-content">
 
-                <?php do_action(THEME_HOOK_PREFIX . 'begin_content'); ?>
-
                 <div class="container">
-                    <div class="<?php echo apply_filters('buddyboss_site_content_grid_class', 'bb-grid site-content-grid'); ?>">

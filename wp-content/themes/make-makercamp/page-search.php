@@ -16,7 +16,7 @@ $searchQuery = isset($_GET['_sft_ld_lesson_category']) ? $_GET['_sft_ld_lesson_c
 			<div class="row">
 				<div class="col-xs-12 col-sm-12">
 					<h1>Maker Camp Project Library</h1>
-					<?php dynamic_sidebar('search'); ?>
+					<?php dynamic_sidebar('sidebar-left'); ?>
 				</div>
 			</div>
 			<div class="row">
@@ -25,19 +25,12 @@ $searchQuery = isset($_GET['_sft_ld_lesson_category']) ? $_GET['_sft_ld_lesson_c
 						<h2>Search Results for: <?php echo $searchQuery ?></h2>
 					<?php } ?>
 					<?php if ( have_posts() ) :
-
-						do_action( THEME_HOOK_PREFIX . '_template_parts_content_top' );
-
 						while ( have_posts() ) :
 							the_post();
-							do_action( THEME_HOOK_PREFIX . '_single_template_part_content', 'page' );
+							the_content();
 
 						endwhile; // End of the loop.
-					else :
-						get_template_part( 'template-parts/content', 'none' );
-						?>
-
-					<?php endif; ?>
+					endif; ?>
 				</div>
 			</div>
 		</div>

@@ -1,11 +1,9 @@
 <?php
 $course_cover_photo = false;
-
 if ( class_exists( '\BuddyBossTheme\BuddyBossMultiPostThumbnails' ) ) {
 	$course_cover_photo = \BuddyBossTheme\BuddyBossMultiPostThumbnails::get_post_thumbnail_url(
 		'sfwd-courses',
-		'course-cover-image',
-		$course_id
+		'course-cover-image'
 	);
 }
 

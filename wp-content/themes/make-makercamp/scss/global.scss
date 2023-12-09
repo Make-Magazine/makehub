@@ -30,9 +30,15 @@ body {
 
 a {
 	color: $link-color;
+	outline: 0;
+    text-decoration: none;
 	&:hover {
 		color: $link-color-hover;
 	}
+}
+
+.site-content {
+	padding: 0 30px;
 }
 
 #page.site-content {
