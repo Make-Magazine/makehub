@@ -8,6 +8,20 @@
     }
 }
 
+// Focus mode fixes
+.learndash-wrapper .ld-focus {
+	flex-wrap: wrap;
+	position: relative;
+	.ld-focus-sidebar {
+		position: fixed;
+		top: 121px !important;
+		.ld-course-navigation-heading h3 {
+			margin: 0px;
+		}
+	}
+}
+.admin-bar .learndash-wrapper .ld-focus .ld-focus-sidebar { top: 153px !important; }
+
 //hide pagination and participants, as well as tag section
 #learndash-course-header, .lms-course-members-list, section.tags {
 	display: none;
@@ -88,14 +102,104 @@
 
 // Adventures page
 .sfwd-courses-template, .learndash-cpt-sfwd-courses {
-	.bb-single-course-sidebar {
-		.bb-course-preview-content {
-			.button, .bb-course-volume-list, .bb-course-type {
-				font-size: 16px;
+	#page { overflow: hidden; }
+	.wrapper-fluid { width: auto; }
+	.bb-grid {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.mk-vw-container {
+		margin-left: calc(50% - 50vw - 15px);
+		margin-right: calc(50% - 50vw - 15px);
+		overflow: hidden;
+		padding: 0 44px;
+		.mk-course-banner-info {
+			padding-top: 30px;
+			padding-bottom: 30px;
+			position: relative;
+			z-index: 2;
+			.mk-course-banner-inner {
+				@media screen and (min-width: 820px) {
+					max-width: calc(100% - 400px);
+					width: calc(100% - 400px);
+				}
+				color: #fff;
+				h1 {
+					font-size: 48px;
+					color: inherit;
+					line-height: 1.25;
+					margin-bottom: 15px;
+				}
+				a.anchor-course-points {
+					color: #fff;
+					font-size: 15px;
+					font-weight: 500;
+				}
+				.mk-course-single-meta {
+					margin-top: 30px;
+					margin-bottom: 40px;
+					a { display: flex; align-items: center;}
+					.avatar {
+						border-radius: 50%;
+						margin-right: 12px;
+						max-width: 38px;
+						max-height: 38px;
+					}
+					.author-name {
+						font-size: 16px;
+						color: #fff;
+						letter-spacing: -.24px;
+					}
+				}
 			}
-			.button {
-				background: $color-blue;
-				margin-bottom: 15px;
+		}
+	}
+	.mk-single-course-sidebar {
+		background:#fff;
+		@media screen and (min-width: 820px) {
+			margin-top: -200px;
+			max-width: 380px;
+			flex: 0 0 42%;
+			margin-left: auto;
+			position: relative;
+			z-index: 2;
+		}
+		.widget {
+			box-shadow: 0 32px 54px 0 rgba(0,0,0,.1);
+			border-radius: 4px;
+			border: 0;
+			padding: 0 30px;
+			overflow: hidden;
+			background-color: transparent;
+			.mk-course-preview-content {
+				padding: 0 30px;
+				background-color: #fff;
+				margin-left: -30px;
+				margin-right: -30px;
+				text-align: center;
+				.mk-course-volume-list, .mk-course-type {
+					font-size: 16px;
+				}
+				.ld-button {
+					background: $color-blue;
+					margin-bottom: 15px;
+					border-radius: 4px;
+					font-size: 18px;
+				}
+				.mk-course-type { color: #ccc; }
+				.mk-course-volume {
+					text-align: left;
+					h4 { font-family: "Roboto Bold"; }
+				}
+				ul.mk-course-volume-list {
+					list-style: none;
+					padding-left: 10px;
+					margin-bottom: 25px;
+					li {
+						display: flex;
+						gap: 5px;
+					}
+				}
 			}
 		}
 	}
@@ -246,9 +350,13 @@
 			margin-right: 25px;
 			img.avatar {
 				min-width: 70px;
+				max-width: 70px;
 			}
 		}
-		h5 { margin-bottom: 15px; }
+		h5 { 
+			margin-top: 0px;
+			margin-bottom: 15px;
+		}
 		.flex {
 			align-items: start;
 			@media screen and (max-width: 767px) {
@@ -336,6 +444,9 @@
  		&:hover, &:focus {
  			color: #005e9a;
  		}
+		&.print-btn {
+			margin-top: 30px;
+		}
  	}
  	section.tags {
  		margin-bottom: 30px;

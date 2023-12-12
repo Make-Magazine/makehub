@@ -28,6 +28,13 @@ a { // don't let genesis molest our links
     text-decoration: none;
 	word-break: break-word;
 }
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex {
+    display: flex;
+}
 
 #buddypanel-menu > .panel-head {
 	display: none;

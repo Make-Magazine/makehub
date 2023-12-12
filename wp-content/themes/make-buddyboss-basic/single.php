@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 
-<section class="wrapper">
+<section class="wrapper-fluid">
 
 <main id="content" class="<?php if( !is_active_sidebar('sidebar-single') && !is_buddypress() ) { ?>no-sidebar<?php } ?>">
 

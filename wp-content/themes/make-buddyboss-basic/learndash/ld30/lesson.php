@@ -59,7 +59,6 @@ $themes = get_the_terms($post->ID, 'makeyland_themes');
 
 $terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
 
-
 // variables for building Breadcrumbs
 $referrer_url = (isset($_SERVER['HTTP_REFERER'])? parse_url($_SERVER['HTTP_REFERER']) : array());
 if(isset($referrer_url['query'])) {
@@ -343,12 +342,12 @@ if(isset($referrer_url['query'])) {
 
 							<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
 
-							<?php if( !empty($terms) && empty($terms["errors"]) ) {  ?>
+							<?php if( !empty($terms) && empty($terms["errors"]) && ($materials_tax !== false && $categories !== false && $ages !== false) ) {  ?>
 								<section class="standards">
 									<h2>Maker Camp Project Standards</h2>
 									<h4>Based on NGSS (Next Generation Science Standards)</h4>
 									<?php foreach($terms as $term) {
-										if($term->description) { ?>
+										if($term != false && $term->description) { ?>
 											<div class="disclaimer-section"><?php echo $term->description; ?></div>
 									<?php }
 									} ?>
