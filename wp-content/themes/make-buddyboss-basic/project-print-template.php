@@ -2,7 +2,6 @@
 
 function get_lesson_output($lesson_id, $course_id) {
     global $post;
-    do_action(THEME_HOOK_PREFIX . '_template_parts_content_top');
     $course_settings = learndash_get_setting($lesson_id);
 
     $lesson_materials = '';
@@ -43,7 +42,6 @@ function get_lesson_output($lesson_id, $course_id) {
         </main>
     </div>
     <?php
-    //do_action(THEME_HOOK_PREFIX . '_single_template_part_content', 'page');
 }
 
 ?>

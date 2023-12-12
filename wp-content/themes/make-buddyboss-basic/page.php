@@ -20,8 +20,6 @@ get_header();
         <?php
         if (have_posts()) :
 
-            do_action(THEME_HOOK_PREFIX . '_template_parts_content_top');
-
             //while (have_posts()) :
                 the_post();
                 // Are there custom panels to display?
@@ -35,8 +33,6 @@ get_header();
                     }
                     echo '</div>';
                 }
-
-                do_action(THEME_HOOK_PREFIX . '_single_template_part_content', 'page');
 
             //endwhile; // End of the loop.
         else :

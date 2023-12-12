@@ -16,8 +16,6 @@ get_header();
 
 			if ( have_posts() ) :
 
-				do_action( THEME_HOOK_PREFIX . '_template_parts_content_top' );
-
 				while ( have_posts() ) :
 					the_post();
 					echo the_content();
