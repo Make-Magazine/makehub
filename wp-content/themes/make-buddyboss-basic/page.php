@@ -9,7 +9,6 @@
  *
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package BuddyBoss_Theme
  */
 get_header();
 ?>
@@ -20,7 +19,7 @@ get_header();
         <?php
         if (have_posts()) :
 
-            //while (have_posts()) :
+            while (have_posts()) :
                 the_post();
                 // Are there custom panels to display?
                 if (have_rows('content_panels')) {
@@ -34,9 +33,7 @@ get_header();
                     echo '</div>';
                 }
 
-            //endwhile; // End of the loop.
-        else :
-            get_template_part('template-parts/content', 'none');
+            endwhile; // End of the loop.
             ?>
 
         <?php endif; ?>

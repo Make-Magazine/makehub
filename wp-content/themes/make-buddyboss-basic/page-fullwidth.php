@@ -3,7 +3,6 @@
  * Template name: No Sidebar
  * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
  *
- * @package BuddyBoss_Theme
  */
 
 get_header();
@@ -17,9 +16,7 @@ get_header();
 			while ( have_posts() ) :
 				the_post();
 
-			endwhile; // End of the loop.
-		else :
-			get_template_part( 'template-parts/content', 'none' );
+			endwhile; // End of the loop. d
 			?>
 
 		<?php endif; ?>
