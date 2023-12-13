@@ -37,8 +37,14 @@ a {
 	}
 }
 
-.site-content {
+#content.site-content {
+	width: auto;
 	padding: 0 30px;
+	article {
+		p {
+			font-size: inherit;
+		}
+	}
 }
 
 #page.site-content {

@@ -1,20 +1,17 @@
 <?php
 /**
- * The template for displaying 404 pages (not found)
+ * The template for the LearnDash Archive of courses/adventures
  *
- * @link https://codex.wordpress.org/Creating_an_Error_404_Page
- *
- * @package BuddyBoss_Theme
  */
 global $wp_query;
 
 get_header();
 
-$view = get_option('bb_theme_learndash_grid_list', 'grid');
-$class_grid_active = ( 'grid' === $view ) ? 'active' : '';
-$class_list_active = ( 'list' === $view ) ? 'active' : '';
-$class_grid_show = ( 'grid' === $view ) ? 'grid-view bb-grid' : '';
-$class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
+$class_grid_active = 'active';
+$class_list_active = '';
+$class_grid_show = 'grid-view mk-grid';
+$class_list_show = '';
+$user_id = get_current_user_id();
 ?>
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
@@ -24,26 +21,17 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                 <input type="hidden" name="current_page" value="<?php echo esc_attr($paged); ?>" >
                 <div class="flex align-items-center bb-courses-header">
                     <h4 class="bb-title"><?php echo LearnDash_Custom_Label::get_label('courses'); ?></h4>
-                    <!--
-                    <div id="courses-dir-search" class="bs-dir-search" role="search">
-                        <div id="search-members-form" class="bs-search-form">
-                            <label for="bs_members_search" class="bp-screen-reader-text"><?php _e('Search', 'buddyboss-theme'); ?></label>
-                            <input type="text" name="search" id="bs_members_search" value="<?php echo!empty($_GET['search']) ? $_GET['search'] : ''; ?>" placeholder="<?php _e('Search', 'buddyboss-theme'); ?> <?php echo LearnDash_Custom_Label::get_label('courses') . '...'; ?>">
-                        </div>
-                    </div>-->
                 </div>
                 <nav class="courses-type-navs main-navs bp-navs dir-navs bp-subnavs">
                     <ul class="component-navigation courses-nav">
                         <?php
                         $navs = array(
-                            'all' => __('All', 'buddyboss-theme') . ' ' . LearnDash_Custom_Label::get_label('courses') . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_all_courses_count() . '</span>',
+                            'all' => __('All', 'onecommunity') . ' ' . LearnDash_Custom_Label::get_label('courses') . '<span class="count">' . learndash_get_courses_count() . '</span>',
                         );
 
                         if (is_user_logged_in()) {
-                            $navs['my-courses'] = __('My', 'buddyboss-theme') . ' ' . LearnDash_Custom_Label::get_label('courses') . '<span class="count">' . buddyboss_theme()->learndash_helper()->get_my_courses_count() . '</span>';
+                            $navs['my-courses'] = __('My', 'onecommunity') . ' ' . LearnDash_Custom_Label::get_label('courses') . '<span class="count">' . count(ld_get_mycourses($user_id)) . '</span>';
                         }
-
-                        $navs = apply_filters('BuddyBossTheme/Learndash/Archive/Navs', $navs);
 
                         if (!empty($navs)) {
                             $current_nav = isset($_GET['type']) && isset($navs[$_GET['type']]) ? $_GET['type'] : 'all';
@@ -60,7 +48,7 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                     </ul>
                 </nav>
                 <input type="hidden" name="type" value="<?php echo esc_attr($current_nav); ?>" >
-                <div class="ld-secondary-header">
+                <?php /* <div class="ld-secondary-header">
                     <div class="bb-secondary-list-tabs flex align-items-center" id="subnav" aria-label="Members directory secondary navigation" role="navigation">
                         <input type="hidden" id="course-order" name="order" value="<?php echo!empty($_GET['order']) ? $_GET['order'] : 'desc'; ?>"/>
                         <div class="sfwd-courses-filters flex push-right">
@@ -97,7 +85,7 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                             </a>
                         </div>
                     </div>
-                </div>
+                </div> */ ?>
 
                 <div class="grid-view bb-grid">
 
@@ -126,7 +114,6 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                                 <?php
                                 global $wp_query;
                                 $big = 999999999; // need an unlikely integer
-                                $translated = __('Page', 'buddyboss-theme'); // Supply translatable string
 
                                 echo paginate_links(
                                         array(
@@ -134,7 +121,7 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                                             'format' => '?paged=%#%',
                                             'current' => max(1, get_query_var('paged')),
                                             'total' => $wp_query->max_num_pages,
-                                            'before_page_number' => '<span class="screen-reader-text">' . $translated . ' </span>',
+                                            'before_page_number' => '<span class="screen-reader-text">Page </span>',
                                         )
                                 );
                                 ?>
@@ -144,7 +131,7 @@ $class_list_show = ( 'list' === $view ) ? 'list-view bb-list' : '';
                             ?>
                             <aside class="bp-feedback bp-template-notice ld-feedback info">
                                 <span class="bp-icon" aria-hidden="true"></span>
-                                <p><?php _e('Sorry, no courses were found.', 'buddyboss-theme'); ?></p>
+                                <p>Sorry, no courses were found.</p>
                             </aside>
                             <?php
                         }
