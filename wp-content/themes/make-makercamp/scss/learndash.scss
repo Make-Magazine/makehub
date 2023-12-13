@@ -371,3 +371,119 @@
 		z-index: 0;
 	}
 }
+
+// Adventures
+.learndash-cpt-sfwd-courses {
+	h4 {
+		font-size: 28px;
+		margin: 0px 0px 10px ;
+	}
+	.courses-nav {
+		margin: 0px;
+		padding: 0px;
+		display: flex;
+		gap: 10px;
+		li {
+			position: relative;
+			list-style: none;
+			a { 
+				color: #333;
+				.count {
+					background-color: #f1f1f1;
+					color: #333;
+					border: 1px solid rgba(0,0,0,.1);
+					border-radius: 6px;
+					min-width: 23px;
+					padding: 1px 6px;
+					margin-left: 5px;
+				}
+			}
+		}
+	}
+	#course-dir-list {
+		margin-top: 10px;
+		.bb-course-items {
+			display: flex;
+			padding: 0px;
+			list-style: none;
+			flex-flow: row wrap;
+			margin-left: -10px;
+			margin-right: -10px;
+			.bb-course-item-wrap {
+				-webkit-box-flex: 0;
+				flex: 0 0 23.33333%;
+				margin-bottom: 20px;
+				padding-left: 10px;
+				padding-right: 10px;
+				@media screen and (max-width: 1240px) {
+					flex: 0 0 31.5%;
+				}
+				@media screen and (max-width: 1130px) {
+					flex: 0 0 31.333333%;
+				}
+				@media screen and (max-width: 1040px) {
+					flex: 0 0 47.5%;
+				}
+				@media screen and (max-width: 840px) {
+					flex: 0 0 47.33333%;
+				}
+				@media screen and (max-width: 790px) {
+					flex: 0 0 98%;
+				}
+				.bb-cover-list-item {
+					background: #fff;
+					border: 1px solid #f1f1f1;
+					border-radius: 10px;
+					height: 100%;
+					padding-bottom: 0;
+					transition: .2s box-shadow;
+					position: relative;
+					overflow: hidden;
+					.bb-course-cover {
+						overflow: hidden;
+						position: relative;
+						.bb-cover-wrap {
+							border-radius: 10px;
+							padding-top: 52%;
+							position: relative;
+							overflow: hidden;
+							display: block;
+							img {
+								position: absolute;
+								top: 0;
+								bottom: 0;
+								left: 0;
+								right: 0;
+								margin: auto;
+								z-index: 0;
+								min-height: 100%;
+								width: auto;
+								min-width: 100%;
+								object-fit: cover;
+								border-radius: 0;
+							}
+						}
+					}
+					.bb-card-course-details {
+						padding: 16px 20px 10px;
+						display: flex;
+						flex-direction: column;
+						.course-lesson-count {
+							font-size: 13px;
+							color: #ccc;
+							line-height: 1;
+							margin-bottom: 8px;
+							font-weight: 300;
+						}
+						.bb-course-title {
+							font-size: 22px;
+							color: #333;
+							line-height: 1.24;
+							margin: 0 0 10px;
+						}
+					}
+				}
+			}
+		}
+	}
+}

@@ -25,7 +25,7 @@ $content_count = learndash_get_lesson_content_count($lesson, $course_id);
 $count = ( isset($count) ? $count : 0 );
 $sections = ( isset($sections) ? $sections : array() );
 
-$atts = apply_filters('learndash_lesson_row_atts', ( isset($has_access) && !$has_access && $lesson['sample'] === 'is_not_sample' ? 'data-balloon-pos="up" data-balloon="' . __("You don't currently have access to this content", "buddyboss-theme") . '"' : ''));
+$atts = apply_filters('learndash_lesson_row_atts', ( isset($has_access) && !$has_access && $lesson['sample'] === 'is_not_sample' ? 'data-balloon-pos="up" data-balloon="' . __("You don't currently have access to this content", "onecommunity") . '"' : ''));
 $atts_access_marker = apply_filters('learndash_lesson_row_atts', ( isset($has_access) && !$has_access && $lesson['sample'] === 'is_not_sample' ? '<span class="lms-is-locked-ico"><i class="bb-icons bb-icon-lock-fill"></i></span>' : ''));
 
 /**
@@ -34,7 +34,7 @@ $atts_access_marker = apply_filters('learndash_lesson_row_atts', ( isset($has_ac
 if (( empty($atts) ) && (!is_user_logged_in() )) {
     if ('is_sample' === $lesson['sample']) {
         if (true !== (bool) apply_filters('learndash_lesson_sample_access', true, $lesson['post']->ID, $course_id, $user_id)) {
-            $atts = apply_filters('learndash_lesson_row_atts_sample_no_access', 'data-ld-tooltip="' . esc_html__('Please login to view sample content', 'buddyboss-theme') . '"', $lesson['post']->ID, $course_id, $user_id);
+            $atts = apply_filters('learndash_lesson_row_atts_sample_no_access', 'data-ld-tooltip="' . esc_html__('Please login to view sample content', 'onecommunity') . '"', $lesson['post']->ID, $course_id, $user_id);
         }
     }
 }
@@ -117,12 +117,12 @@ endif;
 
                             <span class="ld-item-component">
                                 <?php
-                                echo sprintf(esc_html__('%s', 'buddyboss-theme'), $content_count['topics']) . ' ' .
+                                echo sprintf(esc_html__('%s', 'onecommunity'), $content_count['topics']) . ' ' .
                                 _n(
-                                        sprintf(esc_html__('%s', 'buddyboss-theme'), LearnDash_Custom_Label::get_label('topic')),
-                                        sprintf(esc_html__('%s', 'buddyboss-theme'), LearnDash_Custom_Label::get_label('topics')),
+                                        sprintf(esc_html__('%s', 'onecommunity'), LearnDash_Custom_Label::get_label('topic')),
+                                        sprintf(esc_html__('%s', 'onecommunity'), LearnDash_Custom_Label::get_label('topics')),
                                         $content_count['topics'],
-                                        'buddyboss-theme'
+                                        'onecommunity'
                                 );
                                 ?>
                             </span>
@@ -138,12 +138,12 @@ endif;
                             ?>
                             <span class="ld-item-component">
                                 <?php
-                                echo sprintf(esc_html__('%s', 'buddyboss-theme'), $content_count['quizzes']) . ' ' .
+                                echo sprintf(esc_html__('%s', 'onecommunity'), $content_count['quizzes']) . ' ' .
                                 _n(
-                                        sprintf(esc_html__('%s', 'buddyboss-theme'), LearnDash_Custom_Label::get_label('quiz')),
-                                        sprintf(esc_html__('%s', 'buddyboss-theme'), LearnDash_Custom_Label::get_label('quizzes')),
+                                        sprintf(esc_html__('%s', 'onecommunity'), LearnDash_Custom_Label::get_label('quiz')),
+                                        sprintf(esc_html__('%s', 'onecommunity'), LearnDash_Custom_Label::get_label('quizzes')),
                                         $content_count['quizzes'],
-                                        'buddyboss-theme'
+                                        'onecommunity'
                                 );
                                 ?>
                             </span>
@@ -192,7 +192,6 @@ endif;
 
         <div class="bb-course-meta">
                     <?php
-                    if (buddyboss_theme_get_option('learndash_course_author')) {
                         $author_id = $lesson['post']->post_author;
                         
                         $avatar = bp_core_fetch_avatar(array('html' => false, 'item_id' => $author_id, 'email' => get_the_author_meta('email', $user_id),
@@ -206,7 +205,6 @@ endif;
                 <?php echo get_the_author_meta('display_name', $author_id); ?>
                     </a>
                 </strong>
-            <?php } ?>
         </div>
 
         <div class="ld-item-details">
@@ -236,7 +234,7 @@ endif;
 
                 <div class="ld-expand-button ld-button-alternate" data-ld-expands="<?php echo esc_attr('ld-expand-' . $lesson['post']->ID); ?>">
                     <span class="ld-icon-arrow-down ld-icon ld-primary-background"></span>
-                    <span class="ld-text ld-primary-color"><?php esc_html_e('Expand', 'buddyboss-theme'); ?></span>
+                    <span class="ld-text ld-primary-color"><?php esc_html_e('Expand', 'onecommunity'); ?></span>
                 </div> <!--/.ld-expand-button-->
 
             <?php
