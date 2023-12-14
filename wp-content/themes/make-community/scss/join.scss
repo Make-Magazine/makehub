@@ -6,21 +6,13 @@
     article { margin-bottom: 0% !important; }
     p { font-size: 18px !important; }
     .entry-header {
-        background: url('../images/join-heros/5.png');
-        background-size: cover;
-        background-position: center;
-        height: 400px;
-        width: 170%;
-        margin-left: -35%;
-        margin-bottom: 0px;
         display: flex;
         align-items: center;
         justify-content: center;
-        text-align: center;;
+        text-align: center;
         .header-text {
             margin: 15px;
-            background: rgba(21, 23, 51,0.8);
-            color: #fff;
+            background: #f1f1f1;
             position: relative;
             max-width: 1170px;
             width: 80vw;
@@ -33,7 +25,6 @@
             }
         }
         @media screen and (max-width: 768px) {
-            height: 500px;
             .header-text {
                 width: 100vw;
                 h1 {
@@ -45,43 +36,12 @@
             margin-top: 10px;
 			margin-bottom: 15px;
             font-weight: 700;
-            color: #fff;
+            color: #333;
             text-align: center;
         }
-        .membership-btn {
-            width: 95%;
-            font-size: 32px;
-            position: relative;
-            margin: 30px 0;
-            height: 90px;
-            &:after {
-                content: "$59.99";
-                font-size: 42px;
-                background: $color-blue;
-                border-radius: 100px;
-                color: #fff;
-                position: absolute;
-                right: -40px;
-                top: -45px;
-                height: 150px;
-                display: flex;
-                align-items: center;
-                padding: 10px;
-                @media screen and ( max-width: 540px ) {
-                    font-size: 24px;
-                    height: 90px;
-                    top: -35px;
-                    right: -20px;
-                }
-            }
-			&.upgrade::after {
-                content: "$24.99";
-			}
-			&.free::after {
-                content: "FREE";
-				top: -15px;
-				height: 120px;
-			}
+        h1 {
+            font-family: "Roboto Bold";
+            font-weight: 300;
         }
     }
     @media screen and (max-width: 768px) {
@@ -92,6 +52,136 @@
 		margin-right: 15px;
 		text-align: right;
 	}
+    .membership-tables {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+        margin-top: 80px;
+        a {
+            width: calc(33.333333% - 35px);
+            background: #fff;
+            margin-bottom: 35px;
+            padding: 15px;
+            padding-bottom: 0px;
+            border: solid $color-blue 7px;
+            border-bottom-left-radius: 35px;
+            border-bottom-right-radius: 35px;
+            transition: scale .5s;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            text-align: center;
+            &.featured {
+                top: -50px;
+            }
+            &.current {
+                pointer-events: none;
+                background: #d1d1d1;
+                &:hover {
+                    scale: 1;
+                }
+            }
+            &:hover {
+                scale: 1.05;
+            }
+            .membership-table {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-width: 100%;
+                img {
+                    margin: 15px auto;
+                }
+            }
+            .membership-benefits-header {
+                text-align: center;
+                text-transform: uppercase;
+                font-size: 40px;
+                font-family: "Roboto Bold";
+                color: #333;
+            }
+            .membership-benefits {
+                margin-bottom: 15px;
+                list-style: disc;
+                li {
+                    text-align: left;
+                    color: #333;
+                    font-weight: 300;
+                }
+            }
+            .membership-btn {
+                font-size: 24px;
+                font-family: "Roboto Bold";
+                border-width: 7px;
+                height: 75px;
+                margin-bottom: -7px !important;
+                margin-top: auto;
+                margin-left: -22px;
+                margin-right: -22px;
+                border-radius: 35px;
+                position: relative;
+                z-index: 99;
+                flex-direction: row;
+            }
+            .membership-shadow {
+                width: 100%;
+                position: absolute;
+                z-index: 0;
+                margin-left: -15px;
+                top: 78%;
+                height: 300px;
+                background: radial-gradient(circle, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 60%, rgba(0, 212, 255, 0) 70%);
+                transform: scaleY(0.2);
+            }
+            @media screen and (max-width: 1230px) {
+                .membership-benefits-header {
+                    font-size: 32px;
+                }
+            }
+            @media screen and (max-width: 1050px) {
+                width: 100%;
+                margin-bottom: 15px;
+                box-shadow: 0px 20px 17px -12px rgba(153,153,153,1);
+                &.featured {
+                    top: 0px;
+                }
+                &.current {
+                    display: none;
+                }
+                .membership-shadow {
+                   display: none;
+                }
+            }
+        }
+    }
+    .membership-btn.upgrade {
+        width: 95%;
+        font-size: 32px;
+        position: relative;
+        margin: 30px 0;
+        height: 90px;
+        &::after {
+            content: "$24.99";
+            font-size: 42px;
+            background: $color-blue;
+            border-radius: 100px;
+            color: #fff;
+            position: absolute;
+            right: -40px;
+            top: -45px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            @media screen and ( max-width: 540px ) {
+                font-size: 24px;
+                height: 90px;
+                top: -35px;
+                right: -20px;
+            }
+        }
+    }
 
     .reader-services-wrapper {
         display: flex;
@@ -157,52 +247,17 @@
     }
 
     .join-box {
-        padding: 10px 20px 20px;
-        border: solid 2px #151733;
+        padding: 20px 20px 10px;
+        //border: solid 2px #151733;
         border-radius: 10px;
-        min-height: calc(100% - 15px);
         margin-bottom: 15px;
-        a { color:#fff; font-weight:bold; }
-        h5, ul, p {
-            position: relative;
-            z-index: 1;
-            color: #fff;
-        }
+        background: #f1f1f1;
+        a { color:$color-blue; font-weight:bold; }
         h5 {
             font-size: 22px;
         }
-        &::after {
-            content: "";
-            opacity: .8;
-            top: 0;
-            left: 15px;
-            bottom: 15px;
-            right: 15px;
-            position: absolute;
-            z-index: 0;
-            border-radius: 8px;
-            min-height: 290px;
-        }
     }
-    .membership-benefits-box::after {
-        background: url(../images/join-heros/2-muted.jpg);
-        background-size: cover;
-    }
-    .membership-supports-box::after {
-        background: url(../images/join-heros/4-muted.jpg);
-        background-size: cover;
-    }
-    .corporate-membership-box {
-        position: relative;
-    }
-    .corporate-membership-box::after {
-        background: url(../images/join-heros/6-muted.jpg);
-        background-size: cover;
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
-        min-height: 225px;
-    }
+
 }
 
 .registration {

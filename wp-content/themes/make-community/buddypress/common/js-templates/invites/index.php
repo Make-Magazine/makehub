@@ -114,7 +114,7 @@ if ( ! did_action( '_bp_nouveau_group_print_invites_placeholders' ) ) {
 				<input type="search" id="group_invites_search" placeholder="<?php echo esc_attr_x( 'Search', 'search placeholder text', 'buddypress' ); ?>"/>
 
 				<button type="submit" id="group_invites_search_submit" class="nouveau-search-submit">
-					<span class="dashicons dashicons-search" aria-hidden="true"></span>
+					<i class="fas fa-search" aria-hidden="true"></i>
 					<span id="button-text" class="bp-screen-reader-text"><?php echo esc_html_x( 'Search', 'button', 'buddypress' ); ?></span>
 				</button>
 			</form>
@@ -125,7 +125,7 @@ if ( ! did_action( '_bp_nouveau_group_print_invites_placeholders' ) ) {
 <script type="text/html" id="tmpl-bp-invites-paginate">
 	<# if ( 1 !== data.page ) { #>
 		<a href="#previous-page" id="bp-invites-prev-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Previous page', 'link', 'buddypress' ); ?>">
-			<span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
+			<i class="fas fa-chevron-circle-left" aria-hidden="true"></i>
 			Previous
 			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Previous page', 'link', 'buddypress' ); ?></span>
 		</a>
@@ -135,7 +135,7 @@ if ( ! did_action( '_bp_nouveau_group_print_invites_placeholders' ) ) {
 		<a href="#next-page" id="bp-invites-next-page" class="button invite-button bp-tooltip" data-bp-tooltip="<?php echo esc_attr_x( 'Next page', 'link', 'buddypress' ); ?>">
 			<span class="bp-screen-reader-text"><?php echo esc_html_x( 'Next page', 'link', 'buddypress' ); ?></span>
 			Next
-			<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span>
+			<i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
 		</a>
 	<# } #>
 </script>
