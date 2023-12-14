@@ -9,7 +9,7 @@ add_filter( 'learndash-lesson-row-attributes-before', 'ldvc_lesson_button_new' )
 function ldvc_lesson_button_new( $post_id = null ) {
    $lds_template = get_option('lds_listing_style');
    if( $lds_template == 'grid-banner' ):
-        echo '<span class="grid-actions"><a class="lds-btn lds-btn-primary" href="' . esc_url( get_the_permalink($post_id) ) . '">See More</a></span>';
+        echo '<span class="grid-actions"><a class="btn universal-btn" href="' . esc_url( get_the_permalink($post_id) ) . '">See More</a></span>';
    endif;
 
 }

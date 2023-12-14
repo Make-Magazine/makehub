@@ -210,6 +210,12 @@
 			align-content: space-between;
 			padding: 10px 20px 0px;
 			margin-bottom: 0px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			img {
+				width: 50px;
+			}
 		}
 	}
 	.ld-status-icon { display: none; }
