@@ -21,6 +21,7 @@ get_header();
 
             while (have_posts()) :
                 the_post();
+                the_content();
                 // Are there custom panels to display?
                 if (have_rows('content_panels')) {
                     // loop through the rows of data
