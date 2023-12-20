@@ -64,7 +64,7 @@ if(isset($referrer_url['query'])) {
 get_header();
 ?>
 
-<div id="learndash-content">
+<div id="learndash-content" class="wrapper">
   <div class="bb-grid grid">
 		<?php /* Sidebar emulating the LearnDash sidebar
 		 <div class="lms-topic-sidebar-wrapper ">

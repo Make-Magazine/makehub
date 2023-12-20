@@ -1,12 +1,11 @@
+.single-user-project {
+	#learndash-content {
+		padding-top: 30px;
+	}
+}
+
 .single-user-project, .learndash-cpt-sfwd-lessons {
 	.row { margin: 0px; }
-	.ld-tabs {
-		display: flex;
-		flex-direction: column;
-		.ld-icon.ld-icon-materials::before {
-			content: "\ef46" !important;
-		}
-	}
 	#ld-tab-content {
 		h1 {
 			color: #51b2dc;
@@ -194,6 +193,10 @@
 			}
 			&:last-of-type::after {
 				content: "";
+			}
+			&:first-of-type::before {
+				content: "<<";
+				margin-right: 5px;
 			}
 		}
 	}
