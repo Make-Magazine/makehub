@@ -311,6 +311,11 @@ jQuery(document).ready(function () {
                             '<span>My Magazine Subscription</span>' +
                         '</a>' +
                     '</li>' +
+                    '<li class="menu-item">' +
+                        '<a href="https://make.co/digital-library">' +
+                            '<span title="Premium Member Benefit">Access Digital Magazine</span>' +
+                        '</a>' +
+                    '</li>' +
                     '<hr />' +
                     '<li class="menu-item">' +
                         '<a href="https://discord.gg/mpBkj2hhJ4?utm_source=universal&utm_medium=dropdown&utm_campaign=discord&utm_content=launch">' +
@@ -332,11 +337,6 @@ jQuery(document).ready(function () {
                             '<span>Member Directory</span>' +
                         '</a>' +
                     '</li>' +      
-                    '<li class="menu-item">' +
-                        '<a href="https://make.co/digital-library">' +
-                            '<span title="Premium Member Benefit">Digital Make:</span>' +
-                        '</a>' +
-                    '</li>' +
                     '<li class="menu-item">' +
                         '<a href="https://make.co/video-library">' +
                             '<span title="Premium Member Benefit">Make: Video Library</span>' +
