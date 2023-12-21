@@ -163,7 +163,7 @@
 			z-index: 2;
 			right: 10px;
 			width: 42%;
-			top: 400px;
+			top: 100px;
 		}
 		.widget {
 			box-shadow: 0 32px 54px 0 rgba(0,0,0,.1);
@@ -183,10 +183,11 @@
 				}
 				.ld-button {
 					background: $color-blue;
-					margin-bottom: 15px;
+					margin-bottom: 25px;
 					border-radius: 4px;
 					font-size: 18px;
 					visibility: hidden;
+					position: relative;
 					&:after {
 						content: "Start Collection";
 						visibility: visible;
