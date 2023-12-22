@@ -194,7 +194,7 @@ endif;
                     <?php
                         $author_id = $lesson['post']->post_author;
                         
-                        $avatar = bp_core_fetch_avatar(array('html' => false, 'item_id' => $author_id, 'email' => get_the_author_meta('email', $user_id),
+                        $avatar = bp_core_fetch_avatar(array('html' => false, 'item_id' => $author_id, 'email' => get_the_author_meta('email', $author_id),
                             'width' => 15, 'height' => 15, 'avatar_dir' => 'avatars'));
                         ?>
                 <a href="<?php echo get_author_posts_url($author_id, get_the_author_meta('user_nicename', $author_id)); ?>" class="item-avatar">
