@@ -8,7 +8,7 @@ include 'db_connect.php';
 //ini_set('display_startup_errors', 1);
 //error_reporting(E_ALL);
 
-$year_filter = (isset($_GET['year_filter'])?$_GET['year_filter']:'2023');
+$year_filter = (isset($_GET['year_filter'])?$_GET['year_filter']:$year = date("Y"));
 $export_csv  = (isset($_GET['export_csv'])?TRUE:FALSE);
 
 //sql query to retrieve transactions
@@ -120,11 +120,12 @@ if($export_csv){
     <body>
         <div id="year_filters">
             <div class="row">
-                <div class="col-sm-3"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=<?php echo $year_filter?>&export_csv" class="btn btn-success">Export</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2023" class="btn btn-primary">2023</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2022" class="btn btn-primary">2022</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2021" class="btn btn-primary">2021</a></div>
-                <div class="col-sm-2"><a href="/wp-content/themes/make-experiences/devScripts/membership_report.php?year_filter=2020" class="btn btn-primary">2020</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=<?php echo $year_filter?>&export_csv" class="btn btn-success">Export</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=2024" class="btn btn-primary">2024</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=2023" class="btn btn-primary">2023</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=2022" class="btn btn-primary">2022</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=2021" class="btn btn-primary">2021</a></div>
+                <div class="col-sm-2"><a href="/wp-content/themes/make-community/devScripts/membership_report.php?year_filter=2020" class="btn btn-primary">2020</a></div>
             </div>
 
 
@@ -134,10 +135,11 @@ if($export_csv){
                 <tr id="headerRow">
                     <td>Trx ID</td>
                     <td>Trx Type</td>
-                    <td>Parent Trx ID</td>
+                    <!--<td>Parent Trx ID</td>-->
                     <td>Membership</td>
                     <!-- Transaction information -->
                     <td>Amount</td>
+                    <td>Gift Purchased</td>
                     <td>Coupon Used</td>
                     <td>Created At</td>
                     <td>Expires</td>
@@ -150,7 +152,7 @@ if($export_csv){
             </thead>
             <tbody>
                 <?php
-                $tabIndex=1;
+                $tabIndex=0;
                 while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
                     $address = ($row['customer_address'] != '' ? $row['customer_address'] : $row['mepr_address_one']);
                     $address2 = ($row['customer_address2']!=''?$row['customer_address2']:$row['mepr_address_two']);
@@ -159,22 +161,26 @@ if($export_csv){
                     $country = ($row['customer_country']!=''?$row['customer_country']:$row['mepr_address_country']);
                     $zip = ($row['customer_zip']!=''?$row['customer_zip']:$row['mepr_address_zip']);
                     $gifted_coupon = ($row['gifted_coupon']!='NULL'?$row['gifted_coupon']:'');
-                    if(!$gifted_coupon) {
+                    
                     ?>
                         <tr>
-                            <td tabindex=<?php echo $tabIndex;?>><?php echo $row['ID']?></td>
-                            <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['txn_type'];?></td>
-                            <td tabindex=<?php echo $tabIndex+1;?>><?php echo $row['parent_transaction_id'];?></td>                
-                            <td tabindex=<?php echo $tabIndex+2;?>><?php echo $row['product_name']?></td>
-                            <td tabindex=<?php echo $tabIndex+3;?>><?php echo $row['amount']?></td>
-                            <td tabindex=<?php echo $tabIndex+4?>><?php echo $row['coupon_name']?></td>
-                            <td tabindex=<?php echo $tabIndex+5;?>><?php echo $row['created_at']?></td>
-                            <td tabindex=<?php echo $tabIndex+6;?>><?php echo $row['expires_at']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['ID']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['txn_type'];?></td>
+                            <!--<td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['parent_transaction_id'];?></td>-->                
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo ($gifted_coupon!=''?'Purchased Gift of ':'').$row['product_name']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['amount']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $gifted_coupon;?></td>
+
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['coupon_name']?></td>
+                            
+                            
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['created_at']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo ($gifted_coupon!=''?'Gift Purchased ':$row['expires_at']);?></td>
                             <!--User information -->
-                            <td tabindex=<?php echo $tabIndex+7;?>><a href="https://make.co/wp-admin/user-edit.php?user_id=<?php echo $row['user_id'];?>" target="_blank"><?php echo $row['user_id']?></a></td>
-                            <td tabindex=<?php echo $tabIndex+8;?>><?php echo $row['first_name'] . ' '.$row['last_name']?></td>
-                            <td tabindex=<?php echo $tabIndex+9;?>><?php echo $row['user_email'];?></td>
-                            <td tabindex=<?php echo $tabIndex+10;?>>
+                            <td tabindex=<?php echo ++$tabIndex;?>><a href="https://make.co/wp-admin/user-edit.php?user_id=<?php echo $row['user_id'];?>" target="_blank"><?php echo $row['user_id']?></a></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['first_name'] . ' '.$row['last_name']?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>><?php echo $row['user_email'];?></td>
+                            <td tabindex=<?php echo ++$tabIndex;?>>
                                 <?php
                                 echo $address.'<br/>';
                                 echo ($address2!=''?$address2.'<br/>':'');
@@ -184,8 +190,7 @@ if($export_csv){
                             </td>                        
                         </tr>
                     <?php
-                    }
-                     $tabIndex = $tabIndex+11;
+                                         
                 }
                 ?>
             </tbody>
