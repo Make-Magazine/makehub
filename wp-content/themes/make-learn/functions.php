@@ -12,22 +12,6 @@ require_once(ABSPATH . 'wp-content/universal-assets/v2/universal-functions.php')
 define('CHILD_THEME_NAME', 'Make - Learn');
 define('CHILD_THEME_URL', 'https://learn.make.co');
 
-/**
- * Sets up theme for translation
- *
- * @since Make Learn 1.0.0
- */
-function make_learn_languages() {
-    /**
-     * Makes child theme available for translation.
-     * Translations can be added into the /languages/ directory.
-     */
-    // Translate text from the PARENT theme.
-    load_theme_textdomain('buddyboss-theme', get_stylesheet_directory() . '/languages');
-
-    // Translate text from the CHILD theme only.
-    // Change 'buddyboss-theme' instances in all child theme files to 'make-learn'.
-}
 
 add_action('after_setup_theme', 'make_learn_languages');
 
@@ -160,13 +144,6 @@ function add_slug_body_class($classes) {
             $classes[] = $post->post_type . '-' . $post->post_name;
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
-        }
-        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
-        if (bp_is_groups_component()) {
-            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
-            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
-                $classes[] = 'my-group';
-            }
         }
         return $classes;
     }
