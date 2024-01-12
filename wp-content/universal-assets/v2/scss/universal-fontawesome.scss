@@ -4,12 +4,17 @@
 	font-display: swap;
 }
 @font-face {
+	font-family: "FontAwesomeRegular";
+	src: url("https://make.co/wp-content/universal-assets/v2/fonts/fa-regular-400.ttf");
+	font-display: swap;
+}
+@font-face {
 	font-family: "FontAwesomeBrands";
 	src: url("https://make.co/wp-content/universal-assets/v2/fonts/fa-brands-400.ttf");
 	font-display: swap;
 }
 
-.fas, .fa, .far {
+.fas, .fa {
 	font-family: "FontAwesome";
 	font-style: normal;
 	&.fa-ellipsis-h:before { content: "\f141"; }
@@ -73,6 +78,17 @@
 	&.fa-map-marker-alt:before { content: "\f3c5"; }
 	&.fa-lightbulb:before { content: "\f0eb"; }
 	&.fa-info-circle:before { content: "\f05a"; }
+	&.fa-info {
+		border-radius: solid 1px inherit;
+		&::before { content: "\f129"; }
+	}
+}
+.far {
+	font-family: "FontAwesomeRegular";
+	font-style: normal;
+	&.fa-id-card-o:before { content: "\f2c2"; }
+	&.fa-lightbulb:before { content: "\f0eb"; }
+	&.fa-map-marker-alt:before { content: "\f3c5"; }
 }
 .glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
 .glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
