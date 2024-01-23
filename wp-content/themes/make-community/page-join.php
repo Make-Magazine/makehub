@@ -114,7 +114,7 @@ while ( have_posts() ) : the_post(); ?>
 									</div>
 									<div class="membership-shadow"></div>
 								</a>
-								<a href="/register/multiseat-membership" onclick="pintrk('track', 'addtocart');">
+								<a href="/register/multi-seat-membership" onclick="pintrk('track', 'addtocart');">
 									<div class="membership-table">
 										<h3 class="membership-benefits-header">Multi-seat</h3>
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-multi-seat-membership.png" width="100%" alt="Get a Multiseat Make: Community Membership" />
