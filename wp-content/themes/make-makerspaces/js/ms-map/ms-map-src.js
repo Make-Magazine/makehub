@@ -133,7 +133,7 @@ jQuery(document).ready(function() {
             var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             this.markers = this.tableData.map(function(location, i) {
                //this math random business keeps faires that were in the same location year after year from being on top of each other and not individually clickable
-               var latLng = {lat: parseFloat(llocation.mmap_lat) + Math.random()/1000, lng: parseFloat(location.mmap_lng) +Math.random()/1000};
+               var latLng = {lat: parseFloat(location.mmap_lat) + Math.random()/1000, lng: parseFloat(location.mmap_lng) +Math.random()/1000};
                var marker =  new google.maps.Marker({
                   position: latLng,
                   label: ''//labels[i % labels.length]
