@@ -129,16 +129,11 @@ jQuery(document).ready(function() {
             this.map.setZoom(16);
          },
          addMarkers: function() {
-            // an attempt to clear the markers first for filtering, but not so good
-            // for (var i = 0; i < this.markers.length; i++) {
-            //    this.markers[i].setMap(null);
-            // }
-            // this.markers = [];
             // Create an array of alphabetical characters used to label the markers.
             var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             this.markers = this.tableData.map(function(location, i) {
-               //console.log(location);
-               var latLng = {lat: parseFloat(location.mmap_lat), lng: parseFloat(location.mmap_lng)};
+               //this math random business keeps faires that were in the same location year after year from being on top of each other and not individually clickable
+               var latLng = {lat: parseFloat(llocation.mmap_lat) + Math.random()/1000, lng: parseFloat(location.mmap_lng) +Math.random()/1000};
                var marker =  new google.maps.Marker({
                   position: latLng,
                   label: ''//labels[i % labels.length]
