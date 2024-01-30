@@ -115,7 +115,6 @@ jQuery(document).ready(function() {
          },
          doFilter: function(data) {
             this.$refs.directoryGrid.setFilter(this.filterVal);
-            this.addMarkers();
          },
          filterOverride: function(data) {
             data.preventDefault();
@@ -129,14 +128,12 @@ jQuery(document).ready(function() {
             this.map.setZoom(16);
          },
          addMarkers: function() {
-            // Create an array of alphabetical characters used to label the markers.
-            var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             this.markers = this.tableData.map(function(location, i) {
                //this math random business keeps faires that were in the same location year after year from being on top of each other and not individually clickable
-               var latLng = {lat: parseFloat(location.mmap_lat) + Math.random()/1000, lng: parseFloat(location.mmap_lng) +Math.random()/1000};
+               var latLng = {lat: parseFloat(location.mmap_lat) + Math.random()/1000, lng: parseFloat(location.mmap_lng) + Math.random()/1000};
                var marker =  new google.maps.Marker({
                   position: latLng,
-                  label: ''//labels[i % labels.length]
+                  label: ''
                });
                marker.addListener('click', function() {
                   var myWindow = new google.maps.InfoWindow({
