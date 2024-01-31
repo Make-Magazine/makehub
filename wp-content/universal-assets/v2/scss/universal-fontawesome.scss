@@ -88,9 +88,8 @@
 .far {
 	font-family: "FontAwesomeRegular";
 	font-style: normal;
-	&.fa-id-card-o:before { content: "\f2c2"; }
-	&.fa-lightbulb:before { content: "\f0eb"; }
 	&.fa-map-marker-alt:before { content: "\f3c5"; }
+	&.fa-circle:before { content: "\f111"; }
 }
 .glyphicon.glyphicon-chevron-up:before { font-family: "FontAwesome"; content: "\f077"; }
 .glyphicon.glyphicon-chevron-down:before { font-family: "FontAwesome"; content: "\f078"; }
