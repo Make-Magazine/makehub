@@ -291,11 +291,12 @@ jQuery(document).ready(function () {
                             '<span>My Membership</span>' +
                         '</a>' +
                     '</li>' +
+                    /*
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/groups/my-groups/">' +
                             '<span>My Groups</span>' +
                         '</a>' +
-                    '</li>' +
+                    '</li>' +*/
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/profile/">' +
                             '<span>My Profile</span>' +
@@ -322,6 +323,7 @@ jQuery(document).ready(function () {
                             '<span>Make: Discord</span>' +
                         '</a>' +
                     '</li>' +  
+                    /*
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/activity">' +
                             '<span>Community Activity</span>' +
@@ -331,7 +333,7 @@ jQuery(document).ready(function () {
                         '<a href="https://make.co/groups/">' +
                             '<span>Groups</span>' +
                         '</a>' +
-                    '</li>' +
+                    '</li>' +*/
                     '<li class="menu-item">' +
                         '<a href="https://make.co/members/">' +
                             '<span>Member Directory</span>' +

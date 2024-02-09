@@ -266,7 +266,7 @@ jQuery(document).ready(function() {
         }
 
         // Now that we have the avatar and the drop down, let's call rimark and see what info they have
-        callRimark(user);
+        //callRimark(user);
 
         return user;
     }
