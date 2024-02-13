@@ -27,9 +27,8 @@ while ( have_posts() ) : the_post(); ?>
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-community-membership.png" width="100%" alt="Get a Premium Make: Free Membership" />
 										<ul class="membership-benefits">
 											<li>Member Directory</li>
-											<li>Maker Space Directory</li>
+											<li>Makerspace Directory</li>
 											<li>Make: Online Platform</li>
-											<li>Interest Groups</li>
 											<li>Make: Newsletter</li>
 											<li>Maker Shed Newsletter</li>
 										</ul>
@@ -87,9 +86,8 @@ while ( have_posts() ) : the_post(); ?>
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-community-membership.png" width="100%" alt="Get a Premium Make: Free Membership" />
 										<ul class="membership-benefits">
 											<li>Member Directory</li>
-											<li>Maker Space Directory</li>
-											<li>Make: Online Platform</li>
-											<li>Interest Groups</li>
+											<li>Makerspace Directory</li>
+											<li>Make: Online Platform</li>											
 											<li>Make: Newsletter</li>
 											<li>Maker Shed Newsletter</li>
 										</ul>
@@ -119,10 +117,9 @@ while ( have_posts() ) : the_post(); ?>
 										<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/join-multi-seat-membership.png" width="100%" alt="Get a Multiseat Make: Community Membership" />
 										<ul class="membership-benefits">
 											<li>Community Access +</li>
-											<li>5 Sub Accounts</li>
-											<li>Complete Make: Digital Archive</li>
-											<li>Print Make: Subscription<sup>*</sup</li>
-											<li>Digital Make: Subscription</li>
+											<li>5 Digital Access Accounts</li>
+											<li>1 Print Make: Subscription<sup>*</sup</li>
+											<li>Complete Make: Digital Archive</li>																						
 											<li>Member only Videos</li>
 											<li>Founder Newsletter</li>
 										</ul>
