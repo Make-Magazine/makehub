@@ -3,9 +3,10 @@
 // This function can add a membership to makercamp as well since we have MP-API-MAKERCAMP set as a constant
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $siteUrl, $siteName, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
 	$user = get_user_by('email', $email);
-  $siteurl = isset($site) ? $site : network_home_url();
-	$url = $siteurl . '/wp-json/mp/v1/transactions';
+  $siteurl = isset($siteUrl) ? $siteUrl : network_home_url();
+	$url = $siteurl . 'wp-json/mp/v1/transactions';
   $sitekey = constant("MP-API-$siteName");
+  error_log($url);
 
 	$datastring = json_encode(
 	  [
@@ -175,7 +176,7 @@ function add_membership_to_other_site($event) {
   if($transaction->product_id == 12038) {
     $user = get_user_by('id', $transaction->user_id);
     error_log(print_r($user, TRUE));
-    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.stagemakehub.wpengine.com", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
+    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.stagemakehub.wpengine.com/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
   }
 }
 add_action('mepr-event-transaction-completed', 'add_membership_to_other_site');
