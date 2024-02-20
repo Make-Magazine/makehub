@@ -1,6 +1,6 @@
 <?php
 // This function can be called to give a user a free membership. The membership type is passed in $membership
-// This function is currently unused.
+// This function can add a membership to makercamp as well since we have MP-API-MAKERCAMP set as a constant
 function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $siteUrl, $siteName, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
 	$user = get_user_by('email', $email);
   $siteurl = isset($site) ? $site : network_home_url();
@@ -169,7 +169,7 @@ add_action('mepr_enqueue_scripts', 'make_enqueue_scripts', 10, 3);
 function add_membership_to_other_site($event) {
   $transaction = $event->get_data();
 
-  // determine wat
+  // if the transaction on make.co is a makercamp membership, let's add a makercamp membership on makercamp as well
   if($transaction->product_id == 12038) {
     $user = get_user_by('id', $transaction->user_id);
     error_log(print_r($user, TRUE));

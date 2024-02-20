@@ -1,5 +1,5 @@
 <?php
-/* Used to set the memberpress headers for the api call */
+/* Used to set the memberpress headers for the api call, use a key set in config constants */
 function setMemPressHeaders($datastring = null, $key) {
  $headers = array();
  error_log("KEY: " . $key);
