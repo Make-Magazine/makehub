@@ -24,6 +24,8 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	);
 
 	$headers = setMemPressHeaders($datastring, $sitekey);
+  error_log("Headers");
+  error_log(print_r($headers, TRUE));
 
 	postCurl($url, $headers, $datastring);
 }
