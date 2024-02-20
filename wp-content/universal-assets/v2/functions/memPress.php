@@ -2,7 +2,6 @@
 /* Used to set the memberpress headers for the api call, use a key set in config constants */
 function setMemPressHeaders($datastring = null, $key) {
  $headers = array();
- error_log("KEY: " . $key);
  $headers[] = 'MEMBERPRESS-API-KEY: ' . $key; // Your API KEY from MemberPress Developer Tools
  $headers[] = 'Content-Type: application/json';
  if($datastring){

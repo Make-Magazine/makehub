@@ -43,8 +43,6 @@ function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 	if ($headers != null) {
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 	}
-  error_log("Curl");
-  error_log(print_r($ch, true));
 
 	$response = curl_exec($ch);
 
@@ -55,7 +53,5 @@ function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 
 	curl_close($ch);
 
-  error_log("Response");
-  error_log(print_r($response, true));
   return $response;
 }

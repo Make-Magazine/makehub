@@ -6,7 +6,6 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
   $siteurl = isset($siteUrl) ? $siteUrl : network_home_url();
 	$url = $siteurl . 'wp-json/mp/v1/transactions';
   $sitekey = constant("MP-API-$siteName");
-  error_log($url);
 
 	$datastring = json_encode(
 	  [
@@ -25,8 +24,6 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	);
 
 	$headers = setMemPressHeaders($datastring, $sitekey);
-  error_log("Headers");
-  error_log(print_r($headers, TRUE));
 
 	postCurl($url, $headers, $datastring);
 }
@@ -175,8 +172,7 @@ function add_membership_to_other_site($event) {
   // if the transaction on make.co is a makercamp membership, let's add a makercamp membership on makercamp as well
   if($transaction->product_id == 12038) {
     $user = get_user_by('id', $transaction->user_id);
-    error_log(print_r($user, TRUE));
-    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.devmakehub.make.co/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
+    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.make.co/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
   }
 }
 add_action('mepr-event-transaction-completed', 'add_membership_to_other_site');
