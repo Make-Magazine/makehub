@@ -286,27 +286,29 @@ jQuery(document).ready(function () {
                             '<span>My Dashboard</span>' +
                         '</a>' +
                     '</li>' +
+                    /*
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/membership/">' +
                             '<span>My Membership</span>' +
                         '</a>' +
-                    '</li>' +
-                    /*
+                    '</li>' +                    
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/groups/my-groups/">' +
                             '<span>My Groups</span>' +
                         '</a>' +
                     '</li>' +*/
+                    /*
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/profile/">' +
                             '<span>My Profile</span>' +
                         '</a>' +
-                    '</li>' +
+                    '</li>' +*/
+                    /*
                     '<li class="menu-item icon-added">' +
                         '<a href="https://make.co/members/me/messages/">' +
                             '<span>My Messages</span>' +
                         '</a>' +
-                    '</li>' +
+                    '</li>' +*/
                     '<li class="menu-item icon-added">' +
                         '<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_account_status&r=">' +
                             '<span>My Magazine Subscription</span>' +
@@ -334,11 +336,12 @@ jQuery(document).ready(function () {
                             '<span>Groups</span>' +
                         '</a>' +
                     '</li>' +*/
+                    /*
                     '<li class="menu-item">' +
                         '<a href="https://make.co/members/">' +
                             '<span>Member Directory</span>' +
                         '</a>' +
-                    '</li>' +      
+                    '</li>' +      */
                     '<li class="menu-item">' +
                         '<a href="https://make.co/video-library">' +
                             '<span title="Premium Member Benefit">Make: Video Library</span>' +
