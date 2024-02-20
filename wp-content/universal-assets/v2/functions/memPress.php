@@ -1,8 +1,9 @@
 <?php
 /* Used to set the memberpress headers for the api call */
-function setMemPressHeaders($datastring = null) {
+function setMemPressHeaders($datastring = null, $key) {
  $headers = array();
- $headers[] = 'MEMBERPRESS-API-KEY: apXPTMEf4O'; // Your API KEY from MemberPress Developer Tools Here -- 0n8p2YkomO for local apXPTMEf4O for prod
+ error_log("KEY: " . $key);
+ $headers[] = 'MEMBERPRESS-API-KEY: ' . $key; // Your API KEY from MemberPress Developer Tools
  $headers[] = 'Content-Type: application/json';
  if($datastring){
    $headers[] = 'Content-Length: ' . strlen($datastring);

@@ -52,5 +52,7 @@ function postCurl($url, $headers = null, $datastring = null,$type="POST") {
 	}
 
 	curl_close($ch);
+
+  error_log(print_r($response, true));
   return $response;
 }
