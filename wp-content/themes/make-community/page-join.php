@@ -73,7 +73,7 @@ while ( have_posts() ) : the_post(); ?>
 							<div class="disclaimer">** Full price ($59.99) applied <b>annually</b> after first year. **</div>
 							<?php } else { ?>
 								<h1>You are already a Member!</h1>
-								<a href="/activity" class="universal-btn-reversed" style="margin:0 auto;width:95%px;display:flex;font-size:24px;min-height:100px;padding:10px 20px;text-transform:capitalize">See what's happening on Make: Community</a>
+								<a href="/dashboard" class="universal-btn-reversed" style="margin:0 auto;width:95%px;display:flex;font-size:24px;min-height:100px;padding:10px 20px;text-transform:capitalize">Go to your Dashboard</a>
 							<?php } ?>
 						<?php } else { ?>
 							<h1>Become a Member of Make: Community</h1>
