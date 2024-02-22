@@ -172,7 +172,7 @@ function add_membership_to_other_site($event) {
   // if the transaction on make.co is a makercamp membership, let's add a makercamp membership on makercamp as well
   if($transaction->product_id == 12038) {
     $user = get_user_by('id', $transaction->user_id);
-    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.devmakehub.make.co/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
+    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.make.co/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
   }
 }
 
