@@ -1,9 +1,11 @@
 <?php
 // This function can be called to give a user a free membership. The membership type is passed in $membership
-// This function is currently unused.
-function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
+// This function can add a membership to makercamp as well since we have MP-API-MAKERCAMP set as a constant
+function addFreeMembership($email, $userName, $firstName, $lastName, $membership, $siteUrl, $siteName, $sendWelcomeEmail = true, $expiresAt = '0000-00-00 00:00:00', $price = '0.00') {
 	$user = get_user_by('email', $email);
-	$url = network_home_url() . '/wp-json/mp/v1/transactions';
+  $siteurl = isset($siteUrl) ? $siteUrl : network_home_url();
+	$url = $siteurl . 'wp-json/mp/v1/transactions';
+  $sitekey = constant("MP-API-$siteName");
 
 	$datastring = json_encode(
 	  [
@@ -21,7 +23,7 @@ function addFreeMembership($email, $userName, $firstName, $lastName, $membership
 	  ]
 	);
 
-	$headers = setMemPressHeaders($datastring);
+	$headers = setMemPressHeaders($datastring, $sitekey);
 
 	postCurl($url, $headers, $datastring);
 }
@@ -163,3 +165,15 @@ function make_enqueue_scripts($is_product_page, $is_group_page, $is_account_page
   }
 }
 add_action('mepr_enqueue_scripts', 'make_enqueue_scripts', 10, 3);
+
+function add_membership_to_other_site($event) {
+  $transaction = $event->get_data();
+
+  // if the transaction on make.co is a makercamp membership, let's add a makercamp membership on makercamp as well
+  if($transaction->product_id == 12038) {
+    $user = get_user_by('id', $transaction->user_id);
+    addFreeMembership($user->user_email, $user->display_name, $user->first_name, $user->last_name, 8387, "https://makercamp.devmakehub.make.co/", "MAKERCAMP", false, date('Y-m-d H:i:s', strtotime('+1 year')));
+  }
+}
+
+add_action('mepr-event-transaction-completed', 'add_membership_to_other_site');
