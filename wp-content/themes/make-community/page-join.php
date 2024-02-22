@@ -12,7 +12,10 @@ while ( have_posts() ) : the_post(); ?>
         	<header class="entry-header">
 				<div class="header-text logged-in-refresh">
 					<?php if( class_exists('MeprUtils') ) { ?>
-						<?php if(isset($_GET["mepr-unauth-page"])) {
+						<?php 
+						if($_GET['redirect_to'] == "/dashboard/") { ?>
+							<p style="text-align:center;">You must be logged in to access this page.</p>
+						<?php } else if(isset($_GET["mepr-unauth-page"]) ) {
 							echo(do_shortcode('[mepr-unauthorized-message]'));
 						} ?>
 						<div class="join-membership-wrapper">
