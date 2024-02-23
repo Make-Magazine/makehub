@@ -14,34 +14,33 @@ function process_omeda_file() {
 
   $file = fopen(ABSPATH."/_wpeprivate/omeda/make-active-customers.csv", 'r');
   fgetcsv($file); //skip the header row
-
-  $omedaData = array();
-  $count = 1;
+  
   while (($line = fgetcsv($file)) !== FALSE) {
     //build the contacts
     $contacts[] = array(
-      "email" => utf8_encode($line[3]),
-      "first_name" => utf8_encode($line[1]),
-      "last_name" => utf8_encode($line[2]),
+      "email" => mb_convert_encoding($line[3], 'UTF-8', 'ISO-8859-1'),
+      "first_name" => mb_convert_encoding($line[1], 'UTF-8', 'ISO-8859-1'),
+      "last_name" => mb_convert_encoding($line[2], 'UTF-8', 'ISO-8859-1'),
       "tags"    => array("Omeda Subscriber"),
       "fields"  => array(
-        array("id" => 1,    "value" => utf8_encode($line[5])), //address
-        array("id" => 162,  "value" => utf8_encode($line[6])), //address 2
-        array("id" => 2,    "value" => utf8_encode($line[7])), //city
-        array("id" => 3,    "value" => utf8_encode($line[8])), //state
-        array("id" => 4,    "value" => utf8_encode($line[9])), //Zip Code
-        array("id" => 5,    "value" => utf8_encode($line[10])), //Country
-        array("id" => 156,  "value" => utf8_encode($line[11])), //rollup expire date
-        array("id" => 157,  "value" => utf8_encode($line[12])), //promo code
-        array("id" => 158,  "value" => utf8_encode($line[13])), //order date
-        array("id" => 159,  "value" => utf8_encode($line[14])), //Requested Version
-        array("id" => 160,  "value" => utf8_encode($line[15])), //Class Description
-        array("id" => 161,  "value" => utf8_encode($line[16])), //Payment Status Description
+        array("id" => 1,    "value" => mb_convert_encoding($line[5], 'UTF-8', 'ISO-8859-1')), //address
+        array("id" => 162,  "value" => mb_convert_encoding($line[6], 'UTF-8', 'ISO-8859-1')), //address 2
+        array("id" => 2,    "value" => mb_convert_encoding($line[7], 'UTF-8', 'ISO-8859-1')), //city
+        array("id" => 3,    "value" => mb_convert_encoding($line[8], 'UTF-8', 'ISO-8859-1')), //state
+        array("id" => 4,    "value" => mb_convert_encoding($line[9], 'UTF-8', 'ISO-8859-1')), //Zip Code
+        array("id" => 5,    "value" => mb_convert_encoding($line[10], 'UTF-8', 'ISO-8859-1')), //Country
+        array("id" => 156,  "value" => mb_convert_encoding($line[11], 'UTF-8', 'ISO-8859-1')), //rollup expire date
+        array("id" => 157,  "value" => mb_convert_encoding($line[12], 'UTF-8', 'ISO-8859-1')), //promo code
+        array("id" => 158,  "value" => mb_convert_encoding($line[13], 'UTF-8', 'ISO-8859-1')), //order date
+        array("id" => 159,  "value" => mb_convert_encoding($line[14], 'UTF-8', 'ISO-8859-1')), //Requested Version
+        array("id" => 160,  "value" => mb_convert_encoding($line[15], 'UTF-8', 'ISO-8859-1')), //Class Description
+        array("id" => 161,  "value" => mb_convert_encoding($line[16], 'UTF-8', 'ISO-8859-1')), //Payment Status Description
       ),
-      //"subscribe"  => array(
-      //  "listid" => 8, //make community
-      //  "listid" => 18 //make magazine
-      //),
+      "subscribe"  => array(
+        "listid" => 2 // all contacts
+        //  "listid" => 8, //make community
+        //  "listid" => 18 //make magazine
+      ),
     );
   }
   fclose($file);
@@ -110,5 +109,3 @@ function omeda_log($log_msg) {
     // add message to the log file prepended by todays date and time
     file_put_contents($log_filename, date('[m/d/Y H:i:s e] ').$log_msg . "\n", FILE_APPEND);
 }
-
-?>
