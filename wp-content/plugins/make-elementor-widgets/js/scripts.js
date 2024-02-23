@@ -3,6 +3,9 @@ jQuery(document).ready(function(){
 		jQuery(this).toggleClass( "closed" );
 		jQuery(this).next().toggleClass( "closed" );
 	});
+	jQuery(".more-info").click(function(){
+		jQuery(this).parent().toggleClass( "open" );
+	});
 	// for rss carousel
 	if(jQuery(".rss-carousel-read-more").length) {
 		var slideBy = 'page';

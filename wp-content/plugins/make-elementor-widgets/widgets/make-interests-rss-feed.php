@@ -269,7 +269,7 @@ class Elementor_makeInterestsRss_Widget extends \Elementor\Widget_Base {
 		
 		array_walk($interest_slugs, function (&$value) {
 			$term = get_term_by('name', $value, "category");
-			$value = $term->slug;
+			$value = isset($term->slug) ? $term->slug : "";
 		});
 
 		// if no interests are set, we are just using the default makezine feed, otherwise, build a feed based on interests

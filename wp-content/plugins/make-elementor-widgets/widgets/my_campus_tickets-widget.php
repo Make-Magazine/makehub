@@ -133,4 +133,78 @@ class Elementor_MyCampusTickets_Widget extends \Elementor\Widget_Base {
     }
 	}
 }
+
+function build_ee_ticket_section($event, $user_email) {
+    // if the first date of event has passed and it's a multiday event with one ticket, skip this item in the loop
+    $firstExpiredDate = EEM_Datetime::instance()->get_oldest_datetime_for_event($event->ID(), true, false, 1)->start();
+    $now = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
+    $now = $now->format('Y-m-d H:i:s');
+    $past_event = (date('Y-m-d H:i:s', $firstExpiredDate) < $now ? TRUE : FALSE);
+    $registrations = $event->get_many_related('Registration', array(array('Attendee.ATT_email' => $user_email)));
+    $time_range = espresso_event_date_range('', '', '', '', $event->ID(), FALSE);
+    //get group link
+    $group_id = get_field('group_id', $event->ID());
+    $group = groups_get_group(array('group_id' => $group_id));
+    $group_link = bp_get_group_link($group);
+
+    //build the inner rows
+    $return = '<tr class="ee-my-events-event-section-summary-row">
+                    <td>' . $group_link . '</td>
+                    <td>' . $time_range . '</td>
+                    <td>' . count($registrations) . ' </td>
+                    <td>';
+    foreach ($registrations as $registration) {
+        if (!$registration instanceof EE_Registration) {
+            continue;
+        }
+        $actions = array();
+        $link_to_edit_registration_text = esc_html__('Link to edit registration.', 'event_espresso');
+        $link_to_make_payment_text = esc_html__('Link to make payment', 'event_espresso');
+        $link_to_view_receipt_text = esc_html__('Link to view receipt', 'event_espresso');
+        $link_to_view_invoice_text = esc_html__('Link to view invoice', 'event_espresso');
+
+        //attendee name
+        $attendee = $registration->attendee();
+        $return .= $attendee->full_name() . '<br/>';
+
+        if (!$past_event) {
+            // only show the edit registration link IF the registration has question groups.
+            $actions['edit_registration'] = $registration->count_question_groups() ? '<a aria-label="' . $link_to_edit_registration_text
+                    . '" title="' . $link_to_edit_registration_text
+                    . '" href="' . $registration->edit_attendee_information_url() . '">'
+                    . '<span class="ee-icon ee-icon-user-edit ee-icon-size-16"></span></a>' : '';
+
+            // resend confirmation email.
+            $resend_registration_link = add_query_arg(
+                    array('token' => $registration->reg_url_link(), 'resend' => true),
+                    null
+            );
+        }
+
+        // make payment?
+        if ($registration->is_primary_registrant() && $registration->transaction() instanceof EE_Transaction && $registration->transaction()->remaining()) {
+            $actions['make_payment'] = '<a aria-label="' . $link_to_make_payment_text
+                    . '" title="' . $link_to_make_payment_text
+                    . '" href="' . $registration->payment_overview_url() . '">'
+                    . '<span class="dashicons dashicons-cart"></span></a>';
+        }
+
+        // receipt link?
+        if ($registration->is_primary_registrant() && $registration->receipt_url()) {
+            $actions['receipt'] = '<a aria-label="' . $link_to_view_receipt_text
+                    . '" title="' . $link_to_view_receipt_text
+                    . '" href="' . $registration->receipt_url() . '">'
+                    . '<span class="dashicons dashicons-media-default ee-icon-size-18"></span></a>';
+        }
+
+        // ...and echo the actions!
+        if (!empty($actions))
+            $return .= implode('&nbsp;', $actions) . '<br/>';
+    }
+
+    $return .= '    </td>
+                </tr>';
+
+    return $return;
+}
 */
