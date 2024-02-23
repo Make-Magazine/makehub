@@ -89,15 +89,21 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial__header' => 'padding-bottom: calc({{SIZE}}{{UNIT}} / 2)',
-					'{{WRAPPER}} .elementor-testimonial__content' => 'padding-top: calc({{SIZE}}{{UNIT}} / 2)',
+					'{{WRAPPER}} .elementor-testimonial__header' => 'padding-block-end: calc( {{SIZE}}{{UNIT}} / 2 )',
+					'{{WRAPPER}} .elementor-testimonial__content' => 'padding-block-start: calc( {{SIZE}}{{UNIT}} / 2 )',
 				],
 			]
 		);
@@ -122,7 +128,7 @@ class Reviews extends Base {
 				'label' => esc_html__( 'Color', 'elementor-pro' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial__header' => 'border-bottom-color: {{VALUE}}',
+					'{{WRAPPER}} .elementor-testimonial__header' => 'border-block-end-color: {{VALUE}}',
 				],
 				'condition' => [
 					'show_separator!' => '',
@@ -135,17 +141,23 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
+					],
+					'rem' => [
+						'max' => 2,
 					],
 				],
 				'condition' => [
 					'show_separator!' => '',
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-testimonial__header' => 'border-bottom-width: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .elementor-testimonial__header' => 'border-block-end-width: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -269,10 +281,16 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
-						'max' => 70,
+						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -286,15 +304,20 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
-					'body:not(.rtl) {{WRAPPER}} .elementor-testimonial__image + cite' => 'margin-left: {{SIZE}}{{UNIT}}; margin-right: 0;',
-					'body.rtl {{WRAPPER}} .elementor-testimonial__image + cite' => 'margin-right: {{SIZE}}{{UNIT}}; margin-left:0;',
+					'{{WRAPPER}} .elementor-testimonial__image + cite' => 'margin-inline-start: {{SIZE}}{{UNIT}}; margin-inline-end: 0;',
 				],
 			]
 		);
@@ -304,6 +327,7 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-testimonial__image img' => 'border-radius: {{SIZE}}{{UNIT}}',
 				],
@@ -353,10 +377,16 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -416,10 +446,16 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -434,15 +470,20 @@ class Reviews extends Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 50,
+					],
+					'em' => [
+						'max' => 5,
+					],
+					'rem' => [
+						'max' => 5,
 					],
 				],
 				'selectors' => [
-					'body:not(.rtl) {{WRAPPER}} .elementor-star-rating i:not(:last-of-type)' => 'margin-right: {{SIZE}}{{UNIT}}',
-					'body.rtl {{WRAPPER}} .elementor-star-rating i:not(:last-of-type)' => 'margin-left: {{SIZE}}{{UNIT}}',
+					'{{WRAPPER}} .elementor-star-rating i:not(:last-of-type)' => 'margin-inline-end: {{SIZE}}{{UNIT}}',
 				],
 			]
 		);
@@ -512,6 +553,9 @@ class Reviews extends Base {
 				'default' => [
 					'url' => Utils::get_placeholder_image_src(),
 				],
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -521,6 +565,12 @@ class Reviews extends Base {
 				'label' => esc_html__( 'Name', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => esc_html__( 'John Doe', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
+				],
 			]
 		);
 
@@ -530,6 +580,9 @@ class Reviews extends Base {
 				'label' => esc_html__( 'Title', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '@username',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -541,6 +594,9 @@ class Reviews extends Base {
 				'min' => 0,
 				'max' => 5,
 				'step' => 0.1,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -633,6 +689,9 @@ class Reviews extends Base {
 				'label' => esc_html__( 'Review', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'default' => esc_html__( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 	}
@@ -772,6 +831,8 @@ class Reviews extends Base {
 	}
 
 	protected function print_slide( array $slide, array $settings, $element_key ) {
+		$lazyload = 'yes' === $this->get_settings( 'lazyload' );
+
 		$this->add_render_attribute( $element_key . '-testimonial', [
 			'class' => 'elementor-testimonial',
 		] );
@@ -781,10 +842,18 @@ class Reviews extends Base {
 		] );
 
 		if ( ! empty( $slide['image']['url'] ) ) {
-			$this->add_render_attribute( $element_key . '-image', [
-				'src' => $this->get_slide_image_url( $slide, $settings ),
-				'alt' => ! empty( $slide['name'] ) ? $slide['name'] : '',
-			] );
+			$img_src = $this->get_slide_image_url( $slide, $settings );
+
+			if ( $lazyload ) {
+				$img_attribute['class'] = 'swiper-lazy';
+				$img_attribute['data-src'] = $img_src;
+			} else {
+				$img_attribute['src'] = $img_src;
+			}
+
+			$img_attribute['alt'] = $this->get_slide_image_alt_attribute( $slide );
+
+			$this->add_render_attribute( $element_key . '-image', $img_attribute );
 		}
 
 		?>
@@ -805,6 +874,9 @@ class Reviews extends Base {
 					<?php if ( $slide['image']['url'] ) : ?>
 						<div class="elementor-testimonial__image">
 							<img <?php $this->print_render_attribute_string( $element_key . '-image' ); ?>>
+							<?php if ( $lazyload ) : ?>
+								<div class="swiper-lazy-preloader"></div>
+							<?php endif; ?>
 						</div>
 					<?php endif; ?>
 					<?php $this->print_cite( $slide, $settings ); ?>

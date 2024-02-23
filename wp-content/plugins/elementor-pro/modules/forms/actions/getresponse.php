@@ -72,6 +72,9 @@ class Getresponse extends Integration_Base {
 				'condition' => [
 					'getresponse_api_key_source' => 'custom',
 				],
+				'ai' => [
+					'active' => false,
+				],
 			]
 		);
 
@@ -133,7 +136,7 @@ class Getresponse extends Integration_Base {
 		$subscriber = $this->create_subscriber_object( $record );
 
 		if ( ! $subscriber ) {
-			throw new \Exception( esc_html__( 'Integration requires an email field', 'elementor-pro' ) );
+			throw new \Exception( 'Integration requires an email field.' );
 		}
 
 		if ( 'default' === $form_settings['getresponse_api_key_source'] ) {
@@ -256,7 +259,7 @@ class Getresponse extends Integration_Base {
 		}
 
 		if ( empty( $api_key ) ) {
-			throw new \Exception( '`api_key` is required', 400 );
+			throw new \Exception( '`api_key` is required.', 400 );
 		}
 
 		$handler = new Getresponse_Handler( $api_key );
@@ -273,8 +276,13 @@ class Getresponse extends Integration_Base {
 		if ( ! isset( $_POST['api_key'] ) ) {
 			wp_send_json_error();
 		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permission denied' );
+		}
+
 		try {
-			new Getresponse_Handler( $_POST['api_key'] );
+			new Getresponse_Handler( $_POST['api_key'] ); // phpcs:ignore -- No need to sanitize to support special characters.
 		} catch ( \Exception $exception ) {
 			wp_send_json_error();
 		}
@@ -292,7 +300,7 @@ class Getresponse extends Integration_Base {
 					'field_args' => [
 						'type' => 'text',
 						'desc' => sprintf(
-							/* translators: 1: Link open tag, 2: Link closing tag. */
+							/* translators: 1: Link opening tag, 2: Link closing tag. */
 							esc_html__( 'To integrate with our forms you need an %1$sAPI Key%2$s.', 'elementor-pro' ),
 							'<a href="https://www.getresponse.com" target="_blank">',
 							'</a>'

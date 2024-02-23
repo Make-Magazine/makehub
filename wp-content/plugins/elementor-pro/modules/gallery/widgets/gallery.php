@@ -272,6 +272,32 @@ class Gallery extends Base_Widget {
 					'link_to' => 'custom',
 				],
 				'frontend_available' => true,
+				'dynamic' => [
+					'active' => true,
+				],
+			]
+		);
+
+		$this->add_control(
+			'open_lightbox',
+			[
+				'label' => esc_html__( 'Lightbox', 'elementor-pro' ),
+				'type' => Controls_Manager::SELECT,
+				'description' => sprintf(
+					/* translators: 1: Link open tag, 2: Link close tag. */
+					esc_html__( 'Manage your site’s lightbox settings in the %1$sLightbox panel%2$s.', 'elementor-pro' ),
+					'<a href="javascript: $e.run( \'panel/global/open\' ).then( () => $e.route( \'panel/global/settings-lightbox\' ) )">',
+					'</a>'
+				),
+				'default' => 'default',
+				'options' => [
+					'default' => esc_html__( 'Default', 'elementor-pro' ),
+					'yes' => esc_html__( 'Yes', 'elementor-pro' ),
+					'no' => esc_html__( 'No', 'elementor-pro' ),
+				],
+				'condition' => [
+					'link_to' => 'file',
+				],
 			]
 		);
 
@@ -335,6 +361,12 @@ class Gallery extends Base_Widget {
 				'default' => esc_html__( 'All', 'elementor-pro' ),
 				'condition' => [
 					'show_all_galleries' => 'yes',
+				],
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
 				],
 			]
 		);
@@ -528,7 +560,18 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
+				'range' => [
+					'px' => [
+						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
+					],
+					'em' => [
+						'max' => 2,
+					],
+				],
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-border-width: {{SIZE}}{{UNIT}};',
 				],
@@ -540,7 +583,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--image-border-radius: {{SIZE}}{{UNIT}};',
 				],
@@ -580,7 +623,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-gallery-item:hover' => 'border-radius: {{SIZE}}{{UNIT}};',
 				],
@@ -632,6 +675,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -691,7 +735,7 @@ class Gallery extends Base_Widget {
 			[
 				'name' => 'overlay_background_hover',
 				'types' => [ 'classic', 'gradient' ],
-				'selector' => '{{WRAPPER}} .e-gallery-item:hover .elementor-gallery-item__overlay',
+				'selector' => '{{WRAPPER}} .e-gallery-item:hover .elementor-gallery-item__overlay, {{WRAPPER}} .e-gallery-item:focus .elementor-gallery-item__overlay',
 				'exclude' => [ 'image' ],
 				'fields_options' => [
 					'background' => [
@@ -793,6 +837,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -873,7 +918,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'size' => 20,
 				],
@@ -928,7 +973,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--description-margin-top: {{SIZE}}{{UNIT}}',
 				],
@@ -1045,6 +1090,7 @@ class Gallery extends Base_Widget {
 					'px' => [
 						'min' => 0,
 						'max' => 3000,
+						'step' => 100,
 					],
 				],
 				'selectors' => [
@@ -1085,7 +1131,7 @@ class Gallery extends Base_Widget {
 		$this->add_control(
 			'align_filter_bar_items',
 			[
-				'label' => esc_html__( 'Align', 'elementor-pro' ),
+				'label' => esc_html__( 'Alignment', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
@@ -1256,6 +1302,7 @@ class Gallery extends Base_Widget {
 				'label' => esc_html__( 'Pointer Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
 				'devices' => [ Breakpoints_Manager::BREAKPOINT_KEY_DESKTOP, Breakpoints_Manager::BREAKPOINT_KEY_TABLET ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'range' => [
 					'px' => [
 						'max' => 30,
@@ -1276,7 +1323,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Space Between', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-gallery-title' => '--space-between: {{SIZE}}{{UNIT}}',
 				],
@@ -1288,7 +1335,7 @@ class Gallery extends Base_Widget {
 			[
 				'label' => esc_html__( 'Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-gallery__titles-container' => 'margin-bottom: {{SIZE}}{{UNIT}}',
 				],
@@ -1375,7 +1422,13 @@ class Gallery extends Base_Widget {
 		$galleries = [];
 
 		if ( $is_multiple ) {
-			$this->add_render_attribute( 'titles-container', 'class', 'elementor-gallery__titles-container' );
+			$this->add_render_attribute(
+				'titles-container',
+				[
+					'class' => 'elementor-gallery__titles-container',
+					'aria-label' => esc_html__( 'Gallery filter', 'elementor-pro' ),
+				]
+			);
 
 			if ( $settings['pointer'] ) {
 				$this->add_render_attribute( 'titles-container', 'class', 'e--pointer-' . $settings['pointer'] );
@@ -1389,7 +1442,7 @@ class Gallery extends Base_Widget {
 			} ?>
 			<div <?php $this->print_render_attribute_string( 'titles-container' ); ?>>
 				<?php if ( $settings['show_all_galleries'] ) { ?>
-					<a data-gallery-index="all" class="elementor-item elementor-gallery-title">
+					<a class="elementor-item elementor-gallery-title" role="button" tabindex="0" data-gallery-index="all">
 						<?php $this->print_unescaped_setting( 'show_all_galleries_label' ); ?>
 					</a>
 				<?php } ?>
@@ -1401,7 +1454,7 @@ class Gallery extends Base_Widget {
 
 					$galleries[ $index ] = $gallery['multiple_gallery'];
 					?>
-					<a data-gallery-index="<?php echo esc_attr( $index ); ?>" class="elementor-item elementor-gallery-title">
+					<a class="elementor-item elementor-gallery-title" role="button" tabindex="0" data-gallery-index="<?php echo esc_attr( $index ); ?>">
 						<?php $this->print_unescaped_setting( 'gallery_title', 'galleries', $index ); ?>
 					</a>
 					<?php
@@ -1488,6 +1541,10 @@ class Gallery extends Base_Widget {
 					$this->add_render_attribute( 'gallery_item_' . $unique_index, [ 'data-e-gallery-tags' => implode( ',', $tags ) ] );
 				}
 
+				if ( $has_title && 'div' === $gallery_item_tag ) {
+					$this->add_render_attribute( 'gallery_item_' . $unique_index, [ 'tabindex' => '0' ] );
+				}
+
 				if ( 'a' === $gallery_item_tag ) {
 					if ( 'file' === $settings['link_to'] ) {
 						$href = $image_data['media'];
@@ -1496,7 +1553,11 @@ class Gallery extends Base_Widget {
 							'href' => $href,
 						] );
 
-						$this->add_lightbox_data_attributes( 'gallery_item_' . $unique_index, $id, 'yes', 'all-' . $this->get_id() );
+						if ( Plugin::elementor()->editor->is_edit_mode() ) {
+							$this->add_render_attribute( 'gallery_item_' . $unique_index, 'class', 'elementor-clickable' );
+						}
+
+						$this->add_lightbox_data_attributes( 'gallery_item_' . $unique_index, $id, $settings['open_lightbox'], $this->get_id() );
 					} elseif ( 'custom' === $settings['link_to'] ) {
 						$this->add_link_attributes( 'gallery_item_' . $unique_index, $settings['url'] );
 					}
@@ -1511,7 +1572,8 @@ class Gallery extends Base_Widget {
 						'data-thumbnail' => $image_data['src'],
 						'data-width' => $image_data['width'],
 						'data-height' => $image_data['height'],
-						'alt' => $image_data['alt'],
+						'aria-label' => $image_data['alt'],
+						'role' => 'img',
 					]
 				);?>
 				<<?php Utils::print_validated_html_tag( $gallery_item_tag ); ?> <?php $this->print_render_attribute_string( 'gallery_item_' . $unique_index ); ?>>

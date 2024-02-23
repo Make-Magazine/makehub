@@ -44,9 +44,18 @@ class Elementor_Related_Query extends Elementor_Post_Query {
 	protected function get_fallback_query( $original_query ) {
 		$this->set_fallback_query_args();
 		$this->set_fallback_arg_by_settings( 'posts_per_page', $original_query->query_vars['posts_per_page'] );
-		$this->fallback_args = apply_filters( 'elementor/query/fallback_query_args', $this->fallback_args, $this->widget );
+		$this->set_fallback_arg_by_settings( 'post__not_in', $original_query->query_vars['post__not_in'] );
 
-		$this->fallback_args['no_found_rows'] = true;
+		/**
+		 * Fallback query arguments.
+		 *
+		 * Filters the query arguments for the fallback query. This hook allows
+		 * developers to alter those arguments.
+		 *
+		 * @param array       $fallback_args An array of WordPress query arguments.
+		 * @param Widget_Base $widget        An instance of Elementor widget.
+		 */
+		$this->fallback_args = apply_filters( 'elementor/query/fallback_query_args', $this->fallback_args, $this->widget );
 
 		return new \WP_Query( $this->fallback_args );
 	}
@@ -134,14 +143,20 @@ class Elementor_Related_Query extends Elementor_Post_Query {
 		}
 	}
 
+	/**
+	 * @return string|array
+	 */
+	public function get_post_types() {
+		$public_post_types = Utils::get_public_post_types();
+		$active_post_type = get_post_type();
+
+		return ! empty( $active_post_type ) ? $active_post_type : array_keys( $public_post_types );
+	}
+
 	protected function set_fallback_query_args() {
 		$this->set_fallback_arg_by_settings( 'ignore_sticky_posts', true );
 		$this->set_fallback_arg_by_settings( 'post_status', 'publish' );
-
-		$post_types = Utils::get_public_post_types();
-		$post_types = array_keys( $post_types );
-
-		$this->set_fallback_arg_by_settings( 'post_type', $post_types );
+		$this->set_fallback_arg_by_settings( 'post_type', $this->get_post_types() );
 
 		if ( 'fallback_by_id' === $this->get_widget_settings( 'related_fallback' ) ) {
 			$this->set_fallback_arg_by_settings( 'post__in', [ 0 ], 'fallback_ids' );

@@ -5,7 +5,9 @@ use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
 use Elementor\Group_Control_Typography;
 use ElementorPro\Base\Base_Widget;
 use Elementor\Controls_Manager;
+use ElementorPro\Core\Utils;
 use ElementorPro\Modules\Posts\Traits\Button_Widget_Trait;
+use ElementorPro\Modules\Posts\Traits\Pagination_Trait;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -16,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 abstract class Posts_Base extends Base_Widget {
 	use Button_Widget_Trait;
+	use Pagination_Trait;
 
 	const LOAD_MORE_ON_CLICK = 'load_more_on_click';
 	const LOAD_MORE_INFINITE_SCROLL = 'load_more_infinite_scroll';
@@ -70,6 +73,9 @@ abstract class Posts_Base extends Base_Widget {
 				'condition' => [
 					'pagination_type' => 'load_more_on_click',
 				],
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -80,6 +86,9 @@ abstract class Posts_Base extends Base_Widget {
 				'type' => Controls_Manager::HEADING,
 				'condition' => [
 					'pagination_type' => 'load_more_infinite_scroll',
+				],
+				'dynamic' => [
+					'active' => true,
 				],
 			]
 		);
@@ -128,9 +137,16 @@ abstract class Posts_Base extends Base_Widget {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'max' => 50,
+					],
+					'em' => [
+						'max' => 5,
+					],
+					'rem' => [
+						'max' => 5,
 					],
 				],
 				'selectors' => [
@@ -194,6 +210,9 @@ abstract class Posts_Base extends Base_Widget {
 			'pagination_prev_label',
 			[
 				'label' => esc_html__( 'Previous Label', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
 				'default' => esc_html__( '&laquo; Previous', 'elementor-pro' ),
 				'condition' => [
 					'pagination_type' => [
@@ -214,6 +233,9 @@ abstract class Posts_Base extends Base_Widget {
 						'prev_next',
 						'numbers_and_prev_next',
 					],
+				],
+				'dynamic' => [
+					'active' => true,
 				],
 			]
 		);
@@ -246,6 +268,54 @@ abstract class Posts_Base extends Base_Widget {
 						'load_more_on_click',
 						'load_more_infinite_scroll',
 						'',
+					],
+				],
+			]
+		);
+
+		$this->add_control(
+			'pagination_individual_divider',
+			[
+				'type' => Controls_Manager::DIVIDER,
+				'condition' => [
+					'pagination_type' => [
+						'numbers',
+						'numbers_and_prev_next',
+						'prev_next',
+					],
+				],
+			]
+		);
+
+		$this->add_control(
+			'pagination_individual_handle',
+			[
+				'label' => esc_html__( 'Individual Pagination', 'elementor-pro' ),
+				'type' => Controls_Manager::SWITCHER,
+				'label_on' => esc_html__( 'On', 'elementor-pro' ),
+				'label_off' => esc_html__( 'Off', 'elementor-pro' ),
+				'default' => '',
+				'condition' => [
+					'pagination_type' => [
+						'numbers',
+						'numbers_and_prev_next',
+						'prev_next',
+					],
+				],
+			]
+		);
+
+		$this->add_control(
+			'pagination_individual_handle_message',
+			[
+				'type' => Controls_Manager::RAW_HTML,
+				'raw' => esc_html__( 'For multiple Posts Widgets on the same page, toggle this on to control the pagination for each individually. Note: It affects the page\'s URL structure.', 'elementor-pro' ),
+				'content_classes' => 'elementor-control-field-description',
+				'condition' => [
+					'pagination_type' => [
+						'numbers',
+						'numbers_and_prev_next',
+						'prev_next',
 					],
 				],
 			]
@@ -323,6 +393,9 @@ abstract class Posts_Base extends Base_Widget {
 						'load_more_infinite_scroll',
 					],
 				],
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -390,6 +463,9 @@ abstract class Posts_Base extends Base_Widget {
 					'load_more_no_posts_message_switcher' => 'yes',
 				],
 				'label_block' => true,
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -500,14 +576,20 @@ abstract class Posts_Base extends Base_Widget {
 			[
 				'label' => esc_html__( 'Space Between', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'separator' => 'before',
 				'default' => [
 					'size' => 10,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -524,10 +606,16 @@ abstract class Posts_Base extends Base_Widget {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -563,15 +651,28 @@ abstract class Posts_Base extends Base_Widget {
 	abstract public function query_posts();
 
 	public function get_current_page() {
-		if ( '' === $this->get_settings( 'pagination_type' ) ) {
+		if ( '' === $this->get_settings_for_display( 'pagination_type' ) ) {
 			return 1;
 		}
 
-		return max( 1, get_query_var( 'paged' ), get_query_var( 'page' ) );
+		return max(
+			1,
+			get_query_var( 'paged' ),
+			get_query_var( 'page' ),
+			Utils::_unstable_get_super_global_value( $_GET, 'e-page-' . $this->get_id() )
+		);
+	}
+
+	public function is_rest_request() {
+		$request_uri = Utils::_unstable_get_super_global_value( $_SERVER, 'REQUEST_URI' );
+
+		return false !== wp_get_referer() &&
+			isset( $_SERVER['REQUEST_URI'] ) &&
+			( false !== strpos( $request_uri, 'wp-json' ) || false !== strpos( $request_uri, 'rest_route' ) );
 	}
 
 	public function get_wp_link_page( $i ) {
-		if ( ! is_singular() || is_front_page() ) {
+		if ( ( ! is_singular() || is_front_page() ) && ! $this->is_rest_request() && ! $this->is_allow_to_use_custom_page_option() ) {
 			return get_pagenum_link( $i );
 		}
 
@@ -581,9 +682,20 @@ abstract class Posts_Base extends Base_Widget {
 		$query_args = [];
 		$url = get_permalink();
 
+		if ( $this->is_rest_request() ) {
+			$link_unescaped = wp_get_referer();
+			$post_id = url_to_postid( $link_unescaped );
+
+			if ( $post_id > 0 ) {
+				$post = get_post( $post_id );
+			}
+
+			$url = $this->get_base_url_for_rest_request( $post_id, $url );
+		}
+
 		if ( $i > 1 ) {
 			if ( '' === get_option( 'permalink_structure' ) || in_array( $post->post_status, [ 'draft', 'pending' ] ) ) {
-				$url = add_query_arg( 'page', $i, $url );
+				$url = add_query_arg( $this->get_wp_pagination_query_var(), $i, $url );
 			} elseif ( get_option( 'show_on_front' ) === 'page' && (int) get_option( 'page_on_front' ) === $post->ID ) {
 				$url = trailingslashit( $url ) . user_trailingslashit( "$wp_rewrite->pagination_base/" . $i, 'single_paged' );
 			} else {
@@ -591,16 +703,114 @@ abstract class Posts_Base extends Base_Widget {
 			}
 		}
 
-		if ( is_preview() ) {
-			if ( ( 'draft' !== $post->post_status ) && isset( $_GET['preview_id'], $_GET['preview_nonce'] ) ) {
-				$query_args['preview_id'] = wp_unslash( $_GET['preview_id'] );
-				$query_args['preview_nonce'] = wp_unslash( $_GET['preview_nonce'] );
-			}
+		if ( $i > 1 && $this->is_allow_to_use_custom_page_option() ) {
+			$url = $this->get_wp_link_page_url_for_custom_page_option( $url, $i, $post_id ?? 0 );
+		}
 
-			$url = get_preview_post_link( $post, $query_args, $url );
+		if ( 1 === $i && $this->is_allow_to_use_custom_page_option() ) {
+			$url = $this->get_base_url();
+		}
+
+		if ( is_preview() ) {
+			$url = $this->get_wp_link_page_url_for_preview( $post, $query_args, $url );
+		}
+
+		if ( $this->is_rest_request() ) {
+			$url = $this->get_wp_link_page_url_for_rest_request( $url, $link_unescaped );
+		}
+
+		if ( ! $this->is_rest_request() && $this->current_url_contains_taxonomy_filter() && ! is_preview() ) {
+			$url = $this->get_wp_link_page_url_for_normal_page_load( $url );
 		}
 
 		return $url;
+	}
+
+	public function is_allow_to_use_custom_page_option() {
+		return 'ajax' === $this->get_settings_for_display( 'pagination_load_type' ) || 'yes' === $this->get_settings_for_display( 'pagination_individual_handle' );
+	}
+
+	protected function get_base_url_for_rest_request( $post_id, $url ) {
+		if ( $post_id > 0 ) {
+			return get_permalink( $post_id );
+		}
+
+		global $wp_rewrite;
+
+		if ( $wp_rewrite->using_permalinks() && ( $this->current_url_contains_taxonomy_filter() || $this->referer_contains_taxonomy_filter() ) ) {
+			$url = $this->is_allow_to_use_custom_page_option() ? get_query_var( 'pagination_base_url' ) : get_query_var( 'pagination_base_url' ) . user_trailingslashit( "$wp_rewrite->pagination_base/", 'single_paged' );
+		} else {
+			$url = remove_query_arg( 'p', $url );
+		}
+
+		return $url;
+	}
+
+	protected function get_wp_link_page_url_for_preview( $post, $query_args, $url ) {
+		if ( 'draft' === $post->post_status || ! isset( $_GET['preview_id'], $_GET['preview_nonce'] ) ) {
+			return $url;
+		}
+
+		$query_args['preview_id'] = Utils::_unstable_get_super_global_value( $_GET, 'preview_id' );
+		$query_args['preview_nonce'] = Utils::_unstable_get_super_global_value( $_GET, 'preview_nonce' );
+
+		if ( $this->is_rest_request() || ! $this->current_url_contains_taxonomy_filter() ) {
+			return get_preview_post_link( $post, $query_args, $url );
+		}
+
+		wp_parse_str( htmlspecialchars_decode( Utils::_unstable_get_super_global_value( $_SERVER, 'QUERY_STRING' ) ), $query_params );
+
+		foreach ( $query_params as $param_key => $param_value ) {
+			if ( false !== strpos( $param_key, 'e-filter-' ) ) {
+				$query_args[ $param_key ] = $param_value;
+			}
+		}
+
+		return get_preview_post_link( $post, $query_args, $url );
+	}
+
+	protected function get_wp_link_page_url_for_rest_request( $url, $link_unescaped ) {
+		$url_components = wp_parse_url( $link_unescaped );
+		$query_args = [];
+
+		if ( isset( $url_components['query'] ) ) {
+			wp_parse_str( $url_components['query'], $query_args );
+		}
+
+		$url = ! empty( $query_args ) ? $url . '&' . http_build_query( $query_args ) : $url;
+
+		return $this->format_query_string_concatenation( $url );
+	}
+
+	protected function get_wp_link_page_url_for_normal_page_load( $url ) {
+		wp_parse_str( htmlspecialchars_decode( Utils::_unstable_get_super_global_value( $_SERVER, 'QUERY_STRING' ) ), $query_params );
+
+		$e_filters = '';
+
+		foreach ( $query_params as $param_key => $param_value ) {
+			if ( false !== strpos( $param_key, 'e-filter' ) ) {
+				$e_filters .= '&' . $param_key . '=' . $param_value;
+			}
+		}
+
+		return $this->format_query_string_concatenation( $url . $e_filters );
+	}
+
+	public function current_url_contains_taxonomy_filter() {
+		return false !== strpos( Utils::_unstable_get_super_global_value( $_SERVER, 'QUERY_STRING' ), 'e-filter-' );
+	}
+
+	public function referer_contains_taxonomy_filter() {
+		return false !== strpos( Utils::_unstable_get_super_global_value( $_SERVER, 'HTTP_REFERER' ), 'e-filter-' );
+	}
+
+	protected function format_query_string_concatenation( $input ) {
+		if ( false === strpos( $input, '?' ) ) {
+			// If "?" doesn't exist in the input URL, replace the first "&" with "?"
+			$input = preg_replace( '/&/', '?', $input, 1 );
+		}
+
+		return $input;
 	}
 
 	public function get_posts_nav_link( $page_limit = null ) {
@@ -621,17 +831,17 @@ abstract class Posts_Base extends Base_Widget {
 				$next_page = 1;
 			}
 
-			$return['prev'] = sprintf( $link_template, 'prev', $this->get_wp_link_page( $next_page ), $this->get_settings( 'pagination_prev_label' ) );
+			$return['prev'] = sprintf( $link_template, 'prev', $this->get_wp_link_page( $next_page ), $this->get_settings_for_display( 'pagination_prev_label' ) );
 		} else {
-			$return['prev'] = sprintf( $disabled_template, 'prev', $this->get_settings( 'pagination_prev_label' ) );
+			$return['prev'] = sprintf( $disabled_template, 'prev', $this->get_settings_for_display( 'pagination_prev_label' ) );
 		}
 
 		$next_page = intval( $paged ) + 1;
 
 		if ( $next_page <= $page_limit ) {
-			$return['next'] = sprintf( $link_template, 'next', $this->get_wp_link_page( $next_page ), $this->get_settings( 'pagination_next_label' ) );
+			$return['next'] = sprintf( $link_template, 'next', $this->get_wp_link_page( $next_page ), $this->get_settings_for_display( 'pagination_next_label' ) );
 		} else {
-			$return['next'] = sprintf( $disabled_template, 'next', $this->get_settings( 'pagination_next_label' ) );
+			$return['next'] = sprintf( $disabled_template, 'next', $this->get_settings_for_display( 'pagination_next_label' ) );
 		}
 
 		return $return;
@@ -661,4 +871,27 @@ abstract class Posts_Base extends Base_Widget {
 	}
 
 	public function render_plain_content() {}
+
+	/**
+	 * @param string $url
+	 * @param int $i
+	 * @param int $post_id
+	 * @return string
+	 */
+	private function get_wp_link_page_url_for_custom_page_option( $url, $i, $post_id ) {
+		$base_raw_url = $this->is_rest_request() ? $this->get_base_url_for_rest_request( $post_id, $url ) : $this->get_base_url();
+
+		return $this->format_query_string_concatenation( $base_raw_url . '&e-page-' . $this->get_id() . '=' . $i );
+	}
+
+	/**
+	 * @return string
+	 */
+	private function get_wp_pagination_query_var() {
+		if ( '' === get_option( 'permalink_structure' ) && $this->is_posts_page( $this->is_allow_to_use_custom_page_option() ) ) {
+			return 'paged';
+		}
+
+		return 'page';
+	}
 }

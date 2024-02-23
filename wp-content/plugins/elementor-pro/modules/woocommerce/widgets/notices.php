@@ -58,7 +58,7 @@ class Notices extends Base_Widget {
 			[
 				'type' => Controls_Manager::RAW_HTML,
 				'raw' => sprintf(
-					/* translators: 1: Link open tag, 2: Link closing tag. */
+					/* translators: 1: Link opening tag, 2: Link closing tag. */
 					esc_html__( 'To change the design of your notices, go to your %1$sWooCommerce Settings%2$s', 'elementor-pro' ),
 					'<a href="#" onclick="elementorPro.modules.woocommerce.openSiteSettingsTab( \'settings-woocommerce\', \'section_woocommerce_notices\' );">',
 					'</a>'
@@ -72,7 +72,7 @@ class Notices extends Base_Widget {
 			[
 				'type' => Controls_Manager::RAW_HTML,
 				'raw' => sprintf(
-					/* translators: 1: Link open tag, 2: Link closing tag. */
+					/* translators: 1: Bold text opening tag, 2: Bold text closing tag. */
 					esc_html__( '%1$sNote:%2$s You can only add the Notices widget once per page.', 'elementor-pro' ),
 					'<strong>',
 					'</strong>'
@@ -99,11 +99,7 @@ class Notices extends Base_Widget {
 
 	protected function render() {
 		if ( Plugin::elementor()->editor->is_edit_mode() || Plugin::elementor()->preview->is_preview_mode() ) {
-			?>
-			<div class="woocommerce-info e-notices-demo-notice">
-				<?php echo esc_html__( 'This is an example of a WooCommerce notice. (You won\'t see this while previewing your site.)', 'elementor-pro' ); ?>
-			</div>
-			<?php
+			$this->render_demo_notice();
 		} else {
 			$this->hide_woocommerce_notices();
 			?>
@@ -112,6 +108,23 @@ class Notices extends Base_Widget {
 			</div>
 			<?php
 		}
+	}
+
+	protected function render_demo_notice() {
+		?>
+		<div class="e-notices-demo-notice">
+		<?php
+		wc_get_template( 'notices/notice.php', [
+			'notices' => [
+				'0' => [
+					'notice' => esc_html__( 'This is an example of a WooCommerce notice. (You won\'t see this while previewing your site.)', 'elementor-pro' ),
+					'data' => [],
+				],
+			],
+		] );
+		?>
+		</div>
+		<?php
 	}
 
 	public function get_group_name() {

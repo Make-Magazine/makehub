@@ -2,6 +2,7 @@
 namespace ElementorPro\Modules\Forms\Classes;
 
 use ElementorPro\Core\Utils;
+use ElementorPro\Modules\Forms\Fields\Upload;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -50,9 +51,8 @@ class Form_Record {
 			/**
 			 * Elementor form field validation.
 			 *
-			 * Fires when a single form field is being validated.
-			 *
-			 * It allows developers to validate individual field types.
+			 * Fires when a single form field is being validated. This hook allows developers
+			 * to validate individual field types.
 			 *
 			 * The dynamic portion of the hook name, `$field_type`, refers to the field type.
 			 *
@@ -68,7 +68,8 @@ class Form_Record {
 		/**
 		 * Elementor form validation.
 		 *
-		 * Fires when form fields are being validated.
+		 * Fires when form fields are being validated. This hook allows developers
+		 * to validate all form fields.
 		 *
 		 * @since 2.0.0
 		 *
@@ -91,9 +92,8 @@ class Form_Record {
 			/**
 			 * Elementor form field process.
 			 *
-			 * Fires when a single form field is being processed.
-			 *
-			 * It allows developers to process individual field types.
+			 * Fires when a single form field is being processed. This hook allows developers
+			 * to process individual field types.
 			 *
 			 * The dynamic portion of the hook name, `$field_type`, refers to the field type.
 			 *
@@ -109,7 +109,8 @@ class Form_Record {
 		/**
 		 * Elementor form process.
 		 *
-		 * Fires when form fields are being processed.
+		 * Fires when form fields are being processed. This hook allows developers
+		 * to process all form fields.
 		 *
 		 * @since 2.0.0
 		 *
@@ -176,21 +177,21 @@ class Form_Record {
 				case 'page_url':
 					$result['page_url'] = [
 						'title' => esc_html__( 'Page URL', 'elementor-pro' ),
-						'value' => esc_url_raw( $_POST['referrer'] ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						'value' => isset( $_POST['referrer'] ) ? esc_url_raw( wp_unslash( $_POST['referrer'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					];
 					break;
 
 				case 'page_title':
 					$result['page_title'] = [
 						'title' => esc_html__( 'Page Title', 'elementor-pro' ),
-						'value' => sanitize_text_field( $_POST['referer_title'] ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
+						'value' => isset( $_POST['referer_title'] ) ? sanitize_text_field( wp_unslash( $_POST['referer_title'] ) ) : '', // phpcs:ignore WordPress.Security.NonceVerification.Missing
 					];
 					break;
 
 				case 'user_agent':
 					$result['user_agent'] = [
 						'title' => esc_html__( 'User Agent', 'elementor-pro' ),
-						'value' => sanitize_textarea_field( $_SERVER['HTTP_USER_AGENT'] ),
+						'value' => isset( $_SERVER['HTTP_USER_AGENT'] ) ? sanitize_textarea_field( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) : '',
 					];
 					break;
 
@@ -234,9 +235,10 @@ class Form_Record {
 			];
 
 			if ( 'upload' === $field['type'] ) {
-				$field['file_sizes'] = isset( $form_field['file_sizes'] ) ? $form_field['file_sizes'] : '';
-				$field['file_types'] = isset( $form_field['file_types'] ) ? $form_field['file_types'] : '';
-				$field['max_files'] = isset( $form_field['max_files'] ) ? $form_field['max_files'] : '';
+				$field['file_sizes'] = $form_field['file_sizes'] ?? '';
+				$field['file_types'] = $form_field['file_types'] ?? '';
+				$field['max_files'] = $form_field['max_files'] ?? '';
+				$field['attachment_type'] = $form_field['attachment_type'] ?? '';
 			}
 
 			if ( isset( $this->sent_data[ $form_field['custom_id'] ] ) ) {
@@ -279,7 +281,8 @@ class Form_Record {
 				/**
 				 * Sanitize field value.
 				 *
-				 * Filters the value of the form field for sanitization purpose.
+				 * Filters the value of the form field for sanitization purpose. This hook allows
+				 * developers to add custom sanitization for field values.
 				 *
 				 * The dynamic portion of the hook name, `$field_type`, refers to the field type.
 				 *
@@ -317,7 +320,9 @@ class Form_Record {
 				'path' => [],
 			];
 		}
-		$this->files[ $id ]['url'][ $index ] = $filename['url'];
+
+		$attachment_type = $this->fields[ $id ]['attachment_type'];
+		$this->files[ $id ]['url'][ $index ] = Upload::MODE_ATTACH === $attachment_type ? 'attached' : $filename['url'];
 		$this->files[ $id ]['path'][ $index ] = $filename['path'];
 	}
 

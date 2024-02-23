@@ -333,10 +333,17 @@ class Animated_Headline extends Base_Widget {
 			[
 				'label' => esc_html__( 'Width', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
 						'min' => 1,
 						'max' => 20,
+					],
+					'em' => [
+						'max' => 2,
+					],
+					'rem' => [
+						'max' => 2,
 					],
 				],
 				'selectors' => [
@@ -565,7 +572,7 @@ class Animated_Headline extends Base_Widget {
 		?>
 		<#
 		var headlineClasses = 'elementor-headline',
-			tag = elementorPro.validateHTMLTag( settings.tag );
+			tag = elementor.helpers.validateHTMLTag( settings.tag );
 
 		if ( 'rotate' === settings.headline_style ) {
 			headlineClasses += ' elementor-headline-animation-type-' + settings.animation_type;

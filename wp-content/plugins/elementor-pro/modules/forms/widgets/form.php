@@ -64,6 +64,10 @@ class Form extends Form_Base {
 		 *
 		 * Filters the list of field types displayed in the form `field_type` control.
 		 *
+		 * This hook allows developers to alter the list of displayed field types. For
+		 * example, removing the 'upload' field type from the list of fields types will
+		 * prevent uploading files using Elementor forms.
+		 *
 		 * @since 1.0.0
 		 *
 		 * @param array $field_types Field types.
@@ -92,6 +96,9 @@ class Form extends Form_Base {
 				'label' => esc_html__( 'Label', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -117,6 +124,9 @@ class Form extends Form_Base {
 							],
 						],
 					],
+				],
+				'dynamic' => [
+					'active' => true,
 				],
 			]
 		);
@@ -399,6 +409,9 @@ class Form extends Form_Base {
 				'dynamic' => [
 					'active' => true,
 				],
+				'ai' => [
+					'active' => false,
+				],
 				'conditions' => [
 					'terms' => [
 						[
@@ -431,6 +444,12 @@ class Form extends Form_Base {
 				'description' => esc_html__( 'Please make sure the ID is unique and not used elsewhere in this form. This field allows `A-z 0-9` & underscore chars without spaces.', 'elementor-pro' ),
 				'render_type' => 'none',
 				'required' => true,
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
+				],
 			]
 		);
 
@@ -478,6 +497,9 @@ class Form extends Form_Base {
 						'field_label' => esc_html__( 'Name', 'elementor-pro' ),
 						'placeholder' => esc_html__( 'Name', 'elementor-pro' ),
 						'width' => '100',
+						'dynamic' => [
+							'active' => true,
+						],
 					],
 					[
 						'custom_id' => 'email',
@@ -645,6 +667,12 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Next', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
+				],
 				'frontend_available' => true,
 				'render_type' => 'none',
 				'default' => esc_html__( 'Next', 'elementor-pro' ),
@@ -657,6 +685,12 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Previous', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
+				],
 				'frontend_available' => true,
 				'render_type' => 'none',
 				'default' => esc_html__( 'Previous', 'elementor-pro' ),
@@ -679,6 +713,12 @@ class Form extends Form_Base {
 				'type' => Controls_Manager::TEXT,
 				'default' => esc_html__( 'Send', 'elementor-pro' ),
 				'placeholder' => esc_html__( 'Send', 'elementor-pro' ),
+				'dynamic' => [
+					'active' => true,
+				],
+				'ai' => [
+					'active' => false,
+				],
 			]
 		);
 
@@ -713,9 +753,16 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Icon Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'range' => [
 					'px' => [
-						'max' => 50,
+						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'condition' => [
@@ -734,10 +781,15 @@ class Form extends Form_Base {
 				'label' => esc_html__( 'Button ID', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => '',
+				'ai' => [
+					'active' => false,
+				],
 				'title' => esc_html__( 'Add your custom id WITHOUT the Pound key. e.g: my-id', 'elementor-pro' ),
 				'description' => esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows `A-z 0-9` & underscore chars without spaces.', 'elementor-pro' ),
 				'separator' => 'before',
-
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -758,6 +810,20 @@ class Form extends Form_Base {
 			$actions_options[ $action->get_name() ] = $action->get_label();
 		}
 
+		$default_submit_actions = [ 'email' ];
+
+		/**
+		 * Default submit actions.
+		 *
+		 * Filters the list of submit actions pre deffined by Elementor forms.
+		 *
+		 * By default, only one submit action is set by Elementor forms, an 'email'
+		 * action. This hook allows developers to alter those submit action.
+		 *
+		 * @param array $default_submit_actions A list of default submit actions.
+		 */
+		$default_submit_actions = apply_filters( 'elementor_pro/forms/default_submit_actions', $default_submit_actions );
+
 		$this->add_control(
 			'submit_actions',
 			[
@@ -767,9 +833,7 @@ class Form extends Form_Base {
 				'options' => $actions_options,
 				'render_type' => 'none',
 				'label_block' => true,
-				'default' => apply_filters( 'elementor_pro/forms/default_submit_actions', [
-					'email',
-				] ),
+				'default' => $default_submit_actions,
 				'description' => esc_html__( 'Add actions that will be performed after a visitor submits the form (e.g. send an email notification). Choosing an action will add its setting below.', 'elementor-pro' ),
 			]
 		);
@@ -869,9 +933,28 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Form ID', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
+				'ai' => [
+					'active' => false,
+				],
 				'placeholder' => 'new_form_id',
 				'description' => esc_html__( 'Please make sure the ID is unique and not used elsewhere on the page this form is displayed. This field allows `A-z 0-9` & underscore chars without spaces.', 'elementor-pro' ),
 				'separator' => 'after',
+				'dynamic' => [
+					'active' => true,
+				],
+			]
+		);
+
+		$this->add_control(
+			'form_validation',
+			[
+				'label' => esc_html__( 'Form Validation', 'elementor-pro' ),
+				'type' => Controls_Manager::SELECT,
+				'options' => [
+					'' => esc_html__( 'Browser Default', 'elementor-pro' ),
+					'custom' => esc_html__( 'Custom', 'elementor-pro' ),
+				],
+				'default' => '',
 			]
 		);
 
@@ -900,13 +983,16 @@ class Form extends Form_Base {
 					'custom_messages!' => '',
 				],
 				'render_type' => 'none',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
 		$this->add_control(
 			'error_message',
 			[
-				'label' => esc_html__( 'Error Message', 'elementor-pro' ),
+				'label' => esc_html__( 'Form Error', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => $default_messages[ Ajax_Handler::ERROR ],
 				'placeholder' => $default_messages[ Ajax_Handler::ERROR ],
@@ -915,28 +1001,34 @@ class Form extends Form_Base {
 					'custom_messages!' => '',
 				],
 				'render_type' => 'none',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
 		$this->add_control(
-			'required_field_message',
+			'server_message',
 			[
-				'label' => esc_html__( 'Required Message', 'elementor-pro' ),
+				'label' => esc_html__( 'Server Error', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => $default_messages[ Ajax_Handler::FIELD_REQUIRED ],
-				'placeholder' => $default_messages[ Ajax_Handler::FIELD_REQUIRED ],
+				'default' => $default_messages[ Ajax_Handler::SERVER_ERROR ],
+				'placeholder' => $default_messages[ Ajax_Handler::SERVER_ERROR ],
 				'label_block' => true,
 				'condition' => [
 					'custom_messages!' => '',
 				],
 				'render_type' => 'none',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
 		$this->add_control(
 			'invalid_message',
 			[
-				'label' => esc_html__( 'Invalid Message', 'elementor-pro' ),
+				'label' => esc_html__( 'Invalid Form', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'default' => $default_messages[ Ajax_Handler::INVALID_FORM ],
 				'placeholder' => $default_messages[ Ajax_Handler::INVALID_FORM ],
@@ -945,6 +1037,28 @@ class Form extends Form_Base {
 					'custom_messages!' => '',
 				],
 				'render_type' => 'none',
+				'dynamic' => [
+					'active' => true,
+				],
+			]
+		);
+
+		$this->add_control(
+			'required_field_message',
+			[
+				'label' => esc_html__( 'Required Field', 'elementor-pro' ),
+				'type' => Controls_Manager::TEXT,
+				'default' => $default_messages[ Ajax_Handler::FIELD_REQUIRED ],
+				'placeholder' => $default_messages[ Ajax_Handler::FIELD_REQUIRED ],
+				'label_block' => true,
+				'condition' => [
+					'custom_messages!' => '',
+					'form_validation' => 'custom',
+				],
+				'render_type' => 'none',
+				'dynamic' => [
+					'active' => true,
+				],
 			]
 		);
 
@@ -963,13 +1077,19 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Columns Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 10,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 60,
+					],
+					'em' => [
+						'max' => 6,
+					],
+					'rem' => [
+						'max' => 6,
 					],
 				],
 				'selectors' => [
@@ -984,13 +1104,19 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Rows Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 10,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 60,
+					],
+					'em' => [
+						'max' => 6,
+					],
+					'rem' => [
+						'max' => 6,
 					],
 				],
 				'selectors' => [
@@ -1015,13 +1141,19 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 0,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 60,
+					],
+					'em' => [
+						'max' => 6,
+					],
+					'rem' => [
+						'max' => 6,
 					],
 				],
 				'selectors' => [
@@ -1089,13 +1221,19 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 0,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 60,
+					],
+					'em' => [
+						'max' => 6,
+					],
+					'rem' => [
+						'max' => 6,
 					],
 				],
 				'selectors' => [
@@ -1198,7 +1336,7 @@ class Form extends Form_Base {
 				'label' => esc_html__( 'Border Width', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'placeholder' => '1',
-				'size_units' => [ 'px' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-field-group:not(.elementor-field-type-upload) .elementor-field:not(.elementor-select-wrapper)' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 					'{{WRAPPER}} .elementor-field-group .elementor-select-wrapper select' => 'border-width: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -1211,7 +1349,7 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-field-group:not(.elementor-field-type-upload) .elementor-field:not(.elementor-select-wrapper)' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 					'{{WRAPPER}} .elementor-field-group .elementor-select-wrapper select' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
@@ -1485,7 +1623,7 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-button' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1498,7 +1636,7 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Text Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::DIMENSIONS,
-				'size_units' => [ 'px', 'em', '%' ],
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-button' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
 				],
@@ -1597,13 +1735,19 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Spacing', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 20,
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
+					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
 				'selectors' => [
@@ -1617,17 +1761,21 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Icon Size', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 15,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'size_units' => [ 'px' ],
 				'conditions' => [
 					'terms' => [
 						[
@@ -1651,17 +1799,21 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Padding', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'size' => 30,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'size_units' => [ 'px' ],
 				'selectors' => [
 					'{{WRAPPER}}' => '--e-form-steps-indicator-padding: {{SIZE}}{{UNIT}}',
 				],
@@ -1802,17 +1954,21 @@ class Form extends Form_Base {
 				'label' => esc_html__( 'Divider Width', 'elementor-pro' ),
 				'separator' => 'before',
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'vw', 'custom' ],
 				'default' => [
 					'size' => 1,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'size_units' => [ 'px' ],
 				'condition' => [
 					'step_type!' => 'progress_bar',
 				],
@@ -1827,21 +1983,21 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Divider Gap', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 10,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
-					'%' => [
-						'min' => 0,
-						'max' => 100,
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
 					],
 				],
-				'size_units' => [ 'px', '%' ],
 				'condition' => [
 					'step_type!' => 'progress_bar',
 				],
@@ -1890,17 +2046,21 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Height', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', 'em', 'rem', 'vh', 'custom' ],
 				'default' => [
 					'size' => 20,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'size_units' => [ 'px' ],
 				'condition' => [
 					'step_type' => 'progress_bar',
 				],
@@ -1915,17 +2075,21 @@ class Form extends Form_Base {
 			[
 				'label' => esc_html__( 'Border Radius', 'elementor-pro' ),
 				'type' => Controls_Manager::SLIDER,
+				'size_units' => [ 'px', '%', 'em', 'rem', 'custom' ],
 				'default' => [
 					'size' => 0,
-					'unit' => 'px',
 				],
 				'range' => [
 					'px' => [
-						'min' => 0,
 						'max' => 100,
 					],
+					'em' => [
+						'max' => 10,
+					],
+					'rem' => [
+						'max' => 10,
+					],
 				],
-				'size_units' => [ 'px' ],
 				'condition' => [
 					'step_type' => 'progress_bar',
 				],
@@ -1999,14 +2163,15 @@ class Form extends Form_Base {
 
 		if ( ! Plugin::elementor()->editor->is_edit_mode() ) {
 			/**
-			 * Elementor form Pre render.
+			 * Elementor form pre render.
 			 *
-			 * Fires before the from is rendered in the frontend
+			 * Fires before the from is rendered in the frontend. This hook allows
+			 * developers to add functionality before the from is rendered.
 			 *
 			 * @since 2.4.0
 			 *
-			 * @param array $instance current form settings
-			 * @param Form $this current form widget instance
+			 * @param array $instance Current form settings.
+			 * @param Form  $this     An instance of the form.
 			 */
 			do_action( 'elementor-pro/forms/pre_render', $instance, $this );
 		}
@@ -2073,6 +2238,10 @@ class Form extends Form_Base {
 			$this->add_render_attribute( 'form', 'name', $instance['form_name'] );
 		}
 
+		if ( 'custom' === $instance['form_validation'] ) {
+			$this->add_render_attribute( 'form', 'novalidate' );
+		}
+
 		if ( ! empty( $instance['button_css_id'] ) ) {
 			$this->add_render_attribute( 'button', 'id', $instance['button_css_id'] );
 		}
@@ -2107,7 +2276,7 @@ class Form extends Form_Base {
 					/**
 					 * Render form field.
 					 *
-					 * Filters the field rendered by Elementor Forms.
+					 * Filters the field rendered by Elementor forms.
 					 *
 					 * @since 1.0.0
 					 *
@@ -2120,7 +2289,7 @@ class Form extends Form_Base {
 					/**
 					 * Render form field.
 					 *
-					 * Filters the field rendered by Elementor Forms.
+					 * Filters the field rendered by Elementor forms.
 					 *
 					 * The dynamic portion of the hook name, `$field_type`, refers to the field type.
 					 *
@@ -2181,7 +2350,8 @@ class Form extends Form_Base {
 							/**
 							 * Elementor form field render.
 							 *
-							 * Fires when a field is rendered.
+							 * Fires when a field is rendered in the frontend. This hook allows developers to
+							 * add functionality when from fields are rendered.
 							 *
 							 * The dynamic portion of the hook name, `$field_type`, refers to the field type.
 							 *
@@ -2228,12 +2398,27 @@ class Form extends Form_Base {
 	 */
 	protected function content_template() {
 		?>
-		<form class="elementor-form" id="{{settings.form_id}}" name="{{settings.form_name}}">
+		<#
+		view.addRenderAttribute(
+			'form',
+			{
+				'id': settings.form_id,
+				'name': settings.form_name,
+			}
+		);
+		if ( 'custom' === settings.form_validation ) {
+			view.addRenderAttribute( 'form', 'novalidate' );
+		}
+		#>
+		<form class="elementor-form" {{{ view.getRenderAttributeString( 'form' ) }}}>
 			<div class="elementor-form-fields-wrapper elementor-labels-{{settings.label_position}}">
 				<#
 					for ( var i in settings.form_fields ) {
 						var item = settings.form_fields[ i ];
 						item = elementor.hooks.applyFilters( 'elementor_pro/forms/content_template/item', item, i, settings );
+
+						item.field_type  = _.escape( item.field_type );
+						item.field_value = _.escape( item.field_value );
 
 						var options = item.field_options ? item.field_options.split( '\n' ) : [],
 							itemClasses = _.escape( item.css_classes ),
@@ -2371,6 +2556,7 @@ class Form extends Form_Base {
 								inputField = '<input size="1" type="' + item.field_type + '" value="' + item.field_value + '" class="elementor-field elementor-size-' + settings.input_size + ' ' + itemClasses + '" name="form_field_' + i + '" id="form_field_' + i + '" ' + required + ' ' + placeholder + ' >';
 								break;
 							default:
+								item.placeholder = _.escape( item.placeholder );
 								inputField = elementor.hooks.applyFilters( 'elementor_pro/forms/content_template/field/' + item.field_type, '', item, i, settings );
 						}
 
