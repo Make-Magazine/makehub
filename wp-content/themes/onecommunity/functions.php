@@ -780,27 +780,6 @@ function onecommunity_register_required_plugins() {
 		),
 
 		array(
-			'name'      => 'GamiPress - BuddyPress integration',
-			'slug'      => 'gamipress-buddypress-integration',
-			'required'  => false,
-			'force_activation'  => false
-		),
-
-		array(
-			'name'      => 'GamiPress - WP Ulike integration',
-			'slug'      => 'gamipress-wp-ulike-integration',
-			'required'  => false,
-			'force_activation'  => false
-		),
-
-		array(
-			'name'      => 'GamiPress - bbPress integration',
-			'slug'      => 'gamipress-bbpress-integration',
-			'required'  => false,
-			'force_activation'  => false
-		),
-
-		array(
 			'name'      => 'rtMedia for WordPress, BuddyPress and bbPress',
 			'slug'      => 'buddypress-media',
 			'required'  => false,
