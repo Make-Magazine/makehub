@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use LearnDash\Core\Utilities\Cast;
+
 /**
  * Builds the `[quizinfo]` shortcode output.
  *
@@ -92,6 +94,17 @@ function learndash_quizinfo( $attr = array(), $content = '', $shortcode_slug = '
 	}
 
 	if ( empty( $quiz ) || empty( $user_id ) || empty( $show ) ) {
+		return '';
+	}
+
+	// Override the user ID if the current user can't access the passed user ID's data.
+	$user_id = learndash_shortcode_protect_user( Cast::to_int( $user_id ) );
+
+	if (
+		$user_id <= 0
+		|| ! learndash_shortcode_can_current_user_access_post( Cast::to_int( $course_id ) )
+		|| ! learndash_shortcode_can_current_user_access_post( Cast::to_int( $quiz ) )
+	) {
 		return '';
 	}
 

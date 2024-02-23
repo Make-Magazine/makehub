@@ -1,5 +1,11 @@
 <?php if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');} ?>
 <div class="mp_wrapper mp_invoice">
+  <?php
+    if (isset($_POST['errors']) && $_GET['action'] === 'checkout') {
+      $errors = array_map('sanitize_text_field', $_POST['errors']);
+        MeprView::render('/shared/errors', get_defined_vars());
+    }
+  ?>
   <?php if( isset( $sub_price_str ) ): ?>
   <div class="mp_price_str">
     <strong><?php _ex('Terms:', 'ui', 'memberpress'); ?></strong> <?php echo $sub_price_str; ?>
@@ -32,7 +38,13 @@
           <?php if( $show_quantity ): ?>
             <td>&nbsp;</td>
           <?php endif; ?>
-          <td class="mp-currency-cell"><?php echo MeprAppHelper::format_currency(MeprCouponsHelper::format_coupon_amount($invoice['coupon']['amount']), true, false); ?></td>
+          <td class="mp-currency-cell">
+            <?php if( '0' !== $invoice['coupon']['amount'] ) : ?>
+              <?php echo MeprAppHelper::format_currency(MeprCouponsHelper::format_coupon_amount($invoice['coupon']['amount']), true, false); ?>
+            <?php else: ?>
+              &nbsp;
+            <?php endif; ?>
+          </td>
         </tr>
       <?php endif; ?>
     </tbody>

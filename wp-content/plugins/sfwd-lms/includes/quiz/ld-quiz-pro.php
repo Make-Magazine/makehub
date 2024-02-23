@@ -1362,72 +1362,55 @@ class LD_QuizPro {
 			 */
 			do_action( 'learndash_quiz_submitted', $quizdata, get_user_by( 'id', $user_id ) );
 
-			/**
-			 * Changed in 2.6.0. If the quiz has essay type questions that are not
-			 * auto-graded we don't send out the 'learndash_quiz_completed' action.
-			 */
-			$send_quiz_completed = true;
-			if ( ( isset( $quizdata['has_graded'] ) ) && ( true === $quizdata['has_graded'] ) ) {
-				if ( ( isset( $quizdata['graded'] ) ) && ( ! empty( $quizdata['graded'] ) ) ) {
-					foreach ( $quizdata['graded'] as $grade_item ) {
-						if ( ( isset( $grade_item['status'] ) ) && ( $grade_item['status'] !== 'graded' ) ) {
-							$send_quiz_completed = false;
-						}
-					}
+			if ( ! empty( $course_id ) ) {
+				$quiz_parent_post_id = 0;
+				if ( ! empty( $topic_id ) ) {
+					$quiz_parent_post_id = $topic_id;
+				} elseif ( ! empty( $lesson_id ) ) {
+					$quiz_parent_post_id = $lesson_id;
 				}
-			}
 
-			if ( true === $send_quiz_completed ) {
-				if ( ! empty( $course_id ) ) {
-					$quiz_parent_post_id = 0;
-					if ( ! empty( $topic_id ) ) {
-						$quiz_parent_post_id = $topic_id;
-					} elseif ( ! empty( $lesson_id ) ) {
-						$quiz_parent_post_id = $lesson_id;
-					}
+				if ( ! empty( $quiz_parent_post_id ) ) {
 
-					if ( ! empty( $quiz_parent_post_id ) ) {
-
-						/**
-						 * Filter to set all parent steps completed.
-						 *
-						 * @since 4.2.0
-						 *
-						 * @param boolean $set_all_steps_completed Whether to set all steps completed.
-						 * @param int     $quiz_post_id            Quiz post ID.
-						 * @param int     $user_id                 User ID.
-						 * @param int     $course_id               Course ID.
-						 */
-						if ( apply_filters( 'learndash_complete_all_parent_steps', true, $quiz_post_id, $user_id, $course_id ) ) {
-							if ( ! empty( $topic_id ) ) {
-								if ( learndash_can_complete_step( $user_id, $topic_id, $course_id ) ) {
-									learndash_process_mark_complete( $user_id, $topic_id, false, $course_id );
-								}
+					/**
+					 * Filter to set all parent steps completed.
+					 *
+					 * @since 4.2.0
+					 *
+					 * @param boolean $set_all_steps_completed Whether to set all steps completed.
+					 * @param int     $quiz_post_id            Quiz post ID.
+					 * @param int     $user_id                 User ID.
+					 * @param int     $course_id               Course ID.
+					 */
+					if ( apply_filters( 'learndash_complete_all_parent_steps', true, $quiz_post_id, $user_id, $course_id ) ) {
+						if ( ! empty( $topic_id ) ) {
+							if ( learndash_can_complete_step( $user_id, $topic_id, $course_id ) ) {
+								learndash_process_mark_complete( $user_id, $topic_id, false, $course_id );
 							}
-							if ( ! empty( $lesson_id ) ) {
-								if ( learndash_can_complete_step( $user_id, $lesson_id, $course_id ) ) {
-									learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
-								}
-							}
-						} else {
-							if ( learndash_can_complete_step( $user_id, $quiz_parent_post_id, $course_id ) ) {
-								learndash_process_mark_complete( $user_id, $quiz_parent_post_id, false, $course_id );
+						}
+						if ( ! empty( $lesson_id ) ) {
+							if ( learndash_can_complete_step( $user_id, $lesson_id, $course_id ) ) {
+								learndash_process_mark_complete( $user_id, $lesson_id, false, $course_id );
 							}
 						}
 					} else {
-						$all_quizzes_complete = true;
-						$quizzes              = learndash_get_global_quiz_list( $course_id );
-						if ( ! empty( $quizzes ) ) {
-							foreach ( $quizzes as $quiz ) {
-								if ( learndash_is_quiz_notcomplete( $user_id, array( $quiz->ID => 1 ), false, $course_id ) ) {
-									$all_quizzes_complete = false;
-									break;
-								}
+						if ( learndash_can_complete_step( $user_id, $quiz_parent_post_id, $course_id ) ) {
+							learndash_process_mark_complete( $user_id, $quiz_parent_post_id, false, $course_id );
+						}
+					}
+				} else {
+					$all_quizzes_complete = true;
+					$quizzes              = learndash_get_global_quiz_list( $course_id );
+					if ( ! empty( $quizzes ) ) {
+						foreach ( $quizzes as $quiz ) {
+							if ( learndash_is_quiz_notcomplete( $user_id, array( $quiz->ID => 1 ), false, $course_id ) ) {
+								$all_quizzes_complete = false;
+								break;
 							}
 						}
-						if ( true === $all_quizzes_complete ) {
-							learndash_process_mark_complete( $user_id, $course_id, false, $course_id );
-						}
+					}
+					if ( true === $all_quizzes_complete ) {
+						learndash_process_mark_complete( $user_id, $course_id, false, $course_id );
 					}
 				}
 

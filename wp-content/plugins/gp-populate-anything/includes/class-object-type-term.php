@@ -17,10 +17,8 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 	/**
 	 * Extract unique identifier for a given term.
 	 *
-	 * @param $object WP_Term
-	 * @param  null  $primary_property_value
-	 *
-	 * @return string|number
+	 * @param WP_Term $object
+	 * @param null|string $primary_property_value
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
 		return $object->term_id;
@@ -54,6 +52,25 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 		return $object->{$prop};
 
+	}
+
+	/**
+	 * @param $property_id string
+	 *
+	 * @return string|null
+	 */
+	public function get_group_from_property_id( $property_id ) {
+		if ( strpos( $property_id, 'meta_' ) === 0 ) {
+			return 'meta';
+		}
+
+		return null;
+	}
+
+	public function get_property_value_from_property_id( $property_id ) {
+		$property_id = preg_replace( '/^meta_/', '', $property_id );
+
+		return $property_id;
 	}
 
 	public function get_properties( $primary_property = null ) {
@@ -136,25 +153,35 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 	}
 
 	public function add_filter_hooks() {
-		add_filter( 'gppa_object_type_term_filter', array( $this, 'process_filter_default' ), 10, 4 );
-		add_filter( 'gppa_object_type_term_filter_parent', array( $this, 'process_filter_with_term_taxonomy' ), 10, 4 );
-		add_filter( 'gppa_object_type_term_filter_taxonomy', array( $this, 'process_filter_with_term_taxonomy' ), 10, 4 );
-		add_filter( 'gppa_object_type_term_filter_object_id', array( $this, 'process_filter_object_id' ), 10, 4 );
-		add_filter( 'gppa_object_type_term_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 4 );
+		add_filter( 'gppa_object_type_term_filter', array( $this, 'process_filter_default' ), 10, 2 );
+		add_filter( 'gppa_object_type_term_filter_parent', array( $this, 'process_filter_with_term_taxonomy' ), 10, 2 );
+		add_filter( 'gppa_object_type_term_filter_taxonomy', array( $this, 'process_filter_with_term_taxonomy' ), 10, 2 );
+		add_filter( 'gppa_object_type_term_filter_object_id', array( $this, 'process_filter_object_id' ), 10, 2 );
+		add_filter( 'gppa_object_type_term_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 2 );
 	}
 
 	public function process_filter_default( $query_builder_args, $args ) {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -168,14 +195,24 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -230,14 +267,24 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -251,14 +298,24 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -295,13 +352,36 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 * @var $field array
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -334,14 +414,14 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 	 * @return string   SHA1 representation of the requested query
 	 */
 	public function query_cache_hash( $args ) {
-		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
+		return sha1( serialize( $this->process_query_args( $args, $this->default_query_args( $args ) ) ) );
 	}
 
 	public function query( $args ) {
 
 		global $wpdb;
 
-		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
+		$query_args = $this->process_query_args( $args, $this->default_query_args( $args ) );
 
 		$query = $this->build_mysql_query( $query_args, rgar( $args, 'field' ) );
 

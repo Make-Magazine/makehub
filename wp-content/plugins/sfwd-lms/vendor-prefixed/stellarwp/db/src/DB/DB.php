@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by learndash on 10-July-2023 using Strauss.
+ * Modified by learndash on 14-February-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -179,11 +179,11 @@ class DB {
 	 * Create QueryBuilder instance
 	 *
 	 * @param string|RawSQL $table
-	 * @param null|string $alias
+	 * @param string|null  $alias
 	 *
 	 * @return QueryBuilder
 	 */
-	public static function table( $table, $alias = null ) {
+	public static function table( $table, $alias = '' ) {
 		$builder = new QueryBuilder();
 		$builder->from( $table, $alias );
 

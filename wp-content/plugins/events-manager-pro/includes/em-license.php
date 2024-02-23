@@ -40,7 +40,7 @@ class EM_License extends PXL_License {
 	
 	public static function load_em_admin_notices(){
 		if( !class_exists('EM_Admin_Notices') ){
-			if( file_exists(EM_DIR.'/classes/em-admin-notices.php') && file_exists(EM_DIR.'/classes/em-admin-notice.php') ){
+			if( defined('EM_DIR') && file_exists(EM_DIR.'/classes/em-admin-notices.php') && file_exists(EM_DIR.'/classes/em-admin-notice.php') ){
 				$admin_notices = include_once(EM_DIR.'/classes/em-admin-notices.php');
 				$admin_notice = include_once(EM_DIR.'/classes/em-admin-notice.php');
 				return $admin_notice && $admin_notices;

@@ -1,3 +1,7 @@
+<?php
+use LearnDash\Course_Grid\Utilities;
+?>
+
 <div class="filter-wrapper">
     <form method="POST" name="learndash_course_grid_filter">
         <?php wp_nonce_field( 'ld_cg_apply_filter' ); ?>
@@ -31,7 +35,18 @@
                                 <ul class="terms">
                                     <?php foreach ( $terms as $term ) : ?>
                                         <li class="term">
-                                            <label for="<?php echo esc_attr( $atts['course_grid_id'] ) . '-' . esc_attr( $taxonomy ) . '-' . esc_attr( $term->slug ); ?>"><input id="<?php echo esc_attr( $atts['course_grid_id'] ) . '-' . esc_attr( $taxonomy ) . '-' . esc_attr( $term->slug ); ?>" type="checkbox" name="<?php echo esc_attr( $taxonomy ); ?>[]" value="<?php echo esc_attr( $term->term_id ); ?>"> <?php echo esc_html( $term->name ) ?></label>
+                                            <label 
+                                                for="<?php echo esc_attr( $atts['course_grid_id'] ) . '-' . esc_attr( $taxonomy ) . '-' . esc_attr( $term->slug ); ?>"
+                                            >
+                                                <input 
+                                                    id="<?php echo esc_attr( $atts['course_grid_id'] ) . '-' . esc_attr( $taxonomy ) . '-' . esc_attr( $term->slug ); ?>" 
+                                                    type="checkbox" 
+                                                    name="<?php echo esc_attr( $taxonomy ); ?>[]" 
+                                                    value="<?php echo esc_attr( $term->term_id ); ?>" 
+                                                    <?php Utilities::checked_array( @$term->slug, @$default_taxonomies[ $taxonomy ]['terms'], true ); ?>
+                                                > 
+                                                <?php echo esc_html( $term->name ) ?>
+                                            </label>
                                         </li>
                                     <?php endforeach; ?>
                                 </ul>

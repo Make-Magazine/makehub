@@ -143,7 +143,7 @@ class Subscriber implements Subscriber_Interface, LoggerAwareInterface {
 				[ 'add_lazy_tag', 24 ],
 			],
 			'rocket_buffer'                         => [ 'maybe_replace_css_images', 1002 ],
-			'after_rocket_clean_domain'             => 'clear_generated_css',
+			'rocket_after_clean_domain'             => 'clear_generated_css',
 			'wp_enqueue_scripts'                    => 'insert_lazyload_script',
 			'rocket_css_image_lazyload_images_load' => [ 'exclude_rocket_lazyload_excluded_src', 10, 2 ],
 			'rocket_lazyload_css_ignored_urls'      => 'remove_svg_from_lazyload_css',
@@ -415,7 +415,7 @@ class Subscriber implements Subscriber_Interface, LoggerAwareInterface {
 			return [];
 		}
 
-		$output = $this->generate_content( $content );
+		$output = $this->generate_content( $content, $this->cache->generate_url( $url ) );
 
 		if ( count( $output->get_urls() ) === 0 ) {
 			return [];
@@ -434,10 +434,11 @@ class Subscriber implements Subscriber_Interface, LoggerAwareInterface {
 	 * Generate lazy content for a certain content.
 	 *
 	 * @param string $content Content to generate lazy for.
+	 * @param string $url URL of the file we are extracting content from.
 	 * @return LazyloadedContent
 	 */
-	protected function generate_content( string $content ): LazyloadedContent {
-		$urls           = $this->extractor->extract( $content );
+	protected function generate_content( string $content, string $url = '' ): LazyloadedContent {
+		$urls           = $this->extractor->extract( $content, $url );
 		$formatted_urls = [];
 		foreach ( $urls as $url_tags ) {
 			$url_tags       = $this->add_hashes( $url_tags );

@@ -252,6 +252,11 @@ final class LearnDash_ProPanel {
 				// LearnDash_ProPanel_Shortcodes_Progress_Chart::get_instance();
 				// LearnDash_ProPanel_Shortcodes_Link::get_instance();
 			}
+
+			require_once LD_PP_PLUGIN_DIR . 'includes/class-ld-propanel-rest.php';
+
+			LearnDash_ProPanel_REST::get_instance();
+
 		}
 	}
 
@@ -271,41 +276,48 @@ final class LearnDash_ProPanel {
 			$is_dashboard = false;
 
 			if ( is_admin() ) {
-				$screen = get_current_screen();
-				if ( in_array( $screen->id, array( 'dashboard', 'dashboard_page_propanel-reporting' ) ) ) {
-					$force_load_scripts = true;
-					$is_dashboard       = true;
 
-					/**
-					 * Filters whether to show the ProPanel widgets on the Dashboard.
-					 *
-					 * @since 2.1.4.1
-					 *
-					 * @param boolean $is_dashboard Whether to show the Dashboard widgets.
-					 */
-					$is_dashboard = apply_filters( 'ld_propanel_dashboard_show_widgets', $is_dashboard );
-					if ( true !== $is_dashboard ) {
-						return;
+				if ( function_exists( 'get_current_screen' ) ) {
+
+					$screen = get_current_screen();
+					if ( in_array( $screen->id, array( 'dashboard', 'dashboard_page_propanel-reporting' ) ) ) {
+						$force_load_scripts = true;
+						$is_dashboard       = true;
+
 					}
+
 				}
+
+				/**
+				 * Filters whether to show the ProPanel widgets on the Dashboard.
+				 *
+				 * @since 2.1.4.1
+				 *
+				 * @param boolean $is_dashboard Whether to show the Dashboard widgets.
+				 */
+				$is_dashboard = apply_filters( 'ld_propanel_dashboard_show_widgets', $is_dashboard );
+				if ( true !== $is_dashboard ) {
+					return;
+				}
+
 			}
 
 			if ( true === $force_load_scripts ) {
 
 				$ld_script_prereq = array( 'jquery' );
 
-				wp_register_script( 'ld-propanel-chart-script', LD_PP_PLUGIN_URL . 'assets/vendor/Chart.js', array( 'jquery' ), LD_PP_VERSION, false );
+				wp_register_script( 'ld-propanel-chart-script', LD_PP_PLUGIN_URL . 'dist/vendor/Chart.js', array( 'jquery' ), LD_PP_VERSION, false );
 				$ld_script_prereq[] = 'ld-propanel-chart-script';
 
-				wp_register_script( 'ld-propanel-flatpickr-script', LD_PP_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.js', array(), LD_PP_VERSION, true );
+				wp_register_script( 'ld-propanel-flatpickr-script', LD_PP_PLUGIN_URL . 'dist/vendor/flatpickr/flatpickr.min.js', array(), LD_PP_VERSION, true );
 				$ld_script_prereq[] = 'ld-propanel-flatpickr-script';
-				wp_enqueue_style( 'ld-propanel-flatpickr-style', LD_PP_PLUGIN_URL . 'assets/vendor/flatpickr/flatpickr.min.css' );
+				wp_enqueue_style( 'ld-propanel-flatpickr-style', LD_PP_PLUGIN_URL . 'dist/vendor/flatpickr/flatpickr.min.css' );
 
-				wp_register_script( 'ld-propanel-select2-script', LD_PP_PLUGIN_URL . 'assets/vendor/select2-jquery/js/select2.full.min.js', array( 'jquery' ), '4.0.3', true );
+				wp_register_script( 'ld-propanel-select2-script', LD_PP_PLUGIN_URL . 'dist/vendor/select2-jquery/js/select2.full.min.js', array( 'jquery' ), '4.0.3', true );
 				$ld_script_prereq[] = 'ld-propanel-select2-script';
-				wp_enqueue_style( 'ld-propanel-select2-style', LD_PP_PLUGIN_URL . 'assets/vendor/select2-jquery/css/select2.min.css' );
+				wp_enqueue_style( 'ld-propanel-select2-style', LD_PP_PLUGIN_URL . 'dist/vendor/select2-jquery/css/select2.min.css' );
 
-				wp_register_script( 'ld-propanel-script', LD_PP_PLUGIN_URL . 'assets/js/ld-propanel.js', $ld_script_prereq, LD_PP_VERSION, true );
+				wp_register_script( 'ld-propanel-script', LD_PP_PLUGIN_URL . 'dist/js/ld-propanel.js', $ld_script_prereq, LD_PP_VERSION, true );
 
 				$pager_values = ld_propanel_get_pager_values();
 				if ( empty( $pager_values ) ) {
@@ -333,7 +345,7 @@ final class LearnDash_ProPanel {
 				if ( ! empty( $time_format ) ) {
 					$time_format = str_replace(
 						array( 'g', 'a', 'A', 'T' ),
-						array( 'G', 'K', 'K', '' ), 
+						array( 'G', 'K', 'K', '' ),
 						$time_format
 					);
 				}
@@ -389,7 +401,7 @@ final class LearnDash_ProPanel {
 
 				wp_enqueue_style( 'dashicons' );
 
-				wp_register_style( 'ld-propanel-style', LD_PP_PLUGIN_URL . 'assets/css/ld-propanel.css', null, LD_PP_VERSION );
+				wp_register_style( 'ld-propanel-style', LD_PP_PLUGIN_URL . 'dist/css/ld-propanel.css', null, LD_PP_VERSION );
 				wp_enqueue_style( 'ld-propanel-style' );
 				wp_style_add_data( 'ld-propanel-style', 'rtl', 'replace' );
 

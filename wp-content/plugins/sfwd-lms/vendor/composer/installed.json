@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "lucatume/di52",
-            "version": "3.3.3",
-            "version_normalized": "3.3.3.0",
+            "version": "3.3.5",
+            "version_normalized": "3.3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lucatume/di52.git",
-                "reference": "4185e21be2ac6c96bb1bb03970258352b6876bb2"
+                "reference": "d39d1cbbc57eb41c7aa21fab106e17b6938ec6b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lucatume/di52/zipball/4185e21be2ac6c96bb1bb03970258352b6876bb2",
-                "reference": "4185e21be2ac6c96bb1bb03970258352b6876bb2",
+                "url": "https://api.github.com/repos/lucatume/di52/zipball/d39d1cbbc57eb41c7aa21fab106e17b6938ec6b3",
+                "reference": "d39d1cbbc57eb41c7aa21fab106e17b6938ec6b3",
                 "shasum": ""
             },
             "require": {
@@ -23,7 +23,7 @@
             "require-dev": {
                 "phpunit/phpunit": "<10.0"
             },
-            "time": "2023-04-28T07:39:10+00:00",
+            "time": "2023-09-01T08:49:32+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -44,29 +44,29 @@
             "description": "A PHP 5.6 compatible dependency injection container.",
             "support": {
                 "issues": "https://github.com/lucatume/di52/issues",
-                "source": "https://github.com/lucatume/di52/tree/3.3.3"
+                "source": "https://github.com/lucatume/di52/tree/3.3.5"
             },
             "install-path": "../lucatume/di52"
         },
         {
             "name": "psr/container",
-            "version": "1.1.1",
-            "version_normalized": "1.1.1.0",
+            "version": "1.1.2",
+            "version_normalized": "1.1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
-                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/513e0666f7216c7459170d56df27dfcefe1689ea",
+                "reference": "513e0666f7216c7459170d56df27dfcefe1689ea",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
-            "time": "2021-03-05T17:36:06+00:00",
+            "time": "2021-11-05T16:50:12+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -95,29 +95,247 @@
             ],
             "support": {
                 "issues": "https://github.com/php-fig/container/issues",
-                "source": "https://github.com/php-fig/container/tree/1.1.1"
+                "source": "https://github.com/php-fig/container/tree/1.1.2"
             },
             "install-path": "../psr/container"
         },
         {
-            "name": "stellarwp/container-contract",
-            "version": "1.1.0",
-            "version_normalized": "1.1.0.0",
+            "name": "razorpay/razorpay",
+            "version": "2.9.0",
+            "version_normalized": "2.9.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stellarwp/container-contract.git",
-                "reference": "b1568be99b4d2d38446895d31a1c0f3718bf4d36"
+                "url": "https://github.com/razorpay/razorpay-php.git",
+                "reference": "a3d7c2bcb416091edd6a76eb5a7600eaf00ac837"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/container-contract/zipball/b1568be99b4d2d38446895d31a1c0f3718bf4d36",
-                "reference": "b1568be99b4d2d38446895d31a1c0f3718bf4d36",
+                "url": "https://api.github.com/repos/razorpay/razorpay-php/zipball/a3d7c2bcb416091edd6a76eb5a7600eaf00ac837",
+                "reference": "a3d7c2bcb416091edd6a76eb5a7600eaf00ac837",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.3",
+                "rmccue/requests": "^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9",
+                "raveren/kint": "1.*"
+            },
+            "time": "2023-12-18T04:19:46+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "Deprecated.php"
+                ],
+                "psr-4": {
+                    "Razorpay\\Api\\": "src/",
+                    "Razorpay\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abhay Rana",
+                    "email": "nemo@razorpay.com",
+                    "homepage": "https://captnemo.in",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Shashank Kumar",
+                    "email": "shashank@razorpay.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Razorpay PHP Client Library",
+            "homepage": "https://docs.razorpay.com",
+            "keywords": [
+                "api",
+                "client",
+                "php",
+                "razorpay"
+            ],
+            "support": {
+                "email": "contact@razorpay.com",
+                "issues": "https://github.com/Razorpay/razorpay-php/issues",
+                "source": "https://github.com/Razorpay/razorpay-php"
+            },
+            "install-path": "../razorpay/razorpay"
+        },
+        {
+            "name": "rmccue/requests",
+            "version": "v2.0.9",
+            "version_normalized": "2.0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WordPress/Requests.git",
+                "reference": "422612952ff3bd5163039f8889eaaaab95a432eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/WordPress/Requests/zipball/422612952ff3bd5163039f8889eaaaab95a432eb",
+                "reference": "422612952ff3bd5163039f8889eaaaab95a432eb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+                "php-parallel-lint/php-console-highlighter": "^0.5.0",
+                "php-parallel-lint/php-parallel-lint": "^1.3.1",
+                "phpcompatibility/php-compatibility": "^9.0",
+                "requests/test-server": "dev-main",
+                "roave/security-advisories": "dev-latest",
+                "squizlabs/php_codesniffer": "^3.6",
+                "wp-coding-standards/wpcs": "^2.0",
+                "yoast/phpunit-polyfills": "^1.0.0"
+            },
+            "suggest": {
+                "art4/requests-psr18-adapter": "For using Requests as a PSR-18 HTTP Client",
+                "ext-curl": "For improved performance",
+                "ext-openssl": "For secure transport support",
+                "ext-zlib": "For improved performance when decompressing encoded streams"
+            },
+            "time": "2023-11-08T19:22:04+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "library/Deprecated.php"
+                ],
+                "psr-4": {
+                    "WpOrg\\Requests\\": "src/"
+                },
+                "classmap": [
+                    "library/Requests.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan McCue",
+                    "homepage": "https://rmccue.io/"
+                },
+                {
+                    "name": "Alain Schlesser",
+                    "homepage": "https://github.com/schlessera"
+                },
+                {
+                    "name": "Juliette Reinders Folmer",
+                    "homepage": "https://github.com/jrfnl"
+                },
+                {
+                    "name": "Contributors",
+                    "homepage": "https://github.com/WordPress/Requests/graphs/contributors"
+                }
+            ],
+            "description": "A HTTP library written in PHP, for human beings.",
+            "homepage": "https://requests.ryanmccue.info/",
+            "keywords": [
+                "curl",
+                "fsockopen",
+                "http",
+                "idna",
+                "ipv6",
+                "iri",
+                "sockets"
+            ],
+            "support": {
+                "docs": "https://requests.ryanmccue.info/",
+                "issues": "https://github.com/WordPress/Requests/issues",
+                "source": "https://github.com/WordPress/Requests"
+            },
+            "install-path": "../rmccue/requests"
+        },
+        {
+            "name": "stellarwp/arrays",
+            "version": "1.2.2",
+            "version_normalized": "1.2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stellarwp/arrays.git",
+                "reference": "fe0a4cec1a299c196cc89bdba18ac99dea6bf5a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stellarwp/arrays/zipball/fe0a4cec1a299c196cc89bdba18ac99dea6bf5a2",
+                "reference": "fe0a4cec1a299c196cc89bdba18ac99dea6bf5a2",
+                "shasum": ""
+            },
+            "require-dev": {
+                "codeception/module-asserts": "^1.0",
+                "codeception/module-cli": "^1.0",
+                "codeception/module-db": "^1.0",
+                "codeception/module-filesystem": "^1.0",
+                "codeception/module-phpbrowser": "^1.0",
+                "codeception/module-rest": "^1.0",
+                "codeception/module-webdriver": "^1.0",
+                "codeception/util-universalframework": "^1.0",
+                "lucatume/wp-browser": "^3.0.14",
+                "phpunit/phpunit": "~6.0",
+                "saggre/phpdocumentor-markdown": "^0.1.3",
+                "symfony/event-dispatcher-contracts": "^2.5.1",
+                "symfony/string": "^5.4",
+                "szepeviktor/phpstan-wordpress": "^1.1"
+            },
+            "time": "2023-11-14T12:48:06+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "StellarWP\\Arrays\\": "src/Arrays/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "StellarWP",
+                    "email": "dev@stellarwp.com"
+                },
+                {
+                    "name": "Matthew Batchelder",
+                    "email": "matt.batchelder@stellarwp.com"
+                }
+            ],
+            "description": "A library for array manipulation.",
+            "support": {
+                "issues": "https://github.com/stellarwp/arrays/issues",
+                "source": "https://github.com/stellarwp/arrays/tree/1.2.2"
+            },
+            "install-path": "../stellarwp/arrays"
+        },
+        {
+            "name": "stellarwp/container-contract",
+            "version": "1.0.4",
+            "version_normalized": "1.0.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stellarwp/container-contract.git",
+                "reference": "37becc9edbecb0ff95556048337600dd9cc888f0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stellarwp/container-contract/zipball/37becc9edbecb0ff95556048337600dd9cc888f0",
+                "reference": "37becc9edbecb0ff95556048337600dd9cc888f0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0.0"
             },
-            "time": "2023-02-13T21:24:31+00:00",
+            "time": "2022-12-20T21:29:17+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -145,23 +363,23 @@
             ],
             "support": {
                 "issues": "https://github.com/stellarwp/container-contract/issues",
-                "source": "https://github.com/stellarwp/container-contract/tree/1.1.0"
+                "source": "https://github.com/stellarwp/container-contract/tree/1.0.4"
             },
             "install-path": "../stellarwp/container-contract"
         },
         {
             "name": "stellarwp/db",
-            "version": "1.0.4",
-            "version_normalized": "1.0.4.0",
+            "version": "1.1.0",
+            "version_normalized": "1.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stellarwp/db.git",
-                "reference": "728ef079b67092b4510ea26fd47eac86ef8fa1f2"
+                "reference": "9c76724be8b60e76b7281118e4ccdf2cc129f257"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/db/zipball/728ef079b67092b4510ea26fd47eac86ef8fa1f2",
-                "reference": "728ef079b67092b4510ea26fd47eac86ef8fa1f2",
+                "url": "https://api.github.com/repos/stellarwp/db/zipball/9c76724be8b60e76b7281118e4ccdf2cc129f257",
+                "reference": "9c76724be8b60e76b7281118e4ccdf2cc129f257",
                 "shasum": ""
             },
             "require-dev": {
@@ -179,7 +397,7 @@
                 "symfony/string": "^5.4",
                 "szepeviktor/phpstan-wordpress": "^1.1"
             },
-            "time": "2023-06-06T17:22:51+00:00",
+            "time": "2023-11-14T12:37:35+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -204,23 +422,76 @@
             "description": "A WPDB wrapper and query builder library.",
             "support": {
                 "issues": "https://github.com/stellarwp/db/issues",
-                "source": "https://github.com/stellarwp/db/tree/1.0.4"
+                "source": "https://github.com/stellarwp/db/tree/1.1.0"
             },
             "install-path": "../stellarwp/db"
         },
         {
-            "name": "stellarwp/models",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "name": "stellarwp/field-conditions",
+            "version": "1.1.1",
+            "version_normalized": "1.1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/stellarwp/models.git",
-                "reference": "a04aeb0898524d6538d0722629b6f04ff5018418"
+                "url": "https://github.com/stellarwp/field-conditions.git",
+                "reference": "03f5aff2f4977359e672efe5426bbb4ef62101cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stellarwp/models/zipball/a04aeb0898524d6538d0722629b6f04ff5018418",
-                "reference": "a04aeb0898524d6538d0722629b6f04ff5018418",
+                "url": "https://api.github.com/repos/stellarwp/field-conditions/zipball/03f5aff2f4977359e672efe5426bbb4ef62101cd",
+                "reference": "03f5aff2f4977359e672efe5426bbb4ef62101cd",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*"
+            },
+            "require-dev": {
+                "codeception/module-asserts": "^1.0.0",
+                "codeception/module-phpbrowser": "^1.0.0",
+                "lucatume/wp-browser": "^3.0.14",
+                "phpunit/phpunit": "~6.0"
+            },
+            "time": "2023-04-01T00:38:22+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "StellarWP\\FieldConditions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "StellarWP",
+                    "email": "dev@stellarwp.com"
+                },
+                {
+                    "name": "Jason Adams",
+                    "email": "jason.adams@givewp.com"
+                }
+            ],
+            "description": "A set of serializable classes for handling conditional logic for fields in PHP",
+            "support": {
+                "issues": "https://github.com/stellarwp/field-conditions/issues",
+                "source": "https://github.com/stellarwp/field-conditions/tree/1.1.1"
+            },
+            "install-path": "../stellarwp/field-conditions"
+        },
+        {
+            "name": "stellarwp/models",
+            "version": "1.2.1",
+            "version_normalized": "1.2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stellarwp/models.git",
+                "reference": "1e364cc54883ac43fc25f7fce652259439af0a89"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stellarwp/models/zipball/1e364cc54883ac43fc25f7fce652259439af0a89",
+                "reference": "1e364cc54883ac43fc25f7fce652259439af0a89",
                 "shasum": ""
             },
             "require": {
@@ -238,8 +509,7 @@
                 "lucatume/wp-browser": "^3.0.14",
                 "phpunit/phpunit": "~6.0"
             },
-            "time": "2023-03-16T20:45:27+00:00",
-            "default-branch": true,
+            "time": "2023-09-12T15:59:24+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -264,7 +534,7 @@
             ],
             "support": {
                 "issues": "https://github.com/stellarwp/models/issues",
-                "source": "https://github.com/stellarwp/models/tree/main"
+                "source": "https://github.com/stellarwp/models/tree/1.2.1"
             },
             "install-path": "../stellarwp/models"
         },
@@ -325,6 +595,124 @@
                 "source": "https://github.com/stellarwp/telemetry/tree/1.0.6"
             },
             "install-path": "../stellarwp/telemetry"
+        },
+        {
+            "name": "stellarwp/validation",
+            "version": "1.4.1",
+            "version_normalized": "1.4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stellarwp/validation.git",
+                "reference": "0f0d0dbc28b9b0780c61f81a6462c467e6d0358f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stellarwp/validation/zipball/0f0d0dbc28b9b0780c61f81a6462c467e6d0358f",
+                "reference": "0f0d0dbc28b9b0780c61f81a6462c467e6d0358f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "stellarwp/container-contract": "1.0.4",
+                "stellarwp/field-conditions": "^1.0"
+            },
+            "require-dev": {
+                "codeception/module-asserts": "^1.0.0",
+                "codeception/module-phpbrowser": "^1.0.0",
+                "lucatume/di52": "^3.0",
+                "lucatume/wp-browser": "^3.0.14",
+                "phpunit/phpunit": "~6.0"
+            },
+            "time": "2023-08-15T15:24:53+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "StellarWP\\Validation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "StellarWP",
+                    "email": "dev@stellarwp.com"
+                },
+                {
+                    "name": "Jason Adams",
+                    "email": "jason.adams@givewp.com"
+                }
+            ],
+            "description": "An end-to-end ready PHP validation library",
+            "support": {
+                "issues": "https://github.com/stellarwp/validation/issues",
+                "source": "https://github.com/stellarwp/validation/tree/1.4.1"
+            },
+            "install-path": "../stellarwp/validation"
+        },
+        {
+            "name": "stripe/stripe-php",
+            "version": "v13.6.0",
+            "version_normalized": "13.6.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stripe/stripe-php.git",
+                "reference": "6863bd70637fa1e2c022eceec44b89b7687634a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/6863bd70637fa1e2c022eceec44b89b7687634a1",
+                "reference": "6863bd70637fa1e2c022eceec44b89b7687634a1",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "3.5.0",
+                "phpstan/phpstan": "^1.2",
+                "phpunit/phpunit": "^5.7 || ^9.0"
+            },
+            "time": "2023-12-07T21:13:50+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Stripe\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Stripe and contributors",
+                    "homepage": "https://github.com/stripe/stripe-php/contributors"
+                }
+            ],
+            "description": "Stripe PHP Library",
+            "homepage": "https://stripe.com/",
+            "keywords": [
+                "api",
+                "payment processing",
+                "stripe"
+            ],
+            "support": {
+                "issues": "https://github.com/stripe/stripe-php/issues",
+                "source": "https://github.com/stripe/stripe-php/tree/v13.6.0"
+            },
+            "install-path": "../stripe/stripe-php"
         }
     ],
     "dev": false,

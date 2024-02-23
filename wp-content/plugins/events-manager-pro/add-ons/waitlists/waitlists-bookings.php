@@ -48,7 +48,7 @@ class Bookings {
 		add_filter('em_booking_form_header', '\EM\Waitlist\Bookings::em_booking_form_header', 10, 1);
 		
 		// my bookings page
-		add_filter('em_my_bookings_booking_actions', '\EM\Waitlist\Bookings::em_my_bookings_booking_actions', 10, 2);
+		add_filter('em_my_bookings_booking_action_links', '\EM\Waitlist\Bookings::em_my_bookings_booking_action_links', 10, 2);
 		// circumvent my bookings page to allow booking a waitlist approved event
 		if( !empty($_REQUEST['waitlist_booking']) ) {
 			add_filter('em_locate_template', '\EM\Waitlist\Bookings::em_locate_template', 1, 4);
@@ -406,13 +406,8 @@ class Bookings {
 		}elseif( $EM_Booking instanceof Booking ){
 			if( in_array($EM_Booking->booking_status, array(6,7)) ){
 				ob_start();
-				// include waitlist cancel button, it's still a single button if no $message supplied
-				$button_cancel = esc_html__('Cancel Waitlist Reservation', 'em-pro');
-				?>
-				<a id="em-cancel-button_<?php echo $EM_Booking->booking_id; ?>_<?php echo wp_create_nonce('booking_cancel'); ?>" class="button em-cancel-button" href="#">
-					<?php echo $button_cancel; ?>
-				</a>
-				<?php
+				static::$booking = $EM_Booking;
+				emp_locate_template('waitlists/button-cancel.php');
 				return ob_get_clean();
 			}
 		}
@@ -430,16 +425,16 @@ class Bookings {
 		}
 	}
 	
-	public static function em_my_bookings_booking_actions( $message, $EM_Booking){
+	public static function em_my_bookings_booking_action_links( $links, $EM_Booking){
 		if( $EM_Booking->booking_status == 7 ){
 			$EM_Booking = new Booking($EM_Booking);
 			$url = $EM_Booking->get_booking_url();
-			if( !empty($message) ){
-				$message .= '<br>';
-			}
-			$message .= ' <a href="'. esc_url($url) .'">'. esc_html_x('Book', 'Reserve a space', 'em-pro') . '</a> ';
+			$links[] = '<a href="'. esc_url($url) .'">'. esc_html_x('Book Now', 'Reserve a space', 'em-pro') . '</a> ';
 		}
-		return $message;
+		if( in_array($EM_Booking->booking_status, array(6,7)) ){
+			$links[] = '<a id="em-cancel-button_' . $EM_Booking->booking_id . '"  data-uuid="' . $EM_Booking->booking_uuid .'" data-_wpnonce="' . wp_create_nonce('waitlist_cancel_'.$EM_Booking->booking_id) .'" data-action="waitlist_cancel" class="button em-cancel-button" href="#">' . esc_html__('Cancel', 'em-pro') . '</a>';
+		}
+		return $links;
 	}
 	
 	public static function em_locate_template( $located, $template_name ){
@@ -464,7 +459,7 @@ class Bookings {
 	}
 	
 	/**
-	 * Modifies pending spaces calculations to include paypal bookings, but only if PayPal bookings are set to time-out (i.e. they'll get deleted after x minutes), therefore can be considered as 'pending' and can be reserved temporarily.
+	 * Modifies pending spaces calculations to include waitlisted bookings
 	 * @param integer $count
 	 * @param \EM_Bookings $EM_Bookings
 	 * @return integer

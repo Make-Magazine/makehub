@@ -8,6 +8,8 @@ if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');
 class ReminderEmailException extends \Exception { }
 
 abstract class BaseReminderEmail extends lib\BaseEmail {
+  public $reminder;
+
   // Override the constructor to setup reminders and then
   // call the parent constructor to get everything else setup
   public function __construct($args=array()) {

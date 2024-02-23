@@ -10,12 +10,12 @@
 .em-booking-form p.input-checkbox label { display:inline-block; width:100%; }
 .input-group .em-date-range input { width:100px; }
 .input-group .em-time-range input { width:80px; }
-div.em-gateway-buttons {
-	height:50px; width: 100%;
-	.first { padding-left:0px; margin-left:0px; border-left:none; }
-}
 /* Gateway */
-div.em-gateway-button { float:left; padding-left:20px; margin-left:20px; border-left:1px solid #777; }
+div.em-gateway-buttons {
+	.em-gateway-button-image {
+		margin-bottom : 15px;
+	}
+}
 .em-payment-gateway-form-info {
 	margin-bottom: 35px;
 }
@@ -28,6 +28,9 @@ div.em-gateway-button { float:left; padding-left:20px; margin-left:20px; border-
 		.em-booking-section {
 			&.em-booking-form-tickets {
 				padding: 10px 30px;
+			}
+			&.em-booking-section-manual {
+				padding-bottom: 0;
 			}
 		}
 		h3.em-booking-section-title {
@@ -48,6 +51,10 @@ div.em-gateway-button { float:left; padding-left:20px; margin-left:20px; border-
 		grid-gap: 10px;
 	}
 }
+.em.em-event-booking-form .em-booking-form-section-confirm .em-booking-form-section-coupons {
+	padding-bottom: 0;
+}
+
 /* Cart CSS */
 .em-cart-widget-content .em-cart-widget-total { border-top:1px solid #efefef; margin-top:5px; }
 .em-cart-actions { text-align:right; margin:10px 0px;}

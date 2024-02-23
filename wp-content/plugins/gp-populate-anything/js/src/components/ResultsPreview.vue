@@ -4,10 +4,10 @@
 		<div :id="'gppa-results-' + populate + '-thickbox'" style="display: none;" v-if="results && results.length">
 			<div class="gppa-results-preview-contents">
 				<div class="notice notice-warning notice-alt"
-					 style="margin: 0 0 15px;"
+					 style="margin: 0 0 15px;display:block;"
 					 v-if="results.length >= limit * .8">
 					<p>For optimal performance, only the first {{ limit }} results will be populated.
-						Increase this limit using the <a href="https://gravitywiz.com/documentation/gppa_query_limit/">gppa_query_limit</a> filter.</p>
+						You may increase this limit using the <a href="https://gravitywiz.com/documentation/gppa_query_limit/">gppa_query_limit</a> filter.</p>
 				</div>
 
 				<table class="wp-list-table widefat fixed striped">

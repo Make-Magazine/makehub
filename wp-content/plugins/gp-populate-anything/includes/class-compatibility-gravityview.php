@@ -14,14 +14,11 @@ class GPPA_Compatibility_GravityView {
 
 	public function __construct() {
 
-		add_filter( 'gppa_hydrate_initial_load_entry', array( $this, 'hydrate_initial_load_entry' ), 10, 4 );
+		add_filter( 'gppa_populate_form_entry', array( $this, 'populate_form_entry' ), 10, 4 );
 
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'hydrate_gravityview_search_filters' ), 10, 4 );
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'localize_for_search' ), 10, 4 );
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'add_gravityview_id_filter' ), 10, 4 );
-
-		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'gravityview_inline_edit_choices' ), 15, 6 );
-		add_filter( 'gravityview-inline-edit/select-wrapper-attributes', array( $this, 'gravityview_inline_edit_choices' ), 15, 6 );
 
 		add_filter( 'gppa_field_filter_values', array( $this, 'field_filter_values_replace_filter_prefix' ), 10, 6 );
 		add_filter( 'gppa_get_batch_field_html', array( $this, 'render_search_field' ), 10, 6 );
@@ -29,11 +26,14 @@ class GPPA_Compatibility_GravityView {
 		add_filter( 'gravityview/fields/custom/form', array( $this, 'hydrate_submitted_entry_choices' ), 10, 2 );
 
 		add_filter( 'gravityview/template/field/context', array( $this, 'replace_live_merge_tags_in_html_field_content' ) );
+		add_filter( 'gravityview/template/field/label', array( $this, 'replace_live_merge_tags_in_single_entry_view' ), 10, 2 );
 
 	}
 
 	/**
 	 * Hydrate form field choices so merge tag labels work properly and do not return only the value.
+	 *
+	 * @todo write a test for this
 	 *
 	 * @param $form array Current form
 	 * @param $entry array Current entry being displayed in GravityView
@@ -41,9 +41,17 @@ class GPPA_Compatibility_GravityView {
 	 * @return array Form with hydrated choices
 	 */
 	public function hydrate_submitted_entry_choices( $form, $entry ) {
-		$form = gp_populate_anything()->modify_admin_field_choices( $form, false, $entry );
+		static $forms = array();
 
-		return $form;
+		$cache_key = $form['id'] . '-' . $entry['id'];
+
+		if ( rgar( $forms, $cache_key ) ) {
+			return $forms[ $cache_key ];
+		}
+
+		$forms[ $cache_key ] = gp_populate_anything()->populate_form( $form, false, array(), $entry );
+
+		return $forms[ $cache_key ];
 	}
 
 	/**
@@ -55,6 +63,7 @@ class GPPA_Compatibility_GravityView {
 	public function get_widget_form( $widget_args, $context ) {
 		$form_id = rgar( $widget_args, 'form_id' );
 
+		/** @phpstan-ignore-next-line Without null-safe operators, it doesn't seem wise to remove these checks. */
 		if ( ! $form_id && ! empty( $context->view ) && ! empty( $context->view->form ) && isset( $context->view->form->ID ) ) {
 			$form_id = $context->view->form->ID;
 		}
@@ -66,7 +75,7 @@ class GPPA_Compatibility_GravityView {
 	 * If editing a form with Gravity View's edit screen, then the form should be hydrated with fields from the current
 	 * entry.
 	 */
-	public function hydrate_initial_load_entry( $entry, $form, $ajax, $field_values ) {
+	public function populate_form_entry( $entry, $form, $ajax, $field_values ) {
 
 		if ( ! class_exists( 'GravityView_frontend' ) ) {
 			return $entry;
@@ -82,18 +91,26 @@ class GPPA_Compatibility_GravityView {
 	}
 
 	/**
+	 * @deprecated 2.0 Use GPPA_Compatibility_GravityView::populate_form_entry()
+	 */
+	public function hydrate_initial_load_entry( $entry, $form, $ajax, $field_values ) {
+		return $this->populate_form_entry( $entry, $form, $ajax, $field_values );
+	}
+
+
+	/**
 	 * @param array $search_fields Array of search filters with `key`, `label`, `value`, `type`, `choices` keys
-	 * @param GravityView_Widget_Search $this Current widget object
+	 * @param GravityView_Widget_Search $widget Current widget object
 	 * @param array $widget_args Args passed to this method.
 	 * @param \GV\Template_Context $context
 	 */
-	public function hydrate_gravityview_search_filters( $search_fields, $self, $widget_args, $context ) {
+	public function hydrate_gravityview_search_filters( $search_fields, $widget, $widget_args, $context ) {
 		$form = $this->get_widget_form( $widget_args, $context );
 
 		foreach ( $search_fields as $search_field_index => $search_field ) {
 			$field = GFFormsModel::get_field( $form, $search_field['key'] );
 
-			$hydrated_field   = gp_populate_anything()->hydrate_field( $field, $form, $this->get_gravityview_filter_values() );
+			$hydrated_field   = gp_populate_anything()->populate_field( $field, $form, $this->get_gravityview_filter_values() );
 			$hydrated_choices = rgars( $hydrated_field, 'field/choices' );
 
 			if ( $hydrated_choices === rgar( $search_field, 'choices' ) ) {
@@ -142,17 +159,18 @@ class GPPA_Compatibility_GravityView {
 
 	/**
 	 * @param array $search_fields Array of search filters with `key`, `label`, `value`, `type`, `choices` keys
-	 * @param GravityView_Widget_Search $this Current widget object
+	 * @param GravityView_Widget_Search $widget Current widget object
 	 * @param array $widget_args Args passed to this method.
 	 * @param \GV\Template_Context $context
 	 */
-	public function localize_for_search( $search_fields, $self, $widget_args, $context ) {
+	public function localize_for_search( $search_fields, $widget, $widget_args, $context ) {
 		$form = $this->get_widget_form( $widget_args, $context );
 
 		gp_populate_anything()->field_value_js( $form );
 		gp_populate_anything()->field_value_object_js( $form );
 
 		// Ensure that the scripts are enqueued as there may not be a form present.
+		// @phpstan-ignore-next-line
 		if ( is_callable( array( 'GFCommon', 'output_hooks_javascript' ) ) ) {
 			GFCommon::output_hooks_javascript();
 		}
@@ -164,11 +182,11 @@ class GPPA_Compatibility_GravityView {
 
 	/**
 	 * @param array $search_fields Array of search filters with `key`, `label`, `value`, `type`, `choices` keys
-	 * @param GravityView_Widget_Search $this Current widget object
+	 * @param GravityView_Widget_Search $widget Current widget object
 	 * @param array $widget_args Args passed to this method.
 	 * @param \GV\Template_Context $context
 	 */
-	public function add_gravityview_id_filter( $search_fields, $self, $widget_args, $context ) {
+	public function add_gravityview_id_filter( $search_fields, $widget, $widget_args, $context ) {
 		$form    = $this->get_widget_form( $widget_args, $context );
 		$form_id = rgar( $form, 'id' );
 
@@ -253,6 +271,7 @@ class GPPA_Compatibility_GravityView {
 			$search_field['value'] = $value;
 		}
 
+		// @phpstan-ignore-next-line
 		\GravityView_View::getInstance()->search_field = $search_field;
 
 		ob_start();
@@ -284,6 +303,19 @@ class GPPA_Compatibility_GravityView {
 		}
 
 		return $context;
+	}
+
+	public function replace_live_merge_tags_in_single_entry_view( $column_label, $context ) {
+		// ensure we only do when entry data is accessible like single entry view, and not in Table view.
+		if ( isset( $context->entry ) && $context->entry->ID !== null ) {
+			$entry = GFAPI::get_entry( $context->entry->ID );
+			$form  = GFAPI::get_form( $entry['form_id'] );
+
+			gp_populate_anything()->live_merge_tags->populate_lmt_whitelist( $form );
+			$column_label = gp_populate_anything()->live_merge_tags->replace_live_merge_tags_static( $column_label, $form, $entry );
+		}
+
+		return $column_label;
 	}
 
 }

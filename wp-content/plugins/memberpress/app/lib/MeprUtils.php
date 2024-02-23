@@ -550,7 +550,9 @@ class MeprUtils {
     $new_price = $new_sub->price;
     $days_in_new_period = $new_sub->days_in_this_period(true);
 
-    if( $new_sub->trial && $new_sub->trial_amount > 0.00 ) {
+    if($new_sub->trial && $new_sub->trial_amount > 0.00 ||
+        ($coupon = $new_sub->coupon()) && ($coupon->discount_mode == 'first-payment' || $coupon->discount_mode == 'trial-override')
+    ) {
       $new_price = $new_sub->trial_amount;
       $days_in_new_period = $new_sub->trial_days;
     }
@@ -2329,6 +2331,7 @@ class MeprUtils {
       array('index' => 6, 'slug' => 'memberpress-pro-5', 'name' => 'MemberPress Pro'),
       array('index' => 7, 'slug' => 'memberpress-reseller', 'name' => 'MemberPress Reseller'),
       array('index' => 8, 'slug' => 'memberpress-oem', 'name' => 'MemberPress OEM'),
+      array('index' => 9, 'slug' => 'memberpress-elite', 'name' => 'MemberPress Elite'),
     );
 
     if(preg_match('/^memberpress-reseller-.+$/', $product_slug)) {
@@ -2474,5 +2477,35 @@ class MeprUtils {
    */
   public static function new_badge() {
     return sprintf('<span class="mepr-new-badge">%s</span>', esc_html__('NEW', 'memberpress'));
+  }
+
+  /**
+   * Performs a case-sensitive check indicating if needle is
+   * contained in haystack.
+   *
+   * @param string $haystack The string to search in.
+   * @param string $needle   The substring to search for in the `$haystack`.
+   * @return bool True if `$needle` is in `$haystack`, otherwise false.
+   */
+  public static function str_contains( $haystack, $needle ) {
+    if ( '' === $needle ) {
+      return true;
+    }
+
+    return false !== strpos( $haystack, $needle );
+  }
+
+  /**
+   * Is the given product slug an Elite edition of MemberPress?
+   *
+   * @param string $product_slug
+   * @return bool
+   */
+  public static function is_elite_edition($product_slug) {
+    if(empty($product_slug)) {
+      return false;
+    }
+
+    return in_array($product_slug, ['memberpress-elite'], true);
   }
 } // End class

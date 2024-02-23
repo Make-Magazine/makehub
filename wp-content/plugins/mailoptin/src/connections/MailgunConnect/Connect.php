@@ -77,11 +77,12 @@ class Connect extends AbstractMailgunConnect implements ConnectionInterface
             // an array with list id as key and name as value.
             $lists_array = [];
 
-            if (is_array($response['body']['items'])) {
+            if (isset($response['body']['items']) && is_array($response['body']['items'])) {
 
                 foreach ($response['body']['items'] as $list) {
                     $lists_array[$list['address']] = $list['name'];
                 }
+
             } else {
                 throw new \Exception(is_string($response['body']) ? $response['body'] : wp_json_encode($response['body']));
             }

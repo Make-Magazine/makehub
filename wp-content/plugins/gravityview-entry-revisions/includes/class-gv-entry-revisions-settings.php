@@ -41,10 +41,13 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	private static $_instance = null;
 
 	/** @var string The setting name for default Inline Edit support. */
-	const INLINE_EDIT_GLOBAL_SETTING = 'inline_edit_create_revisions';
+	const GRAVITYEDIT_GLOBAL_SETTING = 'inline_edit_create_revisions';
+
+	/** @var int The default value for the global Inline Edit setting. */
+	const GRAVITYEDIT_GLOBAL_SETTING_DEFAULT = 1;
 
 	/** @var string The setting name for per-form Inline Edit support. */
-	const INLINE_EDIT_FORM_SETTING = 'inline_edit_create_revisions_per_form';
+	const GRAVITYEDIT_FORM_SETTING = 'inline_edit_create_revisions_per_form';
 
 	public function __construct() {
 
@@ -52,15 +55,17 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 			return self::$_instance;
 		}
 
-		$this->_short_title = esc_html__( 'Entry Revisions', 'gk-gravityrevisions' );
+		$this->_short_title = esc_html__( 'GravityRevisions', 'gk-gravityrevisions' );
 
-		add_filter( 'gform_form_settings_fields', array( $this, 'add_form_settings_fields' ), 20 );
+		add_filter( 'gform_form_settings_fields', [ $this, 'add_form_settings_fields' ], 20 );
+
+		add_filter( 'gk/foundation/settings/data/plugins', [ $this, 'update_gravityedit_foundation_settings' ], 20 );
 
 		parent::__construct();
 	}
 
 	/**
-	 * Adds a per-form option to enable or disable Entry Revisions for Inline Edit changes.
+	 * Adds a per-form option to enable or disable GravityRevisions for Inline Edit changes.
 	 *
 	 * @since 1.2
 	 *
@@ -69,46 +74,43 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	 * @return array
 	 */
 	public function add_form_settings_fields( $fields ) {
+		$gravityedit_setting = null;
 
-		$setting = $this->get_plugin_setting(self::INLINE_EDIT_GLOBAL_SETTING );
-
-		// If global settings haven't yet been configured, set to enabled.
-		if ( is_null( $setting ) ) {
-			$setting = '1';
+		if ( class_exists( 'GravityKitFoundation' ) && GravityKitFoundation::settings() ) {
+			$gravityedit_setting = GravityKitFoundation::settings()->get_plugin_setting( 'gravityedit', self::GRAVITYEDIT_GLOBAL_SETTING );
 		}
 
-		// If Inline Edit isn't active, don't remove the form setting if it has been already set.
-		if ( ! $this->is_gravityedit_activated() && ! is_null( $setting ) ) {
-
-			$fields['form_options']['fields'][] = array(
-				'name'          => self::INLINE_EDIT_FORM_SETTING,
-				'type'          => 'hidden',
-				'value' => $setting,
-			);
+		// If Inline Edit isn't active, don't remove the form setting if it has already been set.
+		if ( ! self::is_gravityedit_activated() && ! is_null( $gravityedit_setting ) ) {
+			$fields['form_options']['fields'][] = [
+				'name'  => self::GRAVITYEDIT_FORM_SETTING,
+				'type'  => 'hidden',
+				'value' => (string) $gravityedit_setting,
+			];
 
 			return $fields;
 		}
 
-		$fields['form_options']['fields'][] = array(
-			'name'          => self::INLINE_EDIT_FORM_SETTING,
+		$fields['form_options']['fields'][] = [
+			'name'          => self::GRAVITYEDIT_FORM_SETTING,
 			'type'          => 'radio',
 			'label'         => esc_html__( 'Inline Edit Behavior', 'gk-gravityrevisions' ),
 			'description'   => '<p class="clear">' . esc_html__( 'Should edits made using the Inline Edit plugin create revisions?', 'gk-gravityrevisions' ) . '</p>',
-			'default_value' => $setting,
-			'dependency'    => array(
+			'default_value' => (string) $gravityedit_setting ?? self::GRAVITYEDIT_GLOBAL_SETTING_DEFAULT,
+			'dependency'    => [
 				'live'   => true,
-				'fields' => array(
-					array(
+				'fields' => [
+					[
 						'field'  => 'gv_inline_edit_enable',
-						'values' => array( '1', true ),
-					),
-				),
-			),
-			'choices'       => array(
-				array( 'label' => esc_html__( 'Add revisions for edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '1' ),
-				array( 'label' => esc_html__( 'Ignore edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '0' ),
-			),
-		);
+						'values' => [ '1', true ],
+					],
+				],
+			],
+			'choices'       => [
+				[ 'label' => esc_html__( 'Add revisions for edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '1' ],
+				[ 'label' => esc_html__( 'Ignore edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '0' ],
+			],
+		];
 
 		return $fields;
 	}
@@ -118,7 +120,7 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	 *
 	 * @since 1.0.3 Fixes conflict with Import Entries plugin
 	 *
-	 * @return bool True: Settings form is being saved and the Entry Revisions setting is in the posted values (form settings)
+	 * @return bool True: Settings form is being saved and the GravityRevisions setting is in the posted values (form settings)
 	 */
 	public function is_save_postback() {
 
@@ -149,46 +151,79 @@ class GV_Entry_Revisions_Settings extends GFAddOn {
 	}
 
 	/**
-	 * Define the plugin addon settings
+	 * Adds a revisions setting to GravityEdit settings.
 	 *
-	 * @since 1.0
+	 * @since 1.2.11
 	 *
-	 * @return array Array that contains plugin settings
+	 * @param array $plugins_data Plugins data.
+	 *
+	 * @return array $plugins_data
 	 */
-	public function plugin_settings_fields() {
-
-		$fields = array();
-
-		if ( $this->is_gravityedit_activated() ) {
-			$fields[] = array(
-				'name'          => self::INLINE_EDIT_GLOBAL_SETTING,
-				'label'         => esc_html__( 'Default Inline Edit Behavior', 'gk-gravityrevisions' ),
-				'description'   => '<p class="clear">' . esc_html__( 'Should edits made using the Inline Edit plugin create revisions?', 'gk-gravityrevisions' ) . ' ' . esc_html__( 'Note: This is the global default. You may override this setting in a form&rsquo;s Settings page.', 'gk-gravityrevisions' ) . '</p>',
-				'type'          => 'radio',
-				'default_value' => '1',
-				'choices'       => array(
-					array( 'label' => esc_html__( 'Add revisions for edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '1' ),
-					array( 'label' => esc_html__( 'Ignore edits made using Inline Edit', 'gk-gravityrevisions' ), 'value' => '0' ),
-				),
-			);
+	function update_gravityedit_foundation_settings( $plugins_data ) {
+		if ( ! class_exists( 'GravityKitFoundation' ) || ! GravityKitFoundation::settings() || ! self::is_gravityedit_activated() ) {
+			return $plugins_data;
 		}
 
-		return array(
-			array(
-				'title'  => '',
-				'fields' => $fields,
-			)
-		);
+		$plugin_id = 'gravityedit';
+
+		$default_settings = [
+			self::GRAVITYEDIT_GLOBAL_SETTING => 1,
+		];
+
+		if ( ! isset( $plugins_data[ $plugin_id ] ) || empty( $plugins_data[ $plugin_id ]['sections'][0]['settings'] ) ) {
+			return $plugins_data;
+		}
+
+		$plugin_settings = GravityKitFoundation::settings()->get_plugin_settings( $plugin_id );
+
+		if ( empty( $plugin_settings ) ) {
+			$plugin_settings = $this->migrate_legacy_settings() ?? $default_settings;
+		}
+
+		$plugins_data[ $plugin_id ]['sections'][0]['settings'][] = [
+			'id'            => self::GRAVITYEDIT_GLOBAL_SETTING,
+			'type'          => 'checkbox',
+			'title'         => esc_html__( 'Save Revisions', 'gk-gravityrevisions' ),
+			'description'   => esc_html__( 'Should revisions be saved for all inline edits?', 'gk-gravityrevisions' ) . '<br><br>' . esc_html__( 'Note: This is the global default. You may override this setting in a form&rsquo;s Settings page.', 'gk-gravityrevisions' ),
+			'default_value' => $default_settings[ self::GRAVITYEDIT_GLOBAL_SETTING ],
+			'value'         => $plugin_settings[ self::GRAVITYEDIT_GLOBAL_SETTING ] ?? $default_settings[ self::GRAVITYEDIT_GLOBAL_SETTING ],
+		];
+
+		return $plugins_data;
 	}
 
 	/**
-	 * Returns whether the GravityEdit plugin is activated
+	 * Migrates GravityRevisions <1.2.11 settings from the GF settings framework to Foundation.
+	 *
+	 * @since 1.2.11
+	 *
+	 * @return array
+	 */
+	public function migrate_legacy_settings() {
+		$legacy_settings = get_option( 'gravityformsaddon_' . $this->_slug . '_settings' );
+
+		if ( empty( $legacy_settings ) ) {
+			return [];
+		}
+
+		$plugin_settings = [
+			self::GRAVITYEDIT_GLOBAL_SETTING => (int) $legacy_settings[ self::GRAVITYEDIT_GLOBAL_SETTING ] ?? 1,
+		];
+
+		GravityKitFoundation::settings()->save_plugin_setting( 'gravityedit', self::GRAVITYEDIT_GLOBAL_SETTING, (int) $legacy_settings[ self::GRAVITYEDIT_GLOBAL_SETTING ] ?? self::GRAVITYEDIT_GLOBAL_SETTING_DEFAULT );
+
+		return $plugin_settings;
+	}
+
+	/**
+	 * Returns whether the GravityEdit plugin is activated.
 	 *
 	 * @since 1.2
+	 * @since 1.2.11 Converted to static method.
 	 *
 	 * @return bool
 	 */
-	private function is_gravityedit_activated() {
+	public static function is_gravityedit_activated() {
 		return defined( 'GRAVITYVIEW_INLINE_VERSION' ) || defined( 'GRAVITYEDIT_VERSION' );
 	}
 

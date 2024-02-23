@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -16,14 +16,14 @@ class Helpers {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $url
-	 * @param array  $args
+	 * @param string $url API URL.
+	 * @param array  $args Request arguments.
 	 *
 	 * @throws Exception
 	 *
 	 * @return array|null Response body.
 	 */
-	static function query_api( $url, array $args = [] ) {
+	public static function query_api( $url, array $args = [] ) {
 		$request_parameters = [
 			'timeout'   => 15,
 			'sslverify' => false,

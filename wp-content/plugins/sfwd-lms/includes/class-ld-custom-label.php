@@ -32,6 +32,15 @@ class LearnDash_Custom_Label {
 	public static $button_take_group = 'button_take_this_group';
 
 	/**
+	 * Button skip event.
+	 *
+	 * @since 4.12.0
+	 *
+	 * @var string
+	 */
+	public static $button_skip_event = 'button_skip_event';
+
+	/**
 	 * Get label based on key name.
 	 *
 	 * @param string $key Key name of setting field.
@@ -160,6 +169,10 @@ class LearnDash_Custom_Label {
 
 				case 'button_mark_complete':
 					$label = esc_html__( 'Mark Complete', 'learndash' );
+					break;
+
+				case self::$button_skip_event:
+					$label = esc_html__( 'Skip Event', 'learndash' );
 					break;
 
 				case 'button_click_here_to_continue':

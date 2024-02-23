@@ -474,6 +474,9 @@ class Classic_Search {
 		}
 
 		// If no results, nothing to do.
+		if ( ! is_countable( $this->search_result['results']['hits'] ) ) {
+			return array();
+		}
 		if ( ! count( $this->search_result['results']['hits'] ) ) {
 			return array();
 		}
@@ -1867,7 +1870,7 @@ class Classic_Search {
 		$changed = false;
 
 		foreach ( $sidebars_widgets as $sidebar => $widgets ) {
-			if ( 'wp_inactive_widgets' === $sidebar || 'orphaned_widgets' === substr( $sidebar, 0, 16 ) ) {
+			if ( 'wp_inactive_widgets' === $sidebar || str_starts_with( $sidebar, 'orphaned_widgets' ) ) {
 				continue;
 			}
 

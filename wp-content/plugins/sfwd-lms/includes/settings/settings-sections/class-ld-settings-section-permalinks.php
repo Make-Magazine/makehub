@@ -88,9 +88,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			if ( false === $this->setting_option_values ) {
-				$this->setting_option_values = array();
-
+			if ( empty( $this->setting_option_values ) ) {
 				// On the initial if we don't have saved values we grab them from the Custom Labels.
 				$custom_label_settings = get_option( 'learndash_custom_label_settings', array() );
 

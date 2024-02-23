@@ -16,7 +16,8 @@ if (!empty($subscriptions)) {
     <table class="mepr-pro-account-table">
       <thead>
         <tr>
-          <th scope="col"><?php _ex('Subscription', 'ui', 'memberpress'); ?></th>
+          <th scope="col"><?php _ex('Membership', 'ui', 'memberpress'); ?></th>
+          <th scope="col"><?php _ex('Terms', 'ui', 'memberpress'); ?></th>
           <th scope="col"><?php _ex('Status', 'ui', 'memberpress'); ?></th>
           <th scope="col"><?php _ex('Dates', 'ui', 'memberpress'); ?></th>
           <th scope="col" style="width: 30px;"><span class="screen-reader-text"><?php _ex('Actions', 'ui', 'memberpress'); ?></span>
@@ -78,7 +79,7 @@ if (!empty($subscriptions)) {
                 $pm->print_user_account_subscription_row_actions($subscription);
               }
             } elseif (!$is_sub && !empty($prd->ID)) {
-              if ($prd->is_renewable() && $prd->is_renewal()) {
+              if ($prd->is_one_time_payment() && $prd->is_renewable() && $prd->is_renewal()) {
               ?>
                 <a href="<?php echo $prd->url(); ?>" class="mepr-account-row-action mepr-account-renew"><?php _ex('Renew', 'ui', 'memberpress'); ?></a>
               <?php
@@ -114,7 +115,7 @@ if (!empty($subscriptions)) {
         ?>
 
           <tr x-data="{open:false}">
-            <td data-label="<?php _ex('Subscription', 'ui', 'memberpress'); ?>">
+            <td data-label="<?php _ex('Membership', 'ui', 'memberpress'); ?>">
               <div class="mepr-pro-account-table__product">
                 <?php if (isset($prd->access_url) && !empty($prd->access_url)) : ?>
                   <a href="<?php echo stripslashes($prd->access_url); ?>"><?php echo MeprHooks::apply_filters('mepr-account-subscr-product-name', $prd->post_title, $txn); ?></a>
@@ -127,6 +128,33 @@ if (!empty($subscriptions)) {
                   <?php echo $s->subscr_id; ?>
                 <?php endif; ?>
               </div>
+            </td>
+            <td data-label="<?php _ex('Terms', 'ui', 'memberpress'); ?>">
+              <?php if($prd->register_price_action != 'hidden'): ?>
+                <div class="mepr-pro-account-terms">
+                  <?php
+                  if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()) {
+                    MeprHooks::do_action('mepr_account_subscriptions_sub_account_terms', $txn);
+                  } else {
+                    if($prd->register_price_action == 'custom' && !empty($prd->register_price)) {
+                      //Add coupon in if one was used eh
+                      $coupon_str = '';
+                      if($is_sub) {
+                        $subscr = new MeprSubscription($s->id);
+
+                        if($subscr->coupon_id && ($coupon = new MeprCoupon($subscr->coupon_id)) && isset($coupon->ID) && $coupon->ID) {
+                          $coupon_str = ' ' . _x('with coupon', 'ui', 'memberpress') . ' ' . $coupon->post_title;
+                        }
+                      }
+                      echo esc_html(stripslashes($prd->register_price) . $coupon_str);
+                    }
+                    else if($txn != false && $txn instanceof MeprTransaction) {
+                      echo esc_html(MeprTransactionsHelper::format_currency($txn));
+                    }
+                  }
+                  ?>
+                </div>
+              <?php endif; ?>
             </td>
             <td data-label="<?php _ex('Status', 'ui', 'memberpress'); ?>">
               <?php
@@ -152,6 +180,20 @@ if (!empty($subscriptions)) {
                   <?php printf(_x('Expired: %s', 'ui', 'memberpress'), MeprAppHelper::format_date($nba)); ?>
                 <?php endif; ?>
               </div>
+              <div class="mepr-pro-account-table__subscription">
+                <?php if($txn != false && $txn instanceof MeprTransaction && $txn->is_sub_account()) {
+                  ?>
+                  <div class="mepr-pro-account-sub-account-auto-rebill">
+                    <?php _ex('Sub Account', 'ui', 'memberpress'); ?>
+                    <?php MeprHooks::do_action('mepr_account_subscriptions_sub_account_auto_rebill', $txn); ?>
+                  </div>
+                <?php
+                } else {
+                  if(is_null($s->expires_at) or $s->expires_at == MeprUtils::db_lifetime()):
+                    _ex('Lifetime', 'ui', 'memberpress');
+                  endif;
+                } ?>
+              </div>
             </td>
             <td class="mepr-pro-account-table__col-actions" data-label="<?php _ex('Actions', 'ui', 'memberpress'); ?>">
               <?php if ( $row_actions ) { ?>
@@ -164,6 +206,7 @@ if (!empty($subscriptions)) {
                 </div>
               <?php } ?>
             </td>
+            <?php MeprHooks::do_action('mepr-account-subscriptions-td', $mepr_current_user, $s, $txn, $is_sub); ?>
           </tr>
         <?php endforeach; ?>
         <?php MeprHooks::do_action('mepr-account-subscriptions-table', $mepr_current_user, $subscriptions); ?>

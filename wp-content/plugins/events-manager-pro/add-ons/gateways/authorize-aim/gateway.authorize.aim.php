@@ -15,6 +15,7 @@ class Gateway extends EM\Payments\Gateway {
 	public static $button_enabled = false; //we can's use a button here
 	public static $count_pending_spaces = true;
 	public static $supports_multiple_bookings = true;
+	public static $supports_manual_bookings = true;
 	public static $transaction_detail = array(
 		'https://account.authorize.net/ui/themes/anet/Transaction/TransactionReceipt.aspx?transid=%s',
 		'https://sandbox.authorize.net/ui/themes/sandbox/Transaction/TransactionReceipt.aspx?transid=%s',

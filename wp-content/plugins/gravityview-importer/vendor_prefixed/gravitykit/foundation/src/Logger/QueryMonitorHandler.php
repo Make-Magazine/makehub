@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -21,8 +21,13 @@ class QueryMonitorHandler extends AbstractProcessingHandler {
 	 * {@inheritdoc}
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param int|string $level  The minimum logging level at which this handler will be triggered.
+	 * @param bool       $bubble Whether the messages that are handled can bubble up the stack or not.
+	 *
+	 * @return void
 	 */
-	public function __construct( $level = MonologLogger::DEBUG, $bubble = true ) {
+	public function __construct( $level = MonologLogger::DEBUG, $bubble = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		parent::__construct( $level, $bubble );
 	}
 
@@ -30,10 +35,14 @@ class QueryMonitorHandler extends AbstractProcessingHandler {
 	 * {@inheritdoc}
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param array $record The record to process.
+	 *
+	 * @return void
 	 */
 	protected function write( array $record ) {
 		$level = strtolower( $record['level_name'] );
 
-		do_action( "qm/${level}", $record['formatted'] );
+		do_action( "qm/{$level}", $record['formatted'] );
 	}
 }

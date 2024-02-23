@@ -20,8 +20,10 @@ class GPPA_Compatibility_JetSloth_Image_Choices {
 		add_filter( 'gppa_input_choice', array( $this, 'add_image_to_choice' ), 10, 4 );
 		add_action( 'gform_editor_js', array( $this, 'add_image_choice_template' ), 1 );
 
-		remove_filter( 'gform_footer_init_scripts_filter', array( gf_image_choices(), 'add_inline_options_label_lookup' ) );
-		add_filter( 'gform_footer_init_scripts_filter', array( $this, 'add_inline_options_label_lookup' ), 10, 3 );
+		if ( method_exists( gf_image_choices(), 'add_inline_options_label_lookup' ) ) {
+			remove_filter( 'gform_footer_init_scripts_filter', array( gf_image_choices(), 'add_inline_options_label_lookup' ) );
+			add_filter( 'gform_footer_init_scripts_filter', array( $this, 'add_inline_options_label_lookup' ), 10, 3 );
+		}
 	}
 
 	public function add_image_to_choice( $choice, $field, $object, $objects ) {
@@ -59,6 +61,13 @@ class GPPA_Compatibility_JetSloth_Image_Choices {
 						id: 'imageChoices_image',
 						label: '<?php echo esc_js( __( 'Image', 'gp-populate-anything' ) ); ?>',
 						required: false,
+						shouldShow: function( field, populate ) {
+							if ( populate !== 'choices' ) {
+								return false;
+							}
+
+							return ! ! field['imageChoices_enableImages'];
+						},
 					} );
 				}
 
@@ -78,8 +87,9 @@ class GPPA_Compatibility_JetSloth_Image_Choices {
 	 * @return string
 	 */
 	public function add_inline_options_label_lookup( $form_string, $form, $current_page ) {
-		$form = gp_populate_anything()->hydrate_initial_load( $form );
+		$form = gp_populate_anything()->populate_form( $form );
 
+		// @phpstan-ignore-next-line
 		return gf_image_choices()->add_inline_options_label_lookup( $form_string, $form, $current_page );
 	}
 

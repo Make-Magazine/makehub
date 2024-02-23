@@ -36,7 +36,7 @@ class ConnectSettingsPage
                 'label'         => __('Enter API Key', 'mailoptin'),
                 'description'   => sprintf(
                     __('%sGet your API key here%s', 'mailoptin'),
-                    '<a target="_blank" href="https://app.omnisend.com/#/my-account/integrations/api-keys">',
+                    '<a target="_blank" href="https://app.omnisend.com/integrations/api-keys">',
                     '</a>'
                 )
             ]

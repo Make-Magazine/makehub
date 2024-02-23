@@ -23,7 +23,7 @@ if( !class_exists('EM_Gateways') ) {
 			_doing_it_wrong('EM_Gateways::register_gateway', 'This function is now deprecated, ensure your gateway ' . $gateway . ' called by '. $class .' is compatible with EM Pro 3.2 and calls its own static init() function directly instead', '3.2');
 		}
 		
-		public static function is_manual_booking( $new_registration = true ){
+		public static function is_manual_booking( $new_registration = false ){
 			return emp_is_manual_booking( $new_registration );
 		}
 	}

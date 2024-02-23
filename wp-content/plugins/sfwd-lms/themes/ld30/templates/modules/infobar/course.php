@@ -37,6 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use LearnDash\Core\Models\Product;
+use LearnDash\Core\Utilities\Cast;
 
 /**
  * Product object.
@@ -45,6 +46,8 @@ use LearnDash\Core\Models\Product;
  */
 $ld_product     = Product::find( $course_id );
 $course_pricing = learndash_get_course_price( $course_id );
+
+$user_id = Cast::to_int( $user_id );
 
 if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 	?>
@@ -135,7 +138,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 			<span class="ld-course-status-label"><?php echo esc_html__( 'Current Status', 'learndash' ); ?></span>
 			<div class="ld-course-status-content">
 				<?php
-				$ld_seats_available      = $ld_product->get_seats_available();
+				$ld_seats_available      = $ld_product->get_seats_available( $user_id );
 				$ld_seats_available_text = ( ! empty( $ld_seats_available )
 											? sprintf(
 												// translators: placeholder: number of places remaining.
@@ -150,7 +153,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 											)
 											: '' );
 				?>
-				<?php if ( $ld_product->has_ended() ) : ?>
+				<?php if ( $ld_product->has_ended( $user_id ) ) : ?>
 					<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="
 						<?php
 							printf(
@@ -165,7 +168,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 				<?php elseif ( ! $ld_product->has_started() ) : ?>
 					<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="
 					<?php
-					if ( ! $ld_product->can_be_purchased() ) :
+					if ( ! $ld_product->can_be_purchased( $user_id ) ) :
 						printf(
 							// translators: placeholder: course, course start date.
 							esc_attr_x( 'This %1$s starts on %2$s', 'placeholder: course, course start date', 'learndash' ),
@@ -175,7 +178,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 					else :
 						printf(
 							// translators: placeholder: course, course start date.
-							esc_attr_x( 'It is a pre-order. Enroll in this %1$s to get access after %2$s', 'placeholder: course', 'learndash' ),
+							esc_attr_x( 'It is a pre-order. Enroll in this %1$s to get access after %2$s', 'placeholder: course, course start date', 'learndash' ),
 							esc_html( learndash_get_custom_label_lower( 'course' ) ),
 							esc_html( learndash_adjust_date_time_display( $ld_product->get_start_date() ) )
 						);
@@ -188,7 +191,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 				<?php else : ?>
 					<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="
 					<?php
-					if ( $ld_product->can_be_purchased() ) :
+					if ( $ld_product->can_be_purchased( $user_id ) ) :
 						printf(
 						// translators: placeholder: course.
 							esc_attr_x( 'Enroll in this %s to get access', 'placeholder: course', 'learndash' ),
@@ -445,7 +448,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 		<div class="<?php echo esc_attr( $course_status_class ); ?>">
 			<span class="ld-course-status-label">
 				<?php
-				if ( $ld_product->can_be_purchased() ) {
+				if ( $ld_product->can_be_purchased( $user_id ) ) {
 					echo esc_html_e( 'Get Started', 'learndash' );
 				}
 				?>
@@ -484,7 +487,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 							if (
 								apply_filters( 'learndash_login_modal', true, $course_id, $user_id )
 								&& ! is_user_logged_in()
-								&& $ld_product->can_be_purchased()
+								&& $ld_product->can_be_purchased( $user_id )
 							) :
 								echo '<a class="ld-button" href="' . esc_url( $login_url ) . '">' . esc_html__( 'Login to Enroll', 'learndash' ) . '</a></span>';
 							else :
@@ -500,7 +503,7 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 							if (
 								apply_filters( 'learndash_login_modal', true, $course_id, $user_id )
 								&& ! is_user_logged_in()
-								&& $ld_product->can_be_purchased()
+								&& $ld_product->can_be_purchased( $user_id )
 							) :
 								echo '<span class="ld-text">';
 								if ( ! empty( $ld_payment_buttons ) ) {

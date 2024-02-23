@@ -4,8 +4,8 @@
  *
  * @since     1.0.4
  * @license   GPL2+
- * @author    GravityView <hello@gravityview.co>
- * @link      http://gravityview.co
+ * @author    GravityKit <hello@gravitykit.com>
+ * @link      https://www.gravitykit.com
  * @copyright Copyright 2014, Katz Web Services, Inc.
  *
  * @package   GravityView
@@ -303,6 +303,10 @@ class GV_Extension_DataTables_Data {
 			return $this->exit_or_return( false );
 		}
 
+		$dt_settings = get_post_meta( $view->ID, '_gravityview_datatables_settings', true );
+
+		$is_server_side = 'serverSide' === \GV\Utils::get( $dt_settings, 'processing_mode', 'serverSide' );
+
 		// check for order/sorting
 		$atts['sort_field']     = array();
 		$atts['sort_direction'] = array();
@@ -331,7 +335,7 @@ class GV_Extension_DataTables_Data {
 		$offset = isset( $_POST['start'] ) ? intval( $_POST['start'] ) : 0;
 
 		// check if someone requested the full filtered data (eg. TableTools print button)
-		if ( $atts['page_size'] == '-1' ) {
+		if ( $atts['page_size'] == '-1' || ! $is_server_side ) {
 			$mode              = 'all';
 			$atts['page_size'] = PHP_INT_MAX;
 		} else {
@@ -411,7 +415,6 @@ class GV_Extension_DataTables_Data {
 		$page = ( ( $offset - ( $view->settings->get( 'offset', 0 ) ?: 0 ) ) / ( $view->settings->get( 'page_size', 20 ) ?: 20 ) ) + 1;
 
 		if ( gravityview()->plugin->supports( \GV\Plugin::FEATURE_GFQUERY ) ) {
-
 		    add_action( 'gravityview/view/query', $callback = function ( $query ) use ( $page, $view ) {
 
 		        /** @var GF_Query $query */
@@ -422,7 +425,6 @@ class GV_Extension_DataTables_Data {
 			    $configured_field_ids = wp_list_pluck( $configured_fields['directory_table-columns'], 'id' );
 
 			    foreach ( \GV\Utils::_POST( 'columns', array() ) as $dt_column ) {
-
 				    if ( empty( $dt_column['searchable'] ) || ! isset( $dt_column['search']['value'] ) ) {
 					    continue;
 				    }
@@ -438,7 +440,9 @@ class GV_Extension_DataTables_Data {
 					    continue;
 				    }
 
-				    #ray( [ $dt_column, $field_id_or_meta_name ] );
+				    if ( 'gv_entry_approval' === $dt_column['name'] ) {
+					    $field_id_or_meta_name = 'is_approved';
+				    }
 
 				    $condition = new \GF_Query_Condition(
 					    new \GF_Query_Column( $field_id_or_meta_name ),
@@ -592,7 +596,7 @@ class GV_Extension_DataTables_Data {
 	 *
 	 * @return array
 	 */
-	function get_output_data( $entries, $view, $post = null ) {
+	public function get_output_data( $entries, $view, $post = null ) {
 
 		if ( ! $view instanceof \GV\View ) {
 			gravityview()->log->notice( '\GV_Extension_DataTables_Data::get_output_data now requires a \GV\View and \GV\Entry_Collection object parameters.' );
@@ -1122,11 +1126,14 @@ class GV_Extension_DataTables_Data {
 		 * @filter `gravityview_datatables_js_options` Modify the settings used to render DataTables
 		 * @see    https://datatables.net/reference/option/
 		 *
+		 * @since 3.3 Added $this parameter.
+		 *
 		 * @param array   $dt_config The configuration for the current View
 		 * @param int     $view_id   The ID of the View being configured
 		 * @param WP_Post $post      Current View or post/page where View is embedded
+         * @param GV_Extension_DataTables_Data $this The current instance of the class.
 		 */
-		$dt_config = apply_filters( 'gravityview_datatables_js_options', $dt_config, $view->ID, $post );
+		$dt_config = apply_filters( 'gravityview_datatables_js_options', $dt_config, $view->ID, $post, $this );
 
 		return $dt_config;
 	}
@@ -1169,7 +1176,7 @@ class GV_Extension_DataTables_Data {
 				'gravityview_datatables_script_src',
 				plugins_url( 'assets/js/third-party/datatables/jquery.dataTables' . $script_debug . '.js', GV_DT_FILE )
 			),
-			array( 'jquery' ),
+			[ 'jquery', 'wp-hooks' ],
 			GV_Extension_DataTables::version,
 			true
 		);

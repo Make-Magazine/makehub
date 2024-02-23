@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use LearnDash\Core\Utilities\Cast;
+
 // cspell:ignore subbmitdiv .
 
 if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learndash_Admin_Essay_Edit' ) ) ) {
@@ -332,9 +334,17 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 * @param WP_Post $essay The `WP_Post` essay object.
 		 */
 		public function essay_upload_meta_box( $essay ) {
-			$upload = get_post_meta( $essay->ID, 'upload', true );
-			if ( ! empty( $upload ) ) {
-				printf( '<a target="_blank" href="%1$s">%s</a>', esc_url( $upload ) );
+			$file_url = learndash_quiz_essay_get_download_url( $essay->ID );
+			if ( ! empty( $file_url ) ) {
+				printf(
+					'<a target="_blank" href="%1$s">%2$s</a>',
+					esc_url( $file_url ),
+					esc_html(
+						basename(
+							Cast::to_string( get_post_meta( $essay->ID, 'upload', true ) )
+						)
+					)
+				);
 			} else {
 				printf(
 					// translators: placeholder: question.

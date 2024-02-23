@@ -74,7 +74,6 @@ class GV_Entry_Revisions {
 		add_action( 'wp_print_scripts', array( $this, 'register_style' ), 1 );
 
 		add_action( 'admin_init', array( $this, 'admin_init_restore_listener' ) );
-
 	}
 
 	public function register_style() {
@@ -252,14 +251,21 @@ class GV_Entry_Revisions {
 	 * @return bool True: process; False: don't!
 	 */
 	private function should_process_inline_edit( $form ) {
+		if ( ! GV_Entry_Revisions_Settings::is_gravityedit_activated() ) {
+			return false;
+		}
 
-		// Global
-		$global_default = GV_Entry_Revisions_Settings::get_instance()->get_plugin_setting(GV_Entry_Revisions_Settings::INLINE_EDIT_GLOBAL_SETTING );
+		$global_setting = GV_Entry_Revisions_Settings::GRAVITYEDIT_GLOBAL_SETTING_DEFAULT;
 
-		// Form ID
-		$setting = rgar( $form, GV_Entry_Revisions_Settings::INLINE_EDIT_FORM_SETTING, $global_default );
+		if ( class_exists( 'GravityKitFoundation' ) && GravityKitFoundation::settings() ) {
+			$global_setting = GravityKitFoundation::settings()->get_plugin_setting( 'gravityedit', GV_Entry_Revisions_Settings::GRAVITYEDIT_GLOBAL_SETTING );
+		}
 
-		return ! empty( $setting );
+		$form_setting = rgar( $form, GV_Entry_Revisions_Settings::GRAVITYEDIT_FORM_SETTING);
+
+		$form_setting = '' === $form_setting ? $global_setting : $form_setting;
+
+		return (bool) $form_setting;
 	}
 
 	/**

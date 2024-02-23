@@ -114,6 +114,7 @@ class OptinSubscription
 
         //escape webhook connection
         unset($connections['WebHookConnect']);
+        unset($connections['WordPressUserRegistrationConnect']);
 
         return $connections;
     }

@@ -18,41 +18,48 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	useBlockProps,
+	InspectorControls
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
-	SelectControl,
 	ToggleControl,
-	TextControl
+	Disabled,
 } = wp.components;
 
+import ServerSideRender from '@wordpress/server-side-render';
+
+const title = _x('ProPanel Filter Block', 'ld_propanel');
+
 registerBlockType(
-    'ld-propanel/ld-propanel-filters',
-    {
-		title: _x('ProPanel Filters', 'ld_propanel'),
-		description: __('This shortcode adds the ProPanel Filters widget any page', 'ld_propanel'),
-		icon: 'admin-network',
+	'ld-propanel/ld-propanel-filters',
+	{
+		title: title,
+		description: __('Displays the filter tools for ProPanel.', 'ld_propanel'),
+		icon: 'filter',
 		category: 'ld-propanel-blocks',
-		//example: {
-		//	attributes: {
-		//		example_show: 0,
-		//	},
-		//},
+		keywords: [ 'filter' ],
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
+		attributes: {
 			preview_show: {
 				type: 'boolean',
-				default: false
+				default: true
 			},
 		},
-        edit: function( props ) {
-			const { attributes: { preview_show },
-            	setAttributes } = props;
+		example: {
+			attributes: {
+				preview_show: true
+			}
+		},
+		edit: function( props ) {
+			const {
+				attributes: { preview_show },
+				setAttributes
+			} = props;
+			const blockProps = useBlockProps();
 
 			const panel_preview = (
 				<PanelBody
@@ -69,29 +76,70 @@ registerBlockType(
 
 			const inspectorControls = (
 				<InspectorControls>
+					<PanelBody
+						title=""
+						initialOpen={ true }
+					>
+						{ __( 'This Block requires one or more of the following other Blocks to be placed on the same page:', 'ld_propanel' ) }
+						<ul style={ {
+							listStyle: 'disc',
+							marginLeft: '1.5em'
+						} }>
+							<li>
+								{ __( 'ProPanel Reporting Block', 'ld_propanel' ) }
+							</li>
+							<li>
+								{ __( 'ProPanel Activity View Block', 'ld_propanel' ) }
+							</li>
+							<li>
+								{ __( 'ProPanel Progress Chart Block', 'ld_propanel' ) }
+							</li>
+						</ul>
+					</PanelBody>
 					{ panel_preview }
 				</InspectorControls>
 			);
 
 			function do_serverside_render( attributes ) {
-				//console.log('attributes[%o]', attributes);
-				
 				if ( attributes.preview_show == true ) {
-					return <ServerSideRender
-					block="ld-propanel/ld-propanel-filters"
-					attributes={ attributes }
-					/>
+					return (
+						<div className={ 'learndash-block-inner' }>
+							<div data-ld-widget-type={ 'filtering' } className={ 'ld-propanel-widget ld-propanel-widget-filtering' }>
+								<ServerSideRender
+									block="ld-propanel/ld-propanel-filters"
+									attributes={ attributes }
+									// GET is the default, but just to help ensure future-proofing
+									httpMethod='GET'
+									urlQueryArgs={
+										// Pass attributes through to the GET request at the top-level to better re-use the existing Ajax logic for Shortcodes
+										Object.assign(
+											{
+												template: 'filtering',
+												container_type: 'shortcode'
+											},
+											attributes
+					 					)
+									}
+								/>
+							</div>
+						</div>
+					);
 				} else {
-					return __( '[ld_propanel widget="filtering"] shortcode output shown here', 'ld_propanel' );
+					// translators: %s is the title for the Block.
+					return __( 'Toggle the Preview setting in the sidebar to see the %s in the editor.', 'ld_propanel' ).replace( '%s', title );
 				}
 			}
 
-			return [
-				inspectorControls,
-				do_serverside_render( props.attributes )
-			];
-        },
-        save: props => {
+			return (
+				<div { ...blockProps }>
+					{ inspectorControls }
+					<Disabled>
+						{ do_serverside_render( props.attributes ) }
+					</Disabled>
+				</div>
+			);
+		},
+		save: props => {
 			// Delete meta from props to prevent it being saved.
 			delete (props.attributes.meta);
 		}

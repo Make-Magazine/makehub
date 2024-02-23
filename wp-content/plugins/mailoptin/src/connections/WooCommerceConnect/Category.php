@@ -320,6 +320,10 @@ class Category
             $logger = wc_get_logger();
             $logger->debug('Unable to add subscriber via MailOptin: ', array('source' => 'mailoptin'));
         }
+
+        if (apply_filters('mailoptin_woocommerce_enable_optin_delay', false)) {
+            sleep(1);
+        }
     }
 
     /**

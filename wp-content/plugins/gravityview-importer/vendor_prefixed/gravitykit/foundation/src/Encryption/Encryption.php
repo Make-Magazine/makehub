@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -17,16 +17,20 @@ class Encryption {
 	const DEFAULT_NONCE = 'bc5d92ffc6c54ff8d865a1e6f3361f48d0a84a2b145be34e'; // 24-bit value stored as a hex string
 
 	/**
+	 * Class instance.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @var Encryption Class instance.
+	 * @var Encryption
 	 */
-	private static $_instance;
+	private static $_instances;
 
 	/**
+	 * Secret key used to encrypt license key.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @var string Secret key used to encrypt license key.
+	 * @var string
 	 */
 	private $_secret_key;
 
@@ -58,7 +62,7 @@ class Encryption {
 	}
 
 	/**
-	 * Returns class instance.
+	 * Returns class instance based on the secret key.
 	 *
 	 * @since 1.0.0
 	 *
@@ -67,11 +71,11 @@ class Encryption {
 	 * @return Encryption
 	 */
 	public static function get_instance( $secret_key = '' ) {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self( $secret_key );
+		if ( ! isset( self::$_instances[ $secret_key ] ) ) {
+			self::$_instances[ $secret_key ] = new self( $secret_key );
 		}
 
-		return self::$_instance;
+		return self::$_instances[ $secret_key ];
 	}
 
 	/**
@@ -144,6 +148,10 @@ class Encryption {
 			$decrypted = sodium_crypto_secretbox_open( $encrypted, $nonce, $this->_secret_key ) ?? null;
 		} catch ( Exception $e ) {
 			return null;
+		}
+
+		if ( false === $decrypted ) {
+			$decrypted = null;
 		}
 
 		return $decrypted;

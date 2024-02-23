@@ -16,7 +16,7 @@
 
 namespace LearnDash\Core\Template\Tabs;
 
-use LearnDash\Core\Collection;
+use LearnDash\Core\Collections\Collection;
 
 /**
  * The Tabs collection.

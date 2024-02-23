@@ -337,7 +337,7 @@ class EM_Gateways_Transactions{
 		$conditions = array();
 		$table = EM_BOOKINGS_TABLE;
 		//we can determine what to search for, based on if certain variables are set.
-		if( is_object($context) && (get_class($context)=="EM_Booking" || get_class($context)=="EM_Multiple_Booking" ) && $context->can_manage('manage_bookings','manage_others_bookings') ){
+		if( is_object($context) && $context instanceof EM_Booking && $context->can_manage('manage_bookings','manage_others_bookings') ){
 			$booking_condition = "tx.booking_id = ".$context->booking_id;
 			if( get_option('dbem_multiple_bookings') && $context->can_manage('manage_others_bookings') ){
 				//in MB mode, if the user can manage others bookings, they can view information about the transaction for a group of bookings

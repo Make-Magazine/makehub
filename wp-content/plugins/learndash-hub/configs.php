@@ -1,6 +1,11 @@
 <?php
 
-const BASE_DOMAIN    = 'learndash.com';
-const LICENSING_SITE = 'https://checkout.' . BASE_DOMAIN;
+if ( ! defined( 'LICENSING_SITE' ) ) {
+	define( 'LICENSING_SITE', 'https://checkout.learndash.com' );
+}
 
-const BASE_REST = 'learndash/v1';
+if ( ! defined( 'REMOTE_SITE' ) ) {
+	define( 'REMOTE_SITE', 'https://remote.learndash.com' );
+}
+
+const BASE_REST = 'learndash/v2';

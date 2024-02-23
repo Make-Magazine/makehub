@@ -178,7 +178,7 @@ class Jetpack_AMP_Support {
 	 * @since 6.2.1
 	 */
 	public static function add_stats_pixel() {
-		if ( ! has_action( 'wp_footer', array( Stats_Tracking_Pixel::class, 'add_to_footer' ) ) ) {
+		if ( ! has_action( 'wp_footer', array( Stats_Tracking_Pixel::class, 'add_amp_pixel' ) ) ) {
 			return;
 		}
 
@@ -500,7 +500,7 @@ class Jetpack_AMP_Support {
 		}
 
 		// Percentage-based dimensions are not allowed in AMP, so this shouldn't happen, but short-circuit just in case.
-		if ( false !== strpos( $details['width_orig'], '%' ) || false !== strpos( $details['height_orig'], '%' ) ) {
+		if ( str_contains( $details['width_orig'], '%' ) || str_contains( $details['height_orig'], '%' ) ) {
 			return $args;
 		}
 
@@ -558,7 +558,3 @@ class Jetpack_AMP_Support {
 		return $options_safelist;
 	}
 }
-
-add_action( 'init', array( 'Jetpack_AMP_Support', 'init' ), 1 );
-
-add_action( 'admin_init', array( 'Jetpack_AMP_Support', 'admin_init' ), 1 );

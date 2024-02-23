@@ -1,5 +1,5 @@
 <template>
-	<div class="gppa-filter" :aria-label="i18nStrings.filterAriaLabel.format( index + 1 )" aria-role="group">
+	<div class="gppa-filter" :aria-label="i18nStrings.filterAriaLabel.gformFormat( index + 1 )" aria-role="group">
 		<select :disabled="loadingProperties"
 				class="gppa-filter-property"
 				v-model="filterPropertyModel"
@@ -32,7 +32,8 @@
 			 v-model="filter.value"
 			 :operator="filter.operator"
 			 :object-type-instance="objectTypeInstance"
-			 :flattened-properties="flattenedProperties">
+			 :flattened-properties="flattenedProperties"
+			 @change="handleFilterValueChange">
 			<option v-if="!filter.value" value="" disabled selected="selected" hidden>&ndash; Value &ndash;</option>
 
 			<optgroup :label="i18nStrings.specialValues">
@@ -63,7 +64,7 @@
 
 		<div class="repeater-buttons">
 			<button class="add-item gform-st-icon gform-st-icon--circle-plus" @click="$emit('add-filter')" :title="i18nStrings.addFilter" />
-			<button class="remove-item gform-st-icon gform-st-icon--circle-minus" @click="$emit('remove-filter')" :title="i18nStrings.removeFilter" :aria-label="i18nStrings.removeFilterAriaLabel.format( index + 1 )" />
+			<button class="remove-item gform-st-icon gform-st-icon--circle-minus" @click="$emit('remove-filter')" :title="i18nStrings.removeFilter" :aria-label="i18nStrings.removeFilterAriaLabel.gformFormat( index + 1 )" />
 		</div>
 
 		<div
@@ -105,7 +106,7 @@
 				return this.getPropertyValues(this.filter.property);
 			}
 
-			this.filter.property = (Object.values(this.flattenedProperties) as any)[0].value;
+			Vue.set(this.filter, 'property', (Object.values(this.flattenedProperties) as any)[0].value);
 		},
 		data: function () {
 			return {
@@ -125,9 +126,27 @@
 			 * filter value from needlessly resetting to having no value when the field itself changes.
 			 */
 			resetFilter: function() {
-				this.filter.value = '';
-				this.filter.operator = this.defaultOperator;
-			}
+				Vue.set(this.filter, 'value', '');
+				Vue.set(this.filter, 'operator', this.defaultOperator);
+			},
+			/**
+			 * Updates the selected operator.
+			 *
+			 * This is currenty used by other Perks and as such functions as a public interface
+			 * and should not be removed.
+			 *
+			 * @param operator string
+			 */
+			updateSelectedOperator: function(operator: string) {
+				Vue.set(this.filter, 'operator', operator);
+			},
+			handleFilterValueChange: function (value: string) {
+				window.gform.doAction(
+					'gppa_filter_value_updated',
+					value,
+					this,
+				);
+			},
 		},
 		computed: {
 			/* Used so we can set it to an empty value while loading. */
@@ -140,7 +159,7 @@
 					return this.filter.property;
 				},
 				set(val) {
-					this.filter.property = val;
+					Vue.set(this.filter, 'property', val);
 				}
 			},
 			loadingProperties: function() {
@@ -168,7 +187,7 @@
 					});
 				}
 
-				return specialValues;
+				return window.gform.applyFilters( 'gppa_filter_special_values', specialValues, this );
 			},
 			formFieldValues: function () {
 

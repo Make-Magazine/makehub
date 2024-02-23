@@ -1,4 +1,12 @@
 <?php
+/**
+ * Skins class.
+ *
+ * @since 2.0.0
+ *
+ * @package LearnDash\Course_Grid
+ */
+
 namespace LearnDash\Course_Grid;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -7,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use LearnDash\Course_Grid\Utilities;
 
+/**
+ * Skins class.
+ */
 class Skins
 {
     private $registered_skins;
@@ -99,8 +110,6 @@ class Skins
                 ]
             ],
         ];
-    
-        return apply_filters( 'learndash_course_grid_skins', $this->registered_skins );
     }
 
     public function register_cards()
@@ -171,28 +180,28 @@ class Skins
                 ]
             ],
         ];
-    
-        return apply_filters( 'learndash_course_grid_cards', $this->registered_cards );
     }
 
     public function get_skins()
     {
-        return $this->registered_skins;
+        return apply_filters( 'learndash_course_grid_skins', $this->registered_skins );
     }
 
     public function get_skin( $skin )
     {
-        return $this->registered_skins[ $skin ] ?? false;
+        $skin_details = $this->registered_skins[ $skin ] ?? false;
+        return apply_filters( 'learndash_course_grid_skin', $skin_details, $skin );
     }
 
     public function get_cards()
     {
-        return $this->registered_cards;
+        return apply_filters( 'learndash_course_grid_cards', $this->registered_cards );
     }
 
     public function get_card( $card )
     {
-        return $this->registered_cards[ $card ] ?? false;
+        $card_details = $this->registered_cards[ $card ] ?? false;
+        return apply_filters( 'learndash_course_grid_card', $card_details, $card );
     }
 
     public function enqueue_general_assets( $enqueue_script = true )
@@ -264,9 +273,21 @@ class Skins
         return $returned_matches;
     }
 
-    public function parse_content_shortcodes( $content, $args )
+    public function parse_content_shortcodes( $content, $args = [] )
     {
         extract( $args );
+
+        if ( ! isset( $course_grids ) ) {
+            $course_grids = [];
+        }
+
+        if ( ! isset( $skins ) ) {
+            $skins = [];
+        }
+        
+        if ( ! isset( $cards ) ) {
+            $cards = [];
+        }
 
         preg_match_all( '/\[learndash_course_grid.*?\]/', $content, $matches );
 
@@ -275,7 +296,7 @@ class Skins
 
             $course_grids[] = $sub_matches;
 
-            if ( in_array( 'skin', $sub_matches[1] ) ) {
+            if ( isset( $sub_matches[1] ) && is_array( $sub_matches[1] ) && in_array( 'skin', $sub_matches[1] ) ) {
                 $key = array_search( 'skin', $sub_matches[1] );
                 if ( $key !== false ) {
                     $skins[] = $sub_matches[2][ $key ];
@@ -284,7 +305,7 @@ class Skins
                 $skins[] = 'grid';
             }
 
-            if ( in_array( 'card', $sub_matches[1] ) ) {
+            if ( isset( $sub_matches[1] ) && is_array( $sub_matches[1] ) && in_array( 'card', $sub_matches[1] ) ) {
                 $key = array_search( 'card', $sub_matches[1] );
                 if ( $key !== false ) {
                     $cards[] = $sub_matches[2][ $key ];
@@ -345,7 +366,11 @@ class Skins
                 $widget_id = _get_widget_id_base( $widget );
 
                 preg_match( '/-([0-9]+)$/', $widget, $widget_matches );
-                $widget_number = $widget_matches[1];
+                $widget_number = $widget_matches[1] ?? null;
+
+                if ( ! $widget_number ) {
+                    continue;
+                }
 
                 $widget_options = get_option( 'widget_' . $widget_id );
 
@@ -389,6 +414,15 @@ class Skins
         if ( $post && strpos( $post->post_content, '<!-- wp:learndash/ld-course-grid' ) !== false ) {
             $args = $this->parse_content_blocks( $post->post_content, compact( 'skins', 'course_grids', 'cards' ) );
             extract( $args );
+        }
+
+        $extra_course_grids = apply_filters( 'learndash_course_grid_post_extra_course_grids', [], $post );
+        if ( ! empty( $extra_course_grids ) && is_array( $extra_course_grids ) ) {
+            foreach ( $extra_course_grids as $extra_course_grid ) {
+                $skins = array_merge( $skins, $extra_course_grid['skins'] );
+                $cards = array_merge( $cards, $extra_course_grid['cards'] );
+                $course_grids = array_merge( $course_grids, $extra_course_grid['course_grids'] );
+            }
         }
 
         if ( ! empty( $skins ) && is_array( $skins ) ) {
@@ -485,8 +519,17 @@ class Skins
                 $this->enqueue_custom_assets( $course_grids );
             } );
         }
+
+        do_action( 'learndash_course_grid_assets_loaded' );
     }
 
+	/**
+	 * Enqueue Block Editor Skin Assets.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
     public function enqueue_editor_skin_assets()
     {
         global $post;
@@ -589,7 +632,7 @@ class Skins
         $this->enqueue_pagination_assets( false );
         $this->enqueue_filter_assets( false );
 
-        wp_enqueue_script( 'learndash-course-grid-block-editor-helper', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'includes/gutenberg/assets/js/editor.js', $skin_ids, LEARNDASH_COURSE_GRID_VERSION, true );
+		wp_enqueue_script( 'learndash-course-grid-block-editor-helper', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'assets/js/editor.js', $skin_ids, LEARNDASH_COURSE_GRID_VERSION, true );
     }
 
     public function has_legacy_v1( $content )

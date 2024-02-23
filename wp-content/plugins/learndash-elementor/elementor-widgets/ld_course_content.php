@@ -64,7 +64,7 @@ class LearnDash_Elementor_Widget_Course_Content extends LearnDash_Elementor_Widg
 	}
 
 	/** Documented in Elementor /includes/base/controls-stack.php */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$template_type   = learndash_elementor_get_template_type();
 		$preview_step_id = $this->learndash_get_preview_post_id( $template_type );
 

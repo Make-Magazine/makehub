@@ -17,7 +17,7 @@ use Automattic\Jetpack\Forms\Jetpack_Forms;
  * Auto Activate: Yes
  * Module Tags: Other
  * Feature: Writing
- * Additional Search Queries: contact, form, grunion, feedback, submission, contact form, email, feedback, contact form plugin, custom form, custom form plugin, form builder, forms, form maker, survey, contact by jetpack, contact us, forms free
+ * Additional Search Queries: contact, form, grunion, feedback, submission, contact form, email, feedback, contact form plugin, custom form, custom form plugin, form builder, forms, form maker, survey, contact by jetpack, contact us, forms free, creator
  */
 
 /**
@@ -30,7 +30,7 @@ use Automattic\Jetpack\Forms\Jetpack_Forms;
  *
  * @param bool $load_contact_form_package Load Jetpack Forms package. Default to false.
  */
-if ( apply_filters( 'jetpack_contact_form_use_package', false ) ) {
+if ( apply_filters( 'jetpack_contact_form_use_package', true ) ) {
 	Jetpack_Forms::load_contact_form();
 	return true; // Not returning true will cause the module to become deactivated.
 }

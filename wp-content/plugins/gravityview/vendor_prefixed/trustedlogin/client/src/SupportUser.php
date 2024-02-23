@@ -7,8 +7,7 @@
  * @copyright 2021 Katz Web Services, Inc.
  *
  * @license GPL-2.0-or-later
- * Modified by gravityview on 25-October-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by gravityview on 23-February-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 namespace GravityKit\GravityView\Foundation\ThirdParty\TrustedLogin;
 
@@ -103,7 +102,6 @@ final class SupportUser {
 			case 'expires_meta_key':
 			case 'created_by_meta_key':
 				return $this->{$name};
-				break;
 		}
 
 		return null;

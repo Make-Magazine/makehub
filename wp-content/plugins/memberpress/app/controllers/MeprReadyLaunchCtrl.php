@@ -91,7 +91,7 @@ class MeprReadyLaunchCtrl extends MeprBaseCtrl {
    * @return void
    */
   public function account_shortcode( $atts = array() ) {
-    wp_enqueue_script( 'alpinejs', MEPR_JS_URL . '/js/vendor/alpine.min.js', array(), MEPR_VERSION, true );
+    wp_enqueue_script( 'alpinejs', MEPR_JS_URL . '/vendor/alpine.min.js', array(), MEPR_VERSION, true );
     wp_enqueue_script( 'mepr-accountjs', MEPR_JS_URL . '/readylaunch/account.js', array( 'jquery' ), MEPR_VERSION, true );
     wp_localize_script(
       'mepr-accountjs',
@@ -230,7 +230,7 @@ class MeprReadyLaunchCtrl extends MeprBaseCtrl {
       if($txn instanceof MeprTransaction && !empty($txn->id)) {
         $mepr_options = MeprOptions::fetch();
         $hide_invoice = $mepr_options->design_thankyou_hide_invoice;
-        $invoice_message = $mepr_options->design_thankyou_invoice_message;
+        $invoice_message = do_shortcode($mepr_options->design_thankyou_invoice_message);
         $has_welcome_image = $mepr_options->design_show_thankyou_welcome_image;
         $welcome_image = esc_url(wp_get_attachment_url($mepr_options->design_thankyou_welcome_img));
 
@@ -447,6 +447,9 @@ class MeprReadyLaunchCtrl extends MeprBaseCtrl {
         'removeInstructorLink' => isset( $courses_options['remove-instructor-link'] ) ? filter_var( $courses_options['remove-instructor-link'], FILTER_VALIDATE_BOOLEAN ) : '',
         'logoId'               => isset( $courses_options['classroom-logo'] ) ? absint( $courses_options['classroom-logo'] ) : '',
       ),
+      'coaching'  => array(
+        'enableTemplate'        =>  isset( $mepr_options->rl_enable_coaching_template ) ? filter_var( $mepr_options->rl_enable_coaching_template, FILTER_VALIDATE_BOOLEAN ) : '',
+      ),
     );
 
     MeprView::render( '/admin/readylaunch/options', get_defined_vars() );
@@ -625,7 +628,7 @@ class MeprReadyLaunchCtrl extends MeprBaseCtrl {
     if ( 'checkout' === $template ) {
       return isset( $options->$attribute_name ) &&
         filter_var( $options->$attribute_name, FILTER_VALIDATE_BOOLEAN ) &&
-        ( isset( $post ) && is_a( $post, 'WP_Post' ) && $post->post_type == MeprProduct::$cpt );
+        ( isset( $post ) && is_a( $post, 'WP_Post' ) && is_singular( MeprProduct::$cpt ) );
     }
 
     if ( 'courses' === $template && is_array($courses_options) ) {

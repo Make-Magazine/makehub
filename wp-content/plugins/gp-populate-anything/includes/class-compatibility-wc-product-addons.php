@@ -13,7 +13,7 @@ class GPPA_Compatibility_WC_Product_Addons {
 	}
 
 	public function __construct() {
-		add_filter( 'woocommerce_get_item_data', array( $this, 'maybe_hydrate_form_for_cart_item' ), 5, 2 );
+		add_filter( 'woocommerce_get_item_data', array( $this, 'maybe_populate_form_for_cart_item' ), 5, 2 );
 		add_filter( 'woocommerce_get_item_data', array( $this, 'clear_form_values' ), 15, 2 );
 	}
 
@@ -28,7 +28,7 @@ class GPPA_Compatibility_WC_Product_Addons {
 	 *
 	 * @return mixed
 	 */
-	public function maybe_hydrate_form_for_cart_item( $item_data, $cart_item ) {
+	public function maybe_populate_form_for_cart_item( $item_data, $cart_item ) {
 		// Grab the lead data from the un-saved entry and hydrate the form
 		$wc_form = rgar( $cart_item, '_gravity_form_data' );
 		$lead    = rgar( $cart_item, '_gravity_form_lead' );
@@ -38,10 +38,22 @@ class GPPA_Compatibility_WC_Product_Addons {
 
 			// Run hydration to prime GLOBALs such as $GLOBALS['gppa-field-values']
 			if ( gp_populate_anything()->form_has_dynamic_population( $form ) ) {
-				gp_populate_anything()->hydrate_initial_load( $form, false, $lead, $lead );
+				gp_populate_anything()->populate_form( $form, false, $lead, $lead );
 			}
 		}
 
+		return $item_data;
+	}
+
+	/**
+	 * @param $item_data
+	 * @param $cart_item
+	 *
+	 * @deprecated 2.0 Use GPPA_Compatibility_WC_Product_Addons::maybe_populate_form_for_cart_item()
+	 *
+	 * @return mixed
+	 */
+	public function maybe_hydrate_form_for_cart_item( $item_data, $cart_item ) {
 		return $item_data;
 	}
 

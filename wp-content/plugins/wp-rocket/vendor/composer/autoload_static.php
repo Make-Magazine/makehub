@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115
+class ComposerStaticInitce00d7f8ee42bd7c2ba1ec1bcedf1941
 {
     public static $prefixLengthsPsr4 = array (
         'W' => 
@@ -210,6 +210,8 @@ class ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115
         'WP_Rocket\\Engine\\Common\\Ajax\\AjaxHandler' => __DIR__ . '/../..' . '/inc/Engine/Common/Ajax/AjaxHandler.php',
         'WP_Rocket\\Engine\\Common\\Cache\\CacheInterface' => __DIR__ . '/../..' . '/inc/Engine/Common/Cache/CacheInterface.php',
         'WP_Rocket\\Engine\\Common\\Cache\\FilesystemCache' => __DIR__ . '/../..' . '/inc/Engine/Common/Cache/FilesystemCache.php',
+        'WP_Rocket\\Engine\\Common\\Clock\\ClockInterface' => __DIR__ . '/../..' . '/inc/Engine/Common/Clock/ClockInterface.php',
+        'WP_Rocket\\Engine\\Common\\Clock\\WPRClock' => __DIR__ . '/../..' . '/inc/Engine/Common/Clock/WPRClock.php',
         'WP_Rocket\\Engine\\Common\\Context\\AbstractContext' => __DIR__ . '/../..' . '/inc/Engine/Common/Context/AbstractContext.php',
         'WP_Rocket\\Engine\\Common\\Context\\ContextInterface' => __DIR__ . '/../..' . '/inc/Engine/Common/Context/ContextInterface.php',
         'WP_Rocket\\Engine\\Common\\ExtractCSS\\ServiceProvider' => __DIR__ . '/../..' . '/inc/Engine/Common/ExtractCSS/ServiceProvider.php',
@@ -339,6 +341,12 @@ class ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115
         'WP_Rocket\\Engine\\Optimization\\RUCSS\\Frontend\\APIClient' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Frontend/APIClient.php',
         'WP_Rocket\\Engine\\Optimization\\RUCSS\\Frontend\\Subscriber' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Frontend/Subscriber.php',
         'WP_Rocket\\Engine\\Optimization\\RUCSS\\ServiceProvider' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/ServiceProvider.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Context\\RetryContext' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Context/RetryContext.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Factory\\StrategyFactory' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Factory/StrategyFactory.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Strategies\\DefaultProcess' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Strategies/DefaultProcess.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Strategies\\JobSetFail' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Strategies/JobSetFail.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Strategies\\ResetRetryProcess' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Strategies/ResetRetryProcess.php',
+        'WP_Rocket\\Engine\\Optimization\\RUCSS\\Strategy\\Strategies\\StrategyInterface' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RUCSS/Strategy/Strategies/StrategyInterface.php',
         'WP_Rocket\\Engine\\Optimization\\RegexTrait' => __DIR__ . '/../..' . '/inc/Engine/Optimization/RegexTrait.php',
         'WP_Rocket\\Engine\\Optimization\\ServiceProvider' => __DIR__ . '/../..' . '/inc/Engine/Optimization/ServiceProvider.php',
         'WP_Rocket\\Engine\\Optimization\\UrlTrait' => __DIR__ . '/../..' . '/inc/Engine/Optimization/UrlTrait.php',
@@ -426,11 +434,13 @@ class ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115
         'WP_Rocket\\ThirdParty\\Plugins\\Ads\\Adthrive' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/Ads/Adthrive.php',
         'WP_Rocket\\ThirdParty\\Plugins\\CDN\\Cloudflare' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/CDN/Cloudflare.php',
         'WP_Rocket\\ThirdParty\\Plugins\\CDN\\CloudflareFacade' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/CDN/CloudflareFacade.php',
+        'WP_Rocket\\ThirdParty\\Plugins\\ContactForm7' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/ContactForm7.php',
         'WP_Rocket\\ThirdParty\\Plugins\\ConvertPlug' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/ConvertPlug.php',
         'WP_Rocket\\ThirdParty\\Plugins\\Ecommerce\\BigCommerce' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/Ecommerce/BigCommerce.php',
         'WP_Rocket\\ThirdParty\\Plugins\\Ecommerce\\WooCommerceSubscriber' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/Ecommerce/WooCommerceSubscriber.php',
         'WP_Rocket\\ThirdParty\\Plugins\\I18n\\TranslatePress' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/I18n/TranslatePress.php',
         'WP_Rocket\\ThirdParty\\Plugins\\I18n\\WPML' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/I18n/WPML.php',
+        'WP_Rocket\\ThirdParty\\Plugins\\I18n\\Weglot' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/I18n/Weglot.php',
         'WP_Rocket\\ThirdParty\\Plugins\\InlineRelatedPosts' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/InlineRelatedPosts.php',
         'WP_Rocket\\ThirdParty\\Plugins\\Jetpack' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/Jetpack.php',
         'WP_Rocket\\ThirdParty\\Plugins\\ModPagespeed' => __DIR__ . '/../..' . '/inc/ThirdParty/Plugins/ModPagespeed.php',
@@ -487,10 +497,10 @@ class ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit176d692dd5ea8f1811ce3c93b418e115::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitce00d7f8ee42bd7c2ba1ec1bcedf1941::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitce00d7f8ee42bd7c2ba1ec1bcedf1941::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitce00d7f8ee42bd7c2ba1ec1bcedf1941::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitce00d7f8ee42bd7c2ba1ec1bcedf1941::$classMap;
 
         }, null, ClassLoader::class);
     }

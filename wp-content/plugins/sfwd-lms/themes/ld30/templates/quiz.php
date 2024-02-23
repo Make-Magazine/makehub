@@ -261,8 +261,25 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 		endif;
 	endif;
 
+	// External quizzes.
+
+	if ( learndash_course_steps_is_external( $quiz_post->ID ) ):
+		learndash_get_template_part(
+			'modules/course-steps.php',
+			array(
+				'course_id'        => $course_id,
+				'course_step_post' => $quiz_post,
+				'user_id'          => $user_id,
+				'course_settings'  => $course_settings ?? [],
+				'can_complete'     => ! learndash_course_steps_is_external_attendance_required( $quiz_post->ID ),
+				'context'          => 'quiz',
+			),
+			true
+		);
+	endif;
+
 	/**
-	 * Fires before the quiz content starts.
+	 * Fires after the quiz content starts.
 	 *
 	 * @since 3.0.0
 	 *

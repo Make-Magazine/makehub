@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -22,9 +22,11 @@ use GravityKit\GravityImport\Foundation\Licenses\LicenseManager;
  */
 class PluginsPage {
 	/**
+	 * Class instance.
+	 *
 	 * @since 1.2.0
 	 *
-	 * @var PluginsPage Class instance.
+	 * @var PluginsPage
 	 */
 	private static $_instance;
 
@@ -85,15 +87,17 @@ class PluginsPage {
 		add_filter( 'plugin_action_links', [ $this, 'modify_product_action_links' ], 10, 3 );
 
 		// Disable/enable the "Group GravityKit products" setting.
-		if ( isset( $_REQUEST['gk_disable_grouping'] ) || isset( $_REQUEST['gk_enable_grouping'] ) ) {
-			SettingsFramework::get_instance()->save_plugin_setting( Core::ID, 'group_gk_products', isset( $_REQUEST['gk_enable_grouping'] ) );
+		if ( isset( $_REQUEST['gk_disable_grouping'] ) || isset( $_REQUEST['gk_enable_grouping'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+			SettingsFramework::get_instance()->save_plugin_setting( Core::ID, 'group_gk_products', isset( $_REQUEST['gk_enable_grouping'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 
-			return wp_safe_redirect( remove_query_arg( isset( $_REQUEST['gk_enable_grouping'] ) ? 'gk_enable_grouping' : 'gk_disable_grouping' ) );
+			return wp_safe_redirect( remove_query_arg( isset( $_REQUEST['gk_enable_grouping'] ) ? 'gk_enable_grouping' : 'gk_disable_grouping' ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		}
 
 		// Add action to links that require confirmation.
-		add_filter( 'gk/foundation/inline-scripts', function ( $scripts ) {
-			$scripts[]['script'] = <<<JS
+		add_filter(
+			'gk/foundation/inline-scripts',
+			function ( $scripts ) {
+				$scripts[]['script'] = <<<JS
 document.addEventListener( 'DOMContentLoaded', function () {
 	document.querySelectorAll( 'a[data-gk-product-confirmation]').forEach( link => {
 		link.addEventListener( 'click', ( e ) => !confirm( link.dataset.gkProductConfirmation ) && e.preventDefault() );
@@ -101,8 +105,9 @@ document.addEventListener( 'DOMContentLoaded', function () {
 } );
 JS;
 
-			return $scripts;
-		} );
+				return $scripts;
+			}
+		);
 
 		// Prevent WordPress from displaying an update notice for each unlicensed product or that with unmet dependencies.
 		// Instead, we display our own notice (@see PluginsPage::enqueue_update_notices()).
@@ -110,41 +115,48 @@ JS;
 		if ( function_exists( 'wp_get_update_data' ) ) {
 			$update_data_backup = wp_get_update_data();
 
-			add_filter( 'wp_get_update_data', function () use ( $update_data_backup ) {
-				return $update_data_backup;
-			}, 10 );
+			add_filter(
+				'wp_get_update_data',
+				function () use ( $update_data_backup ) {
+					return $update_data_backup;
+				},
+				10
+			);
 		}
 
 		// 2. Remove plugins from the list of those that have updates available.
-		add_filter( 'site_transient_update_plugins', function ( $data ) {
-			if ( ! isset( $data->response ) ) {
+		add_filter(
+			'site_transient_update_plugins',
+			function ( $data ) {
+				if ( ! isset( $data->response ) ) {
+					return $data;
+				}
+
+				$products = ProductManager::get_instance()->get_products_data();
+
+				foreach ( $data->response as $plugin_path => $plugin ) {
+					if ( ! isset( $plugin->gk_product_text_domain ) || ! isset( $products[ $plugin->gk_product_text_domain ] ) ) {
+						continue;
+					}
+
+					$product = $products[ $plugin->gk_product_text_domain ];
+
+					if ( ! $product['update_available'] ) {
+						continue;
+					}
+
+					if ( ! $product['checked_dependencies'][ $product['server_version'] ]['status'] ?? false ) {
+						unset( $data->response[ $plugin_path ] );
+					}
+
+					if ( ! $product['free'] && empty( $product['licenses'] ) ) {
+						unset( $data->response[ $plugin_path ] );
+					}
+				}
+
 				return $data;
 			}
-
-			$products = ProductManager::get_instance()->get_products_data();
-
-			foreach ( $data->response as $plugin_path => $plugin ) {
-				if ( ! isset( $plugin->gk_product_text_domain ) || ! isset( $products[ $plugin->gk_product_text_domain ] ) ) {
-					continue;
-				}
-
-				$product = $products[ $plugin->gk_product_text_domain ];
-
-				if ( ! $product['update_available'] ) {
-					continue;
-				}
-
-				if ( ! $product['checked_dependencies'][ $product['server_version'] ]['status'] ?? false ) {
-					unset( $data->response[ $plugin_path ] );
-				}
-
-				if ( ! $product['free'] && empty( $product['licenses'] ) ) {
-					unset( $data->response[ $plugin_path ] );
-				}
-			}
-
-			return $data;
-		} );
+		);
 	}
 
 	/**
@@ -164,9 +176,12 @@ JS;
 		if ( ! $products ) {
 			$products = ProductManager::get_instance()->get_products_data();
 
-			$products = array_filter( $products, function ( $product ) {
-				return ! $product['third_party'];
-			} );
+			$products = array_filter(
+				$products,
+				function ( $product ) {
+					return ! $product['third_party'];
+				}
+			);
 		}
 
 		if ( empty( $products ) ) {
@@ -201,15 +216,8 @@ JS;
 
 		if ( $product ) {
 			if ( ! $product['active'] ) {
-				// Modify Activate link for products that are unlicensed or have unmet dependencies.
-				if ( ! $product['free'] && empty( $product['licenses'] ) ) {
-					$links['activate'] = sprintf(
-						'<a href="%s" title="%s">%s</a>',
-						esc_url_raw( Framework::get_instance()->get_link_to_product_search( $product['id'] ) ),
-						esc_html__( 'This product requires a license key to be activated. Click this link to enter your license key.', 'gk-gravityimport' ),
-						esc_html__( 'Activate…', 'gk-gravityimport' )
-					);
-				} else if ( ! $product['checked_dependencies'][ $product['installed_version'] ]['status'] ?? false ) {
+				// Modify Activate link for products that have unmet dependencies.
+				if ( ! $product['checked_dependencies'][ $product['installed_version'] ]['status'] ?? false ) {
 					$links['activate'] = sprintf(
 						'<a href="%s" title="%s">%s</a>',
 						esc_url_raw( add_query_arg( [ 'action' => 'activate' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ),
@@ -228,11 +236,11 @@ JS;
 							$deletion_link,
 							strtr(
 								esc_html_x( '[product] is installed from a Git repository. Click this link to confirm deletion.', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-								[ '[product]' => $product['name'], ]
+								[ '[product]' => $product['name'] ]
 							),
 							strtr(
 								esc_html_x( '[product] is installed from a Git repository. Are you sure you want to delete it?', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-								[ '[product]' => $product['name'], ]
+								[ '[product]' => $product['name'] ]
 							),
 							esc_html__( 'Delete…', 'gk-gravityimport' )
 						);
@@ -245,16 +253,22 @@ JS;
 				$deactivation_link = ( preg_match( '/href="([^"]*)"/', $links['deactivate'], $matches ) ? $matches[1] : '' );
 
 				if ( $deactivation_link ) {
-					$required_by = implode( ', ', array_map( function ( $required_by ) {
-						return $required_by['name'];
-					}, $product['required_by'] ) );
+					$required_by = implode(
+						', ',
+						array_map(
+							function ( $required_by ) {
+								return $required_by['name'];
+							},
+							$product['required_by']
+						)
+					);
 
 					$links['deactivate'] = sprintf(
 						'<a href="%s" title="%s" data-gk-product-confirmation="%s">%s</a>',
 						$deactivation_link,
 						strtr(
 							esc_html_x( '[product] is required by other products to be active. Click this link to see which ones and to confirm deactivation.', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-							[ '[product]' => $product['name'], ]
+							[ '[product]' => $product['name'] ]
 						),
 						strtr(
 							esc_html_x( '[product] is required by [products] to be active. Are you sure you want to deactivate it?', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
@@ -274,7 +288,7 @@ JS;
 						'<a href="%s">%s</a>',
 						$product['settings'],
 						esc_html__( 'Settings', 'gk-gravityimport' )
-					)
+					),
 				];
 			}
 
@@ -303,7 +317,9 @@ JS;
 		}
 
 		/**
-		 * @filter `gk/foundation/products/{$product_slug}/action-links` Sets product action links in the Plugins page.
+		 * Sets product action links in the Plugins page.
+		 *
+		 * @filter `gk/foundation/products/{$product_slug}/action-links`
 		 *
 		 * @since  1.0.3
 		 *
@@ -319,7 +335,9 @@ JS;
 	 *
 	 * @since 1.2.0
 	 *
-	 * @return void
+	 * @param array $wp_plugins List of plugins.
+	 *
+	 * @return array
 	 */
 	public function group_products( $wp_plugins ) {
 		if ( ! $this->should_group_products() ) {
@@ -331,9 +349,12 @@ JS;
 		if ( ! $products ) {
 			$products = ProductManager::get_instance()->get_products_data( [ 'key_by' => 'path' ] );
 
-			$products = array_filter( $products, function ( $product ) {
-				return $product['installed'] && ! $product['third_party'];
-			} );
+			$products = array_filter(
+				$products,
+				function ( $product ) {
+					return $product['installed'] && ! $product['third_party'];
+				}
+			);
 		}
 
 		if ( empty( $products ) ) {
@@ -347,39 +368,48 @@ JS;
 				// If more than one GravityKit product is installed, group them under a single entry using the product that loaded Foundation.
 				// Foundation can be loaded by products that are not necessarily on the list of products returned by EDD, such as the standalone Foundation plugin.
 				if ( $wp_plugin['TextDomain'] === $foundation_info['source_plugin']['TextDomain'] ) {
-					uasort( $products, function ( $first, $second ) {
-						return $first['name'] <=> $second['name'];
-					} );
+					uasort(
+						$products,
+						function ( $first, $second ) {
+							return $first['name'] <=> $second['name'];
+						}
+					);
 
-					$grouped_products = array_map( function ( $product ) {
-						return sprintf(
-							'<a href="%s">%s</a>',
-							Framework::get_instance()->get_link_to_product_search( $product['id'] ),
-							$product['name']
-						);
-					}, $products );
+					$grouped_products = array_map(
+						function ( $product ) {
+							return sprintf(
+								'<a href="%s">%s</a>',
+								Framework::get_instance()->get_link_to_product_search( $product['id'] ),
+								$product['name']
+							);
+						},
+						$products
+					);
 
-					$wp_plugin = array_merge( $wp_plugin, [
-						'Name'            => __( 'GravityKit', 'gk-gravityimport' ),
-						'Version'         => $foundation_info['version'],
-						'TextDomain'      => $foundation_info['source_plugin']['TextDomain'],
-						'Description'     => strtr(
-							esc_html(
-								_nx(
-									'1 installed GravityKit product: [products].',
-									'A suite of [number] installed GravityKit products: [products].',
-									count( $grouped_products ),
-									'Placeholders inside [] are not to be translated.',
-									'gk-gravityimport'
-								)
+					$wp_plugin = array_merge(
+						$wp_plugin,
+						[
+							'Name'            => __( 'GravityKit', 'gk-gravityimport' ),
+							'Version'         => $foundation_info['version'],
+							'TextDomain'      => $foundation_info['source_plugin']['TextDomain'],
+							'Description'     => strtr(
+								esc_html(
+									_nx(
+										'1 installed GravityKit product: [products].',
+										'A suite of [number] installed GravityKit products: [products].',
+										count( $grouped_products ),
+										'Placeholders inside [] are not to be translated.',
+										'gk-gravityimport'
+									)
+								),
+								[
+									'[number]'   => count( $grouped_products ),
+									'[products]' => implode( ', ', $grouped_products ),
+								]
 							),
-							[
-								'[number]'   => count( $grouped_products ),
-								'[products]' => implode( ', ', $grouped_products )
-							]
-						),
-						'GravityKitGroup' => true,
-					] );
+							'GravityKitGroup' => true,
+						]
+					);
 
 					continue;
 				}
@@ -393,15 +423,20 @@ JS;
 			}
 		}
 
-		add_filter( 'plugin_row_meta', function ( $wp_plugin_meta, $wp_plugin_file, $wp_plugin_data ) {
-			if ( ! isset( $wp_plugin_data['GravityKitGroup'] ) ) {
-				return $wp_plugin_meta;
-			}
+		add_filter(
+			'plugin_row_meta',
+			function ( $wp_plugin_meta, $wp_plugin_file, $wp_plugin_data ) {
+				if ( ! isset( $wp_plugin_data['GravityKitGroup'] ) ) {
+					return $wp_plugin_meta;
+				}
 
-			return [
-				'<a href="https://gravitykit.com">' . esc_html__( 'Visit GravityKit.com', 'gk-gravityimport' ) . '</a>'
-			];
-		}, 10, 4 );
+				return [
+					'<a href="https://www.gravitykit.com">' . esc_html__( 'Visit GravityKit.com', 'gk-gravityimport' ) . '</a>',
+				];
+			},
+			10,
+			4
+		);
 
 		return $wp_plugins;
 	}
@@ -415,8 +450,8 @@ JS;
 	 *
 	 * @see   PluginsPage::configure_hooks() for the logic that's used to remove default WP notices.
 	 *
-	 * @param string $plugin_path
-	 * @param array  $plugin_data
+	 * @param string $plugin_path Plugin path.
+	 * @param array  $plugin_data Plugin data.
 	 *
 	 * @return void
 	 */
@@ -426,9 +461,12 @@ JS;
 		if ( ! $products ) {
 			$products = ProductManager::get_instance()->get_products_data();
 
-			$products = array_filter( $products, function ( $product ) {
-				return $product['installed'] && ! $product['third_party'];
-			} );
+			$products = array_filter(
+				$products,
+				function ( $product ) {
+					return $product['installed'] && ! $product['third_party'];
+				}
+			);
 		}
 
 		if ( empty( $products ) ) {
@@ -444,32 +482,48 @@ JS;
 				return;
 			}
 
-			$has_updates = array_filter( $products, function ( $product ) {
-				return $product['update_available'];
-			} );
+			$has_updates = array_filter(
+				$products,
+				function ( $product ) {
+					return $product['update_available'];
+				}
+			);
 
 			if ( empty( $has_updates ) ) {
 				return;
 			}
 
-			$notice = strtr( esc_html(
-				_nx(
-					'[products_with_updates] product has a newer version available. Please visit the [link]Manage Your Kit[/link] page to update it.',
-					'[products_with_updates] products have newer versions available. Please visit the [link]Manage Your Kit[/link] page to update them.',
-					count( $has_updates ),
-					'Placeholders inside [] are not to be translated.',
-					'gk-gravityimport'
-				) ),
+			$notice = strtr(
+				esc_html(
+					_nx(
+						'[products_with_updates] product has a newer version available. Please visit the [link]Manage Your Kit[/link] page to update it.',
+						'[products_with_updates] products have newer versions available. Please visit the [link]Manage Your Kit[/link] page to update them.',
+						count( $has_updates ),
+						'Placeholders inside [] are not to be translated.',
+						'gk-gravityimport'
+					)
+				),
 				[
 					'[products_with_updates]' => count( $has_updates ),
-					'[link]'                  => '<a href="' . esc_url_raw( add_query_arg( [ 'page' => Framework::ID, 'filter' => 'update-available' ], admin_url( 'admin.php' ) ) ) . '">',
-					'[/link]'                 => '</a>'
+					'[link]'                  => '<a href="' . esc_url_raw(
+                        add_query_arg(
+                            [
+								'page'   => Framework::ID,
+								'filter' => 'update-available',
+							],
+                            admin_url( 'admin.php' )
+                        )
+                    ) . '">',
+					'[/link]'                 => '</a>',
 				]
 			);
 		} else {
-			$product = Arr::first( $products, function ( $product ) use ( $plugin_data ) {
-				return $product['text_domain'] === $plugin_data['TextDomain'];
-			} );
+			$product = Arr::first(
+				$products,
+				function ( $product ) use ( $plugin_data ) {
+					return $product['text_domain'] === $plugin_data['TextDomain'];
+				}
+			);
 
 			if ( ! $product || ! $product['update_available'] || $product['free'] ) {
 				return;
@@ -483,7 +537,7 @@ JS;
 						'[version]' => $product['server_version'],
 					]
 				);
-			} else if ( ! $product['checked_dependencies'][ $product['installed_version'] ]['status'] ?? false ) {
+			} elseif ( ! $product['checked_dependencies'][ $product['installed_version'] ]['status'] ?? false ) {
 				$notice = strtr(
 					esc_html_x( 'There is a new version [version] of [product] available. [link]Update now…[/link].', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
 					[
@@ -494,7 +548,7 @@ JS;
 							esc_url_raw( add_query_arg( [ 'action' => 'update' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ),
 							esc_attr__( 'This product has unmet dependencies. Click this link to see see what they are.', 'gk-gravityimport' )
 						),
-						'[/link]'   => '</a>'
+						'[/link]'   => '</a>',
 					]
 				);
 			}
@@ -504,18 +558,21 @@ JS;
 			return;
 		}
 
-		add_filter( 'gk/foundation/products/plugins-page-notices', function ( $notices ) use ( $plugin_path, $notice ) {
-			if ( ! isset( $notices[ $plugin_path ] ) ) {
-				$notices[ $plugin_path ] = [];
+		add_filter(
+			'gk/foundation/products/plugins-page-notices',
+			function ( $notices ) use ( $plugin_path, $notice ) {
+				if ( ! isset( $notices[ $plugin_path ] ) ) {
+					$notices[ $plugin_path ] = [];
+				}
+
+				$notices[ $plugin_path ][] = [
+					'type'   => 'warning',
+					'notice' => $notice,
+				];
+
+				return $notices;
 			}
-
-			$notices[ $plugin_path ][] = [
-				'type'   => 'warning',
-				'notice' => $notice,
-			];
-
-			return $notices;
-		} );
+		);
 	}
 
 	/**
@@ -523,8 +580,8 @@ JS;
 	 *
 	 * @since 1.2.0
 	 *
-	 * @param string $plugin_path
-	 * @param array  $plugin_data
+	 * @param string $plugin_path Plugin path.
+	 * @param array  $plugin_data Plugin data.
 	 *
 	 * @return void
 	 */
@@ -534,9 +591,12 @@ JS;
 		if ( ! $products ) {
 			$products = ProductManager::get_instance()->get_products_data();
 
-			$products = array_filter( $products, function ( $product ) {
-				return $product['installed'] && ! $product['third_party'] && ! $product['free'];
-			} );
+			$products = array_filter(
+				$products,
+				function ( $product ) {
+					return $product['installed'] && ! $product['third_party'] && ! $product['free'];
+				}
+			);
 		}
 
 		if ( empty( $products ) ) {
@@ -545,9 +605,12 @@ JS;
 
 		$licenses_data = LicenseManager::get_instance()->get_licenses_data();
 
-		$unlicensed_products = array_filter( $products, function ( $product ) use ( $licenses_data ) {
-			return empty( array_intersect( array_keys( $licenses_data ), $product['licenses'] ) );
-		} );
+		$unlicensed_products = array_filter(
+			$products,
+			function ( $product ) use ( $licenses_data ) {
+				return empty( array_intersect( array_keys( $licenses_data ), $product['licenses'] ) );
+			}
+		);
 
 		if ( empty( $unlicensed_products ) ) {
 			return;
@@ -556,26 +619,36 @@ JS;
 		$notice = null;
 
 		if ( isset( $plugin_data['GravityKitGroup'] ) ) {
-			$notice = strtr( esc_html(
-				_nx(
-					'[unlicensed] product is unlicensed. Please [link]visit the licensing page[/link] to enter a valid license or to purchase a new one.',
-					'[unlicensed] products are unlicensed. Please [link]visit the licensing page[/link] to enter a valid license or to purchase a new one.',
-					count( $unlicensed_products ),
-					'Placeholders inside [] are not to be translated.',
-					'gk-gravityimport'
-				) ),
+			$notice = strtr(
+				esc_html(
+					_nx(
+						'[unlicensed] product is unlicensed. Please [link]visit the licensing page[/link] to enter a valid license or to purchase a new one.',
+						'[unlicensed] products are unlicensed. Please [link]visit the licensing page[/link] to enter a valid license or to purchase a new one.',
+						count( $unlicensed_products ),
+						'Placeholders inside [] are not to be translated.',
+						'gk-gravityimport'
+					)
+				),
 				[
 					'[unlicensed]' => count( $unlicensed_products ),
-					'[link]'       => '<a href="' . esc_url_raw( add_query_arg( [ 'page' => Framework::ID, 'filter' => 'unlicensed' ], admin_url( 'admin.php' ) ) ) . '">',
-					'[/link]'      => '</a>'
+					'[link]'       => '<a href="' . esc_url_raw(
+                        add_query_arg(
+                            [
+								'page'   => Framework::ID,
+								'filter' => 'unlicensed',
+							],
+                            admin_url( 'admin.php' )
+                        )
+                    ) . '">',
+					'[/link]'      => '</a>',
 				]
 			);
-		} else if ( isset( $unlicensed_products[ $plugin_data['TextDomain'] ] ) ) {
+		} elseif ( isset( $unlicensed_products[ $plugin_data['TextDomain'] ] ) ) {
 			$notice = strtr(
 				esc_html_x( 'This is an unlicensed product. Please [link]visit the licensing page[/link] to enter a valid license or to purchase a new one.', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
 				[
 					'[link]'  => '<a href="' . Framework::get_instance()->get_link_to_product_search( $unlicensed_products[ $plugin_data['TextDomain'] ]['id'] ) . '">',
-					'[/link]' => '</a>'
+					'[/link]' => '</a>',
 				]
 			);
 		}
@@ -584,18 +657,21 @@ JS;
 			return;
 		}
 
-		add_filter( 'gk/foundation/products/plugins-page-notices', function ( $notices ) use ( $plugin_path, $notice ) {
-			if ( ! isset( $notices[ $plugin_path ] ) ) {
-				$notices[ $plugin_path ] = [];
+		add_filter(
+			'gk/foundation/products/plugins-page-notices',
+			function ( $notices ) use ( $plugin_path, $notice ) {
+				if ( ! isset( $notices[ $plugin_path ] ) ) {
+					$notices[ $plugin_path ] = [];
+				}
+
+				$notices[ $plugin_path ][] = [
+					'type'   => 'error',
+					'notice' => $notice,
+				];
+
+				return $notices;
 			}
-
-			$notices[ $plugin_path ][] = [
-				'type'   => 'error',
-				'notice' => $notice,
-			];
-
-			return $notices;
-		} );
+		);
 	}
 
 	/**
@@ -604,7 +680,7 @@ JS;
 	 * @used-by PluginsPage::enqueue_update_notices()
 	 * @used-by PluginsPage::enqueue_unlicensed_notices()
 	 *
-	 * @param string $plugin_path
+	 * @param string $plugin_path Plugin path.
 	 *
 	 * @return void
 	 */
@@ -621,15 +697,19 @@ JS;
 
 		$active = ProductManager::get_instance()->is_product_active_in_current_context( $plugin_path ) ? 'active' : '';
 
-		$notices = array_map( function ( $data ) {
-			return [
-				'notice' => <<<HTML
+		// phpcs:disable WordPress.Arrays.CommaAfterArrayItem.NoComma
+		$notices = array_map(
+			function ( $data ) {
+				return [
+					'notice' => <<<HTML
 <div class="update-message notice inline notice-{$data['type']} notice-alt">
 	<p>{$data['notice']}</p>
 </div>
 HTML
-			];
-		}, $notices[ $plugin_path ] );
+				];
+			},
+			$notices[ $plugin_path ]
+		);          // phpcs:enable WordPress.Arrays.CommaAfterArrayItem.NoComma
 
 		$notices = join( '', Arr::pluck( $notices, 'notice' ) );
 
@@ -644,9 +724,13 @@ HTML;
 
 		// Display notices after WP's default notice (typically, the update notice).
 		// This prevents a visible separation between notices and makes them appear as part of the same plugin row.
-		add_action( "after_plugin_row_{$plugin_path}", function () use ( $notices ) {
-			echo $notices;
-		}, 11 );
+		add_action(
+			"after_plugin_row_{$plugin_path}",
+			function () use ( $notices ) {
+				echo $notices; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			},
+			11
+		);
 	}
 
 	/**

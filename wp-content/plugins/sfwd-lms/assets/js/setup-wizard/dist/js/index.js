@@ -5162,34 +5162,38 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var __ = wp.i18n.__;
 var Step2 = function Step2() {
   var setup = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_data_setup_context__WEBPACK_IMPORTED_MODULE_1__["default"]);
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.courses_amount),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.course_demo),
     _useState2 = _slicedToArray(_useState, 2),
-    courseAmount = _useState2[0],
-    setCourseAmount = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.course_type),
+    courseDemo = _useState2[0],
+    setCourseDemo = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.courses_amount),
     _useState4 = _slicedToArray(_useState3, 2),
-    courseTypes = _useState4[0],
-    setCourseTypes = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.group_access),
+    courseAmount = _useState4[0],
+    setCourseAmount = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.course_type),
     _useState6 = _slicedToArray(_useState5, 2),
-    groupAccess = _useState6[0],
-    setGroupAccess = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.group_leader),
+    courseTypes = _useState6[0],
+    setCourseTypes = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.group_access),
     _useState8 = _slicedToArray(_useState7, 2),
-    groupLeader = _useState8[0],
-    setGroupLeader = _useState8[1];
+    groupAccess = _useState8[0],
+    setGroupAccess = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(setup.data.group_leader),
+    _useState10 = _slicedToArray(_useState9, 2),
+    groupLeader = _useState10[0],
+    setGroupLeader = _useState10[1];
   var MyDropdown = function MyDropdown(options, selected, callback) {
     var item = options.find(function (element) {
       return element.value === selected;
     });
-    var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(item),
-      _useState10 = _slicedToArray(_useState9, 2),
-      value = _useState10[0],
-      setValue = _useState10[1];
-    var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(item),
       _useState12 = _slicedToArray(_useState11, 2),
-      open = _useState12[0],
-      setOpen = _useState12[1];
+      value = _useState12[0],
+      setValue = _useState12[1];
+    var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      open = _useState14[0],
+      setOpen = _useState14[1];
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "relative inline-block text-left"
     }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("button", {
@@ -5240,6 +5244,38 @@ var Step2 = function Step2() {
   }, /*#__PURE__*/React.createElement("h4", {
     className: "text-2xl md:text-3xl font-medium mb-4 mt-4 md:mb-8 md:mt-0"
   }, __('Tell us about your courses', 'learndash')), /*#__PURE__*/React.createElement("div", {
+    className: "md:flex md:justify-between mb-8"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "font-medium text-base"
+  }, __('Do you want to import a demo course?', 'learndash'), /*#__PURE__*/React.createElement("span", {
+    className: "font-light pl-1"
+  }, __('A fully built course that helps you to understand LearnDash.', 'learndash'))), /*#__PURE__*/React.createElement("div", {
+    className: "radio-button-group md:mt-auto md:mb-auto mt-4"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "radio",
+    name: "course_demo",
+    value: "yes",
+    id: "course_demo_enabled",
+    checked: courseDemo === 'yes',
+    onChange: function onChange(e) {
+      setCourseDemo(e.currentTarget.value);
+    }
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "action-button radio large white rounded-tr-none rounded-br-none",
+    htmlFor: "course_demo_enabled"
+  }, __('Yes', 'learndash')), /*#__PURE__*/React.createElement("input", {
+    type: "radio",
+    name: "course_demo",
+    value: "multiple",
+    id: "course_demo_disabled",
+    checked: courseDemo === 'no',
+    onChange: function onChange(e) {
+      setCourseDemo(e.currentTarget.value);
+    }
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "action-button radio large white rounded-tl-none rounded-bl-none",
+    htmlFor: "course_demo_disabled"
+  }, __('No', 'learndash')))), /*#__PURE__*/React.createElement("div", {
     className: "md:flex md:justify-between mb-8"
   }, /*#__PURE__*/React.createElement("p", {
     className: "font-medium text-base"
@@ -5464,6 +5500,7 @@ var Step2 = function Step2() {
     onClick: function onClick() {
       var data = {
         scene: setup.data.scenes[setup.data.scene].next,
+        course_demo: courseDemo,
         courses_amount: courseAmount,
         course_type: courseTypes,
         group_access: groupAccess,
@@ -5844,7 +5881,23 @@ var Step4 = function Step4() {
     className: "font-medium text-sm"
   }, __('Courses Listing', 'learndash')), /*#__PURE__*/React.createElement("p", {
     className: "text-sm font-light pt-1 pr-6"
-  }, __('Display all available courses.', 'learndash')))), setup.data.course_type.includes("group_courses") && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h5", {
+  }, __('Display all available courses.', 'learndash')))), setup.data.course_demo === 'yes' && /*#__PURE__*/React.createElement("div", {
+    className: "mt-8"
+  }, /*#__PURE__*/React.createElement("h5", {
+    className: "text-base font-medium"
+  }, __('We will create the following courses for you:', 'learndash')), /*#__PURE__*/React.createElement("div", {
+    className: "flex items-center mt-4 overflow-hidden"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "h-14 w-14 min-w-14 float-left rounded-full mr-4 bg-gray-icon flex items-center justify-center"
+  }, /*#__PURE__*/React.createElement("img", {
+    className: "inline-block w-6",
+    src: ldSetupWizard.urls.assets + 'img/icon-course-timed.png',
+    alt: ""
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("strong", {
+    className: "font-medium text-sm"
+  }, __('LearnDash 101', 'learndash')), /*#__PURE__*/React.createElement("p", {
+    className: "text-sm font-light pt-1 pr-6"
+  }, __('A demo course to help you understand how to use LearnDash.', 'learndash'))))), setup.data.course_type.includes("group_courses") && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h5", {
     className: "text-base font-medium mt-8 mb-2"
   }, __('We will enable the following group settings:', 'learndash')), /*#__PURE__*/React.createElement("p", {
     className: "text-xxs"

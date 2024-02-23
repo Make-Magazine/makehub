@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by learndash on 10-July-2023 using Strauss.
+ * Modified by learndash on 14-February-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -343,7 +343,7 @@ trait WhereClause {
 	/**
 	 * @param  Closure  $callback  The closure will receive a StellarWP\DB\QueryBuilder\QueryBuilder instance
 	 *
-	 * @return QueryBuilder|WhereQueryBuilder
+	 * @return $this
 	 */
 	public function whereExists( $callback ) {
 		return $this->where(
@@ -356,7 +356,7 @@ trait WhereClause {
 	/**
 	 * @param  Closure  $callback  The closure will receive a StellarWP\DB\QueryBuilder\QueryBuilder instance
 	 *
-	 * @return QueryBuilder|WhereQueryBuilder
+	 * @return $this
 	 */
 	public function whereNotExists( $callback ) {
 		return $this->where(

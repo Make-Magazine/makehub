@@ -3,7 +3,7 @@
 /** Utilities to be used with APIs, Webhooks and the like **/
 abstract class MpdtBaseUtils {
   public $search_fields, $accept_fields, $endpoints, $map,
-         $model_class, $class_info, $namespace;
+         $model_class, $class_info, $namespace, $base;
 
   // API VERSION
   public $version = '1';
@@ -37,7 +37,7 @@ abstract class MpdtBaseUtils {
       $this->search_fields = array_merge($base_search, $custom_search);
     }
     else {
-      $this->search_fields = $base_routes;
+      $this->search_fields = $base_search;
     }
 
     // Figure out routes
@@ -84,7 +84,7 @@ abstract class MpdtBaseUtils {
   }
 
   public function get_class_info() {
-    $base_class = get_class();
+    $base_class = __CLASS__;
     $utils_class = get_class($this);
 
     preg_match('/^Mpdt(.*)Utils$/', $utils_class, $m);

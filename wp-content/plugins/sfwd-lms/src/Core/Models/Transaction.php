@@ -9,7 +9,9 @@
 
 namespace LearnDash\Core\Models;
 
+use Exception;
 use LDLMS_Post_Types;
+use LearnDash\Core\Utilities\Cast;
 use LearnDash_Custom_Label;
 use Learndash_DTO_Validation_Exception;
 use Learndash_Payment_Gateway;
@@ -136,8 +138,8 @@ class Transaction extends Post {
 	public function get_user(): WP_User {
 		if ( $this->post->post_author > 0 ) { // Actual.
 			$user_id = (int) $this->post->post_author;
-		} elseif ( intval( $this->getAttribute( 'user_id', 0 ) ) > 0 ) { // Legacy.
-			$user_id = intval( $this->getAttribute( 'user_id' ) );
+		} elseif ( Cast::to_int( $this->getAttribute( 'user_id', 0 ) ) > 0 ) { // Legacy.
+			$user_id = Cast::to_int( $this->getAttribute( 'user_id' ) );
 		} else {
 			$user_id = 0;
 		}
@@ -164,7 +166,7 @@ class Transaction extends Post {
 		if ( ! empty( $this->getAttribute( 'payer_email' ) ) ) {
 			$user = get_user_by(
 				'email',
-				strval( $this->getAttribute( 'payer_email' ) )
+				Cast::to_string( $this->getAttribute( 'payer_email' ) )
 			);
 
 			if ( $user instanceof WP_User ) {
@@ -491,7 +493,7 @@ class Transaction extends Post {
 	public function get_product(): ?Product {
 		$product_id = 0;
 		foreach ( self::$product_id_meta_keys as $product_id_meta_key ) {
-			$product_id = intval( $this->getAttribute( $product_id_meta_key, 0 ) );
+			$product_id = Cast::to_int( $this->getAttribute( $product_id_meta_key, 0 ) );
 
 			if ( $product_id > 0 ) {
 				break;
@@ -551,7 +553,7 @@ class Transaction extends Post {
 		 *
 		 * @return string Transaction product name.
 		 */
-		return apply_filters( 'learndash_model_transaction_product_name', strval( $product_title ), $this );
+		return apply_filters( 'learndash_model_transaction_product_name', Cast::to_string( $product_title ), $this );
 	}
 
 	/**
@@ -598,8 +600,6 @@ class Transaction extends Post {
 	 *
 	 * @since 4.5.0
 	 *
-	 * @throws Learndash_DTO_Validation_Exception DTO validation exception.
-	 *
 	 * @return Learndash_Pricing_DTO
 	 */
 	public function get_pricing(): Learndash_Pricing_DTO {
@@ -632,7 +632,7 @@ class Transaction extends Post {
 
 			if ( 'stripe' === $gateway_name ) { // Legacy Stripe.
 				$pricing['currency'] = mb_strtoupper(
-					strval( $this->getAttribute( 'stripe_currency', '' ) )
+					Cast::to_string( $this->getAttribute( 'stripe_currency', '' ) )
 				);
 				$pricing['price']    = $this->getAttribute( 'stripe_price' );
 
@@ -659,11 +659,11 @@ class Transaction extends Post {
 				if ( $this->is_subscription() ) {
 					$duration       = explode(
 						' ',
-						strval( $this->getAttribute( 'period3', '' ) )
+						Cast::to_string( $this->getAttribute( 'period3', '' ) )
 					);
 					$trial_duration = explode(
 						' ',
-						strval( $this->getAttribute( 'period1', '' ) )
+						Cast::to_string( $this->getAttribute( 'period1', '' ) )
 					);
 
 					if ( empty( $pricing['price'] ) ) {
@@ -710,6 +710,12 @@ class Transaction extends Post {
 			}
 		}
 
+		try {
+			$pricing_dto = Learndash_Pricing_DTO::create( $pricing );
+		} catch ( Exception $e ) {
+			$pricing_dto = new Learndash_Pricing_DTO();
+		}
+
 		/**
 		 * Filters transaction product pricing.
 		 *
@@ -722,7 +728,7 @@ class Transaction extends Post {
 		 */
 		return apply_filters(
 			'learndash_model_transaction_pricing',
-			Learndash_Pricing_DTO::create( $pricing ),
+			$pricing_dto,
 			$this
 		);
 	}
@@ -732,11 +738,17 @@ class Transaction extends Post {
 	 *
 	 * @since 4.5.0
 	 *
-	 * @throws Learndash_DTO_Validation_Exception Coupon DTO validation exception.
-	 *
 	 * @return Learndash_Transaction_Coupon_DTO Transaction coupon data.
 	 */
 	public function get_coupon_data(): Learndash_Transaction_Coupon_DTO {
+		try {
+			$coupon_data = Learndash_Transaction_Coupon_DTO::create(
+				(array) $this->getAttribute( LEARNDASH_TRANSACTION_COUPON_META_KEY, array() )
+			);
+		} catch ( Exception $e ) {
+			$coupon_data = new Learndash_Transaction_Coupon_DTO();
+		}
+
 		/**
 		 * Filters transaction coupon data.
 		 *
@@ -747,13 +759,7 @@ class Transaction extends Post {
 		 *
 		 * @return array Transaction coupon data.
 		 */
-		return apply_filters(
-			'learndash_model_transaction_coupon_data',
-			Learndash_Transaction_Coupon_DTO::create(
-				(array) $this->getAttribute( LEARNDASH_TRANSACTION_COUPON_META_KEY, array() )
-			),
-			$this
-		);
+		return apply_filters( 'learndash_model_transaction_coupon_data', $coupon_data, $this );
 	}
 
 	/**

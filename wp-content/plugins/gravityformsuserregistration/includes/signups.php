@@ -263,6 +263,10 @@ class GFSignup {
 	public $form;
 	public $config;
 
+	public $activation_key;
+	public $user_login;
+	public $user_email;
+
 	private $error;
 
 	function __construct( $signup ) {
@@ -326,5 +330,10 @@ class GFSignup {
 
 		return $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->signups WHERE activation_key = %s", $this->activation_key ) );
 	}
+
+	/**
+	 * Magic methods to allow setting dynamic properties without deprecation notices in PHP 8.2.
+	 */
+	public function __set($name, $value) { }
 
 }

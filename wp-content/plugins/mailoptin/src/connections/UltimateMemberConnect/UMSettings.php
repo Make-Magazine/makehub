@@ -105,7 +105,7 @@ class UMSettings
 
         if ( ! defined('MAILOPTIN_DETACH_LIBSODIUM')) :
             $upsell_url = 'https://mailoptin.io/pricing/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=ultimatemember_connection_settings';
-            $doc_url    = 'https://mailoptin.io/article/ultimatemember-mailchimp-aweber-more/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=ultimatemember_connection_settings';
+            $doc_url    = 'https://mailoptin.io/article/ultimate-member-mailchimp-aweber-more/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=ultimatemember_connection_settings';
 
             $content = sprintf(
                 __("Upgrade to %sMailOptin Premium%s to add all users that register via Ultimate Member registration forms to your email marketing list.", 'mailoptin'),
@@ -139,7 +139,7 @@ class UMSettings
                 'type' => 'arbitrary',
                 'data' => '<p>' . sprintf(
                         esc_html__('The Ultimate Member integration subscribes customers to your email marketing software and CRM upon order completion. You can also set this up on a per product, category and tag level. %sLearn more%s', 'mailoptin'),
-                        '<a href="https://mailoptin.io/article/ultimatemember-mailchimp-aweber-more/" target="_blank">', '</a>'
+                        '<a href="https://mailoptin.io/article/ultimate-member-mailchimp-aweber-more/" target="_blank">', '</a>'
                     ) . '</p>',
             ];
 

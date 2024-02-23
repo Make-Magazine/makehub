@@ -68,6 +68,10 @@ class EM_Bookings_Table extends EM\List_Table {
 	public $bookings;
 	public $bookings_count = 0;
 	
+	public $person;
+	public $event;
+	public $item_type;
+	
 	function __construct($show_tickets = true){
 		$this->uid = $this->id . '-' . rand(1,99999);
 		$this->statuses = array(
@@ -582,6 +586,7 @@ class EM_Bookings_Table extends EM\List_Table {
 										?><td class="em-bt-col-<?php echo esc_attr($key); ?>"class="em-bt-col-<?php echo esc_attr($key); ?>"><?php echo $row_cell; ?></td><?php
 										}
 										$this->ticket = null;
+										$count++;
 									}
 								}else{
 									$row = $this->get_row($EM_Booking);

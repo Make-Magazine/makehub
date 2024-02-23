@@ -92,7 +92,10 @@ class Product extends lib\BaseCtrl {
     $coupon = \MeprCoupon::get_one_from_code($coupon_code);
 
     // Price is set to product price (no coupon, proration) when "Is this a Gift" checkbox is checked
-    if(isset($_POST['mpgft-signup-gift-checkbox']) && "on" == $_POST['mpgft-signup-gift-checkbox']){
+
+    // We need to check for both "mpgft-signup-gift-checkbox" and "mpgft_gift_checkbox" in $_POST as the checkbox name and value
+    // are different when toggled on our checkout pages vs. when a gift is force applied.
+    if(isset($_POST['mpgft-signup-gift-checkbox']) && "on" == $_POST['mpgft-signup-gift-checkbox'] || isset($_POST['mpgft_gift_checkbox']) && "true" == $_POST['mpgft_gift_checkbox']){
       if (empty($coupon)) {
         $price = $product->price;
       }

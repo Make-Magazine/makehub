@@ -27,6 +27,7 @@ class EM_Coupons extends EM_Object {
 			//manual bookings - add coupons for single event manual bookings
 			if( !empty($_REQUEST['action']) && $_REQUEST['action'] == 'manual_booking' ){
 				add_action('em_booking_form_summary_footer', array('EM_Coupons', 'em_booking_form'),1,2);
+				add_action('em_booking_form_confirm_header', array('EM_Coupons', 'em_booking_form'),1,2);
 			}
 			if( !empty($_REQUEST['manual_booking']) && wp_verify_nonce($_REQUEST['manual_booking'], 'em_manual_booking_'.$_REQUEST['event_id']) ){
 				add_filter('em_booking_get_post', array('EM_Coupons', 'em_booking_get_post'), 10, 2);
@@ -36,6 +37,7 @@ class EM_Coupons extends EM_Object {
 		}else{ //normal mode
 		    //add to any booking form
 			add_action('em_booking_form_summary_footer', array('EM_Coupons', 'em_booking_form'),1,2);
+			add_action('em_booking_form_confirm_header', array('EM_Coupons', 'em_booking_form'),1,2);
 			//meta box hook for adding coupons to booking info
 			add_filter('em_event_get_post_meta',array('EM_Coupons', 'em_event_get_post_meta'),10,2);
 			add_filter('em_event_save_meta',array('EM_Coupons', 'em_event_save_meta'),10,2);
@@ -448,6 +450,7 @@ class EM_Coupons extends EM_Object {
 	 * @param EM_Event $EM_Event
 	 */
 	public static function em_booking_form( $EM_Event, $EM_Booking ){
+		if( doing_action('em_booking_form_confirm_header') && did_action('em_booking_form_summary_footer') ) return; //only show once, if summary is disabled
 		if( !$EM_Event->is_free(true) && EM_Coupons::event_has_coupons($EM_Event) > 0){
 			?>
 			<div class="em-booking-form-section-coupons em-booking-section <?php if ( $EM_Booking->get_spaces() == 0 ) echo 'hidden'; ?>">

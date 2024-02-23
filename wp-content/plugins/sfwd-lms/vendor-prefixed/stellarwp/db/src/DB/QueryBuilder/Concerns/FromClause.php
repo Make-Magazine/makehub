@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0
  *
- * Modified by learndash on 10-July-2023 using Strauss.
+ * Modified by learndash on 14-February-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -27,7 +27,7 @@ trait FromClause {
 	 *
 	 * @return $this
 	 */
-	public function from( $table, $alias = null ) {
+	public function from( $table, $alias = '' ) {
 		$this->froms[] = new From( $table, $alias );
 
 		return $this;

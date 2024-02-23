@@ -47,6 +47,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				// New fields.
 				'course_materials_enabled'      => 'course_materials_enabled',
 				'course_lesson_order_enabled'   => 'course_lesson_order_enabled',
+				'course_completion_page'        => 'course_completion_page',
 
 				// Legacy fields.
 				'course_materials'              => 'course_materials',
@@ -118,6 +119,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ( isset( $this->setting_option_values['course_lesson_orderby'] ) ) && ( ! empty( $this->setting_option_values['course_lesson_orderby'] ) ) || ( isset( $this->setting_option_values['course_lesson_order'] ) ) && ( ! empty( $this->setting_option_values['course_lesson_order'] ) ) ) {
 					$this->setting_option_values['course_lesson_order_enabled'] = 'on';
+				}
+
+				if ( ! isset( $this->setting_option_values['course_completion_page'] ) ) {
+					$this->setting_option_values['course_completion_page'] = '';
 				}
 
 				$this->setting_option_values['exam_challenge'] = (int) learndash_get_course_exam_challenge( $this->_post->ID );
@@ -575,6 +580,27 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
+
+				'course_completion_page' => [
+					'name'             => 'course_completion_page',
+					'type'             => 'select',
+					'label'            => sprintf(
+						// translators: placeholder: Course.
+						esc_html_x( '%1$s Completion Page', 'placeholder: Course', 'learndash' ),
+						learndash_get_custom_label( 'course' )
+					),
+					'help_text'        => sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'The page students are redirected to after %1$s completion. Overrides the global %1$s completion page if configured.',
+							'placeholder: course',
+							'learndash'
+						),
+						learndash_get_custom_label_lower( 'course' )
+					),
+					'value'            => $this->setting_option_values['course_completion_page'],
+					'display_callback' => [ LearnDash_Settings_Section_Registration_Pages::class, 'display_pages_selector' ],
+				],
 			);
 
 			if ( learndash_is_course_builder_enabled() ) {
@@ -674,6 +700,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				if ( empty( $settings_values['course_lesson_order_enabled'] ) ) {
 					$settings_values['course_lesson_orderby'] = '';
 					$settings_values['course_lesson_order']   = '';
+				}
+
+				if ( ! isset( $settings_values['course_completion_page'] ) ) {
+					$settings_values['course_completion_page'] = '';
 				}
 
 				if ( (int) $settings_values['exam_challenge'] !== (int) $this->setting_option_values['exam_challenge'] ) {

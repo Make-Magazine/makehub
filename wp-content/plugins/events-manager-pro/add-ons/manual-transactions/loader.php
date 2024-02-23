@@ -14,7 +14,7 @@ if( get_option('dbem_bookings_manual', true) ){
  * @uses EM\Manual_Transactions\Bookings::is_manual_booking()
  * @return bool
  */
-function emp_is_manual_booking( $new_registration = true ){
+function emp_is_manual_booking( $new_registration = false ){
 	if( get_option('dbem_bookings_manual', true) ){
 		return EM\Manual_Transactions\Bookings::is_manual_booking( $new_registration );
 	}

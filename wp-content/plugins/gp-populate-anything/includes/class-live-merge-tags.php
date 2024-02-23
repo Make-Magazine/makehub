@@ -1,5 +1,7 @@
 <?php
 
+/* @todo add abspath check on all PHP files */
+
 /**
  * Class GP_Populate_Anything_Live_Merge_Tags
  */
@@ -7,10 +9,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 	private static $instance = null;
 
-	private $_live_attrs_on_page            = array();
-	private $_escapes                       = array();
-	private $_current_live_merge_tag_values = array();
-	private $_lmt_whitelist                 = array();
+	private $_live_attrs_on_page                       = array();
+	private $_escapes                                  = array();
+	private $_current_live_merge_tag_values            = array();
+	private $_current_live_merge_tag_values_texturized = array();
+	private $_lmt_whitelist                            = array();
 
 	public $checkable_input_types = array( 'checkbox', 'radio' );
 
@@ -50,6 +53,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			add_filter( $field_filter, array( $this, 'replace_live_merge_tag_textarea_default_value' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_live_value_attr' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_live_value_attr_textarea' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_live_value_attr_product_name' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_live_value_attr_checkable_choice' ), 99, 2 );
 			add_filter( $field_filter, array( $this, 'add_select_default_value_attr' ), 99, 2 );
 		}
@@ -62,7 +66,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			add_filter( $wrapper_filter, array( $this, 'preserve_product_field_label' ), 98, 2 );
 			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_attr' ), 99, 2 );
 			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_non_attr' ), 99, 2 );
-			add_filter( $wrapper_filter, array( $this, 'unescape_live_merge_tags' ), 99, 2 );
+			add_filter( $wrapper_filter, array( $this, 'unescape_live_merge_tags' ), 99 );
 			add_filter( $wrapper_filter, array( $this, 'add_localization_attr_variable' ), 99, 2 );
 			add_filter( $wrapper_filter, array( $this, 'restore_escapes' ), 100, 2 );
 		}
@@ -81,6 +85,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gpnf_all_entries_nested_entry_markup', array( $this, 'replace_live_merge_tags_gpnf_all_entries' ), 10, 5 );
 
 		/**
+		 * Security
+		 */
+		// Prevent things like <script> from being output in Live Merge Tags to protect against XSS.
+		// @todo this is stripping things like background-repeat from CSS.
+		add_filter( 'gppa_live_merge_tag_value', 'wp_kses_post' );
+
+		/**
 		 * Prevent replacement of Live Merge Tags in Preview Submission.
 		 */
 		add_filter( 'gpps_pre_replace_merge_tags', array( $this, 'escape_live_merge_tags' ) );
@@ -90,6 +101,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Replace Live Merge Tags in labels of fields when printing.
 		 */
 		add_action( 'gform_print_entry_header', array( $this, 'add_printing_hooks' ) );
+
+		/**
+		 * Products
+		 */
+		add_filter( 'gform_product_info', array( $this, 'replace_lmts_in_non_choice_product_labels' ), 10, 3 );
 	}
 
 
@@ -122,6 +138,15 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		$this->_current_live_merge_tag_values[ $form_id ][ $live_merge_tag ] = $this->prepare_for_lmt_comparison( $live_merge_tag_value );
+
+		// Separate array for texturized values.
+		if ( ! isset( $this->_current_live_merge_tag_values_texturized[ $form_id ] ) ) {
+			$this->_current_live_merge_tag_values_texturized[ $form_id ] = array();
+		}
+
+		$this->_current_live_merge_tag_values_texturized[ $form_id ][ $live_merge_tag ] = html_entity_decode( wptexturize(
+			$this->_current_live_merge_tag_values[ $form_id ][ $live_merge_tag ]
+		) );
 	}
 
 	/**
@@ -155,9 +180,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $form;
 		}
 
-		$single_dimension_form = $this->flatten_multi_dimensional_array_to_index_array(
-			json_decode( json_encode( $form ), ARRAY_A )
-		);
+		$single_dimension_form = $this->flatten_multi_dimensional_array_to_index_array( $form );
 
 		$this->_lmt_whitelist[ $form['id'] ] = array();
 
@@ -185,7 +208,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	/**
-	 * Helper method to flatten multi-dimensional arrays to poplate the Live Merge Tag whitelist.
+	 * Helper method to flatten multi-dimensional arrays into single-dimension arrays that can
+	 * be looped through to populate the Live Merge Tag whitelist.
 	 *
 	 * @param array $array
 	 *
@@ -195,9 +219,9 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		$return = array();
 
 		foreach ( $array as $key => $value ) {
-			if ( is_array( $value ) ) {
+			if ( is_array( $value ) || $value instanceof ArrayAccess ) {
 				$return = array_merge( array_values( $return ), $this->flatten_multi_dimensional_array_to_index_array( $value ) );
-			} else {
+			} elseif ( is_string( $value ) ) {
 				$return[] = $value;
 			}
 		}
@@ -469,7 +493,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * If there are already LMTs in the value, then bail out since the filters for the entry form string will
 		 * add in the data attrs.
 		 */
-		if ( $matches && count( $matches ) ) {
+		if ( count( $matches ) ) {
 			return $content;
 		}
 
@@ -530,7 +554,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Skip if this field does not contain a textarea or the default value does NOT contain an LMT.
 		 */
 		if (
-			( ! $matches || ! count( $matches ) )
+			( ! count( $matches ) )
 			|| ! preg_match( '/@{.*?:?.+?}/', $field->defaultValue )
 		) {
 			return $content;
@@ -556,6 +580,56 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return str_replace( '<textarea ', '<textarea ' . $data_attr, $content );
 
+	}
+
+	/**
+	 * Calculated Product labels can accept Live Merge Tags which have an input to accommodate them. Adding Live
+	 * Merge Tag logic to the input is required when editing as the $field->defaultValue logic does not account for this.
+	 *
+	 * @param $content
+	 * @param $field
+	 *
+	 * @return mixed
+	 *
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr() for other inputs
+	 */
+	public function add_live_value_attr_product_name( $content, $field ) {
+		if ( $field->get_input_type() !== 'calculation' ) {
+			return $content;
+		}
+
+		if ( ! preg_match( '/@{.*?:?.+?}/', $field->label ) ) {
+			return $content;
+		}
+
+		$merge_tag_value = $this->get_live_merge_tag_value( $field->label, GFAPI::get_form( $field->formId ) );
+
+		$this->register_lmt_on_page( $field->formId, 'data-gppa-live-merge-tag-value' );
+
+		if ( $merge_tag_value ) {
+			$this->add_current_lmt_value( $field->formId, $field->label, $merge_tag_value );
+		}
+
+		$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $field->label ) ) . '"';
+
+		$content = str_replace(
+			'name=\'input_' . $field->id . '.1\' value=\'',
+			' ' . $data_attr . ' name=\'input_' . $field->id . '.1\' value=\'',
+			$content
+		);
+
+		// Handle the actual label.
+		$label_lmt_span = '<span data-gppa-live-merge-tag="' . esc_attr( $this->escape_live_merge_tags( $field->label ) ) . '">' . $merge_tag_value . '</span>';
+
+		// insert $label_lmt_span into this span using preg_replace
+		// <span class="gfield_label_product gform-field-label">101 Aerial/Ladder Response - Per Hour - ladder 69</span>
+		$content = preg_replace(
+			'/<span class="([a-z0-9_\s-]*)gfield_label_product([a-z0-9_\s-]*?)">(.*?)<\/span>/',
+			'<span class="$1gfield_label_product$2">' . $label_lmt_span . '</span>',
+			$content
+		);
+
+		return $content;
 	}
 
 	/**
@@ -728,6 +802,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			$choice_markup = str_replace( $full_match, $full_match_replacement, $choice_markup );
 			// Remove empty values to default to innerHTML
 			$choice_markup = str_replace( " value=''", '', $choice_markup );
+
+			// Ensure that we reselect selected options using LMTs as their values.
+			$value_parsed = $this->get_live_merge_tag_value( $choice['value'], $form );
+
+			if ( $value_parsed == $value ) {
+				$choice_markup = str_replace( '<option ', '<option selected="selected" ', $choice_markup );
+			}
 		}
 
 		return $choice_markup;
@@ -781,6 +862,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			 */
 			$form_string .= '<script type="text/javascript">
 				var GPPA_CURRENT_LIVE_MERGE_TAG_VALUES_FORM_' . $form['id'] . ' = ' . json_encode( $this->_current_live_merge_tag_values[ $form['id'] ] ) . ';
+				var GPPA_CURRENT_LIVE_MERGE_TAG_VALUES_FORM_' . $form['id'] . '_TEXTURIZED = ' . json_encode( $this->_current_live_merge_tag_values_texturized[ $form['id'] ] ) . ';
 			</script>';
 		}
 
@@ -892,6 +974,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			if ( $field->get_input_type() === 'number' ) {
+				/** @var \GF_Field_Number $field */
 				$entry_values[ $input_id ] = $field->clean_number( $entry_value );
 				continue;
 			}
@@ -931,7 +1014,14 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			 * the correct value won't be returned.
 			 */
 			if (
-				( $field->type === 'time' || ( $field->type == 'date' && rgar( $field, 'dateType' ) === 'datedropdown' ) )
+				$field->type === 'time'
+				|| (
+					$field->type == 'date'
+					&& in_array( rgar( $field, 'dateType' ), array(
+						'datedropdown',
+						'datefield',
+					), true )
+				)
 			) {
 				/* Our goal is to get the entry value into a scalar (string, specifically) format. If it's already converted, skip it. */
 				if ( isset( $entry_values[ $field_id ] ) && is_scalar( $entry_values[ $field_id ] ) ) {
@@ -1022,11 +1112,18 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				}
 			}
 
-			// We probably should create a proper GF entry but for now, we'll add the currency property to prevent a
-			// series of notices generated by passing the $entry_values to GFCommon::replace_variables() below when
-			// {all_fields} or {pricing_fields} are used on the form.
-			if ( ! isset( $entry_values['currency'] ) ) {
-				$entry_values['currency'] = GFCommon::get_currency();
+			/**
+			 * By default, `$entry_values` will only contain field values, but we use it as an entry object when passed
+			 * to `GFCommon::replace_variables()` so we need to ensure that it contains all the values that are expected
+			 * for a proper entry object to avoid notices.
+			 */
+			if ( ! isset( $entry_values['id'] ) ) {
+				// Temporarily remove fields to avoid theoretical conflicts with `GFFormsModel::create_lead()` below.
+				$fields         = $form['fields'];
+				$form['fields'] = array();
+				// Combine the field values we have in `$entry_values` with the non-field values of a proper GF entry (e.g. "id", "form_id", "currency", etc).
+				$entry_values   = $entry_values + GFFormsModel::create_lead( $form );
+				$form['fields'] = $fields;
 			}
 
 			$merge_tag_match_value_html = GFCommon::replace_variables( $merge_tag, $form, $entry_values, false, false, false );
@@ -1090,7 +1187,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Handle recursive Live Merge Tags.
 		 */
 		while ( preg_match_all( $this->live_merge_tag_regex, $output, $populated_merge_tag_matches, PREG_SET_ORDER ) ) {
-			$output = $this->get_live_merge_tag_value( $output, $form, $entry_values, $lmt_nonces );
+			$output = $this->get_live_merge_tag_value( $output, $form, $entry_values );
 		}
 
 		return $output;
@@ -1132,6 +1229,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @return string $text
 	 */
 	public function replace_live_merge_tags_static( $text, $form, $entry = null, $url_encode = false, $esc_html = false, $nl2br = false, $format = 'html' ) {
+
+		// GPNF {parent} on an HTML may show raw value, so if there isn't any text value to replace. Show empty character
+		if ( preg_match( '/\{\%?(?:GPNF:)?parent:(.*?)\%?\}/i', $text ) && ! $entry ) {
+			return '';
+		}
 
 		if ( ! $entry ) {
 			return $text;
@@ -1228,6 +1330,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 */
 		$form_for_lmts = wp_doing_ajax() ? GFAPI::get_form( $form['id'] ) : $form;
 
+		/** @var \GF_Field $field */
 		foreach ( $form['fields'] as &$field ) {
 			if ( ! in_array( $field->get_input_type(), $this->checkable_input_types, true ) ) {
 				continue;
@@ -1296,4 +1399,33 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		gform_default_entry_content( $form, $entry, $entry_ids );
 	}
+
+	/**
+	 * Replace Live Merge Tags in product labels.
+	 */
+	public function replace_lmts_in_non_choice_product_labels( $product_info, $form, $entry ) {
+		if ( empty( $product_info['products'] ) ) {
+			return $product_info;
+		}
+
+		$this->populate_lmt_whitelist( $form );
+
+		foreach ( $product_info['products'] as $field_id => &$product ) {
+			$field = GFAPI::get_field( $form, $field_id );
+
+			if ( ! $field || ! $this->has_live_merge_tag( $field->label ) ) {
+				continue;
+			}
+
+			// Ensure the field does not have any choices.
+			if ( ! empty( $field->choices ) ) {
+				continue;
+			}
+
+			$product['name'] = $this->replace_live_merge_tags( $field->label, $form, $entry );
+		}
+
+		return $product_info;
+	}
+
 }

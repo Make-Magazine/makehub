@@ -25,7 +25,7 @@ class Gateway_Admin {
 	public static $documentation_url_api = '';
 	
 	/**
-	 * @deprecated Use Gateway::$api_cred_name instead
+	 * @deprecated Use Gateway::$api_option_name instead
 	 * @var string
 	 */
 	public static $api_cred_name;

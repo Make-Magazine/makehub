@@ -5,6 +5,7 @@ if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');
 
 use memberpress\gifting as base;
 
+#[AllowDynamicProperties]
 abstract class BaseModel {
   protected $rec, $attrs, $defaults, $custom_attr_keys;
 

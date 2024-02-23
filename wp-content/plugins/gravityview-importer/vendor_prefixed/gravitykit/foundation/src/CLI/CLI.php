@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -75,7 +75,7 @@ class CLI {
 				continue;
 			}
 
-			$command = defined( "${full_class_name}::COMMAND" ) ? $full_class_name::COMMAND : strtolower( $class );
+			$command = defined( "{$full_class_name}::COMMAND" ) ? $full_class_name::COMMAND : strtolower( $class );
 
 			$commands[ $command ] = $full_class_name;
 		}
@@ -93,7 +93,7 @@ class CLI {
 
 		foreach ( $commands as $command => $class ) {
 			WP_CLI::add_command(
-				$command === 'root' ? self::COMMAND_PREFIX : self::COMMAND_PREFIX . ' ' . $command,
+				'root' === $command ? self::COMMAND_PREFIX : self::COMMAND_PREFIX . ' ' . $command,
 				$class
 			);
 		}

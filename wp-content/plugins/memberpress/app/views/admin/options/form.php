@@ -65,6 +65,12 @@
           <td><?php _e('MemberPress Login Page', 'memberpress'); ?>*:</td>
           <td><?php MeprOptionsHelper::wp_pages_dropdown($mepr_options->login_page_id_str, $mepr_options->login_page_id, __('Login', 'memberpress')); ?></td>
         </tr>
+        <?php if( MeprAppHelper::is_coaching_enabled() ) : ?>
+        <tr>
+          <td><?php _e('MemberPress Coaching Page', 'memberpress'); ?>*:</td>
+          <td><?php MeprOptionsHelper::wp_pages_dropdown($mepr_options->coaching_page_id_str, $mepr_options->coaching_page_id, __('Coaching', 'memberpress')); ?></td>
+        </tr>
+        <?php endif; ?>
       </table>
 
       <h3 class="mepr-field-label">
@@ -103,6 +109,18 @@
             </td>
             <td>
               <input type="text" id="mpcs_options_courses_slug" name="mpcs-options[courses-slug]>" placeholder="<?php esc_attr_e('courses', 'memberpress-courses', 'memberpress'); ?>" class="regular-text" value="<?php echo memberpress\courses\helpers\Options::val($courses_options, 'courses-slug'); ?>" />
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <label for="<?php echo $mepr_options->product_pages_slug_str; ?>"><?php _e("Lesson Slug:", 'memberpress'); ?>
+              <?php MeprAppHelper::info_tooltip('mepr-lessons-slug',
+                __('Lesson Slug', 'memberpress'),
+                __('Use this field to change the permalink base of your lessons to something other than /lessons/', 'memberpress'));
+              ?>
+            </td>
+            <td>
+              <input type="text" id="mpcs_options_lessons_slug" name="mpcs-options[lessons-slug]>" placeholder="<?php esc_attr_e('lessons', 'memberpress-courses', 'memberpress'); ?>" class="regular-text" value="<?php echo memberpress\courses\helpers\Options::val($courses_options, 'lessons-slug'); ?>" />
             </td>
           </tr>
           <?php } ?>
@@ -327,7 +345,7 @@
               <label for="<?php echo $mepr_options->tos_title_str; ?>"><?php _e('Terms of Service Checkbox Title:', 'memberpress'); ?></label>
             </div>
             <div class="mp-col-4">
-              <input type="text" id="<?php echo $mepr_options->tos_title_str; ?>" name="<?php echo $mepr_options->tos_title_str; ?>" class="regular-text" value="<?php echo stripslashes($mepr_options->tos_title); ?>" />
+              <input type="text" id="<?php echo $mepr_options->tos_title_str; ?>" name="<?php echo $mepr_options->tos_title_str; ?>" class="regular-text" value="<?php echo esc_attr(stripslashes($mepr_options->tos_title)); ?>" />
             </div>
           </div>
         </div>
@@ -362,7 +380,7 @@
                                            __('This will appear next to the Privacy Policy checkbox on membership registration forms. The text between % characters will become the link text to your Privacy Policy page.', 'memberpress') ); ?>
             </div>
             <div class="mp-col-4">
-              <input type="text" id="<?php echo $mepr_options->privacy_policy_title_str; ?>" name="<?php echo $mepr_options->privacy_policy_title_str; ?>" class="regular-text" value="<?php echo stripslashes($mepr_options->privacy_policy_title); ?>" />
+              <input type="text" id="<?php echo $mepr_options->privacy_policy_title_str; ?>" name="<?php echo $mepr_options->privacy_policy_title_str; ?>" class="regular-text" value="<?php echo esc_attr(stripslashes($mepr_options->privacy_policy_title)); ?>" />
             </div>
           </div>
         </div>

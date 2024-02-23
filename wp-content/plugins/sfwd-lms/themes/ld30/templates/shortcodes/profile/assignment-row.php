@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$learndash_assignment_link = learndash_assignment_get_download_url( $assignment->ID );
+
 $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 ( $assignment->ID );
 ?>
@@ -19,12 +21,12 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 	<div class="ld-table-list-item-preview">
 		<div class="ld-table-list-title">
 
-			<a class="ld-item-icon" href='<?php echo esc_url( get_post_meta( $assignment->ID, 'file_link', true ) ); ?>' target="_blank">
+			<a class="ld-item-icon" href='<?php echo esc_url( $learndash_assignment_link ); ?>' target="_blank">
 				<span class="ld-icon ld-icon-assignment" aria-label="<?php esc_html_e( 'Download Assignment', 'learndash' ); ?>"></span>
 			</a>
 
 			<?php
-			$assignment_link = ( true === $assignment_post_type_object->publicly_queryable ? get_permalink( $assignment->ID ) : get_post_meta( $assignment->ID, 'file_link', true ) );
+			$assignment_link = ( true === $assignment_post_type_object->publicly_queryable ? get_permalink( $assignment->ID ) : $learndash_assignment_link );
 			?>
 
 			<a class="ld-text" href="<?php echo esc_url( $assignment_link ); ?>"><?php echo esc_html( get_the_title( $assignment->ID ) ); ?></a>

@@ -567,10 +567,10 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 				<p class="description" style="margin-top: 10px">
 					<?php
 					// translators: placeholder: question, course.
-					echo sprintf( esc_html_x( 'This is a %1$s that can be graded and potentially prevent a user from progressing to the next step of the %2$s.', 'placeholder: question, course', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'question' ) ), esc_html( learndash_get_custom_label_lower( 'course' ) ) )
+					echo sprintf( esc_html_x( 'If you set the %1$s to be graded and the student doesn\'t have enough points to proceed, they will be blocked from continuing the %2$s until the %1$s has been graded.', 'placeholder: question, course', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'question' ) ), esc_html( learndash_get_custom_label_lower( 'course' ) ) )
 					?>
 					<br />
-					<?php esc_html_e( 'The user can only progress if the essay is marked as "Graded" and if the user has enough points to move on.', 'learndash' ); ?><br />
+					<?php esc_html_e( 'The student can progress if they have enough points to move on.', 'learndash' ); ?><br />
 					<?php
 					// translators: placeholder: question, quiz.
 					echo sprintf( esc_html_x( 'How should the answer to this %1$s be marked and graded upon %2$s submission?', 'placeholder: question, quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'question' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );

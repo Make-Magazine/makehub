@@ -6,6 +6,7 @@ class GPNF_Session {
 	const SESSION_HASH_META_KEY = 'gpnf_session_hash';
 
 	private $_form_id;
+	private $_context;
 	private $_cookie;
 	private $_hashcode;
 
@@ -317,7 +318,7 @@ class GPNF_Session {
 			return $path;
 		}
 
-		$url = wp_parse_url( $_SERVER['REQUEST_URI'] );
+		$url  = wp_parse_url( $_SERVER['REQUEST_URI'] );
 		$path = $url['path'];
 
 		if ( ! isset( $url['query'] ) ) {

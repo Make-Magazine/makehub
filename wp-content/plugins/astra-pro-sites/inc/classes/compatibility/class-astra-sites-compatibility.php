@@ -73,6 +73,12 @@ if ( ! class_exists( 'Astra_Sites_Compatibility' ) ) :
 
 			// Plugin - Checkout Plugins - Stripe.
 			require_once ASTRA_SITES_DIR . 'inc/classes/compatibility/checkout-plugins-stripe-woo/class-astra-sites-checkout-plugins-stripe-woo.php';
+
+			// Plugin - Cartflows.
+			require_once ASTRA_SITES_DIR . 'inc/classes/compatibility/cartflows/class-astra-sites-compatibility-cartflows.php';
+
+			// Plugin - Suretriggers.
+			require_once ASTRA_SITES_DIR . 'inc/classes/compatibility/suretriggers/class-astra-sites-compatibility-suretriggers.php';
 		}
 
 	}

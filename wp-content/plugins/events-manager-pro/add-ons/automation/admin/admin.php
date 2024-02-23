@@ -406,6 +406,7 @@ class Admin {
 									</select>
 								</p>
 							</div>
+							<?php if( class_exists('\EM\Payments\Gateways') ) : ?>
 							<div class="em-automation-context-multi em-automation-event-booking-gateways">
 								<?php
 								$what = isset($trigger->trigger_data['filters']['gateways_include']) ? $trigger->trigger_data['filters']['gateways_include'] :'include';
@@ -421,18 +422,18 @@ class Admin {
 								</p>
 								<?php
 								// output any sort of html options relevant to this trigger, that'll be stored in trigger_data
-								$EM_Booking = new \EM_Booking();
 								$gateways = !empty($trigger->trigger_data['filters']['gateways']) && is_array($trigger->trigger_data['filters']['gateways']) ? $trigger->trigger_data['filters']['gateways'] : array();
 								?>
 								<p>
 									<select name="trigger_output[bookings][gateways][]" id="em-automation-event-bookings" class="em-selectize checkboxes" multiple size="10" placeholder="<?php esc_html_e_emp('Gateways'); ?>">
-										<option value=""><?php esc_html_e('Choose booking statuses', 'em-pro'); ?></option>
+										<option value=""><?php esc_html_e('Choose payment methods used', 'em-pro'); ?></option>
 										<?php foreach( \EM\Payments\Gateways::active_gateways() as $gateway => $Gateway ): ?>
 											<option value="<?php echo esc_attr($gateway); ?>" <?php if( in_array($gateway, $gateways) ) echo 'selected'; ?>><?php echo esc_html($Gateway::$title); ?></option>
 										<?php endforeach; ?>
 									</select>
 								</p>
 							</div>
+							<?php endif; ?>
 						</div>
 					</div>
 						

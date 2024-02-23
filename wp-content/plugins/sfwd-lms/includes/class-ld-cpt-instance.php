@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use LearnDash\Core\Models\Product;
 use LearnDash\Core\Template\Views;
 
 if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
@@ -642,7 +643,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							if ( ( defined( 'LEARNDASH_LESSON_VIDEO' ) ) && ( true === LEARNDASH_LESSON_VIDEO ) ) {
 								if ( $show_content ) {
 									$ld_course_videos = Learndash_Course_Video::get_instance();
-									$content          = $ld_course_videos->add_video_to_content( $content, $post, $lesson_settings );
+									$content          = $ld_course_videos->add_video_to_content( $content, $post, (array) $lesson_settings );
 								}
 							}
 
@@ -776,7 +777,7 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 							if ( ( defined( 'LEARNDASH_LESSON_VIDEO' ) ) && ( true === LEARNDASH_LESSON_VIDEO ) ) {
 								if ( $show_content ) {
 									$ld_course_videos = Learndash_Course_Video::get_instance();
-									$content          = $ld_course_videos->add_video_to_content( $content, $post, $topic_settings );
+									$content          = $ld_course_videos->add_video_to_content( $content, $post, (array) $topic_settings );
 								}
 							}
 
@@ -802,11 +803,16 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 					$group_id = $post->ID;
 					$group    = $post;
 
-					if ( learndash_is_user_in_group( $user_id, $group_id ) ) {
-						$has_access   = true;
+					try {
+						$product    = Product::create_from_post( $group );
+						$has_access = $product->user_has_access();
+					} catch ( InvalidArgumentException $e ) {
+						$has_access = false;
+					}
+
+					if ( $has_access ) {
 						$group_status = learndash_get_user_group_status( $group_id, $user_id );
 					} else {
-						$has_access   = false;
 						$group_status = '';
 					}
 

@@ -40,25 +40,23 @@ class Gateways {
 			add_filter('em_action_emp_checkout', array( static::class, 'em_action_booking_add'),10,2); //adds gateway var to feedback
 			//Booking Form Modifications
 			add_action('em_checkout_form_confirm_footer', array( static::class, 'mb_payment_form'),10,2);
+			add_action('em_manual_booking_form_confirm_footer', array( static::class, 'event_booking_payment_form'),10,2);
 		}else{
 		    //Normal Bookings mode, or manual booking
 			add_filter('em_booking_validate', array( static::class, 'em_booking_validate'), 10, 2);
 			add_action('em_booking_add', array( static::class, 'em_booking_add'), 10, 3);
-			add_filter('em_booking_get_post',array( static::class, 'em_booking_get_post'), 10, 2);
+			add_filter('em_booking_get_post',array( static::class, 'em_booking_get_post'), 100, 2);
 			add_filter('em_booking_added', array( static::class, 'em_booking_added'), 10, 2);
 			add_filter('em_action_booking_add', array( static::class, 'em_action_booking_add'),10,2); //adds gateway var to feedback
 			//Booking Form Modifications
 				//new way, with payment selector
 				add_action('em_booking_form_confirm_footer', array( static::class, 'event_booking_payment_form'),10,2);
 				// back-compat for the above action in case templates are overriden but outdated
-				add_action('em_booking_form_footer', function( $EM_Event ){
-					// if firing hook via the back-compat mode then don't proceed, since we'll also likely have the new hook above
-					if( !did_action('em_booking_form_confirm_footer') ){
-						static::event_booking_payment_form( $EM_Event );
-					}
-				},10,2);
-			
+				add_action('em_booking_form_footer', array(static::class, 'em_booking_form_footer'),10,2);
 		}
+		// check the edit page if manual booking was made
+		
+		
 		//booking gateways JS
 		static::$customer_fields = array(
 			'address' => __('Address','em-pro'),
@@ -240,12 +238,21 @@ class Gateways {
 		return $is_active;
 	}
 	
+	/**
+	 * Checks if gateway is active for a specific context or object, assumes that the gateway is generally active
+	 * @param string|Gateway $gateway   The gateway string or class name.
+	 * @param string $context           What context is this gateway active under, e.g. regular bookings, multiple bookings, event registration payments, etc. Supports 'bookings' and 'events'
+	 * @param $object                   A booking or event object to check against if necessary
+	 *
+	 * @return array|bool
+	 */
 	public static function is_active_for( $gateway, $context = null, $object = null ){
 		if( $context === 'bookings' ){
 			if( get_option('dbem_multiple_bookings') ){
-				return static::get_gateway( $gateway )::$supports_multiple_bookings;
+				$supports_mb = static::get( $gateway )::$supports_multiple_bookings;
+				return $supports_mb && static::get( $gateway )::is_displayable($context, $object);
 			}else{
-				return true;
+				return static::get( $gateway )::is_displayable($context, $object);
 			}
 		}
 		return $context === null;
@@ -272,7 +279,7 @@ class Gateways {
 	}
 	
 	public static function restore_current_event() {
-		array_pop( static::$previous_event_id );
+		static::$current_event_id = array_pop( static::$previous_event_id );
 	}
 	
 	public static function load_current_event() {
@@ -309,14 +316,17 @@ class Gateways {
 	 * @return boolean
 	 */
 	public static function em_booking_get_post($result, $EM_Booking){
-	    if( emp_is_manual_booking() ){
-	    	return $result;
+		if( !empty($_REQUEST['action']) && $_REQUEST['action'] === 'booking_form_summary' ) {
+			// only proceed if we're not asking for a booking form summary
+			return $result;
+		}
+	    if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' && !emp_is_manual_booking() ){
+			//we only deal with the EM_Multiple_Booking class if we're in multi booking mode unless it's a manual booking
+	        return $result;
 	    }
-	    if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' ){ //we only deal with the EM_Multiple_Booking class if we're in multi booking mode
-	        return $result;	        
-	    }
+		static::switch_current_event( $EM_Booking );
 		// hard intercept booking process if gateway not selected or unrecognized
-		if( empty($EM_Booking->booking_id) && (empty($_REQUEST['gateway']) || !static::is_active($_REQUEST['gateway'], 'bookings')) && $EM_Booking->get_price() > 0 && count(static::active_gateways()) > 0 ) {
+		if( empty($EM_Booking->booking_id) && (empty($_REQUEST['gateway']) || !static::is_active($_REQUEST['gateway'], 'bookings')) && $EM_Booking->get_price() > 0 && count(static::active_gateways('bookings', $EM_Booking)) > 0 ) {
 	        //spammer or hacker trying to get around no gateway selection
 	    	$error = __('Choice of payment method not recognized. If you are seeing this error and selecting a method of payment, we apologize for the inconvenience. Please contact us and we\'ll help you make a booking as soon as possible.','em-pro');
 	    	$EM_Booking->add_error($error);
@@ -335,17 +345,12 @@ class Gateways {
 				// set booking status out the door
 				$EM_Booking->booking_status = $Gateway::$status; // e.g. status 4 = awaiting online payment
 				// check if this booking is in test mode, if so, we add it right now and we know onwards that we're in test mode for this booking
-				if( $EM_Booking->event_id > 0 ) {
-					static::$current_event_id = $EM_Booking->event_id;
+				if ( $Gateway::is_test_mode() ) {
+					$EM_Booking->booking_meta['test'] = true;
 				}
-				$current_event_id = static::switch_current_event( $EM_Booking ); // for Test Mode
-				$test_mode = $Gateway::is_test_mode();
-				if ( $test_mode ) {
-					$EM_Booking->booking_meta['test'] = $test_mode;
-				}
-				static::$current_event_id = $current_event_id; // for Test Mode
 			}
 		}
+		static::restore_current_event();
 	    return $result;
 	}
 	
@@ -357,10 +362,7 @@ class Gateways {
 	 * @return bool
 	 */
 	public static function em_booking_validate( $result, $EM_Booking ){
-		if( emp_is_manual_booking() ){
-			return $result;
-		}
-		if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' ){ //we only deal with the EM_Multiple_Booking class if we're in multi booking mode
+		if( get_option('dbem_multiple_bookings') && get_class($EM_Booking) == 'EM_Booking' && !emp_is_manual_booking() ){ //we only deal with the EM_Multiple_Booking class if we're in multi booking mode
 			return $result;
 		}
 		if( !empty($EM_Booking->booking_meta['gateway']) && !empty($_REQUEST['gateway']) && static::is_active($_REQUEST['gateway']) ){
@@ -405,12 +407,23 @@ class Gateways {
 		}
 	}
 	
-	public static function event_booking_payment_form( $EM_Event ){
-		if( !$EM_Event->is_free(true) ){
-			static::switch_current_event( $EM_Event ); // for Test Mode
-		    self::payment_form( $EM_Event->event_id );
-			static::restore_current_event(); // for Test Mode
+	/**
+	 * Backwards compatible hook in case templates are overriden but outdated
+	 * @param $EM_Event
+	 *
+	 * @return void
+	 */
+	public static function em_booking_form_footer ( $EM_Event ){
+		// if firing hook via the back-compat mode then don't proceed, since we'll also likely have the new hook above
+		if( !did_action('em_booking_form_confirm_footer') ){
+			static::event_booking_payment_form( $EM_Event );
 		}
+	}
+	
+	public static function event_booking_payment_form( $EM_Event ){
+		static::switch_current_event( $EM_Event ); // for Test Mode
+	    self::payment_form( $EM_Event->event_id );
+		static::restore_current_event(); // for Test Mode
 	}
 	
 	public static function mb_payment_form(){
@@ -703,15 +716,20 @@ class Gateways {
 			}
 			//$gateway_buttons = apply_filters('em_gateway_buttons', $gateway_buttons, $EM_Event);
 			if( count($gateway_buttons) > 0 ){
-				$button = '<div class="em-gateway-buttons"><div class="em-gateway-button first">'. implode('</div><div class="em-gateway-button">', $gateway_buttons).'</div></div>';			
+				ob_start();
+				?>
+				<div class="em-gateway-buttons em-booking-section hidden">
+					<?php echo implode('', $gateway_buttons); ?>
+				</div>
+				<?php
+				$button = ob_get_clean();
 			}
 			if( count($gateway_buttons) > 1 ){
-				$button .= '<input type="hidden" name="gateway" value="offline" />';
+				$button .= '<input type="hidden" name="gateway" value="offline" class="em-payment-gateway-option" data-custom-button="1">';
 			}else{
-				$button .= '<input type="hidden" name="gateway" value="'.$gateway.'" />';
+				$button .= '<input type="hidden" name="gateway" value="'.$gateway.'" class="em-payment-gateway-option" data-custom-button="1">';
 			}
 		}
-		if($button != '') $button .= '<style type="text/css">input.em-booking-submit { display:none !important; } .em-gateway-button input.em-booking-submit { display:block !important; }</style>'; //hide normal button if we have buttons
 		return apply_filters('em_gateway_booking_form_buttons', $button, $gateway_buttons);
 	}
 	

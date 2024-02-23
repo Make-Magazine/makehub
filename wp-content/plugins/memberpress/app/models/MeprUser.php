@@ -503,6 +503,10 @@ class MeprUser extends MeprBaseModel {
       }
     }
 
+    if( empty( trim( $name ) ) ) {
+      $name = $this->display_name;
+    }
+
     return $name;
   }
 
@@ -1012,14 +1016,8 @@ class MeprUser extends MeprBaseModel {
   public static function validate_forgot_password($params, $errors) {
     extract($params);
 
-    if(empty($mepr_user_or_email))
+    if(empty($mepr_user_or_email)){
       $errors[] = __('You must enter a Username or Email', 'memberpress');
-    else {
-      $is_email = (is_email($mepr_user_or_email) and email_exists($mepr_user_or_email));
-      $is_username = username_exists($mepr_user_or_email);
-
-      if(!$is_email and !$is_username)
-        $errors[] = __("That Username or Email wasn't found.", 'memberpress');
     }
 
     return $errors;
@@ -1562,7 +1560,7 @@ class MeprUser extends MeprBaseModel {
   }
 
   public function formatted_email() {
-    return $this->full_name() . " <{$this->user_email}>";
+    return str_replace(',', '', $this->full_name()) . " <{$this->user_email}>";
   }
 
   public static function manually_place_account_form($post) {
@@ -1626,7 +1624,7 @@ class MeprUser extends MeprBaseModel {
     $count = $wpdb->get_var($q);
 
     //If force all fields enabled, or no memberships have customized fields, just return the MeprOptions->custom_fields
-    if($force_all || empty($count)) { return $mepr_options->custom_fields; }
+    if(MeprHooks::apply_filters('mepr_show_all_custom_fields_on_account', $force_all) || empty($count)) { return $mepr_options->custom_fields; }
 
     //If the user hasn't purchased anything, and at least one membership has customized fields just show all fields
     $prods = $this->active_product_subscriptions('products');

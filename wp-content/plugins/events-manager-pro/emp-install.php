@@ -13,6 +13,9 @@ function emp_install() {
 			emp_create_bookings_relationships_table();
 			emp_create_checkin_table();
 			emp_create_automation_table();
+			if( defined('EM_AUTOMATION_LOGS') ) {
+				emp_create_automation_logs_table();
+			}
 	 		delete_option('emp_ms_global_install'); //in case for some reason the user changed global settings
 	 	}else{
 	 		update_option('emp_ms_global_install',1); //in case for some reason the user changes global settings in the future
@@ -156,6 +159,7 @@ function emp_create_reminders_table(){
 		  subject text NOT NULL,
 		  body text NOT NULL,
 		  attachment text NULL,
+		  args LONGTEXT NULL,
 		  attempts int NOT NULL DEFAULT 0,
 		  last_error text NULL,
 		  PRIMARY KEY  (queue_id)
@@ -222,14 +226,15 @@ function emp_create_automation_logs_table(){
 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 	$table_name = $wpdb->prefix.'em_automation_logs';
 	$sql = "CREATE TABLE ".$table_name." (
-			trigger_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			automation_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-			ts TIMESTAMP NULL,
-			completed int(1) unsigned NULL,
-			PRIMARY KEY  (automation_id)
+			log_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+			automation_id bigint(20) unsigned NOT NULL,
+			ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			affected bigint(20) unsigned NULL,
+			data longtext NULL,
+			PRIMARY KEY  (log_id)
 		) DEFAULT CHARSET=utf8 ;";
 	dbDelta($sql);
-	emp_sort_out_table_nu_keys($table_name,array('object_id','trigger_type','automation_ts'));
+	emp_sort_out_table_nu_keys($table_name,array('automation_id'));
 	if( emp_check_utf8mb4_tables() ) maybe_convert_table_to_utf8mb4( $table_name );
 }
 
@@ -404,7 +409,9 @@ function emp_add_options() {
 		$contact_person_emails['pending'] = sprintf(emp__('The following booking is %s :'),strtolower(emp__('Pending')))."\n\r".$contact_person_email_body_template;
 		$contact_person_emails['cancelled'] = sprintf(emp__('The following booking is %s :'),strtolower(emp__('Cancelled')))."\n\r".$contact_person_email_body_template;
 	
-		add_option('dbem_multiple_bookings_contact_email_confirmed_subject', emp__("Booking Confirmed"));
+	add_option('dbem_multiple_bookings_contact_email', false);
+	add_option('dbem_multiple_bookings_contact_email_user', false);
+	add_option('dbem_multiple_bookings_contact_email_confirmed_subject', emp__("Booking Confirmed"));
 	$respondent_email_body_localizable = sprintf(emp__('The following booking is %s :'),strtolower(emp__('Confirmed')))."\n\r".$contact_person_email_body_template;
 	add_option('dbem_multiple_bookings_contact_email_confirmed_body', $respondent_email_body_localizable);
 	

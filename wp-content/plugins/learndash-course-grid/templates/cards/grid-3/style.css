@@ -1,4 +1,4 @@
-.learndash-course-grid .grid-3 .post {
+.learndash-course-grid .items-wrapper .grid-3 .post {
     line-height: 1.428571429;
     background-color: #ffffff;
     border: 1px solid #dddddd;
@@ -17,12 +17,12 @@
     -webkit-box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 5%);
 }
 
-.learndash-course-grid .grid-3 .thumbnail {
+.learndash-course-grid .items-wrapper .grid-3 .thumbnail {
     margin: 0;
     padding: 0;
 }
 
-.learndash-course-grid .grid-3 .thumbnail img {
+.learndash-course-grid .items-wrapper .grid-3 .thumbnail img {
     margin: 0 auto;
     padding: 0;
     width: 100%;
@@ -30,12 +30,12 @@
     border-radius: 5px;
 }
 
-.learndash-course-grid .grid-3 .content {
+.learndash-course-grid .items-wrapper .grid-3 .content {
     padding: 30px 0 0;
     color: #333333;
 }
 
-.learndash-course-grid .grid-3 .content .entry-title {
+.learndash-course-grid .items-wrapper .grid-3 .content .entry-title {
     font-size: 1.2rem;
     font-weight: bold;
     line-height: 1.2;
@@ -43,7 +43,7 @@
     margin-bottom: 15px;
 }
 
-.learndash-course-grid .grid-3 .content .entry-title a {
+.learndash-course-grid .items-wrapper .grid-3 .content .entry-title a {
     text-decoration: none;
     color: #333;
     font-size: 1.2rem;
@@ -51,17 +51,17 @@
     font-weight: bold;
 }
 
-.learndash-course-grid .grid-3 .content .entry-content {
+.learndash-course-grid .items-wrapper .grid-3 .content .entry-content {
     margin-bottom: 20px ;
     color: #949ca1;
     font-size: 0.875rem;
 }
 
-.learndash-course-grid .grid-3 .content .entry-content > * {
+.learndash-course-grid .items-wrapper .grid-3 .content .entry-content > * {
     margin: 0;
 }
 
-.learndash-course-grid .grid-3 .content .meta {
+.learndash-course-grid .items-wrapper .grid-3 .content .meta {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -70,13 +70,13 @@
     margin-bottom: 20px;
 }
 
-.learndash-course-grid .grid-3 .content .author {
+.learndash-course-grid .items-wrapper .grid-3 .content .author {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.learndash-course-grid .grid-3 .content .author img {
+.learndash-course-grid .items-wrapper .grid-3 .content .author img {
     width: 30px;
     height: 30px;
     display: block;
@@ -84,30 +84,30 @@
     border: 2px solid #fd8739;
 }
 
-.learndash-course-grid .grid-3 .content .author .name {
+.learndash-course-grid .items-wrapper .grid-3 .content .author .name {
     font-weight: bold;
 }
 
-.learndash-course-grid .grid-3 .content .price-wrapper {
+.learndash-course-grid .items-wrapper .grid-3 .content .price-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
     color: #333333;
 }
 
-.learndash-course-grid .grid-3 .content .price-wrapper > * {
+.learndash-course-grid .items-wrapper .grid-3 .content .price-wrapper > * {
     width: 50%;
 }
 
-.learndash-course-grid .grid-3 .content .price-wrapper .trial {
+.learndash-course-grid .items-wrapper .grid-3 .content .price-wrapper .trial {
     text-align: left;
 }
 
-.learndash-course-grid .grid-3 .content .price-wrapper .price {
+.learndash-course-grid .items-wrapper .grid-3 .content .price-wrapper .price {
     text-align: right;
 }
 
-.learndash-course-grid .grid-3 .content .button {
+.learndash-course-grid .items-wrapper .grid-3 .content .button {
     margin: 0;
     padding: 0;
     background: none;
@@ -115,7 +115,7 @@
     width: 100%;
 }
 
-.learndash-course-grid .grid-3 .content .button a {
+.learndash-course-grid .items-wrapper .grid-3 .content .button a {
     text-decoration: none;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
@@ -137,7 +137,7 @@
     max-width: 70%;
 }
 
-.learndash-course-grid .grid-3 .content .button a:hover {
+.learndash-course-grid .items-wrapper .grid-3 .content .button a:hover {
     background: #fd8739;
     border-color: #fd8739;
 }

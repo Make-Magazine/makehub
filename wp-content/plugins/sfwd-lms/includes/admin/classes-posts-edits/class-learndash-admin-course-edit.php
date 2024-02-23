@@ -42,7 +42,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 * @since 2.2.1
 		 */
 		public function __construct() {
-			$this->post_type = learndash_get_post_type_slug( 'course' );
+			$this->post_type         = learndash_get_post_type_slug( 'course' );
+			$this->has_dashboard_tab = true;
 
 			parent::__construct();
 		}
@@ -60,6 +61,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-display-content.php';
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php';
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-navigation-settings.php';
+				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-extending.php';
+				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-dashboard.php';
 
 				if ( learndash_get_total_post_count( learndash_get_post_type_slug( 'group' ) ) !== 0 ) {
 					require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-course-groups.php';

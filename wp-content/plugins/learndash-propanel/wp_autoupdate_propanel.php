@@ -138,7 +138,7 @@ class nss_plugin_updater_learndash_propanel
 			if ( !property_exists ( $obj, 'icons' ) ) {
 				// Add an image for the WP 4.9.x plugins update screen.
 				$obj->icons = array(
-					'default' => LD_PP_PLUGIN_URL .'/assets/images/learndash-propanel.jpg'
+					'default' => LD_PP_PLUGIN_URL .'/dist/images/learndash-propanel.jpg'
 				);
 			}
 

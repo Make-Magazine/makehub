@@ -92,7 +92,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 		 */
 		public function register_templates() : array {
 			$this->templates = array(
-				'kadence_life_coach'              => array(
+				'kadence_life_coach'        => array(
 					'id'                => 'kadence_life_coach',
 					'label'             => 'Life Coach',
 					'theme'             => 'kadence',
@@ -103,7 +103,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g46/?cache=bust',
 				),
-				'kadence_homesteading'              => array(
+				'kadence_homesteading'      => array(
 					'id'                => 'kadence_homesteading',
 					'label'             => 'HomeSteading',
 					'theme'             => 'kadence',
@@ -114,7 +114,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g74/?cache=bust',
 				),
-				'kadence_meditation_course'              => array(
+				'kadence_meditation_course' => array(
 					'id'                => 'kadence_meditation_course',
 					'label'             => 'Meditation Course',
 					'theme'             => 'kadence',
@@ -125,7 +125,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g73/?cache=bust',
 				),
-				'kadence_cooking_course'              => array(
+				'kadence_cooking_course'    => array(
 					'id'                => 'kadence_cooking_course',
 					'label'             => 'Cooking Course',
 					'theme'             => 'kadence',
@@ -136,7 +136,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g63/?cache=bust',
 				),
-				'kadence_baking_course'              => array(
+				'kadence_baking_course'     => array(
 					'id'                => 'kadence_baking_course',
 					'label'             => 'Baking Course',
 					'theme'             => 'kadence',
@@ -147,7 +147,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g64/?cache=bust',
 				),
-				'kadence_sewing_course'              => array(
+				'kadence_sewing_course'     => array(
 					'id'                => 'kadence_sewing_course',
 					'label'             => 'Sewing Course',
 					'theme'             => 'kadence',
@@ -158,7 +158,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g42/?cache=bust',
 				),
-				'kadence_writing_course'              => array(
+				'kadence_writing_course'    => array(
 					'id'                => 'kadence_writing_course',
 					'label'             => 'Writing Course',
 					'theme'             => 'kadence',
@@ -169,7 +169,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g41/?cache=bust',
 				),
-				'kadence_nutrition_course'              => array(
+				'kadence_nutrition_course'  => array(
 					'id'                => 'kadence_nutrition_course',
 					'label'             => 'Nutrition Course',
 					'theme'             => 'kadence',
@@ -180,7 +180,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g37/?cache=bust',
 				),
-				'kadence_makeup'              => array(
+				'kadence_makeup'            => array(
 					'id'                => 'kadence_makeup',
 					'label'             => 'Makeup',
 					'theme'             => 'kadence',
@@ -191,7 +191,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g28/?cache=bust',
 				),
-				'kadence_design_course'              => array(
+				'kadence_design_course'     => array(
 					'id'                => 'kadence_design_course',
 					'label'             => 'Design Course',
 					'theme'             => 'kadence',
@@ -202,7 +202,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g36/?cache=bust',
 				),
-				'kadence_fitness_course'              => array(
+				'kadence_fitness_course'    => array(
 					'id'                => 'kadence_fitness_course',
 					'label'             => 'Fitness Course',
 					'theme'             => 'kadence',
@@ -213,7 +213,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g40/?cache=bust',
 				),
-				'kadence_photo_courses'              => array(
+				'kadence_photo_courses'     => array(
 					'id'                => 'kadence_photo_courses',
 					'label'             => 'Photo Courses',
 					'theme'             => 'kadence',
@@ -224,7 +224,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g34/?cache=bust',
 				),
-				'kadence_seo_skills'              => array(
+				'kadence_seo_skills'        => array(
 					'id'                => 'kadence_seo_skills',
 					'label'             => 'SEO Skills',
 					'theme'             => 'kadence',
@@ -235,7 +235,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g21/?cache=bust',
 				),
-				'kadence_digital_course'          => array(
+				'kadence_digital_course'    => array(
 					'id'                => 'kadence_digital_course',
 					'label'             => 'Digital Course',
 					'theme'             => 'kadence',
@@ -246,7 +246,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g22/?cache=bust',
 				),
-				'kadence_business_course'         => array(
+				'kadence_business_course'   => array(
 					'id'                => 'kadence_business_course',
 					'label'             => 'Business Course',
 					'theme'             => 'kadence',
@@ -257,7 +257,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g20/?cache=bust',
 				),
-				'kadence_course'                  => array(
+				'kadence_course'            => array(
 					'id'                => 'kadence_course',
 					'label'             => 'Course',
 					'theme'             => 'kadence',
@@ -268,7 +268,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g03/?cache=bust',
 				),
-				'kadence_get_income'              => array(
+				'kadence_get_income'        => array(
 					'id'                => 'kadence_get_income',
 					'label'             => 'Get Income',
 					'theme'             => 'kadence',
@@ -279,7 +279,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/member-g01/?cache=bust',
 				),
-				'kadence_online_course'           => array(
+				'kadence_online_course'     => array(
 					'id'                => 'kadence_online_course',
 					'label'             => 'Online Course',
 					'theme'             => 'kadence',
@@ -290,7 +290,7 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 					),
 					'preview_url'       => 'https://startertemplatecloud.com/g04/?cache=bust',
 				),
-				'kadence_painting_course'         => array(
+				'kadence_painting_course'   => array(
 					'id'                => 'kadence_painting_course',
 					'label'             => 'Painting Course',
 					'theme'             => 'kadence',
@@ -446,14 +446,14 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 				wp_enqueue_style(
 					'learndash-design-wizard',
 					LEARNDASH_LMS_PLUGIN_URL . '/assets/css/design-wizard.css',
-					array(),
+					array( 'wp-jquery-ui-dialog' ),
 					LEARNDASH_VERSION
 				);
 
 				wp_enqueue_script(
 					'learndash-design-wizard',
 					LEARNDASH_LMS_PLUGIN_URL . '/assets/js/design-wizard.js',
-					array( 'jquery', 'js-cookie', 'updates' ),
+					array( 'jquery', 'js-cookie', 'updates', 'jquery-ui-dialog' ),
 					LEARNDASH_VERSION,
 					true
 				);
@@ -489,6 +489,12 @@ if ( ! class_exists( 'LearnDash_Design_Wizard' ) ) {
 							'dw_error_default' => __( 'There\'s unknown error with the design wizard. Please try again later or contact our support if the issue persists.', 'learndash' ),
 						),
 						'templates'                   => $templates,
+						'confirm_dialog'              => array(
+							'proceed' => __( 'I understand, continue.', 'learndash' ),
+							'exit'    => __( 'Exit Setup', 'learndash' ),
+							'start_title' => __( 'Choose a template', 'learndash' ),
+							'end_title'   => __( 'Ready to Import?', 'learndash' ),
+						),
 					)
 				);
 			}

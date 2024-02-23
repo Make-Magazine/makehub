@@ -283,6 +283,12 @@ if ( class_exists( 'LearnDash_Settings_Page' ) && ! class_exists( 'LearnDash_Set
 				admin_url( 'admin.php' )
 			);
 
+			$site_setup_is_completed = 'completed' === get_option( 'learndash_setup_wizard_status' );
+			$import_is_in_progress   = Learndash_Admin_Action_Scheduler::is_task_in_progress(
+				Learndash_Admin_Import_Export::SCHEDULER_IMPORT_GROUP_NAME,
+				Learndash_Admin_Import_Handler::SCHEDULER_ACTION_NAME
+			);
+
 			/**
 			 * Filters steps shown on setup page.
 			 *
@@ -295,11 +301,17 @@ if ( class_exists( 'LearnDash_Settings_Page' ) && ! class_exists( 'LearnDash_Set
 				array(
 					'site_setup'    => array(
 						'class'              => 'setup',
-						'completed'          => 'completed' === get_option( 'learndash_setup_wizard_status' ),
+						'completed'          => $site_setup_is_completed,
 						'time_in_minutes'    => 5,
 						'url'                => admin_url( 'admin.php?page=learndash-setup-wizard' ),
 						'title'              => __( 'Set up your site', 'learndash' ),
-						'description'        => __( 'This is where the fun begins.', 'learndash' ),
+						'description'        => $site_setup_is_completed && $import_is_in_progress
+							? sprintf(
+								// Translators: placeholder: course.
+								esc_html_x( 'We are currently importing your demo %1$s.', 'Setup wizard, placeholder: course label', 'learndash' ),
+								esc_html( LearnDash_Custom_Label::label_to_lower( 'course' ) )
+							)
+							: __( 'This is where the fun begins.', 'learndash' ),
 						'action_label'       => __( 'Site & Course Details', 'learndash' ),
 						'action_description' => __( 'Tell us a little bit about your site.', 'learndash' ),
 						'icon_url'           => LEARNDASH_LMS_PLUGIN_URL . '/assets/images/setup.png',
@@ -312,10 +324,10 @@ if ( class_exists( 'LearnDash_Settings_Page' ) && ! class_exists( 'LearnDash_Set
 						'completed'          => 'completed' === get_option( 'learndash_design_wizard_status' ),
 						'time_in_minutes'    => 5,
 						'url'                => admin_url( 'admin.php?page=learndash-design-wizard' ),
-						'title'              => __( 'Design your site', 'learndash' ),
+						'title'              => __( 'Design your site ( Optional )', 'learndash' ),
 						'description'        => __( 'It\'s all about appearances.', 'learndash' ),
 						'action_label'       => __( 'Select A Starter Template', 'learndash' ),
-						'action_description' => __( 'Choose a design to start with and customize. This will overwrite your current theme, may add additional content and change settings on your site.', 'learndash' ),
+						'action_description' => __( 'Choose a design to start with and customize. This will overwrite your current theme, may add additional content and change settings on your site. This is an optional step and not required if you already have a theme configured.', 'learndash' ),
 						'icon_url'           => LEARNDASH_LMS_PLUGIN_URL . '/assets/images/design.png',
 						'button_type'        => 'arrow',
 						'button_class'       => '',

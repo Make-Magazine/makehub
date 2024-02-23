@@ -3,7 +3,7 @@ Contributors: pxlite, msykes
 Tags: events, event, event registration, event calendar, events calendar, event management, paypal, registration, ticket, tickets, ticketing, tickets, theme, widget, locations, maps, booking, attendance, attendee, buddypress, calendar, gigs, payment, payments, sports,
 Requires at least: 4.9
 Tested up to: 6.3
-Stable tag: 3.2.7
+Stable tag: 3.2.8.1
 
 == Description ==
 
@@ -22,6 +22,45 @@ http://wp-events-plugin.com/support/
 Please visit http://wp-events-plugin.com/documentation/installation/
 
 == Changelog ==
+= 3.2.8.1 =
+* Fixed validation issues of waitlisted bookings in MB mode.
+* Added `em-multiple-booking-form` class to single booking forms in MB mode.
+* Fixed MB `session_start()` PHP errors and issues by starting in `template_redirect` to allow saving of invalid cart contents on checkout/cart pages.
+* Fixed waitlist-approved booking forms not hiding or showing the correct confirmation information when successful.
+* Fixed waitlist-approved bookings not showing booking form on event page itself.
+* Fixed waitlist-approved booking action buttons not displaying on my bookings pages.
+* Fixed a bug in EM_Booking->validate() being used in EM_Multiple_Booking->validate_bookings_spaces() which was removing user fields from checkout page.
+* Fixed username custom user field validation issues when doing a manual booking for a new user with no-user mode enabled.
+* Fixed manual booking network errors due to gateway interference when marked fully paid.
+* Fixed some display issues with quickpay buttons.
+* Improved UI experience for manual bookings whilst selecting payment methods or amounts paid already.
+* Added/improved online payment support for manual bookings via PayPal Advanced, Stripe Checkout/Elements, Authorize.net.
+* Fixed automation booking status PHP errors preventing correct execution for some hooks.
+
+= 3.2.8 =
+* Fixed RSVP policy deadline error when no policy deadline is available for an event.
+* Fixed manual booking issues with legacy gateways mode.
+* Fixed manual booking status setting issues.
+* Changed `Gateway::is_displayable()` by adding `$context` and `$object` params to allow for better overriding options. Extending gateways must update with these parameters to avoid PHP errors.
+* Updated `Gateway::is_displayable()` to return a boolean value only, regardless of test limited mode.
+* Fixed checking of active gateways to ensure test mode is properly verified during limited mode against the current event/booking object and using `is_displayable()`.
+* Fixed `Gateways::restore_current_event()` not repopulating `Gateways::$current_event_id` with the previous `event_id`.
+* Added backend automation logging for `EM_AUTOMATION_LOGS`, with levels 1 (normal, when triggers are executed) and 2 (verbose, including errors).
+* Fixed booking data not getting replaced within `$EM_Bookings` object during the `filter()` method, which resulted in unfiltered bookings.
+* Fixed automation fatal error in builder if Gateways are disabled or using Legacy mode.
+* Fixed gateways not recognizing surcharges/discounts if added with priority 10 during `em_event_get_post` by decreasing the priority of the gateway hook to 100.
+* Fixed booking summary failing with free events.
+* Fixed coupons input field not showing if booking summary is disabled on the booking form.
+* Added 'Reply To:' in the batch email sending feature for bookings.
+* Fixed fatal error when in multilingual mode with Gateway legacy mode enabled.
+* Fixed late static binding issues with new gateway API and generating accurate pending spaces count.
+* Fixed email sending to bookings not breaking new lines and slashing apostrophes.
+* Fixed gateways with immediate payment not force-reserving spaces even if EM settings disable approvals/reservations, which could lead to overbooking.
+* Fixed gateway transaction ID column on booking admin tables showing incorrect/non-existent transaction ID for waitlisted records.
+* Added ability to email individual event confirmations to guests in MB mode.
+* Fixed `previous_status` of individual bookings in MB not being synced properly when changing the main MB status.
+* Fixed various PHP warnings
+
 = 3.2.7 =
 * added new Loader check for QR feature to prevent fatal errors from inconsistent feature active checks
 * added EM\Loader for backcompat with older EM versions

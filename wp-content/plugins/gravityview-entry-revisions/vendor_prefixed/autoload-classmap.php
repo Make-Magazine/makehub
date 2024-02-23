@@ -362,6 +362,7 @@ return array(
    'GravityKit\GravityRevisions\Foundation\WP\AjaxRouter' => $strauss_src . '/gravitykit/foundation/src/WP/AjaxRouter.php',
    'GravityKit\GravityRevisions\Foundation\Helpers\Core' => $strauss_src . '/gravitykit/foundation/src/Helpers/Core.php',
    'GravityKit\GravityRevisions\Foundation\Helpers\Arr' => $strauss_src . '/gravitykit/foundation/src/Helpers/Arr.php',
+   'GravityKit\GravityRevisions\Foundation\Helpers\WP' => $strauss_src . '/gravitykit/foundation/src/Helpers/WP.php',
    'GravityKit\GravityRevisions\Foundation\Core' => $strauss_src . '/gravitykit/foundation/src/Core.php',
    'GravityKit\GravityRevisions\Foundation\CLI\AbstractCommand' => $strauss_src . '/gravitykit/foundation/src/CLI/AbstractCommand.php',
    'GravityKit\GravityRevisions\Foundation\CLI\CLI' => $strauss_src . '/gravitykit/foundation/src/CLI/CLI.php',

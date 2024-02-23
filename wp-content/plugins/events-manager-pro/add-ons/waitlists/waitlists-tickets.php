@@ -40,7 +40,7 @@ class Tickets {
 			// further checks only needed if restriction already let us through
 			if( $is_available ){
 				// reset available value so it forces a refresh
-				if( isset($EM_Ticket->is_available) ) $EM_Ticket->is_available = null;
+				$EM_Ticket->is_available = null;
 				// check if ticket is availble to currently logged in/out person and role
 				\EM_Bookings::$disable_restrictions = false;
 				$is_available = $EM_Ticket->is_available();

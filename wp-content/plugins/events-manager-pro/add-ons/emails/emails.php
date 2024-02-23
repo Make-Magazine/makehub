@@ -211,13 +211,14 @@ class EM_Emails {
 					return true;
 				}
 				$email->attachment = $email->attachment != '' ? unserialize($email->attachment) : array();
+				$email->args = maybe_unserialize($email->args);
 				// get batch data if any and merge repeated info into this
 				if( !empty($email->batch_id) && !empty($batch_data[$email->batch_id]['attachments']) ){
 					// currently we only check attachments, future we could do more
 					$email->attachment = array_merge($email->attachment, $batch_data[$email->batch_id]['attachments']);
 				}
 				//send email, immediately delete after from queue
-			    if( $EM_Mailer->send($email->subject, $email->body, $email->email, $email->attachment) || $email->attempts > 3 ){
+			    if( $EM_Mailer->send($email->subject, $email->body, $email->email, $email->attachment, $email->args) || $email->attempts > 3 ){
 			    	$wpdb->query("DELETE FROM ".EM_EMAIL_QUEUE_TABLE.' WHERE queue_id ='.$email->queue_id);
 			    }else{
 				    $wpdb->query( $wpdb->prepare("UPDATE ".EM_EMAIL_QUEUE_TABLE.' SET attempts=attempts+1, last_error=%s WHERE queue_id=%d', implode('<br>', $EM_Mailer->errors), $email->queue_id));

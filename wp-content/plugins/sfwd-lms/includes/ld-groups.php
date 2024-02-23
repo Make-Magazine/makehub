@@ -7,6 +7,10 @@
  * @package LearnDash\Groups
  */
 
+use LearnDash\Core\Models\Product;
+use LearnDash\Core\Utilities\Cast;
+use StellarWP\Learndash\StellarWP\DB\DB;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -534,25 +538,48 @@ function learndash_group_course_access_from( $group_id = 0, $course_id = 0 ) {
  * @param int $user_id   User ID.
  * @param int $course_id Course ID.
  *
- * @return boolean Whether a course can be accessed by the user's group.
+ * @return bool Whether a course can be accessed by the user's group.
  */
 function learndash_user_group_enrolled_to_course( $user_id = 0, $course_id = 0 ) {
-	$user_id   = absint( $user_id );
-	$course_id = absint( $course_id );
-	if ( ( ! empty( $user_id ) ) && ( ! empty( $course_id ) ) ) {
-		$group_ids = learndash_get_users_group_ids( $user_id );
-		if ( ! empty( $group_ids ) ) {
-			foreach ( $group_ids as $group_id ) {
-				if ( learndash_group_has_course( $group_id, $course_id ) ) {
-					return true;
-				}
-			}
+	$user_id   = Cast::to_int( $user_id );
+	$course_id = Cast::to_int( $course_id );
+
+	if (
+		0 === $user_id
+		|| 0 === $course_id
+	) {
+		return false;
+	}
+
+	$user_group_ids = learndash_get_users_group_ids( $user_id );
+
+	if ( empty( $user_group_ids ) ) {
+		return false;
+	}
+
+	$user = get_user_by( 'ID', $user_id );
+
+	if ( ! $user ) {
+		return false;
+	}
+
+	foreach ( $user_group_ids as $group_id ) {
+		if ( ! learndash_group_has_course( $group_id, $course_id ) ) {
+			continue;
+		}
+
+		$group_product = Product::find( $group_id );
+
+		if (
+			$group_product
+			&& $group_product->user_has_access( $user )
+		) {
+			return true;
 		}
 	}
+
 	return false;
 }
-
-
 
 /**
  * Gets timestamp of when the course is available to a user in a group.
@@ -970,29 +997,32 @@ function learndash_set_course_groups( $course_id = 0, $course_groups_new = array
 }
 
 /**
- * Gets the list of users ids that belong to a group.
+ * Returns the list of user ids that belong to a group.
  *
  * @since 2.1.0
+ * @since 4.12.0 Passing `$bypass_transient` is not used anymore,
+ *            but not deprecated yet in case we need to use it again for better performance.
  *
- * @param int     $group_id         Optional. Group ID. Default 0.
- * @param boolean $bypass_transient Optional. Whether to bypass transient cache or not. Default false.
+ * @param int  $group_id         Group ID. Default 0. Optional only to allow for backward compatibility.
+ * @param bool $bypass_transient Optional. Whether to bypass transient cache or not. Default false. Not used anymore.
  *
- * @return array An array of user ids that belong to group.
+ * @return int[] User ids that belong to a group.
  */
 function learndash_get_groups_user_ids( $group_id = 0, bool $bypass_transient = false ): array {
-	$group_id = absint( $group_id );
+	$group_id = Cast::to_int( $group_id );
 
-	if ( empty( $group_id ) ) {
-		return array();
+	if ( $group_id <= 0 ) {
+		return [];
 	}
 
-	$group_users = learndash_get_groups_users( $group_id, $bypass_transient );
+	$ids = DB::get_col(
+		DB::table( 'usermeta' )
+			->select( 'user_id' )
+			->where( 'meta_key', 'learndash_group_users_' . $group_id )
+			->getSQL()
+	);
 
-	if ( empty( $group_users ) ) {
-		return array();
-	}
-
-	return wp_list_pluck( $group_users, 'ID' );
+	return array_map( [ Cast::class, 'to_int' ], $ids );
 }
 
 /**
@@ -1106,27 +1136,32 @@ function learndash_set_groups_users( $group_id = 0, $group_users_new = array() )
 }
 
 /**
- * Gets the list of administrator IDs for a group.
+ * Returns the list of administrator IDs for a group.
  *
  * @since 2.1.0
+ * @since 4.12.0 Passing `$bypass_transient` is not used anymore,
+ *            but not deprecated yet in case we need to use it again for better performance.
  *
- * @param int     $group_id         Group ID.
- * @param boolean $bypass_transient Optional. Whether to bypass transient cache or not. Default false.
+ * @param int  $group_id         Group ID. Default 0. Optional only to allow for backward compatibility.
+ * @param bool $bypass_transient Optional. Whether to bypass transient cache or not. Default false. Not used anymore.
  *
- * @return array An array of group administrator IDs.
+ * @return int[] Group administrator IDs.
  */
 function learndash_get_groups_administrator_ids( $group_id = 0, $bypass_transient = false ) {
+	$group_id = Cast::to_int( $group_id );
 
-	$group_leader_user_ids = array();
-
-	$group_id = absint( $group_id );
-	if ( ! empty( $group_id ) ) {
-		$group_leader_users = learndash_get_groups_administrators( $group_id, $bypass_transient );
-		if ( ! empty( $group_leader_users ) ) {
-			$group_leader_user_ids = wp_list_pluck( $group_leader_users, 'ID' );
-		}
+	if ( $group_id <= 0 ) {
+		return [];
 	}
-	return $group_leader_user_ids;
+
+	$ids = DB::get_col(
+		DB::table( 'usermeta' )
+			->select( 'user_id' )
+			->where( 'meta_key', 'learndash_group_leaders_' . $group_id )
+			->getSQL()
+	);
+
+	return array_map( [ Cast::class, 'to_int' ], $ids );
 }
 
 /**
@@ -1556,14 +1591,16 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ):
 	$user_id  = absint( $user_id );
 	$group_id = absint( $group_id );
 
-	if ( ( ! empty( $user_id ) ) && ( ! empty( $group_id ) ) ) {
-		$activity_type = 'group_access_user';
-
+	if ( ! empty( $user_id ) && ! empty( $group_id ) ) {
 		if ( $remove ) {
 			$user_enrolled = get_user_meta( $user_id, 'learndash_group_users_' . $group_id, true );
+
 			if ( $user_enrolled ) {
 				$action_success = true;
+
 				delete_user_meta( $user_id, 'learndash_group_users_' . $group_id );
+				// we don't delete the group enrollment date because it is used in reports.
+				delete_user_meta( $user_id, 'group_' . $group_id . '_access_from' );
 
 				/**
 				 * If the user is removed from the course then also remove the group_progress Activity.
@@ -1592,9 +1629,23 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ):
 			}
 		} else {
 			$user_enrolled = get_user_meta( $user_id, 'learndash_group_users_' . $group_id, true );
+
 			if ( ! $user_enrolled ) {
 				$action_success = true;
+
 				update_user_meta( $user_id, 'learndash_group_users_' . $group_id, $group_id );
+				update_user_meta( $user_id, 'learndash_group_' . $group_id . '_enrolled_at', time() );
+
+				// Set the course access time to the course start date if it exists.
+				// We need that to avoid issues with content dripping in the future and keep it consistent with a course access meta.
+
+				$product = Product::find( $group_id );
+
+				update_user_meta(
+					$user_id,
+					'group_' . $group_id . '_access_from',
+					$product && $product->get_start_date() ? $product->get_start_date() : time()
+				);
 
 				/**
 				 * Fires after the user is added to group access meta.
@@ -2929,3 +2980,37 @@ add_action(
 	10,
 	2
 );
+
+if ( ! function_exists( 'learndash_group_access_from' ) ) {
+	/**
+	 * Returns the date when a group becomes available for a user.
+	 *
+	 * It can return a future date if the group has not started yet (group with a start date).
+	 * Admin users don't have an access date even if they have access to the group.
+	 *
+	 * @since 4.8.0
+	 *
+	 * @param int $group_id Group ID to check.
+	 * @param int $user_id  User ID to check.
+	 *
+	 * @return int|null The date when a group becomes available for a user. Can be NULL when a user has been enrolled before 4.8.0 version.
+	 */
+	function learndash_group_access_from( int $group_id, int $user_id ): ?int {
+		$enrolled_timestamp = Cast::to_int(
+			get_user_meta( $user_id, 'group_' . $group_id . '_access_from', true )
+		);
+
+		/**
+		 * Filters the date when a group becomes available for a user.
+		 *
+		 * @since 4.8.0
+		 *
+		 * @param int|null $timestamp Enrollment date timestamp. Can be NULL when a user has been enrolled before 4.8.0 version.
+		 * @param int      $group_id  Group ID.
+		 * @param int      $user_id   User ID.
+		 *
+		 * @return int|null The date when a group becomes available for a user.
+		 */
+		return apply_filters( 'learndash_group_access_from', $enrolled_timestamp, $group_id, $user_id );
+	}
+}

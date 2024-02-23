@@ -24,7 +24,7 @@ class Policies {
 	}
 	
 	public static function admin_notices(){
-		global $EM_Notices;
+		global $EM_Notices; /* @var \EM_Notices $EM_Notices */
 		$EM_Event = em_get_event( $_REQUEST['event_id'] );
 		$notice = static::get_policy_notice( $EM_Event );
 		if( $notice ) {
@@ -199,6 +199,8 @@ class Policies {
 	public static function get_policy_deadline( $EM_Event = null ){
 		$time = get_option('dbem_bookings_rsvp_policy_deadline');
 		/* @var \EM_DateTime $EM_DateTime */
+		$EM_DateTime = new EM_DateTime();
+		$EM_DateTime->valid = false; // if we don't have a valid policy, EM_DateTime is now but invalid
 		if( $EM_Event !== null ) {
 			if ( is_numeric( $time ) ) {
 				$EM_DateTime = $EM_Event->start()->copy()->sub( 'PT' . absint( $time ) . 'H' );
@@ -206,7 +208,6 @@ class Policies {
 				$EM_DateTime = $EM_Event->start()->copy()->sub( $time );
 			}
 		} else {
-			$EM_DateTime = new EM_DateTime();
 			if ( is_numeric( $time ) ) {
 				$EM_DateTime->sub( 'PT' . absint( $time ) . 'H' );
 			} elseif ( \EM_Booking::is_dateinterval_string( $time ) ) {

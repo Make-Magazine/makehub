@@ -20,9 +20,9 @@ abstract class GPPA_Object_Type {
 	 * should extract that prop from the object.
 	 *
 	 * @param $object
-	 * @param  null  $primary_property_value
+	 * @param null|string $primary_property_value
 	 *
-	 * @return string|number
+	 * @return string|number|float|null
 	 */
 	abstract public function get_object_id( $object, $primary_property_value = null );
 
@@ -58,7 +58,7 @@ abstract class GPPA_Object_Type {
 	}
 
 	/**
-	 * @depecated 1.1.12
+	 * @deprecated 1.1.12
 	 *
 	 * @return boolean
 	 */
@@ -69,6 +69,18 @@ abstract class GPPA_Object_Type {
 		return apply_filters( 'gppa_object_type_restricted_' . $this->id, $this->_restricted );
 	}
 
+	/**
+	 * Determines if the current Object Type uses PHP filtering.
+	 *
+	 * Meaning, it takes a list of results and uses PHP to filter down the array to the results that match the filter.
+	 *
+	 * This is sometimes needed if an external API doesn't have the ability to filter results in a way that GPPA
+	 * expects.
+	 */
+	public function uses_php_filtering() {
+		return false;
+	}
+
 	public function __construct( $id ) {
 		$this->id = $id;
 
@@ -76,6 +88,9 @@ abstract class GPPA_Object_Type {
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'parse_date_in_filter_value' ), 10, 7 );
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'replace_special_values' ), 10 );
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'clean_numbers' ), 10 );
+
+		add_filter( 'gppa_object_type_query_' . $this->id, array( $this, 'add_limit_to_query' ), 10, 2 );
+		add_filter( 'gppa_object_type_query_' . $this->id, array( $this, 'maybe_add_offset_to_query' ), 10, 2 );
 	}
 
 	public function parse_date_in_filter_value( $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property ) {
@@ -112,6 +127,21 @@ abstract class GPPA_Object_Type {
 		return array();
 	}
 
+	/**
+	 * Get the group from just the property ID. This is used if loading properties is disabled during the queries.
+	 *
+	 * @param $property_id string
+	 *
+	 * @return string|null
+	 */
+	public function get_group_from_property_id( $property_id ) {
+		return null;
+	}
+
+	public function get_property_value_from_property_id( $property_id ) {
+		return str_replace( $this->get_group_from_property_id( $property_id ) . '_', '', $property_id );
+	}
+
 	public function get_default_templates() {
 		return array();
 	}
@@ -142,6 +172,10 @@ abstract class GPPA_Object_Type {
 
 	public function replace_gf_field_value( $value, $field_values, $primary_property_value, $filter, $ordering, $field ) {
 
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+
 		if ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $value, $field_matches ) ) {
 			if ( count( $field_matches ) && ! empty( $field_matches[0] ) ) {
 				foreach ( $field_matches[0] as $index => $match ) {
@@ -167,11 +201,30 @@ abstract class GPPA_Object_Type {
 		$value          = gp_populate_anything()->get_field_value_from_field_values( $input_id, $field_values );
 
 		/**
-		 * Strip price from pricing fields as it cannot be used when filtering.
+		 * Strip price from pricing fields if the current field is a product field.
 		 */
-		if ( is_string( $value ) && strpos( $value, '|' ) !== false ) {
-			$field = GFAPI::get_field( rgar( $field, 'formId' ), $input_id );
-			$value = gp_populate_anything()->maybe_extract_value_from_product( $value, $field );
+		if (
+			is_string( $value )
+			&& strpos( $value, '|' ) !== false
+		) {
+			$has_product_field_in_filter = false;
+
+			/*
+			 * If the filter property is also a product field, don't strip the price as product fields can have prices
+			 * in their saved values.
+			 */
+			if ( strpos( rgar( $filter, 'property' ), 'gf_field_' ) === 0 ) {
+				$filter_field = GFAPI::get_field( $primary_property_value, rgar( $filter, 'property' ) );
+
+				if ( $filter_field && GFCommon::is_product_field( $filter_field->type ) ) {
+					$has_product_field_in_filter = true;
+				}
+			}
+
+			if ( ! $has_product_field_in_filter ) {
+				$field = GFAPI::get_field( rgar( $field, 'formId' ), $input_id );
+				$value = gp_populate_anything()->maybe_extract_value_from_product( $value, $field );
+			}
 		}
 
 		return $value === '' ? null : $value;
@@ -191,11 +244,12 @@ abstract class GPPA_Object_Type {
 			case 'current_user':
 				$user = wp_get_current_user();
 
-				if ( $user && $user->ID > 0 ) {
+				if ( $user->ID > 0 ) {
 					return $user->{$special_value_parts[1]};
 				}
 
-				break;
+				/* No current post or user, return impossible ID */
+				return apply_filters( 'gppa_special_value_no_result', -1, $value, $special_value );
 			case 'current_post':
 				$post            = get_post();
 				$referer         = rgar( $_SERVER, 'HTTP_REFERER' );
@@ -205,26 +259,35 @@ abstract class GPPA_Object_Type {
 					$post = get_post( $referer_post_id );
 				}
 
+				/**
+				 * Filter the post used for the current post special value.
+				 *
+				 * @param WP_Post|null $post The post used for the current post special value.
+				 *
+				 * @since 2.0.22
+				 */
+				$post = apply_filters( 'gppa_special_value_current_post', $post );
+
 				if ( $post ) {
 					return $post->{$special_value_parts[1]};
 				}
 
-				break;
+				/* No current post or user, return impossible ID */
+				return apply_filters( 'gppa_special_value_no_result', -1, $value, $special_value );
 			case 'null':
 				return null;
-
-				break;
 		}
 
-		/* No current post or user, return impossible ID */
-		return apply_filters( 'gppa_special_value_no_result', -1, $value, $special_value );
+		/**
+		 * @todo document
+		 */
+		return apply_filters( 'gppa_special_value', $value, $special_value, $special_value_parts );
 
 	}
 
 	public function clean_numbers( $value ) {
-
-		// @todo Consider cleaning numbers inside the array?
-		if ( is_array( $value ) ) {
+		// Check for null here to avoid a PHP notice with GFCommon::is_numeric() and preg_match().
+		if ( is_array( $value ) || $value === null ) {
 			return $value;
 		}
 
@@ -237,7 +300,108 @@ abstract class GPPA_Object_Type {
 		}
 
 		return $value;
+	}
 
+	/**
+	 * Adds an offset to the query if page is provided in the initial query. Used primarily for GP Advanced Select.
+	 *
+	 * @param array $processed_filter_groups
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function maybe_add_offset_to_query( $processed_filter_groups, $args ) {
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		extract( $args );
+
+		if ( $page ) {
+			/*
+			 * Reduce the limit by 1 as it is set to be one more than the actual displayed limit, so we can detect if
+			 * there are more results to paginate through.
+			 *
+			 * Used by GP Advanced Select
+			 */
+			$processed_filter_groups['offset'] = max( ( $page - 1 ) * ( $limit - 1 ), 0 );
+		}
+
+		return $processed_filter_groups;
+	}
+
+	/**
+	 * Add the limit to the query from the query args.
+	 *
+	 * @param array $processed_filter_groups
+	 * @param array $args
+	 *
+	 * @return array
+	 */
+	public function add_limit_to_query( $processed_filter_groups, $args ) {
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
+		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
+		extract( $args );
+
+		$processed_filter_groups['limit'] = $limit;
+
+		return $processed_filter_groups;
 	}
 
 	public function get_object_prop_value( $object, $prop ) {
@@ -265,7 +429,7 @@ abstract class GPPA_Object_Type {
 		 * @param string $sql SQL query that will be ran to fetch the property values.
 		 * @param string $col Column that property values are being fetched from.
 		 * @param array $table Table that property values are being fetched from.
-		 * @param \GPPA_Object_Type $this The current object type.
+		 * @param \GPPA_Object_Type $object_type The current object type.
 		 *
 		 * @example https://github.com/gravitywiz/snippet-library/blob/master/gp-populate-anything/gppa-postmeta-property-value-limit.php
 		 */
@@ -293,19 +457,59 @@ abstract class GPPA_Object_Type {
 
 	}
 
-	public function process_filter_groups( $args, $processed_filter_groups = array() ) {
+	/**
+	 * Determine if an object type supports skipping the loading of properties during query. Before this optimization,
+	 * we would query for all properties (usually fairly inexpensive, but can be slow in some cases) so we knew
+	 * everything about a property such as its group, etc.
+	 *
+	 * If an object types has both a get_group_from_property_id() and get_property_value_from_property_id() method
+	 * to extract out the group and property from a property ID, we can skip loading all properties and save on the
+	 * queries on the frontend.
+	 *
+	 * @return bool
+	 */
+	public function can_skip_loading_properties_during_query() {
+		return method_exists( $this, 'get_property_value_from_property_id' );
+	}
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 * @var $field array
-		 */
+	public function process_query_args( $args, $processed_filter_groups = array() ) {
+
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
-		$properties = $this->get_properties_filtered( $primary_property_value );
+		if ( ! $this->can_skip_loading_properties_during_query() ) {
+			$properties = $this->get_properties_filtered( $primary_property_value );
+		}
 
 		gf_do_action( array( 'gppa_pre_object_type_query', $this->id ), $processed_filter_groups, $args );
 
@@ -315,17 +519,27 @@ abstract class GPPA_Object_Type {
 
 		foreach ( $filter_groups as $filter_group_index => $filter_group ) {
 			foreach ( $filter_group as $filter ) {
-				$filter_value = gp_populate_anything()->extract_custom_value( $filter['value'] );
-				$filter_value = GFCommon::replace_variables_prepopulate( $filter_value, false, false, true );
-
-				if ( ! $filter['value'] || ! $filter['property'] ) {
+				if ( rgblank( rgar( $filter, 'value' ) ) || rgblank( rgar( $filter, 'property' ) ) ) {
 					continue;
 				}
 
-				$property = rgar( $properties, $filter['property'] );
+				$filter_value = gp_populate_anything()->extract_custom_value( $filter['value'] );
 
-				if ( ! $property ) {
-					continue;
+				if ( is_scalar( $filter_value ) ) {
+					$filter_value = GFCommon::replace_variables_prepopulate( $filter_value, false, false, true );
+				}
+
+				if ( ! $this->can_skip_loading_properties_during_query() ) {
+					$property = rgar( $properties, $filter['property'] );
+
+					if ( ! $property ) {
+						continue;
+					}
+				} else {
+					$property = array(
+						'value' => $this->get_property_value_from_property_id( $filter['property'] ),
+						'group' => method_exists( $this, 'get_property_value_from_property_id' ) ? $this->get_group_from_property_id( $filter['property'] ) : null,
+					);
 				}
 
 				$filter_value   = apply_filters( 'gppa_replace_filter_value_variables_' . $this->id, $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property );
@@ -402,9 +616,17 @@ abstract class GPPA_Object_Type {
 	}
 
 	/**
-	 * Generate MySQL query using the provided select, from, joins, wheres, group_by, order, and order_by.
+	 * @deprecated 2.0 Use GPPA_Object_Type::process_query_args()
 	 *
-	 * @see GPPA_Object_Type::process_filter_groups()
+	 * @return array
+	 */
+	public function process_filter_groups( $args, $processed_filter_groups = array() ) {
+		return $this->process_query_args( $args, $processed_filter_groups );
+	}
+
+
+	/**
+	 * Generate MySQL query using the provided select, from, joins, wheres, group_by, order, and order_by.
 	 *
 	 * @param $query_args array Typically generated by GPPA_Object_Type::process_filter_groups()
 	 * @param $field GF_Field
@@ -462,11 +684,15 @@ abstract class GPPA_Object_Type {
 			$query[] = "ORDER BY {$order_by} {$order}";
 		}
 
-		$query_limit = gp_populate_anything()->get_query_limit( $this, $field );
-		$query[]     = $wpdb->prepare( 'LIMIT %d', $query_limit );
+		$offset = isset( $query_args['offset'] ) ? $query_args['offset'] : null;
+
+		if ( $offset !== null ) {
+			$query[] = $wpdb->prepare( 'LIMIT %d, %d', $offset, $query_args['limit'] );
+		} else {
+			$query[] = $wpdb->prepare( 'LIMIT %d', $query_args['limit'] );
+		}
 
 		return implode( "\n", $query );
-
 	}
 
 	public function get_value_specification( $value, $operator, $sql_operator ) {
@@ -514,6 +740,10 @@ abstract class GPPA_Object_Type {
 
 			case 'contains':
 			case 'does_not_contain':
+				if ( is_array( $value ) ) {
+					$value = implode( ',', $value );
+					$value = (string) $value;
+				}
 				return '%' . $wpdb->esc_like( $value ) . '%';
 
 			case 'is_in':
@@ -523,7 +753,7 @@ abstract class GPPA_Object_Type {
 				}
 
 				$value = is_array( $value ) ? $value : array_map( 'trim', explode( ',', $value ) );
-				return array_map( array( $wpdb, 'esc_like' ), $value );
+				return $value;
 
 			default:
 				return $value;

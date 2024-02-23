@@ -1,4 +1,12 @@
 <?php
+/**
+ * Blocks class.
+ *
+ * @since 2.0.0
+ *
+ * @package LearnDash\Course_Grid
+ */
+
 namespace LearnDash\Course_Grid;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -7,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use LearnDash\Course_Grid\Utilities;
 
+/**
+ * Blocks class.
+ */
 class Blocks
 {
     public function __construct()
@@ -29,15 +40,24 @@ class Blocks
 		}
 	}
 
+	/**
+	 * Enqueue Block Editor Assets.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
 	public function enqueue_block_editor_assets()
 	{
 		$asset_file = include LEARNDASH_COURSE_GRID_PLUGIN_PATH . 'includes/gutenberg/assets/js/index.asset.php';
 
-		wp_register_script( 'learndash-course-grid-block-editor-helper', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'includes/gutenberg/assets/js/editor.js', [], LEARNDASH_COURSE_GRID_VERSION );
+		wp_register_script( 'learndash-course-grid-block-editor-helper', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'assets/js/editor.js', [], LEARNDASH_COURSE_GRID_VERSION );
 		
 		wp_enqueue_script( 'learndash-course-grid-block-editor', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'includes/gutenberg/assets/js/index.js', array_merge( $asset_file['dependencies'], [ 'learndash-course-grid-block-editor-helper' ] ), $asset_file['version'] );
 
 		wp_enqueue_style( 'learndash-course-grid-block-editor', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'includes/gutenberg/assets/css/editor.css', [], LEARNDASH_COURSE_GRID_VERSION );
+
+		learndash_course_grid_load_inline_script_locale_data();
 
 		wp_localize_script( 
 			'learndash-course-grid-block-editor', 
@@ -51,6 +71,7 @@ class Blocks
 				'orderby' => Utilities::get_orderby_for_block_editor(),
 				'taxonomies' => Utilities::get_taxonomies_for_block_editor(),
 				'paginations' => Utilities::get_paginations_for_block_editor(),
+				'is_learndash_active' => defined( 'LEARNDASH_VERSION' ) ? true : false,
 			]
 		);
 	}

@@ -7,6 +7,8 @@
  * @package LearnDash\Course
  */
 
+use LearnDash\Core\Utilities\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -670,7 +672,6 @@ function learndash_get_course_expired_access_from_meta( $course_id = 0 ) {
 
 	return array_map( 'absint', $expired_user_ids );
 }
-
 
 /**
  * Gets the course settings from the course meta.
@@ -1541,4 +1542,73 @@ function learndash_is_course_post( $post ): bool {
 	$post_type = is_a( $post, WP_Post::class ) ? $post->post_type : get_post_type( $post );
 
 	return LDLMS_Post_Types::get_post_type_slug( 'course' ) === $post_type;
+}
+
+/**
+ * Returns the page url a user is redirected to after completing a course.
+ * Priority is: Course level setting -> Courses level setting -> Course page url.
+ *
+ * @since 4.11.0
+ *
+ * @param int $course_id Course ID.
+ *
+ * @return string
+ */
+function learndash_course_get_completion_url( int $course_id ): string {
+	// Get the course completion page.
+	$page_id = learndash_get_setting( $course_id, 'course_completion_page' );
+
+	// If the course completion page is not set, then get the default course completion page.
+	if ( empty( $page_id ) ) {
+		$page_id = LearnDash_Settings_Section::get_section_setting(
+			'LearnDash_Settings_Courses_Management_Display',
+			'course_completion_page'
+		);
+	}
+
+	$page_id = Cast::to_int( $page_id );
+
+	/**
+	 * Filters whether to redirect to the course completion page.
+	 *
+	 * @since 4.11.0
+	 *
+	 * @param bool $redirect_enabled Whether to redirect to the course completion page. Default true.
+	 * @param int  $course_id        Course ID.
+	 *
+	 * @return bool Whether to redirect to the course completion page.
+	 */
+	$course_completion_redirect_enabled = apply_filters(
+		'learndash_course_completion_page_redirect_enabled',
+		true,
+		$course_id
+	);
+
+	$page_url = get_permalink(
+		$course_completion_redirect_enabled && $page_id > 0
+			? $page_id
+			: $course_id
+	);
+	$page_url = Cast::to_string( $page_url );
+
+	/**
+	 * Filters the course completion URL.
+	 *
+	 * Before version 4.11.0, it was used to filter the ID/URL of the next course quiz which was incorrect.
+	 *
+	 * @since 2.1.0
+	 * @since 4.11.0 Added the `$page_id` parameter and `$page_url` parameter is always a string.
+	 *
+	 * @param string $page_url  The URL of the course completion page.
+	 * @param int    $course_id Course ID.
+	 * @param int    $page_id   The ID of the course completion page.
+	 *
+	 * @return string The URL of the course completion page.
+	 */
+	return apply_filters(
+		'learndash_course_completion_url',
+		$page_url,
+		$course_id,
+		$page_id
+	);
 }

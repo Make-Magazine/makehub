@@ -172,7 +172,7 @@ class MpdtApiCtrl extends MpdtBaseCtrl {
 
     $params = array();
     if(is_array($route->search_args)) {
-      $params = array('page'=>2,'per_page'=>10);
+      $params = array('page'=>1,'per_page'=>10);
     }
     elseif(is_array($route->update_args)) {
       $params = $data[0];

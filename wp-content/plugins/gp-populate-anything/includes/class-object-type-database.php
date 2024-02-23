@@ -4,8 +4,6 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	protected $_restricted = true;
 
-	protected $_primary_key_cache = array();
-
 	private static $blacklisted_columns = array( 'password', 'user_pass', 'user_activation_key' );
 
 	public $supports_null_filter_value = true;
@@ -17,7 +15,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	}
 
 	public function add_filter_hooks() {
-		add_filter( sprintf( 'gppa_object_type_%s_filter', $this->id ), array( $this, 'process_filter_default' ), 10, 4 );
+		add_filter( sprintf( 'gppa_object_type_%s_filter', $this->id ), array( $this, 'process_filter_default' ), 10, 2 );
 	}
 
 	/**
@@ -25,21 +23,16 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	 * the easiest thing to do is simply to select the first column since 99 times out of 100, it'll be a unique ID
 	 * column.
 	 *
-	 * @param $object
-	 *
-	 * @return number|string
+	 * @param array $object
+	 * @param null|string $primary_property_value
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
 		if ( ! $object || ! $primary_property_value ) {
 			return null;
 		}
 
-		if ( ! isset( $this->_primary_key_cache[ $primary_property_value ] ) ) {
-			$props = array_keys( $object );
-			$this->_primary_key_cache[ $primary_property_value ] = $props[0];
-		}
-
-		$key = $this->_primary_key_cache[ $primary_property_value ];
+		$props = array_keys( $object );
+		$key   = $props[0];
 
 		return $object[ $key ];
 	}
@@ -146,15 +139,27 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	public function process_filter_default( $query_builder_args, $args ) {
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $primary_property_value
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -166,15 +171,36 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	public function default_query_args( $args ) {
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $templates array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 * @var $field array
-		 * @var $unique boolean
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -192,14 +218,14 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	}
 
 	public function query_cache_hash( $args ) {
-		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
+		$query_args = $this->process_query_args( $args, $this->default_query_args( $args ) );
 
 		return $this->build_mysql_query( apply_filters( 'gppa_object_type_database_pre_query_parts', $query_args, $this ), rgar( $args, 'field' ) );
 	}
 
 	public function query( $args ) {
 
-		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
+		$query_args = $this->process_query_args( $args, $this->default_query_args( $args ) );
 
 		$query = $this->build_mysql_query( apply_filters( 'gppa_object_type_database_pre_query_parts', $query_args, $this ), rgar( $args, 'field' ) );
 

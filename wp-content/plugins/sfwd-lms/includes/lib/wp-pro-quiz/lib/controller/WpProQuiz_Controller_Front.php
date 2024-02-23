@@ -299,6 +299,36 @@ class WpProQuiz_Controller_Front {
 		$this->_settings = $mapper->fetchAll();
 	}
 
+	/**
+	 * It's a copy of the ajaxQuizLoadData method with the security fix.
+	 * Unfortunately, we could not do anything better at the moment.
+	 *
+	 * @since 4.12.0
+	 *
+	 * @param array $data Data.
+	 * @param mixed $func Function.
+	 *
+	 * @return false|string
+	 */
+	public static function ajaxQuizLoadDataWithoutCorrectAnswers( $data, $func ) {
+		$quiz_data = json_decode( self::ajaxQuizLoadData( $data, $func ), true );
+
+		if (
+			is_array( $quiz_data )
+			&& ! empty( $quiz_data )
+			&& ! empty( $quiz_data['json'] )
+			&& is_array( $quiz_data['json'] )
+		) {
+			foreach ( $quiz_data['json'] as &$question ) {
+				if ( isset( $question['correct'] ) ) {
+					unset( $question['correct'] );
+				}
+			}
+		}
+
+		return wp_json_encode( $quiz_data );
+	}
+
 	public static function ajaxQuizLoadData( $data, $func ) {
 		if ( is_user_logged_in() ) {
 			$user_id = get_current_user_id();
@@ -327,7 +357,6 @@ class WpProQuiz_Controller_Front {
 		} else {
 			$learndash_course_id = (int) learndash_get_course_id();
 		}
-
 
 		$view = new WpProQuiz_View_FrontQuiz();
 

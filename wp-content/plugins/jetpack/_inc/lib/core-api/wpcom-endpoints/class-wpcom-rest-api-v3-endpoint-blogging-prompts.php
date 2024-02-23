@@ -31,6 +31,13 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 	public $day_of_year_query = 0;
 
 	/**
+	 * A year used to force one prompt per day for a specific year.
+	 *
+	 * @var integer
+	 */
+	public $force_year = 0;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
@@ -95,6 +102,10 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 			return $this->proxy_request_to_wpcom( $request );
 		}
 
+		if ( $request->get_param( 'force_year' ) ) {
+			$this->force_year = $request->get_param( 'force_year' );
+		}
+
 		switch_to_blog( self::TEMPLATE_BLOG_ID );
 		add_action( 'pre_get_posts', array( $this, 'modify_query' ) );
 		add_filter( 'posts_clauses', array( $this, 'filter_sql' ) );
@@ -115,6 +126,10 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 	public function get_item( $request ) {
 		if ( ! $this->is_wpcom ) {
 			return $this->proxy_request_to_wpcom( $request, $request->get_param( 'id' ) );
+		}
+
+		if ( $request->get_param( 'force_year' ) ) {
+			$this->force_year = $request->get_param( 'force_year' );
 		}
 
 		switch_to_blog( self::TEMPLATE_BLOG_ID );
@@ -153,7 +168,7 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 
 			// If using a "year-less" date, e.g. `--03-16`, override the date_query, and prepare to modify sql manually.
 			// `after` should be a date string when making API requests, rather than an array.
-			if ( is_string( $date_query['after'] ) && 0 === strpos( $date_query['after'], '-' ) ) {
+			if ( is_string( $date_query['after'] ) && str_starts_with( $date_query['after'], '-' ) ) {
 				$date = date_create_from_format( '--m-d', $date_query['after'] );
 
 				if ( false !== $date ) {
@@ -178,20 +193,29 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 	public function filter_sql( $clauses ) {
 		global $wpdb;
 		if ( $this->day_of_year_query > 0 ) {
-			$day = $this->day_of_year_query;
+			$day  = $this->day_of_year_query;
+			$year = $this->force_year ? $this->force_year : wp_date( 'Y' );
 
 			// Grab the current sort order, `ASC` or `DESC`, so we can reuse it.
-			$order = end( explode( ' ', $clauses['orderby'] ) );
+			$exploded = explode( ' ', $clauses['orderby'] );
+			$order    = end( $exploded );
+
+			// Calculate the day of year for each prompt, from 1 to 366, but use the current year so that prompts published
+			// during leap years have the correct day for non-leap years.
+			$fields = $clauses['fields'] . $wpdb->prepare( ", DAYOFYEAR(CONCAT(%d, DATE_FORMAT({$wpdb->posts}.post_date, '-%%m-%%d'))) AS day_of_year", $year );
+
+			// When it's not a leap year, exclude posts used for Feb 29th. DAYOFYEAR will return null for Feb 29th on non-leap years.
+			$where = $clauses['where'] . $wpdb->prepare( " AND DAYOFYEAR(CONCAT(%d, DATE_FORMAT({$wpdb->posts}.post_date, '-%%m-%%d'))) IS NOT NULL", $year );
 
 			// Order posts regardless of year: get a list of posts for each day,
 			// starting with the query date through the end of the year, then from the start of the year through the day before.
 			$orderby = $wpdb->prepare(
 				'CASE ' .
-					"WHEN DAYOFYEAR({$wpdb->posts}.post_date) < %d " .
+					'WHEN day_of_year < %d ' .
 					// Push posts from the beginning of the year until the day before to the end.
-					"THEN DAYOFYEAR({$wpdb->posts}.post_date) + 366 " .
+					'THEN day_of_year + 366 ' .
 					// Otherwise order posts from the query date through the end of the year.
-					"ELSE DAYOFYEAR({$wpdb->posts}.post_date) " .
+					'ELSE day_of_year ' .
 				'END' .
 				// Sort posts for the same day by year, in asc or desc order.
 				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- order string cannot be escaped.
@@ -199,6 +223,28 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 				$day
 			);
 
+			if ( $this->force_year ) {
+				// If we're forcing the year, group by day of year, so that we only get one prompt per day.
+				$clauses['groupby'] = 'day_of_year';
+
+				// Ensure we get either to newest or oldest prompt for each day of the year, depending on the sort order.
+				// GROUP BY runs and collects the prompts for each day of the year before ORDER BY is run, so we first need to use MAX/MIN on post_date
+				// to find the most recent/oldest prompt for each day and join the results to the main query.
+				$clauses['join'] = $wpdb->prepare(
+					'INNER JOIN (' .
+						// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL function cannot be escaped.
+						'SELECT ' . ( 'DESC' === $order ? 'MAX' : 'MIN' ) . "({$wpdb->posts}.post_date) AS post_date, DAYOFYEAR(CONCAT(%d, DATE_FORMAT(post_date, '-%%m-%%d'))) AS day_of_year " .
+						"FROM {$wpdb->posts} " .
+						// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- reuses unmodified existing clause.
+						"WHERE 1=1 {$clauses['where']} " .
+						'GROUP BY day_of_year' .
+					") AS newest_prompts ON {$wpdb->posts}.post_date = newest_prompts.post_date",
+					$year
+				);
+			}
+
+			$clauses['fields']  = $fields;
+			$clauses['where']   = $where;
 			$clauses['orderby'] = $orderby;
 		}
 
@@ -230,7 +276,11 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 		}
 
 		if ( rest_is_field_included( 'label', $fields ) ) {
-			$data['label'] = __( 'Daily writing prompt', 'jetpack' );
+			if ( $this->is_in_bloganuary( $prompt->post_date_gmt ) ) {
+				$data['label'] = __( 'Bloganuary writing prompt', 'jetpack' );
+			} else {
+				$data['label'] = __( 'Daily writing prompt', 'jetpack' );
+			}
 		}
 
 		if ( rest_is_field_included( 'text', $fields ) ) {
@@ -258,14 +308,48 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 		}
 
 		if ( rest_is_field_included( 'answered_link', $fields ) ) {
-			$data['answered_link'] = esc_url( "https://wordpress.com/tag/dailyprompt-{$prompt->ID}" );
+			if ( $this->is_in_bloganuary( $prompt->post_date_gmt ) ) {
+				$bloganuary_id         = $this->get_bloganuary_id( $prompt->post_date_gmt );
+				$data['answered_link'] = esc_url( "https://wordpress.com/tag/{$bloganuary_id}" );
+			} else {
+				$data['answered_link'] = esc_url( "https://wordpress.com/tag/dailyprompt-{$prompt->ID}" );
+			}
 		}
 
 		if ( rest_is_field_included( 'answered_link_text', $fields ) ) {
 			$data['answered_link_text'] = __( 'View all responses', 'jetpack' );
 		}
 
+		if ( $this->is_in_bloganuary( $prompt->post_date_gmt ) && rest_is_field_included( 'bloganuary_id', $fields ) ) {
+			$data['bloganuary_id'] = $this->get_bloganuary_id( $prompt->post_date_gmt );
+		}
+
 		return $data;
+	}
+
+	/**
+	 * Return true if the post is in "Bloganuary"
+	 *
+	 * @param string $post_date_gmt Post date in GMT.
+	 * @return bool True if the post is in "Bloganuary".
+	 */
+	protected function is_in_bloganuary( $post_date_gmt ) {
+		$post_month = gmdate( 'm', strtotime( $post_date_gmt ) );
+		return $post_month === '01';
+	}
+
+	/**
+	 * Return the bloganuary id of the form `bloganuary-yyyy-dd`
+	 *
+	 * @param string $post_date_gmt Post date in GMT.
+	 * @return string Bloganuary id.
+	 */
+	protected function get_bloganuary_id( $post_date_gmt ) {
+		$post_year_day = gmdate( 'Y-d', strtotime( $post_date_gmt ) );
+		if ( $this->force_year ) {
+			$post_year_day = $this->force_year . '-' . gmdate( 'd', strtotime( $post_date_gmt ) );
+		}
+		return 'bloganuary-' . $post_year_day;
 	}
 
 	/**
@@ -278,6 +362,15 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 	public function prepare_date_response( $date_gmt, $date = null ) {
 		$post_date = $date ? $date : $date_gmt;
 		$date_obj  = date_create( $post_date );
+
+		if ( $this->force_year ) {
+			$date_obj->setDate( $this->force_year, $date_obj->format( 'm' ), $date_obj->format( 'd' ) );
+
+			// If ascending by day of year, go to the next year when we pass the last day of the year.
+			if ( $date_obj->format( 'm-d' ) === '12-31' ) {
+				$this->force_year += 1;
+			}
+		}
 
 		return false !== $date_obj ? $date_obj->format( 'Y-m-d' ) : substr( $post_date, 0, 10 );
 	}
@@ -292,23 +385,30 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 
 		$args = array(
 			// Modify date args so that will except a YYYY-MM-DD without a time.
-			'after'  => array(
+			'after'      => array(
 				'description'       => __( 'Show prompts following a given date.', 'jetpack' ),
 				'type'              => 'string',
 				'validate_callback' => function ( $param ) {
-					// Allow month and date without year, e.g. `--02-28`
-					if ( strpos( $param, '-' ) === 0 ) {
+					// Allow month and day without year, e.g. `--02-28`
+					if ( str_starts_with( $param, '-' ) ) {
 						return false !== date_create_from_format( '--m-d', $param );
 					}
 
 					return false !== date_create( $param );
 				},
 			),
-			'before' => array(
+			'before'     => array(
 				'description'       => __( 'Show prompts before a given date.', 'jetpack' ),
 				'type'              => 'string',
 				'validate_callback' => function ( $param ) {
 					return false !== date_create( $param );
+				},
+			),
+			'force_year' => array(
+				'description'       => __( 'Force the returned prompts to be for a specific year. Returns only one prompt for each day.', 'jetpack' ),
+				'type'              => 'integer',
+				'validate_callback' => function ( $param ) {
+					return is_numeric( $param ) && intval( $param ) > 0 && intval( $param ) < 9999;
 				},
 			),
 		);
@@ -387,6 +487,10 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 					'description' => __( 'Text for the link to answers for the prompt.', 'jetpack' ),
 					'type'        => 'string',
 				),
+				'bloganuary_id'         => array(
+					'description' => __( 'Id used by the bloganuary promotion', 'jetpack' ),
+					'type'        => 'string',
+				),
 			),
 		);
 	}
@@ -442,11 +546,11 @@ class WPCOM_REST_API_V3_Endpoint_Blogging_Prompts extends WP_REST_Posts_Controll
 		}
 
 		$response_status = wp_remote_retrieve_response_code( $response );
-		$response_body   = json_decode( wp_remote_retrieve_body( $response ) );
+		$response_body   = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( $response_status >= 400 ) {
-			$code    = isset( $response_body->code ) ? $response_body->code : 'unknown_error';
-			$message = isset( $response_body->message ) ? $response_body->message : __( 'An unknown error occurred.', 'jetpack' );
+			$code    = isset( $response_body['code'] ) ? $response_body['code'] : 'unknown_error';
+			$message = isset( $response_body['message'] ) ? $response_body['message'] : __( 'An unknown error occurred.', 'jetpack' );
 			return new WP_Error( $code, $message, array( 'status' => $response_status ) );
 		}
 

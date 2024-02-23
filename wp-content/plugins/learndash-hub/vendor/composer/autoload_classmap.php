@@ -15,6 +15,7 @@ return array(
     'LearnDash\\Hub\\Controller\\Licensing_Settings_Section' => $baseDir . '/src/controller/class-licensing-settings-section.php',
     'LearnDash\\Hub\\Controller\\Main_Controller' => $baseDir . '/src/controller/class-main-controller.php',
     'LearnDash\\Hub\\Controller\\Projects_Controller' => $baseDir . '/src/controller/class-projects-controller.php',
+    'LearnDash\\Hub\\Controller\\RemoteBanners' => $baseDir . '/src/controller/class-remote-banner.php',
     'LearnDash\\Hub\\Controller\\Settings_Controller' => $baseDir . '/src/controller/class-settings-controller.php',
     'LearnDash\\Hub\\Controller\\Signin_Controller' => $baseDir . '/src/controller/class-signin-controller.php',
     'LearnDash\\Hub\\Framework\\Base' => $baseDir . '/framework/class-base.php',

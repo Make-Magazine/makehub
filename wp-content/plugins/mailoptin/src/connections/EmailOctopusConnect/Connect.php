@@ -17,6 +17,9 @@ class Connect extends AbstractEmailOctopusConnect implements ConnectionInterface
 
         add_filter('mailoptin_registered_connections', array($this, 'register_connection'));
 
+        add_filter('mo_optin_form_integrations_default', array($this, 'integration_customizer_settings'));
+        add_filter('mo_optin_integrations_controls_after', array($this, 'integration_customizer_controls'));
+
         parent::__construct();
     }
 
@@ -26,6 +29,55 @@ class Connect extends AbstractEmailOctopusConnect implements ConnectionInterface
             self::OPTIN_CAMPAIGN_SUPPORT,
             self::OPTIN_CUSTOM_FIELD_SUPPORT
         ];
+    }
+
+    /**
+     * @param array $settings
+     *
+     * @return mixed
+     */
+    public function integration_customizer_settings($settings)
+    {
+        $settings['EmailOctopusConnect_lead_tags'] = apply_filters('mailoptin_customizer_optin_campaign_EmailOctopusConnect_lead_tags', '');
+
+        return $settings;
+    }
+
+    /**
+     * @param $controls
+     *
+     * @return array
+     */
+    public function integration_customizer_controls($controls)
+    {
+        if (defined('MAILOPTIN_DETACH_LIBSODIUM') === true) {
+            // always prefix with the name of the connect/connection service.
+            $controls[] = [
+                'field'       => 'text',
+                'name'        => 'EmailOctopusConnect_lead_tags',
+                'label'       => __('Lead Tags', 'mailoptin'),
+                'placeholder' => 'tag1, tag2',
+                'description' => __('Enter comma-separated list of tags to assign to subscribers who opt-in via this campaign.', 'mailoptin'),
+            ];
+
+        } else {
+
+            $content = sprintf(
+                __("Upgrade to %sMailOptin Premium%s to apply tags to leads as well as get access to loads of conversion features.", 'mailoptin'),
+                '<a target="_blank" href="https://mailoptin.io/pricing/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=emailoctopus_connection">',
+                '</a>',
+                '<strong>',
+                '</strong>'
+            );
+
+            $controls[] = [
+                'name'    => 'EmailOctopusConnect_upgrade_notice',
+                'field'   => 'custom_content',
+                'content' => $content
+            ];
+        }
+
+        return $controls;
     }
 
     /**

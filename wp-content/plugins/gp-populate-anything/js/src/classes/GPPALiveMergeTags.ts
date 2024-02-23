@@ -1,7 +1,7 @@
 import { enableSubmitButton } from '../helpers/toggleSubmitButton';
 import loUniq from 'lodash/uniq';
 // eslint-disable-next-line prettier/prettier
-import type { fieldID, formId } from './GPPopulateAnything';
+import type { formID, fieldID } from './GPPopulateAnything';
 
 const $ = window.jQuery;
 
@@ -10,13 +10,16 @@ export interface ILiveMergeTagValues {
 }
 
 export default class GPPALiveMergeTags {
-	public formId: formId;
+	public formId: formID;
 	public whitelist: { [ lmt: string ]: string } = {};
 	public liveAttrsOnPage: string[] = [];
 	public currentMergeTagValues: ILiveMergeTagValues = {};
 
+	// Only used on initial load. This is the same as currentMergeTagValues but with the merge tag values texturized.
+	public currentMergeTagValuesTexturized?: ILiveMergeTagValues = undefined;
+
 	// eslint-disable-next-line no-shadow
-	constructor( formId: formId ) {
+	constructor( formId: formID ) {
 		this.formId = formId;
 
 		this.addHooks();
@@ -97,6 +100,7 @@ export default class GPPALiveMergeTags {
 		 */
 		if ( gpnf && gpnf.getCurrentEntryId() ) {
 			this.currentMergeTagValues = {};
+			this.currentMergeTagValuesTexturized = undefined;
 
 			return;
 		}
@@ -104,6 +108,10 @@ export default class GPPALiveMergeTags {
 		if ( prefix + this.formId in window ) {
 			this.currentMergeTagValues = ( window as any )[
 				prefix + this.formId
+			];
+
+			this.currentMergeTagValuesTexturized = ( window as any )[
+				prefix + this.formId + '_TEXTURIZED'
 			];
 		}
 	}
@@ -193,7 +201,8 @@ export default class GPPALiveMergeTags {
 				new RegExp( `:id=${ fieldId }(\\.\\d+)?[}:]`, 'g' )
 			) || // @{score:id=xx}
 			value.match( /{all_fields(:.*)?}/g ) ||
-			value.match( /{order_summary(:.*)?}/g )
+			value.match( /{order_summary(:.*)?}/g ) ||
+			value.match( /{pricing_fields(:.*)?}/g )
 		);
 	}
 
@@ -329,6 +338,9 @@ export default class GPPALiveMergeTags {
 
 		this.currentMergeTagValues = mergeTagValues;
 
+		// No longer used after we get a response back from AJAX.
+		this.currentMergeTagValuesTexturized = undefined;
+
 		enableSubmitButton( this.getFormElement() );
 
 		$( document ).trigger( 'gppa_merge_tag_values_replaced', [
@@ -407,7 +419,7 @@ export default class GPPALiveMergeTags {
 								.find( '.chosen-container' ).length
 						) {
 							const inputID = $el.parent().attr( 'id' );
-							$( ( '#{0}' as any ).format( inputID ) ).trigger(
+							$( ( '#{0}' as any ).gformFormat( inputID ) ).trigger(
 								'chosen:updated'
 							);
 						}
@@ -450,6 +462,11 @@ export default class GPPALiveMergeTags {
 				canBeDecoupled = false;
 			}
 
+			// Read only inputs cannot be decoupled
+			if ( $el.prop( 'readonly' ) ) {
+				canBeDecoupled = false;
+			}
+
 			let attrValComparison = attrVal;
 
 			/**
@@ -475,6 +492,11 @@ export default class GPPALiveMergeTags {
 				// eslint-disable-next-line eqeqeq
 				attrValComparison !=
 					this.currentMergeTagValues[ elementMergeTag ] &&
+				(
+					! this?.currentMergeTagValuesTexturized?.[elementMergeTag] ||
+					// eslint-disable-next-line eqeqeq
+					attrValComparison != this.currentMergeTagValuesTexturized[ elementMergeTag ]
+				) &&
 				// eslint-disable-next-line eqeqeq
 				attrVal != elementMergeTag &&
 				canBeDecoupled

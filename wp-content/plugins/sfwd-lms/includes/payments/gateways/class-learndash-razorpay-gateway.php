@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use LearnDash\Core\Models\Product;
 use LearnDash\Core\Models\Transaction;
-use Razorpay\Api\Api;
-use Razorpay\Api\Errors\SignatureVerificationError;
+use StellarWP\Learndash\Razorpay\Api\Api;
+use StellarWP\Learndash\Razorpay\Api\Errors\SignatureVerificationError;
 
 if ( ! class_exists( 'Learndash_Razorpay_Gateway' ) && class_exists( 'Learndash_Payment_Gateway' ) ) {
 	/**
@@ -271,10 +271,6 @@ if ( ! class_exists( 'Learndash_Razorpay_Gateway' ) && class_exists( 'Learndash_
 			$this->webhook_secret       = $this->settings[ "webhook_secret_$setting_suffix" ];
 			$this->customer_id_meta_key = $this->is_test_mode() ? self::META_KEY_CUSTOMER_ID_TEST : self::META_KEY_CUSTOMER_ID_LIVE;
 			$this->plans_meta_key       = $this->is_test_mode() ? self::META_KEY_PLANS_TEST : self::META_KEY_PLANS_LIVE;
-
-			if ( ! class_exists( 'Razorpay\Api\Api' ) ) {
-				require_once LEARNDASH_LMS_LIBRARY_DIR . '/razorpay-php/Razorpay.php';
-			}
 
 			if ( ! empty( $this->secret_key ) ) {
 				$this->api = new Api( $this->publishable_key, $this->secret_key );

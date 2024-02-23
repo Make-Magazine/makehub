@@ -7,6 +7,10 @@
  * @package LearnDash\Essay
  */
 
+use LearnDash\Core\Infrastructure\File_Protection\File_Download_Handler;
+use LearnDash\Core\Utilities\Cast;
+use LearnDash\Core\API;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -64,31 +68,30 @@ function learndash_register_essay_post_type() {
 		$show_in_admin_bar = false;
 	}
 
-	$show_in_rest = LearnDash_REST_API::enabled( learndash_get_post_type_slug( 'essay' ) ) || LearnDash_REST_API::gutenberg_enabled( learndash_get_post_type_slug( 'essay' ) );
-
 	$args = array(
-		'label'               => esc_html__( 'sfwd-essays', 'learndash' ),
+		'label'                 => esc_html__( 'sfwd-essays', 'learndash' ),
 		// translators: quiz, question.
-		'description'         => sprintf( esc_html_x( 'Submitted essays via a %1$s %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
-		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'comments', 'author' ),
-		'hierarchical'        => false,
-		'public'              => true,
-		'show_ui'             => true,
-		'show_in_menu'        => false,
-		'show_in_admin_bar'   => $show_in_admin_bar,
-		'query_var'           => true,
-		'rewrite'             => array( 'slug' => 'essay' ),
-		'menu_position'       => 5,
-		'show_in_nav_menus'   => false,
-		'can_export'          => true,
-		'has_archive'         => false,
-		'show_in_rest'        => $show_in_rest,
-		'exclude_from_search' => true,
-		'publicly_queryable'  => true,
-		'capability_type'     => 'essay',
-		'capabilities'        => $capabilities,
-		'map_meta_cap'        => true,
+		'description'           => sprintf( esc_html_x( 'Submitted essays via a %1$s %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor', 'comments', 'author' ),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => false,
+		'show_in_admin_bar'     => $show_in_admin_bar,
+		'query_var'             => true,
+		'rewrite'               => array( 'slug' => 'essay' ),
+		'menu_position'         => 5,
+		'show_in_nav_menus'     => false,
+		'can_export'            => true,
+		'has_archive'           => false,
+		'show_in_rest'          => false,
+		'rest_controller_class' => API\Controllers\Essays::class,
+		'exclude_from_search'   => true,
+		'publicly_queryable'    => true,
+		'capability_type'       => 'essay',
+		'capabilities'          => $capabilities,
+		'map_meta_cap'          => true,
 	);
 	/** This filter is documented in includes/ld-assignment-uploads.php */
 	$args = apply_filters( 'learndash-cpt-options', $args, 'sfwd-essays' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores -- Better to keep it this way for now.
@@ -282,6 +285,8 @@ function learndash_essay_permissions() {
 					$course_id = get_post_meta( $post->ID, 'course_id', true );
 					$course_id = absint( $course_id );
 
+					// For the future, if the essay is not associated with a course, we can't check for common groups.
+					// It feels like a bug, but I'm not fixing it at the moment.
 					if ( learndash_check_group_leader_course_user_intersect( $user_id, $post->post_author, $course_id ) ) {
 						$can_view_file = true;
 					}
@@ -291,8 +296,13 @@ function learndash_essay_permissions() {
 
 		if ( true === $can_view_file ) {
 			$uploaded_file = get_post_meta( $post->ID, 'upload', true );
-			if ( ( ! empty( $uploaded_file ) ) && ( ! strstr( $post->post_content, $uploaded_file ) ) ) {
-				$quiz_essay_upload_link = '<p><a target="_blank" href="' . esc_url( $uploaded_file ) . '">' . esc_html__( 'View uploaded file', 'learndash' ) . '</a></p>';
+
+			if (
+				$post
+				&& ! empty( $uploaded_file )
+				&& ! strstr( $post->post_content, $uploaded_file )
+			) {
+				$quiz_essay_upload_link = '<p><a target="_blank" href="' . esc_url( learndash_quiz_essay_get_download_url( $post->ID ) ) . '">' . esc_html__( 'View uploaded file', 'learndash' ) . '</a></p>';
 
 				/**
 				 * Filters quiz essay upload link HTML output.
@@ -364,6 +374,7 @@ add_action( 'wp', 'learndash_essay_permissions' );
  * Called from `LD_QuizPro::checkAnswers()` via AJAX.
  *
  * @since 2.2.0
+ * @since 4.10.3 Essays have a learndash_version meta field to help distinguish between old and new Essays.
  *
  * @param string                   $response      Essay response.
  * @param WpProQuiz_Model_Question $this_question Pro quiz question object.
@@ -462,6 +473,8 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 
 		update_post_meta( $essay_id, 'quiz_post_id', $quiz->getPostId() );
 		update_post_meta( $essay_id, 'question_post_id', $this_question->getQuestionPostId() );
+
+		update_post_meta( $essay_id, 'learndash_version', LEARNDASH_VERSION );
 
 		if ( 'upload' == $essay_data->getGradedType() ) {
 			update_post_meta( $essay_id, 'upload', esc_url( $response ) );
@@ -919,16 +932,16 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			$file_title = pathinfo( $filename, PATHINFO_FILENAME );
 			$file_time  = microtime( true ) * 100;
 
-			$filename = sprintf( 'question_%d_%d_%s.%s', $question_id, $file_time, $file_title, $filetype['ext'] );
+			$filename = sprintf( 'question_%d_%d_%s_%s.%s', $question_id, $file_time, $file_title, uniqid(), $filetype['ext'] );
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
 			$filename        = apply_filters( 'learndash_essay_upload_filename', $filename, $question_id, $file_title, $filetype['ext'] );
 			$upload_dir      = wp_upload_dir();
-			$upload_dir_base = str_replace( '\\', '/', $upload_dir['basedir'] );
+			$upload_dir_base = str_replace( '\\', DIRECTORY_SEPARATOR, $upload_dir['basedir'] );
 			$upload_url_base = $upload_dir['baseurl'];
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-			$upload_dir_path = $upload_dir_base . apply_filters( 'learndash_essay_upload_dirbase', '/essays', $filename, $upload_dir );
+			$upload_dir_path = $upload_dir_base . apply_filters( 'learndash_essay_upload_dirbase', DIRECTORY_SEPARATOR . 'learndash' . DIRECTORY_SEPARATOR . 'essays', $filename, $upload_dir );
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-			$upload_url_path = $upload_url_base . apply_filters( 'learndash_essay_upload_urlbase', '/essays/', $filename, $upload_dir );
+			$upload_url_path = $upload_url_base . apply_filters( 'learndash_essay_upload_urlbase', DIRECTORY_SEPARATOR . 'learndash' . DIRECTORY_SEPARATOR . 'essays' . DIRECTORY_SEPARATOR, $filename, $upload_dir );
 
 			if ( ! file_exists( $upload_dir_path ) ) {
 				if ( is_writable( dirname( $upload_dir_path ) ) ) {
@@ -958,12 +971,12 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			 */
 			$i = 0;
 
-			while ( file_exists( $upload_dir_path . '/' . $filename ) ) {
+			while ( file_exists( $upload_dir_path . DIRECTORY_SEPARATOR . $filename ) ) {
 				$i++;
 				$filename = $file_title . '_' . $i . '.' . $file_ext;
 			}
 
-			$file_dest   = $upload_dir_path . '/' . $filename;
+			$file_dest   = $upload_dir_path . DIRECTORY_SEPARATOR . $filename;
 			$destination = $upload_url_path . $filename;
 
 			/**
@@ -1016,10 +1029,16 @@ function learndash_before_delete_essay( $post_id ) {
 	if ( ( ! empty( $post_id ) ) && ( 'sfwd-essays' == get_post_type( $post_id ) ) ) {
 		$file_path = get_post_meta( $post_id, 'upload', true );
 		if ( ! empty( $file_path ) ) {
-			$file_path = basename( $file_path );
-
 			$url_link_arr = wp_upload_dir();
-			$file_path    = trailingslashit( str_replace( '\\', '/', $url_link_arr['basedir'] ) ) . 'essays/' . basename( $file_path );
+			$base_dir     = trailingslashit( str_replace( '\\', DIRECTORY_SEPARATOR, $url_link_arr['basedir'] ) );
+			$file_name    = basename( Cast::to_string( $file_path ) );
+
+			// Since LD version 4.10.3 we've changed the file path and added the learndash_version meta.
+
+			$file_path = get_post_meta( $post_id, 'learndash_version', true )
+						? $base_dir . 'learndash' . DIRECTORY_SEPARATOR . 'essays' . DIRECTORY_SEPARATOR . $file_name
+						: $base_dir . 'essays' . DIRECTORY_SEPARATOR . $file_name;
+
 			if ( file_exists( $file_path ) ) {
 				unlink( $file_path );
 			}
@@ -1110,5 +1129,35 @@ function learndash_get_user_quiz_entry_for_essay( $essay_post_id = 0, $user_id =
 				}
 			}
 		}
+	}
+}
+
+/**
+ * Returns the URL to download the quiz essay file, if any.
+ *
+ * @since 4.10.3
+ *
+ * @param int $post_id Essay ID.
+ *
+ * @return string Empty string if no file, otherwise the URL to download the file.
+ */
+function learndash_quiz_essay_get_download_url( int $post_id ): string {
+	$file_name = Cast::to_string(
+		get_post_meta( $post_id, 'upload', true )
+	);
+
+	if ( empty( $file_name ) ) {
+		return '';
+	}
+
+	// Since LD version 4.10.3 we've changed the path ID and added the learndash_version meta.
+	$file_path_id = get_post_meta( $post_id, 'learndash_version', true )
+		? 'uploads_learndash_essays'
+		: 'uploads_essays';
+
+	try {
+		return File_Download_Handler::get_download_url( $file_path_id, basename( $file_name ) );
+	} catch ( Exception $e ) {
+		return '';
 	}
 }

@@ -9,6 +9,7 @@ use Automattic\Jetpack\Connection\Client;
 use Automattic\Jetpack\Connection\Manager as Connection_Manager;
 use Automattic\Jetpack\Connection\Rest_Authentication;
 use Automattic\Jetpack\Connection\REST_Connector;
+use Automattic\Jetpack\Current_Plan as Jetpack_Plan;
 use Automattic\Jetpack\Jetpack_CRM_Data;
 use Automattic\Jetpack\Plugins_Installer;
 use Automattic\Jetpack\Stats\Options as Stats_Options;
@@ -17,9 +18,7 @@ use Automattic\Jetpack\Status\Visitor;
 use Automattic\Jetpack\Waf\Brute_Force_Protection\Brute_Force_Protection_Shared_Functions;
 use Automattic\Jetpack\Waf\Waf_Compatibility;
 
-/**
- * Disable direct access.
- */
+// Disable direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -70,6 +69,22 @@ class Jetpack_Core_Json_Api_Endpoints {
 		$module_toggle_endpoint = new Jetpack_Core_API_Module_Toggle_Endpoint( new Jetpack_IXR_Client() );
 		$site_endpoint          = new Jetpack_Core_API_Site_Endpoint();
 		$widget_endpoint        = new Jetpack_Core_API_Widget_Endpoint();
+
+		/**
+		 * TODO: Move me somewhere that makes more sense.
+		 * Also give me permissions that aren't awful.
+		 */
+		register_rest_route(
+			'jetpack/v4',
+			'jetpack-ai-jwt',
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => __CLASS__ . '::get_openai_jwt',
+				'permission_callback' => function () {
+					return ( new Connection_Manager( 'jetpack' ) )->is_user_connected() && current_user_can( 'edit_posts' );
+				},
+			)
+		);
 
 		register_rest_route(
 			'jetpack/v4',
@@ -750,6 +765,80 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'permission_callback' => __CLASS__ . '::view_admin_page_permission_check',
 			)
 		);
+
+		// Save subscriber token and redirect
+		register_rest_route(
+			'jetpack/v4',
+			'/subscribers/auth',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => __CLASS__ . '::set_subscriber_cookie_and_redirect',
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'redirect_url' => array(
+						'required'          => true,
+						'description'       => __( 'The URL to redirect to.', 'jetpack' ),
+						'validate_callback' => 'wp_http_validate_url',
+						'sanitize_callback' => 'sanitize_url',
+						'type'              => 'string',
+						'format'            => 'uri',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Ask WPCOM for a JWT token to use for OpenAI conversations.
+	 * TODO: Clean me up. This is ugly hack code.
+	 */
+	public static function get_openai_jwt() {
+		$blog_id = \Jetpack_Options::get_option( 'id' );
+
+		$response = \Automattic\Jetpack\Connection\Client::wpcom_json_api_request_as_user(
+			"/sites/$blog_id/jetpack-openai-query/jwt",
+			'2',
+			array(
+				'method'  => 'POST',
+				'headers' => array( 'Content-Type' => 'application/json; charset=utf-8' ),
+			),
+			wp_json_encode( array() ),
+			'wpcom'
+		);
+
+		if ( is_wp_error( $response ) ) {
+			return $response;
+		}
+
+		$json = json_decode( wp_remote_retrieve_body( $response ) );
+
+		if ( ! isset( $json->token ) ) {
+			return new WP_Error( 'no-token', 'No token returned from WPCOM' );
+		}
+
+		return array(
+			'token'   => $json->token,
+			'blog_id' => $blog_id,
+		);
+	}
+
+	/**
+	 * Set subscriber cookie and redirect
+	 *
+	 * @param \WP_Rest_Request $request The URL to redirect to.
+	 *
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public static function set_subscriber_cookie_and_redirect( $request ) {
+		require_once JETPACK__PLUGIN_DIR . 'extensions/blocks/premium-content/_inc/subscription-service/include.php';
+		$subscription_service = \Automattic\Jetpack\Extensions\Premium_Content\subscription_service();
+		$token                = $subscription_service->get_and_set_token_from_request();
+		$payload              = $subscription_service->decode_token( $token );
+		$is_valid_token       = ! empty( $payload );
+		if ( $is_valid_token ) {
+			return new WP_REST_Response( null, 302, array( 'location' => $request['redirect_url'] ) );
+		}
+		return new WP_Error( 'invalid-token', 'Invalid Token' );
 	}
 
 	/**
@@ -1413,7 +1502,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 	 */
 	public static function view_jetpack_connection_test_check() {
 		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- This is verifying the trusted caller via a shared private key and timestamp.
-		if ( ! isset( $_GET['signature'], $_GET['timestamp'], $_GET['url'] ) ) {
+		if ( ! isset( $_GET['signature'] ) || ! isset( $_GET['timestamp'] ) || ! isset( $_GET['url'] ) ) {
 			return false;
 		}
 		$signature = base64_decode( wp_unslash( $_GET['signature'] ) ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
@@ -2302,7 +2391,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'default'           => '',
 				'validate_callback' => __CLASS__ . '::validate_string',
 				'sanitize_callback' => 'esc_textarea',
-				'jp_group'          => 'waf',
+				'jp_group'          => 'settings',
 			),
 			'jetpack_waf_share_data'               => array(
 				'description'       => esc_html__( 'Share data with Jetpack.', 'jetpack' ),
@@ -2445,7 +2534,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'description'       => esc_html__( 'Enabled Services and those hidden behind a button', 'jetpack' ),
 				'type'              => 'object',
 				'default'           => array(
-					'visible' => array( 'twitter', 'facebook' ),
+					'visible' => array( 'facebook', 'x' ),
 					'hidden'  => array(),
 				),
 				'validate_callback' => __CLASS__ . '::validate_services',
@@ -2514,7 +2603,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'validate_callback' => __CLASS__ . '::validate_custom_service',
 				'jp_group'          => 'sharedaddy',
 			),
-			// Not an option, but an action that can be perfomed on the list of custom services passing the service ID.
+			// Not an option, but an action that can be performed on the list of custom services passing the service ID.
 			'sharing_delete_service'               => array(
 				'description'       => esc_html__( 'Delete custom sharing service.', 'jetpack' ),
 				'type'              => 'string',
@@ -2534,7 +2623,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 			'jetpack_sso_match_by_email'           => array(
 				'description'       => esc_html__( 'Match by Email', 'jetpack' ),
 				'type'              => 'boolean',
-				'default'           => 0,
+				'default'           => 1,
 				'validate_callback' => __CLASS__ . '::validate_boolean',
 				'jp_group'          => 'sso',
 			),
@@ -2551,6 +2640,13 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'description'       => esc_html__( "Show a <em>'follow comments'</em> option in the comment form", 'jetpack' ),
 				'type'              => 'boolean',
 				'default'           => 1,
+				'validate_callback' => __CLASS__ . '::validate_boolean',
+				'jp_group'          => 'subscriptions',
+			),
+			'sm_enabled'                           => array(
+				'description'       => esc_html__( 'Show popup Subscribe modal to readers.', 'jetpack' ),
+				'type'              => 'boolean',
+				'default'           => 0,
 				'validate_callback' => __CLASS__ . '::validate_boolean',
 				'jp_group'          => 'subscriptions',
 			),
@@ -2793,6 +2889,15 @@ class Jetpack_Core_Json_Api_Endpoints {
 				'default'           => 0,
 				'validate_callback' => __CLASS__ . '::validate_boolean',
 				'jp_group'          => 'stats',
+			),
+
+			// Whether to share stats views with WordPress.com Reader.
+			'wpcom_reader_views_enabled'           => array(
+				'description'       => esc_html__( 'Show post views in the WordPress.com Reader.', 'jetpack' ),
+				'type'              => 'boolean',
+				'default'           => 1,
+				'validate_callback' => __CLASS__ . '::validate_boolean',
+				'jp_group'          => 'settings',
 			),
 
 			// Akismet - Not a module, but a plugin. The options can be passed and handled differently.
@@ -3200,7 +3305,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 					/* Translators: first variable is the name of a parameter passed to endpoint holding the role that will be checked, the second is a list of roles allowed to see stats. The parameter is checked against this list. */
 					esc_html__( '%1$s must be %2$s.', 'jetpack' ),
 					$param,
-					join( ', ', self::$stats_roles )
+					implode( ', ', self::$stats_roles )
 				)
 			);
 		}
@@ -3237,7 +3342,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 					/* Translators: first variable is the name of a parameter passed to endpoint holding the post type where Sharing will be displayed, the second is a list of post types where Sharing can be displayed */
 					esc_html__( '%1$s must be %2$s.', 'jetpack' ),
 					$param,
-					join( ', ', $views )
+					implode( ', ', $views )
 				)
 			);
 		}
@@ -3293,7 +3398,7 @@ class Jetpack_Core_Json_Api_Endpoints {
 					/* Translators: placeholder 1 is a parameter holding the services passed to endpoint, placeholder 2 is a list of all Jetpack Sharing services */
 					esc_html__( '%1$s visible and hidden items must be a list of %2$s.', 'jetpack' ),
 					$param,
-					join( ', ', $services )
+					implode( ', ', $services )
 				)
 			);
 		}
@@ -4197,5 +4302,4 @@ class Jetpack_Core_Json_Api_Endpoints {
 			)
 		);
 	}
-
 } // class end

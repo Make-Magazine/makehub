@@ -5,13 +5,13 @@
  * @package lucatume\DI52
  *
  * @license GPL-3.0
- * Modified by learndash on 10-July-2023 using Strauss.
+ * Modified by learndash on 14-February-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
 namespace StellarWP\Learndash\lucatume\DI52;
 
-use Psr\Container\NotFoundExceptionInterface;
+use StellarWP\Learndash\Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class NotFoundException

@@ -20,6 +20,7 @@ class EM_Multiple_Bookings{
 		add_filter('em_wp_localize_script', 'EM_Multiple_Bookings::em_wp_localize_script');
 		add_filter('em_scripts_and_styles_public_enqueue_pages', 'EM_Multiple_Bookings::pages_enqueue');
 		//cart/checkout pages
+	    add_filter('template_redirect', 'EM_Multiple_Bookings::template_redirect');
 		add_filter('the_content', 'EM_Multiple_Bookings::pages');
 		//ajax calls for cart actions
 		add_action('wp_ajax_emp_checkout_remove_item','EM_Multiple_Bookings::remove_booking');
@@ -62,6 +63,7 @@ class EM_Multiple_Bookings{
     public static function wp_init(){
     	if( (empty($_REQUEST['action']) || $_REQUEST['action'] != 'manual_booking') && !(!empty($_REQUEST['manual_booking']) && wp_verify_nonce($_REQUEST['manual_booking'], 'em_manual_booking_'.$_REQUEST['event_id'])) ){ //not admin area or a manual booking
     		//modify traditional booking forms behaviour
+		    add_filter('em_get_template_classes', 'EM_Multiple_Bookings::booking_form_classes', 10, 2);
     		add_action('em_booking_form_custom','EM_Multiple_Bookings::prevent_user_fields', 1); //prevent user fields from showing
     		add_filter('em_booking_validate', 'EM_Multiple_Bookings::prevent_user_validation', 1); //prevent user fields validation
     		//hooking into the booking process
@@ -171,6 +173,13 @@ class EM_Multiple_Bookings{
 			$_SESSION['em_multiple_bookings'] = serialize(self::$booking_data);
         }
     }
+	
+	public static function booking_form_classes($classes, $component){
+		if( $component === 'event-booking-form' ) {
+			$classes[] = 'em-multiple-booking-form';
+		}
+		return $classes;
+	}
     
     public static function prevent_user_fields(){
 		add_filter('emp_form_show_reg_fields', '__return_false');
@@ -381,6 +390,28 @@ class EM_Multiple_Bookings{
 			die();
 		}
     }
+	
+	/**
+	 * Checks to see the current post and if it's a cart page, validate here whilst we can read-to-modify sessions
+	 * @param $template
+	 *
+	 * @return void
+	 */
+	public static function template_redirect( $template ) {
+		global $post;
+		$cart_page_id = get_option ( 'dbem_multiple_bookings_cart_page' );
+		$checkout_page_id = get_option( 'dbem_multiple_bookings_checkout_page' );
+		if( in_array($post->ID, array($cart_page_id, $checkout_page_id)) ){
+			// output notices
+			if( !self::get_multiple_booking()->validate_bookings_spaces() ){
+				static::session_start();
+				global $EM_Notices;
+				$EM_Notices->add_error(self::get_multiple_booking()->get_errors());
+				static::session_close();
+			}
+		}
+		return $template;
+	}
     
     /**
      * Hooks into the_content and checks if this is a checkout or cart page, and if so overwrites the page content with the relevant content. Uses same concept as em_content.
@@ -388,7 +419,7 @@ class EM_Multiple_Bookings{
      * @return string
      */
     public static function pages($page_content) {
-    	global $post, $wpdb, $wp_query, $EM_Event, $EM_Location, $EM_Category;
+		global $post;
     	if( empty($post) ) return $page_content; //fix for any other plugins calling the_content outside the loop
     	$cart_page_id = get_option ( 'dbem_multiple_bookings_cart_page' );
     	$checkout_page_id = get_option( 'dbem_multiple_bookings_checkout_page' );
@@ -439,11 +470,6 @@ class EM_Multiple_Bookings{
 		// backwards compatibility for EM Pro 3.2 and earlier
 		add_action('em_checkout_form_confirm_footer', array( static::class, 'checkout_page_backcompat')); // for oudated code using deprecated action
 		add_action('em_checkout_form_footer', array( static::class, 'checkout_page_polyfill')); // for outdated overriden templates that don't use new actions
-		// output notices
-	    if( !self::get_multiple_booking()->validate_bookings_spaces() ){
-	        global $EM_Notices;
-	        $EM_Notices->add_error(self::get_multiple_booking()->get_errors());
-	    }
 		//load contents if not using caching, do not alter this conditional structure as it allows the cart to work with caching plugins
 		echo '<div class="em-checkout-page-contents" style="position:relative;">';
 		if( !defined('WP_CACHE') || !WP_CACHE ){
@@ -497,10 +523,6 @@ class EM_Multiple_Bookings{
 	}
         
     public static function cart_page(){
-		if( !EM_Multiple_Bookings::get_multiple_booking()->validate_bookings_spaces() ){
-			global $EM_Notices;
-			$EM_Notices->add_error(EM_Multiple_Bookings::get_multiple_booking()->get_errors());
-		}
 		//load contents if not using caching, do not alter this conditional structure as it allows the cart to work with caching plugins
 		echo '<div class="em-cart-page-contents" style="position:relative;">';
 		if( !defined('WP_CACHE') || !WP_CACHE ){

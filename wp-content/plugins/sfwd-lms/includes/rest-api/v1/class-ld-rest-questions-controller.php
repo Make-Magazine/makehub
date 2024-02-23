@@ -33,19 +33,6 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 
 			register_rest_route(
 				$namespace,
-				'/' . $base,
-				array(
-					array(
-						'methods'             => WP_REST_Server::READABLE,
-						'callback'            => array( $this, 'get_items' ),
-						'permission_callback' => array( $this, 'permissions_check' ),
-						'args'                => array(),
-					),
-				)
-			);
-
-			register_rest_route(
-				$namespace,
 				'/' . $base . '/(?P<id>[\d]+)',
 				array(
 					array(
@@ -271,8 +258,11 @@ if ( ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) && ( class_exists( 
 			$answer_data = array();
 
 			// Get answer data.
-			foreach ( $question_data['_answerData'] as $answer ) {
-				$answer_data[] = $answer->get_object_as_array();
+
+			if ( $question_data['_answerData'] ) {
+				foreach ( $question_data['_answerData'] as $answer ) {
+					$answer_data[] = $answer->get_object_as_array();
+				}
 			}
 
 			unset( $question_data['_answerData'] );

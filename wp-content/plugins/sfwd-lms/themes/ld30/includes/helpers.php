@@ -7,6 +7,9 @@
  * @package LearnDash\Templates\LD30
  */
 
+use LearnDash\Core\Utilities\Cast;
+use StellarWP\Learndash\StellarWP\DB\DB;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -766,6 +769,22 @@ function learndash_get_course_step_attributes( $step_id = 0, $course_id = 0, $us
 				}
 			}
 
+			// External steps.
+
+			if ( learndash_course_steps_is_external( $step_id ) ) {
+				$external_type = learndash_course_steps_get_external_type( $step_id );
+
+				$attendance_label = learndash_course_steps_is_external_attendance_required( $step_id )
+									? esc_html__( '(Required)', 'learndash' )
+									: esc_html__( '(Optional)', 'learndash' );
+
+				$attributes[] = [
+					'label' => learndash_course_steps_map_external_type_to_label( $external_type ) . ' ' . $attendance_label,
+					'icon'  => 'ld-icon-alert',
+					'class' => 'ld-status-alert',
+				];
+			}
+
 			$bypass_course_limits_admin_users = learndash_can_user_bypass( get_current_user_id(), 'learndash_course_lesson_not_available' );
 			if ( true !== $bypass_course_limits_admin_users ) {
 
@@ -1064,46 +1083,33 @@ function learndash_30_remove_legacy_css() {
  *
  * @param int|null $user_id The ID of the user. Defaults to current logged in user.
  *
- * @return array An array of user statistics.
+ * @return array{
+ *     courses: int,
+ *     completed: int,
+ *     points: int,
+ *     certificates: int
+ * } An array of user statistics.
  */
 function learndash_get_user_stats( $user_id = null ) {
-
-	if ( null === $user_id ) {
-		$user    = wp_get_current_user();
-		$user_id = $user->ID;
-	} else {
-		$user_id = absint( $user_id );
-	}
-
-	$progress = get_user_meta( $user_id, '_sfwd-course_progress' );
+	$user_id    = null === $user_id ? get_current_user_id() : absint( $user_id );
+	$course_ids = learndash_user_get_enrolled_courses( $user_id, [], true );
 
 	$stats = array(
-		'courses'      => 0,
-		'completed'    => 0,
+		'courses'      => count( $course_ids ),
 		'points'       => learndash_get_user_course_points( $user_id ),
 		'certificates' => learndash_get_certificate_count( $user_id ),
+		'completed'    => 0,
 	);
 
-	$courses = learndash_user_get_enrolled_courses( $user_id, array(), true );
+	if ( ! empty( $course_ids ) ) {
+		$user_activity_table_name = LDLMS_DB::get_table_name( 'user_activity' );
 
-	if ( $courses ) {
-
-		$stats['courses'] = count( $courses );
-
-		foreach ( $courses as $course_id ) {
-
-			$progress = learndash_course_progress(
-				array(
-					'user_id'   => $user_id,
-					'course_id' => $course_id,
-					'array'     => true,
-				)
-			);
-
-			if ( 100 === absint( $progress['percentage'] ) ) {
-				$stats['completed']++;
-			}
-		}
+		$stats['completed'] = DB::table( DB::raw( $user_activity_table_name ) )
+			->whereIn( 'post_id', $course_ids )
+			->where( 'user_id', Cast::to_string( $user_id ) )
+			->where( 'activity_type', 'course' )
+			->where( 'activity_completed', '0', '>' )
+			->count();
 	}
 
 	/**
@@ -1111,12 +1117,17 @@ function learndash_get_user_stats( $user_id = null ) {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $stats   User statistics.
-	 * @param int   $user_id User ID.
+	 * @param array{
+	 *      courses: int,
+	 *      completed: int,
+	 *      points: int,
+	 *      certificates: int
+	 *  }         $stats   User statistics.
+	 * @param int $user_id User ID.
 	 */
 	$stats = apply_filters_deprecated(
 		'learndash-get-user-stats',
-		array( $stats, $user_id ),
+		[ $stats, $user_id ],
 		'4.5.0',
 		'learndash_user_statistics'
 	);
@@ -1126,8 +1137,13 @@ function learndash_get_user_stats( $user_id = null ) {
 	 *
 	 * @since 4.5.0
 	 *
-	 * @param array $stats   User statistics.
-	 * @param int   $user_id User ID.
+	 * @param array{
+	 *      courses: int,
+	 *      completed: int,
+	 *      points: int,
+	 *      certificates: int
+	 *  }         $stats   User statistics.
+	 * @param int $user_id User ID.
 	 */
 	return apply_filters( 'learndash_user_statistics', $stats, $user_id );
 }
@@ -2079,7 +2095,7 @@ function learndash_30_ajax_pager() {
 		$lesson_topics              = array();
 
 		if ( ! empty( $lessons ) ) {
-			foreach ( $lessons as $lesson ) {
+			foreach ( $lessons as $lesson ) { // @phpstan-ignore-line -- legacy code with wrong PHPDoc.
 
 				$all_topics = learndash_topic_dots( $lesson['post']->ID, false, 'array', null, $course_id );
 
@@ -2733,7 +2749,6 @@ function learndash_30_responsive_videos( $html, $url, $attr, $post_id ) {
  * @return int|false Returns users certificate count.
  */
 function learndash_get_certificate_count( $user = null ) {
-
 	if ( null === $user ) {
 		$user = wp_get_current_user();
 	}
@@ -2749,12 +2764,23 @@ function learndash_get_certificate_count( $user = null ) {
 	$certificates = 0;
 
 	$course_ids = learndash_user_get_enrolled_courses( $user->ID, array(), true );
-	$quizzes    = get_user_meta( $user->ID, '_sfwd-quizzes', true );
 
-	if ( $course_ids && ! empty( $course_ids ) ) {
+	if ( ! empty( $course_ids ) ) {
+		// Filter out the courses that don't have a certificate.
+		$course_ids = DB::get_col(
+			DB::table( 'postmeta' )
+				->select( 'post_id' )
+				->whereIn( 'post_id', $course_ids )
+				->where( 'meta_key', '_ld_certificate' )
+				->where( 'meta_value', '0', '>' )
+				->getSQL()
+		);
+
 		foreach ( $course_ids as $course_id ) {
-
-			$link = learndash_get_course_certificate_link( $course_id, $user->ID );
+			$link = learndash_get_course_certificate_link(
+				Cast::to_int( $course_id ),
+				$user->ID
+			);
 
 			if ( ! empty( $link ) ) {
 				$certificates++;
@@ -2762,7 +2788,12 @@ function learndash_get_certificate_count( $user = null ) {
 		}
 	}
 
-	if ( $quizzes && ! empty( $quizzes ) ) {
+	$quizzes = get_user_meta( $user->ID, '_sfwd-quizzes', true );
+
+	if (
+		is_array( $quizzes )
+		&& ! empty( $quizzes )
+	) {
 		foreach ( $quizzes as $quiz_attempt ) {
 			if ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) {
 				$certificates++;
@@ -2771,7 +2802,6 @@ function learndash_get_certificate_count( $user = null ) {
 	}
 
 	return $certificates;
-
 }
 
 /**

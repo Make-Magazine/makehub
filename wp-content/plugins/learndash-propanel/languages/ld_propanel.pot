@@ -1,17 +1,17 @@
-# Copyright (C) 2022 LearnDash
+# Copyright (C) 2023 LearnDash
 # This file is distributed under the GPL-2.0+.
 msgid ""
 msgstr ""
-"Project-Id-Version: LearnDash LMS - ProPanel 2.1.4.2\n"
+"Project-Id-Version: LearnDash LMS - ProPanel 2.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/learndash-propanel\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-12T12:41:43+00:00\n"
+"POT-Creation-Date: 2023-08-31T14:48:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.5.0\n"
+"X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: ld_propanel\n"
 
 #. Plugin Name of the plugin
@@ -166,6 +166,9 @@ msgid ""
 msgstr ""
 
 #: includes/class-ld-propanel-shortcodes.php:57
+#: includes/gutenberg/blocks/ld-propanel-link/index.php:31
+#: includes/gutenberg/blocks/ld-propanel-link/index.js:50
+#: includes/gutenberg/blocks/ld-propanel-link/index.js:57
 msgid "Show ProPanel Full Page"
 msgstr ""
 
@@ -173,36 +176,36 @@ msgstr ""
 msgid "LearnDash is required to be activated before LearnDash ProPanel can work properly."
 msgstr ""
 
-#: includes/class-ld-propanel.php:362
+#: includes/class-ld-propanel.php:374
 msgid "Hour"
 msgstr ""
 
-#: includes/class-ld-propanel.php:363
+#: includes/class-ld-propanel.php:375
 msgid "Minute"
 msgstr ""
 
-#: includes/class-ld-propanel.php:364
-#: includes/class-ld-propanel.php:365
+#: includes/class-ld-propanel.php:376
+#: includes/class-ld-propanel.php:377
 msgid "Month"
 msgstr ""
 
-#: includes/class-ld-propanel.php:366
+#: includes/class-ld-propanel.php:378
 msgid " to "
 msgstr ""
 
-#: includes/class-ld-propanel.php:367
+#: includes/class-ld-propanel.php:379
 msgid "Scroll to increment"
 msgstr ""
 
-#: includes/class-ld-propanel.php:368
+#: includes/class-ld-propanel.php:380
 msgid "Click to toggle"
 msgstr ""
 
-#: includes/class-ld-propanel.php:369
+#: includes/class-ld-propanel.php:381
 msgid "Wk"
 msgstr ""
 
-#: includes/class-ld-propanel.php:370
+#: includes/class-ld-propanel.php:382
 msgid "Year"
 msgstr ""
 
@@ -220,6 +223,7 @@ msgctxt "ProPanel Widget"
 msgid "Widget"
 msgstr ""
 
+#. translators: ProPanel Widget
 #: includes/class-ld-tinymce-courseinfo.php:24
 msgid "Select which ProPanel widget to dislay"
 msgstr ""
@@ -281,6 +285,9 @@ msgid "Filter Widget by %s ID"
 msgstr ""
 
 #: includes/class-ld-tinymce-courseinfo.php:71
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:171
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:178
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:174
 msgid "Filter Users"
 msgstr ""
 
@@ -308,6 +315,7 @@ msgid "All Statuses"
 msgstr ""
 
 #: includes/class-ld-tinymce-courseinfo.php:109
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:220
 msgid "Display Chart"
 msgstr ""
 
@@ -340,7 +348,7 @@ msgid "Pagination for Widget output"
 msgstr ""
 
 #: includes/class-ld-tinymce-courseinfo.php:169
-msgid "When using the \"reporting\" or \"progress_chart\" widget shortcodes. A selection from the Group, Course or User filters is required unless also using the \"filtering\" widget shortcode on the same page."
+msgid "When using the \"reporting\" or \"progress_chart\" widget shortcodes, a selection from the Group, Course or User filters is recommended unless also using the \"filtering\" widget shortcode on the same page."
 msgstr ""
 
 #: includes/class-ld-translations-propanel.php:17
@@ -348,11 +356,11 @@ msgstr ""
 msgid "LearnDash ProPanel"
 msgstr ""
 
-#: learndash_propanel.php:81
+#: learndash_propanel.php:79
 msgid "LearnDash ProPanel requires the following plugin(s) be active:"
 msgstr ""
 
-#: learndash_propanel.php:143
+#: learndash_propanel.php:140
 msgid "ProPanel License"
 msgstr ""
 
@@ -524,10 +532,13 @@ msgid "%s:"
 msgstr ""
 
 #: templates/ld-propanel-activity-rows.php:358
-#: templates/reporting-filters/courses/ld-propanel-reporting-filter-course-row.php:47
+#: templates/reporting-filters/courses/ld-propanel-reporting-filter-course-row.php:57
 #: templates/reporting-filters/groups/ld-propanel-reporting-filter-group-row.php:71
 #: templates/reporting-filters/status/ld-propanel-reporting-filter-status.php:40
 #: templates/reporting-filters/users/ld-propanel-reporting-filter-user-row.php:40
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:197
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:204
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:200
 msgid "Not Started"
 msgstr ""
 
@@ -653,8 +664,13 @@ msgctxt "placeholder: user email"
 msgid "Compose a new mail to %s"
 msgstr ""
 
+#. translators: Course title.
+#: templates/reporting-filters/courses/ld-propanel-reporting-filter-course-row.php:43
+msgid "%s title"
+msgstr ""
+
 #. translators: Number of completed course steps.
-#: templates/reporting-filters/courses/ld-propanel-reporting-filter-course-row.php:42
+#: templates/reporting-filters/courses/ld-propanel-reporting-filter-course-row.php:52
 #: templates/reporting-filters/groups/ld-propanel-reporting-filter-group-row.php:63
 #: templates/reporting-filters/users/ld-propanel-reporting-filter-user-row.php:36
 msgctxt "Number of completed course steps"
@@ -679,6 +695,7 @@ msgstr ""
 msgid "Checkbox"
 msgstr ""
 
+#. translators: User ID
 #: templates/reporting-filters/courses/ld-propanel-reporting-filter-course.php:258
 #: templates/reporting-filters/courses/ld-propanel-reporting-filter-course.php:266
 #: templates/reporting-filters/courses/ld-propanel-reporting-filter-course.php:273
@@ -752,10 +769,16 @@ msgid "Completed On"
 msgstr ""
 
 #: templates/reporting-filters/status/ld-propanel-reporting-filter-status.php:44
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:201
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:208
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:204
 msgid "In Progress"
 msgstr ""
 
 #: templates/reporting-filters/status/ld-propanel-reporting-filter-status.php:48
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:205
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:212
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:208
 msgid "Completed"
 msgstr ""
 
@@ -785,42 +808,151 @@ msgctxt "Course completion date"
 msgid "Completed On"
 msgstr ""
 
-#: wp_autoupdate_propanel.php:324
+#: wp_autoupdate_propanel.php:290
 msgid "settings saved."
 msgstr ""
 
-#: wp_autoupdate_propanel.php:339
+#: wp_autoupdate_propanel.php:305
 msgid "License Settings"
 msgstr ""
 
-#: wp_autoupdate_propanel.php:341
+#: wp_autoupdate_propanel.php:307
 msgid "Email:"
 msgstr ""
 
-#: wp_autoupdate_propanel.php:343
+#: wp_autoupdate_propanel.php:309
 msgid "License Key:"
 msgstr ""
 
-#: wp_autoupdate_propanel.php:347
+#: wp_autoupdate_propanel.php:313
 msgid "Update License"
 msgstr ""
 
-#: includes/gutenberg/assets/js/editor.blocks.js:93
-#: includes/gutenberg/blocks/ld-propanel-filters/index.js:36
-msgid "This shortcode adds the ProPanel Filters widget any page"
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:46
+msgid "Displays the ProPanel course and quiz activity of your users."
 msgstr ""
 
-#: includes/gutenberg/assets/js/editor.blocks.js:93
-#: includes/gutenberg/blocks/ld-propanel-filters/index.js:59
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:103
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:110
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:106
+msgid "Settings"
+msgstr ""
+
+#. translators: placeholder: Filter Groups.
+#. translators: placeholder: Filter Courses.
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:112
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:143
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:119
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:150
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:115
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:146
+msgid "Filter %s"
+msgstr ""
+
+#. translators: placeholder: Type to search for a Group...
+#. translators: placeholder: Type to search for a Course...
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:122
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:153
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:129
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:160
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:125
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:156
+msgid "Type to search for a %s..."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:172
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:179
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:175
+msgid "Type to search for a User..."
+msgstr ""
+
+#. translators: placeholder: Filter Course Status.
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:182
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:189
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:185
+msgid "Filter %s Status"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:193
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:200
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:196
+msgid "All Statuses"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:213
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:216
+msgid "Per Page"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:223
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:66
+#: includes/gutenberg/blocks/ld-propanel-overview/index.js:66
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:241
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:227
 msgid "Preview"
 msgstr ""
 
-#: includes/gutenberg/assets/js/editor.blocks.js:93
-#: includes/gutenberg/blocks/ld-propanel-filters/index.js:63
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:227
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:70
+#: includes/gutenberg/blocks/ld-propanel-overview/index.js:70
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:245
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:231
 msgid "Show Preview"
 msgstr ""
 
-#: includes/gutenberg/assets/js/editor.blocks.js:93
-#: includes/gutenberg/blocks/ld-propanel-filters/index.js:85
-msgid "[ld_propanel widget=\"filtering\"] shortcode output shown here"
+#. translators: %s is the title for the Block.
+#: includes/gutenberg/blocks/ld-propanel-activity/index.js:293
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:129
+#: includes/gutenberg/blocks/ld-propanel-overview/index.js:109
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:329
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:300
+msgid "Toggle the Preview setting in the sidebar to see the %s in the editor."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:39
+msgid "Displays the filter tools for ProPanel."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:83
+msgid "This Block requires one or more of the following other Blocks to be placed on the same page:"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:89
+msgid "ProPanel Reporting Block"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:92
+msgid "ProPanel Activity View Block"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-filters/index.js:95
+msgid "ProPanel Progress Chart Block"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-link/index.js:40
+msgid "Use this block to place a link on the page for the full ProPanel Report."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-link/index.js:84
+msgid "To change the link's text, click on it in the editor and change it to your preference."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-overview/index.js:39
+msgid "Displays the four overview widgets from ProPanel; Total Students, Courses, Assignments Pending, Essays Pending."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:49
+msgid "Displays user progress; not started, in progress, and categories of percent complete."
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:225
+msgid "Stacked"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-progress-chart/index.js:229
+msgid "Side by Side"
+msgstr ""
+
+#: includes/gutenberg/blocks/ld-propanel-reporting/index.js:46
+msgid "Displays the ProPanel Reporting information for User and Progress."
 msgstr ""

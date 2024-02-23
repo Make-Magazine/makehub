@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -30,9 +30,9 @@ class Core {
 			$buffer = ob_get_clean();
 
 			if ( $buffer ) {
-				error_log( "[GravityKit] Buffer output before returning Ajax response: {$buffer}" );
+				error_log( "[GravityKit] Buffer output before returning Ajax response: {$buffer}" ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 
-				header( 'GravityKit: ' . json_encode( $buffer ) );
+				header( 'GravityKit: ' . wp_json_encode( $buffer ) );
 			}
 
 			if ( $is_error ) {
@@ -162,7 +162,7 @@ class Core {
 				continue;
 			}
 
-			$plugins[ $plugin['TextDomain'] ] = array(
+			$plugins[ $plugin['TextDomain'] ] = [
 				'name'              => $plugin['Name'],
 				'path'              => $path,
 				'plugin_file'       => file_exists( WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $path ) ? WP_PLUGIN_DIR . DIRECTORY_SEPARATOR . $path : null,
@@ -175,13 +175,13 @@ class Core {
 				'free'              => true, // @TODO: possibly handle this differently.
 				'has_update'        => false, // @TODO: detect if there's an update available.
 				'download_link'     => null, // @TODO: get the download link if there's an update available.
-			);
+			];
 
 			$dependencies = [
 				'0.0.1' => [
 					'system' => [],
 					'plugin' => [],
-				]
+				],
 			];
 
 			$required_php_version = $plugin['RequiresPHP'] ?? null;
@@ -194,7 +194,6 @@ class Core {
 					'icon'    => 'https://www.gravitykit.com/wp-content/uploads/2023/08/wordpress-alt.svg',
 				];
 			}
-
 
 			if ( $required_wp_version ) {
 				$dependencies['0.0.1']['system'][] = [
@@ -255,6 +254,27 @@ class Core {
 		}
 
 		return get_plugin_data( $plugin_file, $markup, $translate );
+	}
+
+	/**
+	 * Returns the plugin slug from its text domain.
+	 *
+	 * @since 1.2.6
+	 *
+	 * @param string $text_domain Text domain.
+	 *
+	 * @return string|null
+	 */
+	public static function get_plugin_slug_from_text_domain( $text_domain ) {
+		$installed_plugins = self::get_installed_plugins();
+
+		foreach ( $installed_plugins as $plugin ) {
+			if ( $plugin['text_domain'] === $text_domain ) {
+				return dirname( plugin_basename( $plugin['plugin_file'] ) );
+			}
+		}
+
+		return null;
 	}
 
 	/**

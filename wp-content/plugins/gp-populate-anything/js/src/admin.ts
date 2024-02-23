@@ -9,6 +9,23 @@ import Root from './components/Root.vue';
 
 const $ = window.jQuery;
 
+/*
+ * String.format was deprecated in GF 2.7.1 and will be removed in GF 2.8 in favor of String.prototype.gformFormat.
+ *
+ * As we support older versions of GF, we need to add String.prototype.gformFormat if it doesn't exist.
+ */
+// @ts-ignore
+if (!String.prototype.gformFormat) {
+	// @ts-ignore
+	String.prototype.gformFormat = function() {
+		// eslint-disable-next-line prefer-rest-params
+		const args = arguments;
+		return this.replace(/{(\d+)}/g, function(match, number) {
+			return typeof args[number] !== 'undefined' ? args[number] : match;
+		});
+	};
+}
+
 class GPPopulateAnythingAdmin {
 	public vm: any;
 
@@ -28,6 +45,18 @@ class GPPopulateAnythingAdmin {
 				...window.field.inputs,
 			});
 		});
+
+		const SetFieldPropertyOrig = window.SetFieldProperty;
+
+		window.SetFieldProperty = (prop: string, val: any) => {
+			window.gform.doAction('gppa_field_property_set', prop, val, this);
+
+			if (this.vm.$data.field) {
+				Vue.set(this.vm.$data.field, prop, val);
+			}
+
+			return SetFieldPropertyOrig(prop, val);
+		};
 
 		this.addFilters();
 		this.initVueVM();
@@ -129,6 +158,10 @@ class GPPopulateAnythingAdmin {
 						}
 
 						if (field.type === 'list') {
+							return true;
+						}
+
+						if (field.type === 'workflow_multi_user') {
 							return true;
 						}
 

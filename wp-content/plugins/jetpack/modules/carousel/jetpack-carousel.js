@@ -116,16 +116,19 @@
 			// Ensure the item is in the render tree, in its initial state.
 			el.style.removeProperty( 'display' );
 			el.style.opacity = start;
-			el.style.transition = 'opacity 0.2s';
 			el.style.pointerEvents = 'none';
 
-			var finished = function ( e ) {
-				if ( e.target === el && e.propertyName === 'opacity' ) {
-					el.style.removeProperty( 'transition' );
-					el.style.removeProperty( 'opacity' );
+			var animate = function ( t0, duration ) {
+				var t = performance.now();
+				var diff = t - t0;
+				var ratio = diff / duration;
+
+				if ( ratio < 1 ) {
+					el.style.opacity = start + ( end - start ) * ratio;
+					requestAnimationFrame( () => animate( t0, duration ) );
+				} else {
+					el.style.opacity = end;
 					el.style.removeProperty( 'pointer-events' );
-					el.removeEventListener( 'transitionend', finished );
-					el.removeEventListener( 'transitioncancel', finished );
 					callback();
 				}
 			};
@@ -133,22 +136,19 @@
 			requestAnimationFrame( function () {
 				// Double rAF for browser compatibility.
 				requestAnimationFrame( function () {
-					el.addEventListener( 'transitionend', finished );
-					el.addEventListener( 'transitioncancel', finished );
-					// Trigger transition.
-					el.style.opacity = end;
+					animate( performance.now(), 200 );
 				} );
 			} );
 		}
 
 		function fadeIn( el, callback ) {
 			callback = callback || util.noop;
-			fade( el, '0', '1', callback );
+			fade( el, 0, 1, callback );
 		}
 
 		function fadeOut( el, callback ) {
 			callback = callback || util.noop;
-			fade( el, '1', '0', function () {
+			fade( el, 1, 0, function () {
 				if ( el ) {
 					el.style.display = 'none';
 				}
@@ -770,18 +770,6 @@
 
 			var current = carousel.currentSlide;
 			var attachmentId = current.attrs.attachmentId;
-			var infoIcon = carousel.info.querySelector( '.jp-carousel-icon-info' );
-			var commentsIcon = carousel.info.querySelector( '.jp-carousel-icon-comments' );
-
-			// If the comment/info section is toggled open, it's kept open, but scroll to top of the next slide.
-			if (
-				( infoIcon && infoIcon.classList.contains( 'jp-carousel-selected' ) ) ||
-				( commentsIcon && commentsIcon.classList.contains( 'jp-carousel-selected' ) )
-			) {
-				if ( carousel.overlay.scrollTop !== 0 ) {
-					domUtil.scrollToElement( carousel.overlay, carousel.overlay );
-				}
-			}
 
 			loadFullImage( carousel.slides[ index ] );
 

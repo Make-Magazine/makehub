@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use LearnDash\Core\Utilities\Cast;
 
 /**
  * Builds the `[ld_course_list]` shortcode output.
@@ -318,6 +319,11 @@ function ld_course_list( $attr = array(), $content = '', $shortcode_slug = 'ld_c
 		$atts['user_id']   = false;
 		$atts['mycourses'] = null;
 	}
+
+	// Override the user ID if the current user can't access the passed user ID's data.
+	// I don't trust the previous check, but also don't want to touch.
+	// Double check never hurts.
+	$atts['user_id'] = learndash_shortcode_protect_user( Cast::to_int( $atts['user_id'] ) );
 
 	extract( $atts ); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- Bad idea, but better keep it for now.
 

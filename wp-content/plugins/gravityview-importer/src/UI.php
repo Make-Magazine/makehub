@@ -598,11 +598,14 @@ class UI {
 				continue;
 			}
 
+			// Cast to string to avoid PHP 8.1 warning.
+			$editor_field_title = (string) $field->get_form_editor_field_title();
+
 			if ( preg_match( '/^post_/', $field->type ) ) {
 				$post_fields[ $field->type ] = array(
 					'id'        => $field->type,
 					'parent_id' => 'post_fields',
-					'label'     => esc_html( sprintf( _x( 'Post %s', 'Generates a label for Post fields based on the type of field', 'gk-gravityimport' ), ucwords( $field->get_form_editor_field_title() ) ) ),
+					'label'     => esc_html( sprintf( _x( 'Post %s', 'Generates a label for Post fields based on the type of field', 'gk-gravityimport' ), ucwords( $editor_field_title ) ) ),
 				);
 
 				continue;
@@ -612,7 +615,7 @@ class UI {
 				$product_fields[ $field->type ] = array(
 					'id'        => $field->type,
 					'parent_id' => 'product_fields',
-					'label'     => $field->type === 'product' ? ucwords( $field->get_form_editor_field_title() ) : esc_html( sprintf( __( 'Product %s', 'gk-gravityimport' ), ucwords( $field->get_form_editor_field_title() ) ) ),
+					'label'     => $field->type === 'product' ? ucwords( $editor_field_title ) : esc_html( sprintf( __( 'Product %s', 'gk-gravityimport' ), ucwords( $editor_field_title ) ) ),
 				);
 
 				continue;
@@ -620,7 +623,7 @@ class UI {
 
 			$field_types[ $field->type ] = array(
 				'id'    => $field->type,
-				'label' => ucwords( $field->get_form_editor_field_title() ),
+				'label' => ucwords( $editor_field_title ),
 			);
 
 			if ( 'checkbox' === $field->type ) {
@@ -1161,12 +1164,23 @@ class UI {
 				new \WP_Error( $code, $strings['select_form'][ $code ] )
 			);
 		} else {
-			wp_send_json_success(
-				array(
-					'form_fields' => $this->get_form_fields( $form ),
-					'form_feeds'  => $this->get_form_feeds( $form_id ),
-				)
-			);
+			$form_data = [
+				'form_fields' => $this->get_form_fields( $form ),
+				'form_feeds'  => $this->get_form_feeds( $form_id ),
+			];
+
+			/**
+			 * Modifies the form object with fields and feeds data that is used in the UI.
+			 *
+			 * @filter `gk/gravityimport/ui/form-data`
+			 *
+			 * @since  2.4.10
+			 *
+			 * @param array $form_data From data with available fields and feeds.
+			 */
+			$form_data = apply_filters( 'gk/gravityimport/ui/form-data', $form_data );
+
+			wp_send_json_success( $form_data );
 		}
 	}
 

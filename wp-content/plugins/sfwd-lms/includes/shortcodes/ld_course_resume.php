@@ -6,6 +6,8 @@
  * @package LearnDash\Shortcodes
  */
 
+use LearnDash\Core\Utilities\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -58,6 +60,15 @@ function ld_course_resume_shortcode( $atts = array(), $content = '', $shortcode_
 		if ( ( empty( $atts['course_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
 			$atts['course_id'] = learndash_get_last_active_course( $atts['user_id'] );
 		}
+	}
+
+	if (
+		get_current_user_id() !== $atts['user_id']
+		|| ! learndash_shortcode_can_current_user_access_post(
+			Cast::to_int( $atts['course_id'] )
+		)
+	) {
+		return '';
 	}
 
 	if ( empty( $atts['label'] ) ) {

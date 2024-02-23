@@ -11,7 +11,7 @@ class APIClass
     /**
      * @var int
      */
-    protected $api_version = '1.5';
+    protected $api_version = '1.6';
     /**
      * @var string
      */
@@ -91,16 +91,18 @@ class APIClass
     }
 
     /**
-     * @param $list_id
-     * @param $email
-     * @param $first_name
-     * @param $last_name
-     * @param $custom_fields
+     * @param string $list_id
+     * @param string $email
+     * @param string $first_name
+     * @param string $last_name
+     * @param array $custom_fields
+     * @param string $tags
+     * @param string $status
      *
      * @return array
      * @throws \Exception
      */
-    public function add_subscriber($list_id, $email, $first_name = '', $last_name = '', $custom_fields = [], $status = '')
+    public function add_subscriber($list_id, $email, $first_name = '', $last_name = '', $custom_fields = [], $tags, $status = '')
     {
         $payload = [
             'email_address' => $email,
@@ -109,6 +111,10 @@ class APIClass
                 'LastName'  => $last_name
             ]
         ];
+
+        if ( ! empty($tags)) {
+            $payload['tags'] = array_map('trim', explode(',', $tags));
+        }
 
         if ( ! empty($status) && in_array($status, ['SUBSCRIBED', 'UNSUBSCRIBED', 'PENDING'])) {
             $payload['status'] = $status;

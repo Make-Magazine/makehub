@@ -150,6 +150,7 @@ document.addEventListener("em_booking_form_init", function( e ) {
 			// there is an intent
 			if ( intent.amount > 0 ) {
 				booking_form.querySelectorAll('.em-payment-gateways').forEach( gateways => gateways.classList.remove('hidden') );
+				booking_form.querySelectorAll('div.em-gateway-buttons').forEach( buttons => buttons.classList.remove('hidden') );
 				// dispath events for selected gateway
 				let detail = {
 					form : booking_form,
@@ -185,6 +186,7 @@ document.addEventListener("em_booking_form_init", function( e ) {
 			} else {
 				// it's a free booking
 				booking_form.querySelectorAll('.em-payment-gateways').forEach( gateways => gateways.classList.add('hidden') );
+				booking_form.querySelectorAll('div.em-gateway-buttons').forEach( buttons => buttons.classList.add('hidden') );
 				em_booking_form_enable_button( booking_form, true );
 			}
 		}

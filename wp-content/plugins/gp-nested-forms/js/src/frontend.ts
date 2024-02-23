@@ -837,6 +837,7 @@ const ko = window.ko;
 				action: 'gpnf_delete_entry',
 				nonce:  GPNFData.nonces.deleteEntry,
 				gpnf_entry_id: item.id,
+				gpnf_nested_form_field_id: self.fieldId,
 				gpnf_context: self.ajaxContext
 				}, function( response ) {
 

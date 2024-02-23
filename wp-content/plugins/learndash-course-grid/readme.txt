@@ -6,9 +6,9 @@ LD Requires at least: 3.0
 Slug: learndash-course-grid
 Tags: grid, view, display
 Requires at least: 5.0
-Tested up to: 5.8.2
+Tested up to: 6.2
 Requires PHP: 7.0
-Stable tag: 2.0.4
+Stable tag: 2.0.8
 
 Transform the course list created with shortcode [ld_course_list] to grid view.
 
@@ -39,6 +39,61 @@ Alternatively, you always have the option to update manually. Please note, a ful
 1. Activate the add-on plugin via the PLUGINS menu.
 
 == Changelog ==
+
+ = 2.0.8 =
+
+ * Update: Add custom ColorPalette component and replace default Gutenberg ColorPalette component.
+ * Fix: Fix changing a duplicated block style also change the style of its original block.
+ * Fix: Fix fatal error if the site doesn't have default course category or terms set up.
+ * Fix: Fix double path separator issue.
+ * Fix: PHP error notice.
+
+= 2.0.7 =
+
+* Update remove ColorIndicator component as ColorPalette element now shows color sample clearly
+* Update POT file
+* Update upgrade LearnDash_Gutenberg_Block class from LD 4.3.0 and prioritize core class before using included class in CG addon
+* Update LD gutenberg block lib from the latest LD core version
+* Update in-app documentation text
+* Fix breaking error opening style tab breaks the Gutenberg block
+* Fix overflown video width
+* Fix DB query for multisite install
+* Fix PHP notice and warning errors
+* Fix missing text domain on some strings
+* Fix fatal error with Elementor page
+* Fix color picker component doesn't have clear value button
+* Fix duplicating course grid block and changing styles of one block also changes style of other block
+
+= 2.0.6 =
+
+* Added translation support for block strings
+* Updated added back learndash_course_grid_custom_button_text filter hook
+* Fixed missing course grid translations
+* Fixed slow queries in sites with a large number of users (10,000+)
+* Fixed allow max/min prices to be empty
+* Fixed correctly set max-min width 
+* Fixed shortcodes having additional parameters in their tag
+* Fixed don't show ribbon if course is closed or has no price
+* Fixed grids not displaying correctly in Elementor
+* Fixed skin and card assets not correctly loading in Elementor
+* Fixed incorrect shared steps URL
+* Fixed incorrect variable type for implode
+* Fixed meta box styling
+* Fixed skins and cards not being filterable
+* Fixed incorrect post results if taxonimies attribute values are wrapped in quotes
+
+= 2.0.5 =
+
+* Added pre-defined taxonomies in filter dropdown
+* Added support for new global currency in LearnDash core
+* Added LearnDash specific selector for CSS to avoid conflicts
+* Updated improve ribbon text logic
+* Fixed conflict with other plugins that execute the_content() on the front-end
+* Fixed taxonomies filter not being able to have more than 1 working term
+* Fixed enrolled courses query returning all courses for logged out users
+* Fixed undefined functions
+* Fixed remove box sizing CSS rule to avoid conflicts with other themes/plugins
+* Fixed masonry styles not working correctly 
 
 = 2.0.4 =
 

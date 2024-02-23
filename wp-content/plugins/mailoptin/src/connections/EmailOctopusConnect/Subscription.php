@@ -29,6 +29,8 @@ class Subscription extends AbstractEmailOctopusConnect
     {
         try {
 
+            $lead_tags = $this->get_integration_tags('EmailOctopusConnect_lead_tags');
+
             $name_split = self::get_first_last_names($this->name);
 
             $custom_field = [];
@@ -42,13 +44,6 @@ class Subscription extends AbstractEmailOctopusConnect
                 );
 
                 $custom_field = [$field_key => current_time('mysql')];
-            }
-
-            // backward compatibility
-            $status          = '';
-            $is_double_optin = $this->get_integration_data('EmailOctopusConnectConnect_enable_double_optin');
-            if (isset($is_double_optin)) {
-                $status = $is_double_optin === true ? 'PENDING' : 'SUBSCRIBED';
             }
 
             $custom_field_mappings = $this->form_custom_field_mappings();
@@ -78,7 +73,7 @@ class Subscription extends AbstractEmailOctopusConnect
                 $name_split[0],
                 $name_split[1],
                 $custom_field,
-                $status
+                $lead_tags
             );
 
             if ($response['status_code'] >= 200 && $response['status_code'] <= 299) {

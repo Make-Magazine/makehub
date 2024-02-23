@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -106,6 +106,10 @@ class ProductDependencyChecker {
 		$products = [];
 
 		foreach ( $this->products as $product ) {
+			if ( ! $dependency_text_domain && ! $product['text_domain'] ) {
+				continue;
+			}
+
 			$required_by = $this->is_a_dependency_of_product( $dependency_text_domain, $product['text_domain'], $active_products_only );
 
 			if ( $required_by ) {
@@ -256,7 +260,7 @@ class ProductDependencyChecker {
 			if ( ! $product_version ) {
 				if ( ! empty( $product['installed_version'] ) ) {
 					$product_version = $product['installed_version'];
-				} else if ( ! empty( $product['server_version'] ) ) {
+				} elseif ( ! empty( $product['server_version'] ) ) {
 					$product_version = $product['server_version'];
 				}
 
@@ -375,7 +379,7 @@ class ProductDependencyChecker {
 		$dependency_text_domain = $dependency_data['text_domain'];
 
 		// If there are multiple versions of the same dependency required by more than one product, use the highest version as the required version.
-		$highest_required_version = Arr::get( $unmet_dependencies, "${dependency_text_domain}.required_version" );
+		$highest_required_version = Arr::get( $unmet_dependencies, "{$dependency_text_domain}.required_version" );
 		$highest_required_version = version_compare( $highest_required_version ?? 0, $dependency_data['version'], '<' ) ? $dependency_data['version'] : $highest_required_version;
 
 		$unmet_dependency = [
@@ -388,7 +392,7 @@ class ProductDependencyChecker {
 			'server_version'    => $dependency_product['server_version'],
 			'required_version'  => $highest_required_version,
 			'required_by'       => array_merge(
-				Arr::get( $unmet_dependencies, "${dependency_text_domain}.required_by", [] ),
+				Arr::get( $unmet_dependencies, "{$dependency_text_domain}.required_by", [] ),
 				[ $required_by_product_text_domain => $dependency_data['version'] ]
 			),
 		];
@@ -483,7 +487,7 @@ class ProductDependencyChecker {
 		$dependency_name = $dependency_data['name'];
 
 		// If there are multiple versions of the same dependency required by more than one product, use the highest version as the required version.
-		$highest_required_version = Arr::get( $unmet_dependencies, "${dependency_name}.required_version" );
+		$highest_required_version = Arr::get( $unmet_dependencies, "{$dependency_name}.required_version" );
 		$highest_required_version = version_compare( $highest_required_version ?? 0, $dependency_data['version'], '<' ) ? $dependency_data['version'] : $highest_required_version;
 
 		$unmet_dependency = [
@@ -492,7 +496,7 @@ class ProductDependencyChecker {
 			'available_version' => null,
 			'required_version'  => $highest_required_version,
 			'required_by'       => array_merge(
-				Arr::get( $unmet_dependencies, "${dependency_name}.required_by", [] ),
+				Arr::get( $unmet_dependencies, "{$dependency_name}.required_by", [] ),
 				[ $required_by_product_text_domain => $dependency_data['version'] ]
 			),
 		];
@@ -570,8 +574,8 @@ class ProductDependencyChecker {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @param string|null $product_version
-	 * @param array        $dependencies
+	 * @param string|null $product_version The product version.
+	 * @param array       $dependencies    The dependencies data.
 	 *
 	 * @return mixed|null
 	 */
@@ -582,10 +586,12 @@ class ProductDependencyChecker {
 			return null;
 		}
 
-		$compatible_version = array_filter( $dependencies_versions, function ( $dependency_version ) use ( $product_version ) {
-			return version_compare( $dependency_version, $product_version, '<=' );
-		} );
-
+		$compatible_version = array_filter(
+			$dependencies_versions,
+			function ( $dependency_version ) use ( $product_version ) {
+				return version_compare( $dependency_version, $product_version, '<=' );
+			}
+		);
 
 		if ( empty( $compatible_version ) ) {
 			return null;

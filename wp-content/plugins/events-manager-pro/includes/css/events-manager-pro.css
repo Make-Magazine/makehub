@@ -63,22 +63,9 @@
   width: 80px;
 }
 
-div.em-gateway-buttons {
-  height: 50px;
-  width: 100%;
-}
-div.em-gateway-buttons .first {
-  padding-left: 0px;
-  margin-left: 0px;
-  border-left: none;
-}
-
 /* Gateway */
-div.em-gateway-button {
-  float: left;
-  padding-left: 20px;
-  margin-left: 20px;
-  border-left: 1px solid #777;
+div.em-gateway-buttons .em-gateway-button-image {
+  margin-bottom: 15px;
 }
 
 .em-payment-gateway-form-info {
@@ -91,6 +78,9 @@ div.em-gateway-button {
 }
 .em-manual-booking .em.em-event-booking-form .em-booking-section.em-booking-form-tickets {
   padding: 10px 30px;
+}
+.em-manual-booking .em.em-event-booking-form .em-booking-section.em-booking-section-manual {
+  padding-bottom: 0;
 }
 .em-manual-booking .em.em-event-booking-form h3.em-booking-section-title {
   background: none;
@@ -106,6 +96,10 @@ div.em-gateway-button {
   grid-template-columns: auto max-content;
   grid-auto-columns: 1fr;
   grid-gap: 10px;
+}
+
+.em.em-event-booking-form .em-booking-form-section-confirm .em-booking-form-section-coupons {
+  padding-bottom: 0;
 }
 
 /* Cart CSS */

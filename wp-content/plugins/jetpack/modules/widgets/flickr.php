@@ -2,6 +2,7 @@
 
 // phpcs:disable Universal.Files.SeparateFunctionsFromOO.Mixed -- TODO: Move classes to appropriately-named class files.
 
+
 /**
  * Disable direct access/execution to/of the widget code.
  */
@@ -80,7 +81,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 				if (
 					! empty( $flickr_parameters['host'] )
 					&& ! empty( $flickr_parameters['query'] )
-					&& false !== strpos( $flickr_parameters['host'], 'flickr' )
+					&& str_contains( $flickr_parameters['host'], 'flickr' )
 				) {
 					parse_str( $flickr_parameters['query'], $vars );
 
@@ -90,7 +91,7 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 						// Flickr Feeds can be used for groups or for individuals.
 						if (
 							! empty( $flickr_parameters['path'] )
-							&& false !== strpos( $flickr_parameters['path'], 'groups' )
+							&& str_contains( $flickr_parameters['path'], 'groups' )
 						) {
 							$feed_url = 'https://api.flickr.com/services/feeds/groups_pool.gne';
 						} else {
@@ -139,8 +140,8 @@ if ( ! class_exists( 'Jetpack_Flickr_Widget' ) ) {
 					$photos .= 'title="' . esc_attr( $photo->get_title() ) . '" ';
 					$photos .= ' /></a>';
 				}
-				if ( ! empty( $photos ) && class_exists( 'Jetpack_Photon' ) && Jetpack::is_module_active( 'photon' ) ) {
-					$photos = Jetpack_Photon::filter_the_content( $photos );
+				if ( ! empty( $photos ) ) {
+					$photos = apply_filters( 'jetpack_image_cdn_content', $photos );
 				}
 
 				$flickr_home = $rss->get_link(); // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- Used in flickr/widget.php template file.

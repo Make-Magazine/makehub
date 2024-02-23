@@ -205,6 +205,10 @@ class Product
             $logger = wc_get_logger();
             $logger->debug('Unable to add subscriber via MailOptin: ', array('source' => 'mailoptin'));
         }
+
+        if (apply_filters('mailoptin_woocommerce_enable_optin_delay', false)) {
+            sleep(1);
+        }
     }
 
     /**
@@ -224,7 +228,7 @@ class Product
 
             foreach (Init::merge_vars_field_map($connection, $connection_email_list) as $key => $value) {
                 $mapped_key = rawurlencode('mailoptinWooCommerceMappedFields-' . $key);
-                if ( isset($_POST[$mapped_key])) {
+                if (isset($_POST[$mapped_key])) {
                     $insert_mapped_key = $connection . '[' . $mapped_key . ']';
                     $product->update_meta_data($insert_mapped_key, sanitize_text_field($_POST[$mapped_key]));
                 }

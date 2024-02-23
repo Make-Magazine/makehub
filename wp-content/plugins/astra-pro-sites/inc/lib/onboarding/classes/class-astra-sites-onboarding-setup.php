@@ -92,7 +92,8 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 			if ( ! astra_sites_is_valid_url( $api_url ) ) {
 				wp_send_json_error(
 					array(
-						'message' => sprintf( __( 'Invalid Request URL - %s', 'astra-sites' ), $api_url ),
+						/* Translators: %s is URL. */
+						'message' => sprintf( __( 'Invalid URL - %s', 'astra-sites' ), $api_url ),
 						'code'    => 'Error',
 					)
 				);
@@ -104,7 +105,11 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 			if ( 0 === $post_id ) {
 				wp_send_json_error(
 					array(
-						'message' => sprintf( __( 'Invalid Post ID - %d', 'astra-sites' ), $post_id ),
+						'message' => sprintf(
+							/* translators: %d is the post ID */
+							__( 'Invalid Post ID - %d', 'astra-sites' ),
+							$post_id
+						),
 						'code'    => 'Error',
 					)
 				);
@@ -233,11 +238,11 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 					if ( isset( $option['desktop'] ) ) {
 						$option['desktop'] = $logo_width;
 					}
-						astra_update_option( $width_index, $option );
+					astra_update_option( $width_index, $option );
 
-						// Check if transparent header is used in the demo.
-						$transparent_header = astra_get_option( 'transparent-header-logo', false );
-						$inherit_desk_logo = astra_get_option( 'different-transparent-logo', false );
+					// Check if transparent header is used in the demo.
+					$transparent_header = astra_get_option( 'transparent-header-logo', false );
+					$inherit_desk_logo = astra_get_option( 'different-transparent-logo', false );
 
 					if ( '' !== $transparent_header && $inherit_desk_logo ) {
 						astra_update_option( 'transparent-header-logo', wp_get_attachment_url( $logo_id ) );
@@ -249,6 +254,17 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 						}
 						astra_update_option( $width_index, $option );
 					}
+
+					$retina_logo = astra_get_option( 'different-retina-logo', false );
+					if ( '' !== $retina_logo ) {
+						astra_update_option( 'ast-header-retina-logo', wp_get_attachment_url( $logo_id ) );
+					}
+					
+					$transparent_retina_logo = astra_get_option( 'different-transparent-retina-logo', false );
+					if ( '' !== $transparent_retina_logo ) {
+						astra_update_option( 'transparent-header-retina-logo', wp_get_attachment_url( $logo_id ) );
+					}
+
 
 					break;
 
@@ -311,7 +327,10 @@ if ( ! class_exists( 'Astra_Sites_Onboarding_Setup' ) ) :
 
 					break;
 			}
-
+			
+			// Clearing Cache on hostinger, Cloudways.
+			Astra_Sites_Utils::third_party_cache_plugins_clear_cache();
+			
 			wp_send_json_success();
 		}
 

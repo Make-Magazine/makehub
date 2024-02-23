@@ -7,8 +7,9 @@
 
 namespace Automattic\Jetpack\My_Jetpack;
 
-use Automattic\Jetpack\Connection\Client as Client;
+use Automattic\Jetpack\Connection\Client;
 use Automattic\Jetpack\Status\Visitor;
+use Jetpack_Options;
 use WP_Error;
 /**
  * Stores the list of products available for purchase in WPCOM
@@ -28,6 +29,8 @@ class Wpcom_Products {
 	 * @var string
 	 */
 	const CACHE_META_NAME = 'my-jetpack-cache';
+
+	const MY_JETPACK_PURCHASES_TRANSIENT_KEY = 'my-jetpack-purchases';
 
 	/**
 	 * Fetches the list of products from WPCOM
@@ -148,11 +151,12 @@ class Wpcom_Products {
 	 * Get one product
 	 *
 	 * @param string $product_slug The product slug.
+	 * @param bool   $renew_cache A flag to force the cache to be renewed.
 	 *
 	 * @return ?Object The product details if found
 	 */
-	public static function get_product( $product_slug ) {
-		$products = self::get_products();
+	public static function get_product( $product_slug, $renew_cache = false ) {
+		$products = self::get_products( $renew_cache );
 		if ( ! empty( $products->$product_slug ) ) {
 			return $products->$product_slug;
 		}
@@ -189,6 +193,7 @@ class Wpcom_Products {
 			'discount_price'        => $discount_price,
 			'is_introductory_offer' => $is_introductory_offer,
 			'introductory_offer'    => $introductory_offer,
+			'product_term'          => $product->product_term,
 		);
 
 		return self::populate_with_discount( $product, $pricing, $discount_price );
@@ -225,5 +230,44 @@ class Wpcom_Products {
 		$pricing['discount_price'] = $price * ( 100 - $coupon_discount ) / 100;
 
 		return $pricing;
+	}
+
+	/**
+	 * Gets the site purchases from WPCOM.
+	 *
+	 * @return Object|WP_Error
+	 */
+	public static function get_site_current_purchases() {
+		static $purchases = null;
+
+		if ( $purchases !== null ) {
+			return $purchases;
+		}
+
+		// Check for a cached value before doing lookup
+		$stored_purchases = get_transient( self::MY_JETPACK_PURCHASES_TRANSIENT_KEY );
+		if ( $stored_purchases !== false ) {
+			return $stored_purchases;
+		}
+
+		$site_id = Jetpack_Options::get_option( 'id' );
+
+		$response = Client::wpcom_json_api_request_as_blog(
+			sprintf( '/sites/%d/purchases', $site_id ),
+			'1.1',
+			array(
+				'method' => 'GET',
+			)
+		);
+		if ( 200 !== wp_remote_retrieve_response_code( $response ) ) {
+			return new WP_Error( 'purchases_state_fetch_failed' );
+		}
+
+		$body      = wp_remote_retrieve_body( $response );
+		$purchases = json_decode( $body );
+		// Set short transient to help with repeated lookups on the same page load
+		set_transient( self::MY_JETPACK_PURCHASES_TRANSIENT_KEY, $purchases, 5 );
+
+		return $purchases;
 	}
 }

@@ -148,7 +148,7 @@ const Survey = () => {
 		email: '',
 		wp_user_type: '',
 		build_website_for: '',
-		opt_in: false,
+		opt_in: true,
 	} );
 
 	const updateFormDetails = ( field, value ) => {
@@ -209,7 +209,7 @@ const Survey = () => {
 			return;
 		}
 
-		if ( ! formDetails.opt_in ) {
+		if ( ! formDetails.opt_in && ! formDetails.email ) {
 			return;
 		}
 
@@ -265,6 +265,28 @@ const Survey = () => {
 					{ __( 'Submit & Build My Website', 'astra-sites' ) }
 					{ ICONS.arrowRight }
 				</button>
+				<p className="subscription-agreement-text text-center mt-4">
+					By clicking { `"Submit & Build My Website"` }, you agree to
+					our{ ' ' }
+					<a
+						className="st-link"
+						href="https://store.brainstormforce.com/terms-and-conditions/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Terms
+					</a>{ ' ' }
+					and{ ' ' }
+					<a
+						className="st-link"
+						href="https://store.brainstormforce.com/privacy-policy/"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Privacy Policy
+					</a>
+					.
+				</p>
 			</form>
 		);
 	};
@@ -432,8 +454,11 @@ const Survey = () => {
 	};
 
 	const fileSystemPermissionRequirement = () => {
-		const { is_readable: isReadable, is_writable: isWritable } =
-			fileSystemPermissions.permissions;
+		const {
+			is_readable: isReadable,
+			is_writable: isWritable,
+			is_wp_filesystem: isFilesystem,
+		} = fileSystemPermissions.permissions;
 
 		return (
 			<div className="requirement-check-wrap">
@@ -474,6 +499,21 @@ const Survey = () => {
 							<span
 								className={ `dashicons ${
 									isWritable
+										? 'dashicons-yes'
+										: 'dashicons-no'
+								}` }
+							/>
+						</div>
+					</li>
+					<li>
+						<div className="requirement-list-item">
+							{ __(
+								'WP_Filesystem Permissions:',
+								'astra-sites'
+							) }
+							<span
+								className={ `dashicons ${
+									isFilesystem
 										? 'dashicons-yes'
 										: 'dashicons-no'
 								}` }

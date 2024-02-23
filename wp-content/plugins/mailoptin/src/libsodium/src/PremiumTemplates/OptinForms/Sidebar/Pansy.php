@@ -497,11 +497,8 @@ class Pansy extends AbstractOptinTheme
      */
     public function optin_form()
     {
-        $close_image = MAILOPTIN_PREMIUMTEMPLATES_ASSETS_URL . 'optin/close.png';
-
         return <<<HTML
 [mo-optin-form-wrapper class="pansy-container"]
-[mo-close-optin]<img src="$close_image" class="pansy-closeBtn">[/mo-close-optin]
 	<div class="pansy-top">
         [mo-optin-form-headline tag="div" class="pansy-heading"]
         [mo-optin-form-description class="pansy-caption"]

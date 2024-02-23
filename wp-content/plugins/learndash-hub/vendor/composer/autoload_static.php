@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit78a4fcd0fb6fbbe230aca408b786d94d
+class ComposerStaticInitdaa60890d070edd95dd7a676523febe8
 {
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
@@ -16,6 +16,7 @@ class ComposerStaticInit78a4fcd0fb6fbbe230aca408b786d94d
         'LearnDash\\Hub\\Controller\\Licensing_Settings_Section' => __DIR__ . '/../..' . '/src/controller/class-licensing-settings-section.php',
         'LearnDash\\Hub\\Controller\\Main_Controller' => __DIR__ . '/../..' . '/src/controller/class-main-controller.php',
         'LearnDash\\Hub\\Controller\\Projects_Controller' => __DIR__ . '/../..' . '/src/controller/class-projects-controller.php',
+        'LearnDash\\Hub\\Controller\\RemoteBanners' => __DIR__ . '/../..' . '/src/controller/class-remote-banner.php',
         'LearnDash\\Hub\\Controller\\Settings_Controller' => __DIR__ . '/../..' . '/src/controller/class-settings-controller.php',
         'LearnDash\\Hub\\Controller\\Signin_Controller' => __DIR__ . '/../..' . '/src/controller/class-signin-controller.php',
         'LearnDash\\Hub\\Framework\\Base' => __DIR__ . '/../..' . '/framework/class-base.php',
@@ -35,7 +36,7 @@ class ComposerStaticInit78a4fcd0fb6fbbe230aca408b786d94d
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit78a4fcd0fb6fbbe230aca408b786d94d::$classMap;
+            $loader->classMap = ComposerStaticInitdaa60890d070edd95dd7a676523febe8::$classMap;
 
         }, null, ClassLoader::class);
     }

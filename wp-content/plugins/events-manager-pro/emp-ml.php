@@ -54,14 +54,17 @@ class EMP_ML {
 		//payment gateway options (pro, move out asap)
 		$options[] = 'dbem_gateway_label';
         //gateway translateable options
-        if( get_option('dbem_rsvp_enabled') ){ 
-			foreach ( \EM\Payments\Gateways::list() as $gateway => $Gateway ){
+        if( get_option('dbem_rsvp_enabled') ){
+			global $EM_Gateways;
+			$legacy = EM_Options::site_get('legacy-gateways', false) || em_constant('EMP_GATEWAY_LEGACY');
+			$Gateways = $legacy ? $EM_Gateways : EM\Payments\Gateways::list();
+			foreach ( $Gateways as $gateway => $Gateway ){
 			    $options[] = 'em_'.$gateway.'_option_name';
 			    $options[] = 'em_'.$gateway.'_booking_feedback';
 			    $options[] = 'em_'.$gateway.'_booking_feedback_free';
 			    $options[] = 'em_'.$gateway.'_booking_feedback_completed';
 			    $options[] = 'em_'.$gateway.'_form';
-			    if( $Gateway::$button_enabled ){
+			    if( (!$legacy && $Gateway::$button_enabled) || ($legacy && $Gateway->button_enabled) ){
 			        $options[] = 'em_'.$gateway.'_button';
 			    }
 			}

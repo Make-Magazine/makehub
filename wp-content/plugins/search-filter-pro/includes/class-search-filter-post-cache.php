@@ -28,6 +28,9 @@ class Search_Filter_Post_Cache {
 	private $posts_updated      = array();
 	private $context            = 'none';
 
+	private $cached_search_form_settings = array();
+	private $cached_search_form_fields   = array();
+
 	private $cache_table_name        = '';
 	private $term_results_table_name = '';
 

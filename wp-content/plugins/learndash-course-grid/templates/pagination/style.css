@@ -5,6 +5,11 @@
     padding: 0;
 }
 
+.learndash-course-grid .pagination::before,
+.learndash-course-grid .pagination::after {
+    display: none;
+}
+
 .learndash-course-grid .pagination .load-more {
     margin: 0 auto;
     border-radius: 3px;

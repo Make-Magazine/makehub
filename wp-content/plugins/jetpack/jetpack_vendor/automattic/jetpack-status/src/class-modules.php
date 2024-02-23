@@ -7,8 +7,9 @@
 
 namespace Automattic\Jetpack;
 
-use Automattic\Jetpack\Constants as Constants;
+use Automattic\Jetpack\Current_Plan as Jetpack_Plan;
 use Automattic\Jetpack\IP\Utils as IP_Utils;
+use Automattic\Jetpack\Status\Host;
 
 /**
  * Class Automattic\Jetpack\Modules
@@ -24,6 +25,10 @@ class Modules {
 	 * @return bool
 	 */
 	public function is_active( $module ) {
+		if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
+			return true;
+		}
+
 		return in_array( $module, self::get_active(), true );
 	}
 
@@ -80,9 +85,8 @@ class Modules {
 			if ( $mod['module_tags'] ) {
 				$mod['module_tags'] = explode( ',', $mod['module_tags'] );
 				$mod['module_tags'] = array_map( 'trim', $mod['module_tags'] );
-				$mod['module_tags'] = array_map( 'jetpack_get_module_i18n_tag', $mod['module_tags'] );
 			} else {
-				$mod['module_tags'] = array( jetpack_get_module_i18n_tag( 'Other' ) );
+				$mod['module_tags'] = array( 'Other' );
 			}
 
 			if ( $mod['plan_classes'] ) {
@@ -96,7 +100,7 @@ class Modules {
 				$mod['feature'] = explode( ',', $mod['feature'] );
 				$mod['feature'] = array_map( 'trim', $mod['feature'] );
 			} else {
-				$mod['feature'] = array( jetpack_get_module_i18n_tag( 'Other' ) );
+				$mod['feature'] = array( 'Other' );
 			}
 
 			$modules_details[ $module ] = $mod;
@@ -162,7 +166,7 @@ class Modules {
 		}
 
 		$key           = md5( $file_name . maybe_serialize( $headers ) );
-		$refresh_cache = is_admin() && isset( $_GET['page'] ) && 'jetpack' === substr( $_GET['page'], 0, 7 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput
+		$refresh_cache = is_admin() && isset( $_GET['page'] ) && str_starts_with( $_GET['page'], 'jetpack' ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput
 
 		// If we don't need to refresh the cache, and already have the value, short-circuit!
 		if ( ! $refresh_cache && isset( $file_data_option[ $key ] ) ) {
@@ -194,8 +198,11 @@ class Modules {
 			$active = array_diff( $active, array( 'vaultpress' ) );
 		}
 
-		// If protect is active on the main site of a multisite, it should be active on all sites.
-		if ( ! in_array( 'protect', $active, true ) && is_multisite() && get_site_option( 'jetpack_protect_active' ) ) {
+		// If protect is active on the main site of a multisite, it should be active on all sites. Doesn't apply to WP.com.
+		if ( ! in_array( 'protect', $active, true )
+			&& ! ( new Host() )->is_wpcom_simple()
+			&& is_multisite()
+			&& get_site_option( 'jetpack_protect_active' ) ) {
 			$active[] = 'protect';
 		}
 
@@ -427,7 +434,7 @@ class Modules {
 						}
 					}
 					if ( $deactivated ) {
-						$state->state( 'deactivated_plugins', join( ',', $deactivated ) );
+						$state->state( 'deactivated_plugins', implode( ',', $deactivated ) );
 						wp_safe_redirect( add_query_arg( 'jetpack_restate', 1 ) );
 						exit;
 					}
@@ -442,7 +449,7 @@ class Modules {
 				}
 			}
 
-			if ( class_exists( 'Jetpack_Plan' ) && ! \Jetpack_Plan::supports( $module ) ) {
+			if ( ! Jetpack_Plan::supports( $module ) ) {
 				return false;
 			}
 

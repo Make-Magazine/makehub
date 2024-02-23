@@ -709,7 +709,7 @@ function ld_propanel_get_widget_screen_type_class( $widget_id = '', $screen_clas
 	if ( !empty( $widget_id ) ) {
 		$screen_type = '';
 	
-		if ( is_admin() ) {
+		if ( is_admin() && function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 
 			if ( in_array( $screen->id, array( 'dashboard', 'dashboard_page_propanel-reporting' ) ) ) {

@@ -78,12 +78,12 @@ jQuery(document).ready( function($){
 			}
 		};
 
-		const update_submit_buttons = function( disabled = false ){
+		const update_submit_buttons = function( enabled = false ){
 			// update the clear link
 			let submit_button = search_advanced.find('button[type="submit"]');
 			let main_submit_button = search.find('.em-search-main-bar button[type="submit"]');
 			let submit_buttons = submit_button.add( main_submit_button ); // merge together to apply chanegs
-			if( disabled ){
+			if( enabled ){
 				submit_buttons.removeClass('disabled').attr('aria-disabled', 'false');
 			}else{
 				submit_buttons.addClass('disabled').attr('aria-disabled', 'true');
@@ -209,6 +209,20 @@ jQuery(document).ready( function($){
 			});
 		});
 
+		search.find('.em-search-sort-trigger').each( function(){
+			tooltip_vars.content = this.parentElement.getAttribute('aria-label');
+			let views_tooltip = tippy(this.parentElement, tooltip_vars);
+			search.on('keydown click', '.em-search-sort-option', function( e ){
+				// get other reference elements we need
+				let order = this.dataset.sort === 'ASC' ? 'DESC' : 'ASC';
+				this.setAttribute('data-sort', order);
+				this.parentElement.querySelector('input[name="order"]').value = order;
+				// trigger custom event in case form disabled due to no search vals
+				search_form.find('button[type="submit"]').focus();
+				search_form.trigger('forcesubmit');
+			});
+		});
+
 		// add trigger logic for advanced popup modal
 		let search_advanced_trigger_click = function(){
 			if( search.hasClass('advanced-mode-inline') ){
@@ -284,6 +298,10 @@ jQuery(document).ready( function($){
 			advanced_search_input.val( this.value );
 			// recalculate totals from here
 			search_form_advanced_calculate_totals_inputs(advanced_search_input[0]);
+			// any change without advanced form should show the search form
+			if ( search_advanced.length === 0 ) {
+				update_submit_buttons( true);
+			}
 		});
 		search.on('change', '.em-search-main-bar input.em-search-geo-coords', function(){
 			let el = $(this);
@@ -295,14 +313,23 @@ jQuery(document).ready( function($){
 			advanced_geo.find('input.em-search-geo').val(geo_text.val()).attr('class', geo_text.attr('class'));
 			// calculate totals from here
 			search_form_advanced_calculate_totals_inputs(advanced_geo_coords);
+			// any change without advanced form should show the search form
+			if ( search_advanced.length === 0 ) {
+				update_submit_buttons( true );
+			}
 		});
 		search.find('.em-search-main-bar .em-datepicker input.em-search-scope.flatpickr-input').each( function(){
 			if( !('_flatpickr' in this) ) return;
 			this._flatpickr.config.onClose.push( function( selectedDates, dateStr, instance ) {
-				// update advanced search form datepicker values, trigger a close for it to handle the rest
-				let advanced_datepicker = search_advanced.find('.em-datepicker input.em-search-scope.flatpickr-input');
-				advanced_datepicker[0]._flatpickr.setDate( selectedDates, true );
-				advanced_datepicker[0]._flatpickr.close();
+				// any change without advanced form should show the search form
+				if ( search_advanced.length === 0 ) {
+					update_submit_buttons( true );
+				} else {
+					// update advanced search form datepicker values, trigger a close for it to handle the rest
+					let advanced_datepicker = search_advanced.find('.em-datepicker input.em-search-scope.flatpickr-input');
+					advanced_datepicker[0]._flatpickr.setDate( selectedDates, true );
+					advanced_datepicker[0]._flatpickr.close();
+				}
 			});
 		});
 
@@ -315,9 +342,8 @@ jQuery(document).ready( function($){
 			if( e.type === 'change' ){
 				// copy over place info on change only, not on each keystroke
 				search.find('.em-search-main input.em-search-text').val( this.value );
-			}else{
-				search_form_advanced_calculate_totals_inputs(this);
 			}
+			search_form_advanced_calculate_totals_inputs(this);
 		});
 		search_advanced.on('change', 'input.em-search-geo-coords', function( e ){
 			search_form_advanced_calculate_totals_inputs(this);

@@ -181,10 +181,17 @@ if ( ! class_exists( 'LearnDash_Setup_Wizard' ) ) {
 					$this->create_profile_page();
 					break;
 				case 'process_course_listing':
-					// download and setup course grid, create course listing page.
+					// Import demo course.
+					// phpcs:ignore Generic.CodeAnalysis.EmptyStatement -- TODO: Remove this comment later.
+					if ( 'yes' === $data['course_demo'] ) {
+						Learndash_Admin_Import_Export::import_demo_content();
+					}
+
+					// Create course listing page.
 					if ( 'multiple' === $data['courses_amount'] ) {
 						$this->create_courses_listing_page();
 					}
+
 					// install course grid plugin.
 					if ( 'true' === $data['course_grid'] ) {
 						$ret = $this->maybe_install_a_plugin( self::COURSE_GRID_SLUG );
@@ -460,6 +467,11 @@ if ( ! class_exists( 'LearnDash_Setup_Wizard' ) ) {
 			update_option( self::LICENSE_KEY, $license_key );
 			update_option( self::LICENSE_EMAIL_KEY, $email );
 
+			// try to activate the licensing plugin.
+			learndash_activate_learndash_hub();
+
+			// Licensing validation.
+
 			$license_status = false;
 			if ( learndash_is_learndash_hub_active() ) {
 				$license_status = learndash_validate_hub_license( $email, $license_key );
@@ -578,7 +590,12 @@ if ( ! class_exists( 'LearnDash_Setup_Wizard' ) ) {
 					constant( 'SCRIPT_DEBUG' ) === true ? time() : LEARNDASH_VERSION,
 					true
 				);
-				$data             = get_option( self::DATA_KEY );
+
+				$data = get_option( self::DATA_KEY );
+				if ( ! is_array( $data ) ) {
+					$data = [];
+				}
+
 				$currency_code    = learndash_get_currency_code();
 				$currency_country = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Payments_Defaults', 'country' ) ?? '';
 
@@ -617,6 +634,7 @@ if ( ! class_exists( 'LearnDash_Setup_Wizard' ) ) {
 							'use_registered_email'     => $data['use_registered_email'] ?? 'yes',
 							'notification_email'       => $data['notification_email'] ?? '',
 							'license_validated'        => $data['license_validated'] ?? 'no',
+							'course_demo'              => $data['course_demo'] ?? 'no',
 							'courses_amount'           => $data['courses_amount'] ?? 'single',
 							'course_type'              => $data['course_type'] ?? array(),
 							'group_access'             => $data['group_access'] ?? 'no',
@@ -667,6 +685,16 @@ if ( ! class_exists( 'LearnDash_Setup_Wizard' ) ) {
 
 			// Hide the admin menu item, the page stays available.
 			remove_menu_page( self::HANDLE );
+
+			if (
+				isset( $_GET['page'] )
+				&& self::HANDLE === sanitize_text_field( wp_unslash( $_GET['page'] ) )
+			) {
+				// remove_menu_page() call affects the global title and makes it null in the end,
+				// which causes a deprecation error in WP core cause it requires it to be a string.
+				global $title;
+				$title = ''; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- It's intentional.
+			}
 		}
 
 		/**

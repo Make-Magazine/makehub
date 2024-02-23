@@ -8,6 +8,8 @@
 use Automattic\Jetpack\Assets;
 use Automattic\Jetpack\Assets\Logo as Jetpack_Logo;
 use Automattic\Jetpack\Redirect;
+use Automattic\Jetpack\Stats\Options as Stats_Options;
+use Automattic\Jetpack\Stats_Admin\WP_Dashboard_Odyssey_Widget as Dashboard_Stats_Widget;
 use Automattic\Jetpack\Status;
 
 /**
@@ -62,21 +64,34 @@ class Jetpack_Stats_Dashboard_Widget {
 				__( 'Jetpack Stats', 'jetpack' )
 			);
 
-			wp_add_dashboard_widget(
-				'jetpack_summary_widget',
-				$widget_title,
-				array( __CLASS__, 'render_widget' )
-			);
-			wp_enqueue_style(
-				'jetpack-dashboard-widget',
-				Assets::get_file_url_for_environment(
-					'css/dashboard-widget.min.css',
-					'css/dashboard-widget.css'
-				),
-				array(),
-				JETPACK__VERSION
-			);
-			wp_style_add_data( 'jetpack-dashboard-widget', 'rtl', 'replace' );
+			if ( Stats_Options::get_option( 'enable_odyssey_stats' ) ) {
+				// New widget implemented in Odyssey Stats.
+				$stats_widget = new Dashboard_Stats_Widget();
+				wp_add_dashboard_widget(
+					Dashboard_Stats_Widget::DASHBOARD_WIDGET_ID,
+					$widget_title,
+					array( $stats_widget, 'render' )
+				);
+				// Only load scripts when the widget is not hidden
+				$stats_widget->maybe_load_admin_scripts();
+			} else {
+				// Legacy widget.
+				wp_add_dashboard_widget(
+					Dashboard_Stats_Widget::DASHBOARD_WIDGET_ID,
+					$widget_title,
+					array( __CLASS__, 'render_widget' )
+				);
+				wp_enqueue_style(
+					'jetpack-dashboard-widget',
+					Assets::get_file_url_for_environment(
+						'css/dashboard-widget.min.css',
+						'css/dashboard-widget.css'
+					),
+					array(),
+					JETPACK__VERSION
+				);
+				wp_style_add_data( 'jetpack-dashboard-widget', 'rtl', 'replace' );
+			}
 		}
 	}
 
@@ -184,8 +199,8 @@ class Jetpack_Stats_Dashboard_Widget {
 						)
 					);
 					?>
-								" class="button button-jetpack" title="<?php esc_attr_e( 'Protect helps to keep you secure from brute-force login attacks.', 'jetpack' ); ?>">
-						<?php esc_html_e( 'Activate brute force attack protection', 'jetpack' ); ?>
+								" class="button button-primary" title="<?php esc_attr_e( 'Jetpack helps to keep you secure from brute-force login attacks.', 'jetpack' ); ?>">
+						<?php esc_html_e( 'Activate', 'jetpack' ); ?>
 					</a>
 				<?php else : ?>
 					<?php esc_html_e( 'Brute force attack protection is inactive.', 'jetpack' ); ?>
@@ -215,8 +230,8 @@ class Jetpack_Stats_Dashboard_Widget {
 						)
 					);
 					?>
-								" class="button button-jetpack">
-						<?php esc_html_e( 'Activate Anti-spam', 'jetpack' ); ?>
+								" class="button button-primary">
+						<?php esc_html_e( 'Activate', 'jetpack' ); ?>
 					</a>
 				<?php else : ?>
 					<p><a href="<?php echo esc_url( 'https://akismet.com/?utm_source=jetpack&utm_medium=link&utm_campaign=Jetpack%20Dashboard%20Widget%20Footer%20Link' ); ?>"><?php esc_html_e( 'Anti-spam can help to keep your blog safe from spam!', 'jetpack' ); ?></a></p>

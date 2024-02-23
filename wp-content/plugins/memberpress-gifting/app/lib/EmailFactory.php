@@ -52,7 +52,7 @@ class EmailFactory {
       }
 
       // order based on the ui_order
-      uasort($objs[$etype], 'self::cmp_uasort');
+      uasort($objs[$etype], self::class . '::cmp_uasort');
     }
 
     return $objs[$etype];

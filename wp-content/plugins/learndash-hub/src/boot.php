@@ -4,6 +4,7 @@ namespace LearnDash\Hub;
 
 use LearnDash\Hub\Controller\Main_Controller;
 use LearnDash\Hub\Controller\Projects_Controller;
+use LearnDash\Hub\Controller\RemoteBanners;
 use LearnDash\Hub\Controller\Settings_Controller;
 use LearnDash\Hub\Controller\Signin_Controller;
 use LearnDash\Hub\Traits\License;
@@ -18,7 +19,7 @@ use LearnDash\Hub\Traits\Permission;
  */
 class Boot {
 	use Permission;
-  use License;
+	use License;
 
 	/**
 	 * Run all the triggers in init runtime.
@@ -36,6 +37,8 @@ class Boot {
 		} else {
 			( new Signin_Controller() );
 		}
+
+		( new RemoteBanners() )->register_hooks();
 	}
 
 	/**

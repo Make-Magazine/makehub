@@ -54,6 +54,59 @@ class MPCA_Corporate_Account extends MeprBaseModel {
     return $mepr_db->get_records($mpca_db->corporate_accounts, $args, $order_by, $limit);
   }
 
+  public static function has_active_corporate_account($user_id) {
+    global $wpdb;
+
+    $mepr_db = MeprDb::fetch();
+    $mpca_db = MPCA_Db::fetch();
+    $db_lifetime = $wpdb->prepare('%s',MeprUtils::db_lifetime());
+
+    $q = $wpdb->prepare("
+    SELECT DISTINCT id FROM {$mepr_db->transactions}
+      WHERE user_id = %d
+      AND subscription_id IN(
+        SELECT obj_id FROM {$mpca_db->corporate_accounts}
+        WHERE obj_type = 'subscriptions'
+        AND user_id = %d
+      )
+      AND status IN('complete', 'confirmed')
+      AND (
+        expires_at IS NULL
+        OR expires_at = {$db_lifetime}
+        OR expires_at >= NOW()
+      ) LIMIT 1;
+      ",
+      $user_id,
+      $user_id
+    );
+
+    $subs = $wpdb->get_var($q);
+    if($subs) {
+      return $subs;
+    }
+
+    $q = $wpdb->prepare("
+    SELECT DISTINCT id FROM {$mpca_db->corporate_accounts}
+      WHERE user_id = %d
+      AND obj_type = 'transactions'
+      AND obj_id IN(
+        SELECT id FROM {$mepr_db->transactions}
+        WHERE user_id = %d
+        AND status IN('complete', 'confirmed')
+        AND (
+          expires_at IS NULL
+          OR expires_at = {$db_lifetime}
+          OR expires_at >= NOW()
+        )
+      ) LIMIT 1;
+      ",
+      $user_id,
+      $user_id
+    );
+
+    return $wpdb->get_var($q);
+  }
+
   public static function find_corporate_account_by_obj_id($obj_id, $obj_type) {
     $mepr_db = MeprDb::fetch();
     $mpca_db = MPCA_Db::fetch();

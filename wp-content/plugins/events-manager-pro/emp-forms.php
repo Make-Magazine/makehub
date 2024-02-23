@@ -407,7 +407,7 @@ class EM_Form extends EM_Object {
 				?>
 				<input type="text" name="<?php echo $field_name ?>" id="<?php echo $field['fieldid'] ?>" class="input" value="<?php echo $default; ?>"  />
 				<?php
-				break;	
+				break;
 			case 'textarea':
 				$size = 'rows="2" cols="20"';
 			    if( defined('EMP_FORMS_TEXTAREA_SIZE') && EMP_FORMS_TEXTAREA_SIZE ){
@@ -526,7 +526,7 @@ class EM_Form extends EM_Object {
 					<?php endif; ?>
 				</span>
     			<?php
-    			break;	
+    			break;
 			case 'captcha':
 			    if( !self::show_reg_fields() ) break;
 				$lang = str_replace('_', '-', get_locale());
@@ -911,7 +911,10 @@ class EM_Form extends EM_Object {
 	}
 
 	public static function validate_reg_fields( $field = false ){
-		if( emp_is_manual_booking() ) return true; //short circuit if we're on a manual booking for a new user
+		if( emp_is_manual_booking( true ) ) {	//short circuit if we're on a manual booking for a new user
+			// only login fields are exempt, if in no-user mode, since we don't need it
+			return $field === 'user_login' && get_option('dbem_bookings_anonymous');
+		}
 		if( !empty($field['type']) && $field['type'] == 'user_login' && is_user_logged_in() ) return false;
 		$validate = is_user_logged_in() ? get_option('dbem_emp_booking_form_reg_show') && get_option('dbem_emp_booking_form_reg_input') : true;
 		return $validate && self::show_reg_fields( $field );

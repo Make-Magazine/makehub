@@ -56,7 +56,7 @@ define( 'LEARNDASH_LMS_TEXT_DOMAIN', 'learndash' );
  *
  * @var string $value PHP version x.x.x or x.x.x.x format.
  */
-define( 'LEARNDASH_MIN_PHP_VERSION', '7.3' );
+define( 'LEARNDASH_MIN_PHP_VERSION', '7.4' );
 
 /**
  * Define LearnDash LMS - Set the minimum supported MySQL version.
@@ -315,14 +315,14 @@ if ( ! defined( 'LEARNDASH_REST_API_ENABLED' ) ) {
 
 if ( ! defined( 'LEARNDASH_BLOCK_WORDPRESS_CPT_ROUTES' ) ) {
 	/**
-	 * Define LearnDash LMS - Enable block access to default WordPress CPT routes.
+	 * Define LearnDash LMS - Enable LearnDash additional restrictions for the LD WordPress CPT routes (wp/v2/<learndash_post_types>)
 	 *
-	 * Logic added to prevent access to the automatic routes created as part of
-	 * WP core for Gutenberg enabled custom post types. This new logic will prevent
-	 * visibility read access if used is not authenticated or does not have update
-	 * capabilities.
+	 * If enabled, the LearnDash REST API controllers will add additional permission checks to the default WordPress REST API controllers.
+	 *
+	 * If disabled, the default WordPress REST API controllers logic will be used, which has less restrictions by default.
 	 *
 	 * @since 3.2.0
+	 * @deprecated 4.10.3 We always want to have a good level of security. It can always be modified by custom code if needed.
 	 *
 	 * @var bool $value Default is true.
 	 */
@@ -626,18 +626,19 @@ if ( ! defined( 'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE' ) ) {
 	/**
 	 * Define LearnDash LMS - Set the default course price type.
 	 *
-	 * @since 3.2.0
+	 * @since 3.2.0 Default is 'open'.
+	 * @since 4.9.0   Default is 'free'.
 	 *
 	 * @var string $value {
 	 *    Possible values one of the following.
-	 *    @type string open      Price Type 'open'. Default.
-	 *    @type string free      Price Type 'free'.
+	 *    @type string open      Price Type 'open'.
+	 *    @type string free      Price Type 'free'. Default.
 	 *    @type string paynow    Price Type 'paynow'.
 	 *    @type string subscribe Price Type 'subscribe'.
 	 *    @type string closed    Price Type 'closed'.
 	 * }
 	 */
-	define( 'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE', 'open' );
+	define( 'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE', 'free' );
 }
 
 if ( ! defined( 'LEARNDASH_DEFAULT_COURSE_ORDER' ) ) {

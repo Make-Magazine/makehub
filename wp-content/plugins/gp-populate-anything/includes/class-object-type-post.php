@@ -30,16 +30,14 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 	 * @return string   SHA1 representation of the requested query
 	 */
 	public function query_cache_hash( $args ) {
-		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
+		return sha1( serialize( $this->process_query_args( $args, $this->default_query_args( $args ) ) ) );
 	}
 
 	/**
 	 * Extract unique identifier for a given post.
 	 *
-	 * @param $object WP_Post
-	 * @param  null  $primary_property_value
-	 *
-	 * @return string|number
+	 * @param WP_Post|null $object
+	 * @param null|string $primary_property_value
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
 		if ( empty( $object ) ) {
@@ -77,11 +75,33 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		);
 	}
 
+	/**
+	 * @param $property_id string
+	 *
+	 * @return string|null
+	 */
+	public function get_group_from_property_id( $property_id ) {
+		if ( strpos( $property_id, 'meta_' ) === 0 ) {
+			return 'meta';
+		} elseif ( strpos( $property_id, 'taxonomy_' ) === 0 ) {
+			return 'taxonomies';
+		}
+
+		return null;
+	}
+
+	public function get_property_value_from_property_id( $property_id ) {
+		$property_id = preg_replace( '/^taxonomy_/', '', $property_id );
+		$property_id = preg_replace( '/^meta_/', '', $property_id );
+
+		return $property_id;
+	}
+
 	public function add_filter_hooks() {
-		add_filter( 'gppa_object_type_post_filter', array( $this, 'process_filter_default' ), 10, 4 );
-		add_filter( 'gppa_object_type_post_filter_post_date', array( $this, 'process_filter_post_date' ), 10, 4 );
-		add_filter( 'gppa_object_type_post_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 4 );
-		add_filter( 'gppa_object_type_post_filter_group_taxonomies', array( $this, 'process_filter_taxonomy' ), 10, 4 );
+		add_filter( 'gppa_object_type_post_filter', array( $this, 'process_filter_default' ), 10, 2 );
+		add_filter( 'gppa_object_type_post_filter_post_date', array( $this, 'process_filter_post_date' ), 10, 2 );
+		add_filter( 'gppa_object_type_post_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 2 );
+		add_filter( 'gppa_object_type_post_filter_group_taxonomies', array( $this, 'process_filter_taxonomy' ), 10, 2 );
 		add_filter( 'gppa_object_type_query_post', array( $this, 'maybe_add_post_status_where' ), 10, 2 );
 	}
 
@@ -89,14 +109,24 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -113,14 +143,24 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -161,14 +201,24 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -191,14 +241,24 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -241,7 +301,6 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 			default:
 				/* Invalid operator, bail out. */
 				return $query_builder_args;
-				break;
 		}
 
 		$taxonomy = str_replace( 'taxonomy_', '', $property_id );
@@ -299,12 +358,36 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		global $wpdb;
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -498,7 +581,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 			$meta_key = preg_replace( '/^meta_/', '', $prop );
 
 			// We explicitly do not set "single" to true here. This is the default behavior if we were to use $object->{$prop}
-			$meta = get_post_meta( $object->ID, $meta_key );
+			$meta = $object ? get_post_meta( $object->ID, $meta_key ) : null;
 
 			// If it's a single item in the array, turn it back into a scalar value.
 			if ( is_array( $meta ) && count( $meta ) === 1 ) {
@@ -594,13 +677,36 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 		global $wpdb;
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 * @var $field array
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -669,8 +775,75 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 
 	}
 
+	/**
+	 * Version of GPPA_Object_Type::build_mysql_query() that supports WP query splitting.
+	 *
+	 * @see https://developer.wordpress.org/reference/hooks/split_the_query/
+	 */
+	public function build_mysql_query_split( $query_args, $field ) {
+
+		global $wpdb;
+
+		$query = array(
+			'where'   => '',
+			'join'    => '',
+			'orderby' => '',
+			'groupby' => '',
+			'limits'  => '',
+		);
+
+		if ( ! empty( $query_args['joins'] ) ) {
+			$joins = array();
+
+			foreach ( $query_args['joins'] as $join_name => $join ) {
+				$joins[] = $join;
+			}
+
+			$query['join'] = implode( "\n", $joins );
+		}
+
+		if ( ! empty( $query_args['where'] ) ) {
+			$where_clauses = array();
+
+			foreach ( $query_args['where'] as $where_or_grouping => $where_or_grouping_clauses ) {
+				$where_clauses[] = '(' . implode( ' AND ', $where_or_grouping_clauses ) . ')';
+			}
+
+			$query['where'] = "AND \n" . implode( "\n OR ", $where_clauses );
+		}
+
+		if ( ! empty( $query_args['group_by'] ) ) {
+			$query['groupby'] = self::esc_property_to_ident( $query_args['group_by'] );
+		}
+
+		if ( ! empty( $query_args['order_by'] ) && ! empty( $query_args['order'] ) ) {
+			$order_by = self::esc_property_to_ident( $query_args['order_by'], 'order_by' );
+			$order    = $query_args['order'];
+
+			if ( ! in_array( strtoupper( $order ), array( 'ASC', 'DESC', 'RAND' ), true ) ) {
+				$order = 'DESC';
+			} elseif ( strtoupper( $order ) === 'RAND' ) {
+				// Use MySQL's rand() function if random ordering is requested.
+				$order_by = 'rand()';
+				$order    = '';
+			}
+
+			$query['orderby'] = "{$order_by} {$order}";
+		}
+
+		$offset = isset( $query_args['offset'] ) ? $query_args['offset'] : null;
+
+		if ( $offset !== null ) {
+			$query['limits'] = $wpdb->prepare( 'LIMIT %d, %d', $offset, $query_args['limit'] );
+		} else {
+			$query['limits'] = $wpdb->prepare( 'LIMIT %d', $query_args['limit'] );
+		}
+
+		return $query;
+	}
+
 	public function query( $args ) {
-		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
+		$query_args = $this->process_query_args( $args, $this->default_query_args( $args ) );
 
 		$query = new WP_Query( array(
 			// Set post_status to any to ensure that WP doesn't override our filters and force "published" status only.
@@ -684,19 +857,48 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 			'ignore_sticky_posts' => 1,
 		) );
 
-		/* $self is required for PHP 5.3 compatibility. */
-		$self = $this;
-
 		/* Reset meta query counter */
 		$this->meta_query_counter = 0;
 
-		$func = function () use ( $query_args, $self, $args ) {
-			return $self->build_mysql_query( $query_args, rgar( $args, 'field' ) );
+		// Build the query and split it.
+		$split_query = $this->build_mysql_query_split( $query_args, rgar( $args, 'field' ) );
+
+		// Add individual filters. We previously used posts_request but this does not work with query splitting.
+		$where_filter = function( $where ) use ( $split_query ) {
+			return $split_query['where'];
 		};
 
-		add_filter( 'posts_request', $func, 9 );
+		$join_filter = function( $join ) use ( $split_query ) {
+			return $split_query['join'];
+		};
+
+		$orderby_filter = function( $orderby ) use ( $split_query ) {
+			return $split_query['orderby'];
+		};
+
+		$groupby_filter = function( $groupby ) use ( $split_query ) {
+			return $split_query['groupby'];
+		};
+
+		$limits_filter = function( $limits ) use ( $split_query ) {
+			return $split_query['limits'];
+		};
+
+		// Priority of 11 to be after most plugins, but hopefully early enough for caching plugins to modify things.
+		add_filter( 'posts_where_request', $where_filter, 11 );
+		add_filter( 'posts_join_request', $join_filter, 11 );
+		add_filter( 'posts_orderby_request', $orderby_filter, 11 );
+		add_filter( 'posts_groupby_request', $groupby_filter, 11 );
+		add_filter( 'post_limits_request', $limits_filter, 11 ); // `post` is not a typo.
+
 		$results = $query->get_posts();
-		remove_filter( 'posts_request', $func, 9 );
+
+		// Remove all of the filters we just added.
+		remove_filter( 'posts_where_request', $where_filter, 11 );
+		remove_filter( 'posts_join_request', $join_filter, 11 );
+		remove_filter( 'posts_orderby_request', $orderby_filter, 11 );
+		remove_filter( 'posts_groupby_request', $groupby_filter, 11 );
+		remove_filter( 'post_limits_request', $limits_filter, 11 );
 
 		return $results;
 	}

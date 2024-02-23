@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
+class ComposerStaticInit4d417e07605856825299aff1ab758f07
 {
     public static $files = array (
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
@@ -93,6 +93,7 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
             'MailOptin\\FormidableFormConnect\\' => 32,
             'MailOptin\\FluentFormConnect\\' => 28,
             'MailOptin\\FluentCRMConnect\\' => 27,
+            'MailOptin\\FlodeskConnect\\' => 25,
             'MailOptin\\FacebookCustomAudienceConnect\\' => 40,
             'MailOptin\\EmmaConnect\\' => 22,
             'MailOptin\\EmailOctopusConnect\\' => 30,
@@ -130,6 +131,7 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         'C' => 
         array (
             'Composer\\Installers\\' => 20,
+            'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
         'B' => 
@@ -403,6 +405,10 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         array (
             0 => __DIR__ . '/../..' . '/src/connections/FluentCRMConnect',
         ),
+        'MailOptin\\FlodeskConnect\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/connections/FlodeskConnect',
+        ),
         'MailOptin\\FacebookCustomAudienceConnect\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src/connections/FacebookCustomAudienceConnect',
@@ -502,6 +508,10 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
+        ),
+        'Carbon\\Doctrine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
         ),
         'Carbon\\' => 
         array (
@@ -609,13 +619,13 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         'Carbon\\CarbonPeriodImmutable' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriodImmutable.php',
         'Carbon\\CarbonTimeZone' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonTimeZone.php',
         'Carbon\\Cli\\Invoker' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Cli/Invoker.php',
-        'Carbon\\Doctrine\\CarbonDoctrineType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/CarbonDoctrineType.php',
-        'Carbon\\Doctrine\\CarbonImmutableType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/CarbonImmutableType.php',
-        'Carbon\\Doctrine\\CarbonType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/CarbonType.php',
-        'Carbon\\Doctrine\\CarbonTypeConverter' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/CarbonTypeConverter.php',
-        'Carbon\\Doctrine\\DateTimeDefaultPrecision' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/DateTimeDefaultPrecision.php',
-        'Carbon\\Doctrine\\DateTimeImmutableType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/DateTimeImmutableType.php',
-        'Carbon\\Doctrine\\DateTimeType' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Doctrine/DateTimeType.php',
+        'Carbon\\Doctrine\\CarbonDoctrineType' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/CarbonDoctrineType.php',
+        'Carbon\\Doctrine\\CarbonImmutableType' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/CarbonImmutableType.php',
+        'Carbon\\Doctrine\\CarbonType' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/CarbonType.php',
+        'Carbon\\Doctrine\\CarbonTypeConverter' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/CarbonTypeConverter.php',
+        'Carbon\\Doctrine\\DateTimeDefaultPrecision' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/DateTimeDefaultPrecision.php',
+        'Carbon\\Doctrine\\DateTimeImmutableType' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/DateTimeImmutableType.php',
+        'Carbon\\Doctrine\\DateTimeType' => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine/DateTimeType.php',
         'Carbon\\Exceptions\\BadComparisonUnitException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/BadComparisonUnitException.php',
         'Carbon\\Exceptions\\BadFluentConstructorException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/BadFluentConstructorException.php',
         'Carbon\\Exceptions\\BadFluentSetterException' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Exceptions/BadFluentSetterException.php',
@@ -1069,6 +1079,11 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         'MailOptin\\FacebookCustomAudienceConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/FacebookCustomAudienceConnect/Connect.php',
         'MailOptin\\FacebookCustomAudienceConnect\\ConnectSettingsPage' => __DIR__ . '/../..' . '/src/connections/FacebookCustomAudienceConnect/ConnectSettingsPage.php',
         'MailOptin\\FacebookCustomAudienceConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/FacebookCustomAudienceConnect/Subscription.php',
+        'MailOptin\\FlodeskConnect\\APIClass' => __DIR__ . '/../..' . '/src/connections/FlodeskConnect/APIClass.php',
+        'MailOptin\\FlodeskConnect\\AbstractFlodeskConnect' => __DIR__ . '/../..' . '/src/connections/FlodeskConnect/AbstractFlodeskConnect.php',
+        'MailOptin\\FlodeskConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/FlodeskConnect/Connect.php',
+        'MailOptin\\FlodeskConnect\\ConnectSettingsPage' => __DIR__ . '/../..' . '/src/connections/FlodeskConnect/ConnectSettingsPage.php',
+        'MailOptin\\FlodeskConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/FlodeskConnect/Subscription.php',
         'MailOptin\\FluentCRMConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/FluentCRMConnect/Connect.php',
         'MailOptin\\FluentCRMConnect\\Subscription' => __DIR__ . '/../..' . '/src/connections/FluentCRMConnect/Subscription.php',
         'MailOptin\\FluentFormConnect\\Connect' => __DIR__ . '/../..' . '/src/connections/FluentFormConnect/Connect.php',
@@ -1462,6 +1477,7 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
         'Sabberworm\\CSS\\OutputFormat' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/OutputFormat.php',
         'Sabberworm\\CSS\\OutputFormatter' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/OutputFormatter.php',
         'Sabberworm\\CSS\\Parser' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parser.php',
+        'Sabberworm\\CSS\\Parsing\\Anchor' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/Anchor.php',
         'Sabberworm\\CSS\\Parsing\\OutputException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/OutputException.php',
         'Sabberworm\\CSS\\Parsing\\ParserState' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/ParserState.php',
         'Sabberworm\\CSS\\Parsing\\SourceException' => __DIR__ . '/..' . '/sabberworm/php-css-parser/src/Parsing/SourceException.php',
@@ -1642,9 +1658,9 @@ class ComposerStaticInitc5f455ae8638c0ff69c1590220defa21
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc5f455ae8638c0ff69c1590220defa21::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc5f455ae8638c0ff69c1590220defa21::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc5f455ae8638c0ff69c1590220defa21::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4d417e07605856825299aff1ab758f07::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4d417e07605856825299aff1ab758f07::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit4d417e07605856825299aff1ab758f07::$classMap;
 
         }, null, ClassLoader::class);
     }

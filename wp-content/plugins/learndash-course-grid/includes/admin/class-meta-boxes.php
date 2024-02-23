@@ -13,6 +13,8 @@ class Meta_Boxes
     {
         add_action( 'add_meta_boxes', [ $this, 'add_meta_boxes' ] );
         add_action( 'save_post', [ $this, 'save_meta_boxes' ], 10, 3 );
+
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
     }
 
     public function add_meta_boxes()
@@ -57,17 +59,17 @@ class Meta_Boxes
 
         <?php wp_nonce_field( 'settings_meta_box', 'learndash_course_grid_nonce' ); ?>
 
-        <script type="text/javascript">
-            jQuery( document ).ready( function( $ ) {
-                var toggleVisibility = toggleVisibility || function( id ) {
-                    var e = document.getElementById( id );
-                    if ( e.style.display == 'block' ) {
-                        e.style.display = 'none';
-                    } else {
-                        e.style.display = 'block';
-                    }
-                };
+        <script>
+            var toggleVisibility = toggleVisibility || function( id ) {
+                var e = document.getElementById( id );
+                if ( e.style.display == 'block' ) {
+                    e.style.display = 'none';
+                } else {
+                    e.style.display = 'block';
+                }
+            };
 
+            jQuery( document ).ready( function( $ ) {
                 $( window ).on( 'load', function() {
                     if ( $( 'input[name="learndash_course_grid_enable_video_preview"]' ).is( ':checked' ) ) {
                         $( '#learndash_course_grid_video_embed_code_field' ).show();
@@ -263,6 +265,21 @@ class Meta_Boxes
         
         if ( isset( $_POST['learndash_course_grid_custom_ribbon_text'] ) ) {
             update_post_meta( $post_id, '_learndash_course_grid_custom_ribbon_text', sanitize_text_field( trim( $_POST['learndash_course_grid_custom_ribbon_text'] ) ) );
+        }
+    }
+
+    public function enqueue_scripts()
+    {   
+        $screen = get_current_screen();
+
+        if ( 'post' === $screen->base && ! defined( 'LEARNDASH_VERSION' ) ) {
+            wp_enqueue_style(
+                'learndash-course-grid-meta-box',
+                LEARNDASH_COURSE_GRID_PLUGIN_URL . 'assets/css/meta-box.css',
+                [],
+                LEARNDASH_COURSE_GRID_VERSION,
+                'all'
+            );
         }
     }
 }

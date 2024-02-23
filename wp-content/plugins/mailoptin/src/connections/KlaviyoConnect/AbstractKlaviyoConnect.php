@@ -59,7 +59,7 @@ class AbstractKlaviyoConnect extends AbstractConnect
                 return true;
             }
 
-            return $return_error === true ? $result['body']->message : false;
+            return false;
 
         } catch (\Exception $e) {
 

@@ -62,6 +62,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( ! isset( $this->setting_option_values['reset_password'] ) ) {
 				$this->setting_option_values['reset_password'] = '';
 			}
+
+			if ( ! isset( $this->setting_option_values['reset_password_success'] ) ) {
+				$this->setting_option_values['reset_password_success'] = '';
+			}
 		}
 
 		/**
@@ -96,6 +100,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'display_callback' => array( $this, 'display_pages_selector' ),
 			);
 
+			$this->setting_option_fields['reset_password_success'] = array(
+				'name'             => 'reset_password_success',
+				'type'             => 'select',
+				'label'            => esc_html__( 'Reset Password Success', 'learndash' ),
+				'value'            => $this->setting_option_values['reset_password_success'],
+				'display_callback' => array( $this, 'display_pages_selector' ),
+			);
+
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_section_key );
 
@@ -109,7 +121,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @param array $field_args An array of field arguments used to process the output.
 		 */
-		public function display_pages_selector( $field_args = array() ) {
+		public static function display_pages_selector( $field_args = array() ) {
 			$html = '';
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */

@@ -18,7 +18,25 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 	 * @since 4.3.0.1
 	 */
 	class Learndash_Admin_File_Download_Handler {
+		/**
+		 *
+		 * The file download action name. Deprecated.
+		 *
+		 * @since 4.3.0.1
+		 * @since 4.10.3 Deprecated. It's not used anymore. Replaced by the static property `$file_download_action`.
+		 *
+		 * @var string
+		 */
 		const LD_FILE_DOWNLOAD_ACTION = 'learndash_file_download';
+
+		/**
+		 * The file download action name. It is used to generate the download URL.
+		 *
+		 * @since 4.10.3
+		 *
+		 * @var string
+		 */
+		protected static $file_download_action = 'learndash_admin_file_download';
 
 		/**
 		 * List of file paths to download.
@@ -28,7 +46,6 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 		 * @var array $file_paths [$file_path_id] => $file_path.
 		 */
 		private static $file_paths = array();
-
 
 		/**
 		 * Register a file path to download.
@@ -49,11 +66,12 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 		 *
 		 * @since 4.3.0.1
 		 *
-		 * @param string $file_path_id  The file path ID.
-		 * @param string $file_name     The file name.
-		 * @return string               The URL to download the file.
+		 * @param string $file_path_id The file path ID.
+		 * @param string $file_name    The file name.
 		 *
 		 * @throws InvalidArgumentException If file path ID is not registered.
+		 *
+		 * @return string The URL to download the file.
 		 */
 		public static function get_download_url( string $file_path_id, string $file_name ): string {
 			if ( ! isset( self::$file_paths[ $file_path_id ] ) ) {
@@ -63,8 +81,8 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 
 			$download_url = add_query_arg(
 				array(
-					'action'       => self::LD_FILE_DOWNLOAD_ACTION,
-					'nonce'        => wp_create_nonce( self::LD_FILE_DOWNLOAD_ACTION . $file_path_id . $file_name ),
+					'action'       => static::$file_download_action,
+					'nonce'        => wp_create_nonce( static::$file_download_action . $file_path_id . $file_name ),
 					'file_path_id' => $file_path_id,
 					'file_name'    => $file_name,
 				),
@@ -84,9 +102,11 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 		public static function try_to_protect_file_path( string $file_path ): string {
 			$htaccess_configured = false;
 
-			try {
-				$htaccess_path = $file_path . DIRECTORY_SEPARATOR . '.htaccess';
+			learndash_put_directory_index_file( trailingslashit( $file_path ) . 'index.php' );
 
+			$htaccess_path = trailingslashit( $file_path ) . '.htaccess';
+
+			try {
 				if ( file_exists( $htaccess_path ) ) {
 					$htaccess_configured = true;
 				} elseif ( is_dir( $file_path ) && is_writable( $file_path ) ) {
@@ -202,13 +222,13 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 		 */
 		public static function init(): void {
 			add_action(
-				'admin_post_' . self::LD_FILE_DOWNLOAD_ACTION,
+				'admin_post_' . static::$file_download_action,
 				function() {
 					$file_path_id = filter_input( INPUT_GET, 'file_path_id', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 					$file_name    = filter_input( INPUT_GET, 'file_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 					$nonce        = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 
-					if ( ! wp_verify_nonce( $nonce, self::LD_FILE_DOWNLOAD_ACTION . $file_path_id . $file_name ) ) {
+					if ( ! wp_verify_nonce( $nonce, static::$file_download_action . $file_path_id . $file_name ) ) {
 						echo esc_html__( 'URL expired. Please refresh the page and try it again.', 'learndash' );
 						exit;
 					}
@@ -218,8 +238,25 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 						exit;
 					}
 
-					// checks permissions.
-					if ( ! learndash_is_admin_user() ) {
+					/**
+					 * Filters whether the file can be downloaded.
+					 *
+					 * @since 4.10.3
+					 *
+					 * @param bool   $file_can_be_downloaded Whether the file can be downloaded.
+					 * @param string $file_path_id           The file path ID.
+					 * @param string $file_name              The file name.
+					 *
+					 * @return bool
+					 */
+					$file_can_be_downloaded = apply_filters(
+						'learndash_file_can_be_downloaded',
+						static::can_be_downloaded(),
+						$file_path_id,
+						$file_name
+					);
+
+					if ( ! $file_can_be_downloaded ) {
 						echo esc_html__( 'You do not have sufficient permissions to download this file.', 'learndash' );
 						exit;
 					}
@@ -244,5 +281,15 @@ if ( ! class_exists( 'Learndash_Admin_File_Download_Handler' ) ) {
 			);
 		}
 
+		/**
+		 * Returns whether the current user can download the file.
+		 *
+		 * @since 4.10.3
+		 *
+		 * @return bool
+		 */
+		protected static function can_be_downloaded(): bool {
+			return learndash_is_admin_user();
+		}
 	}
 }

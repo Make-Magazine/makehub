@@ -3,7 +3,7 @@
 Plugin Name: MemberPress Pro
 Plugin URI: http://www.memberpress.com/
 Description: The membership plugin that makes it easy to accept payments for access to your content and digital products.
-Version: 1.11.18
+Version: 1.11.26
 Author: Caseproof, LLC
 Author URI: http://caseproof.com/
 Text Domain: memberpress
@@ -26,6 +26,8 @@ Also add information on how to contact you by electronic and paper mail.
 */
 
 if(!defined('ABSPATH')) {die('You are not allowed to call this page directly.');}
+
+require_once "vendor-prefixed/autoload.php";
 
 define('MEPR_PLUGIN_SLUG','memberpress/memberpress.php');
 define('MEPR_PLUGIN_NAME','memberpress');

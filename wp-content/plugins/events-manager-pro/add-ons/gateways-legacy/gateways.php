@@ -38,12 +38,7 @@ class EM_Gateways {
 				//new way, with payment selector
 				add_action('em_booking_form_footer_before_buttons', array('EM_Gateways','event_booking_form_footer'),10,2);
 				// back-compat for the above action
-				add_action('em_booking_form_footer', function( $EM_Event ){
-					// if firing hook via the back-compat mode then don't proceed, since we'll also likely have the new hook above
-					if( !did_action('em_booking_form_before_confirmation') && !did_action('em_booking_form_before_confirm') ){
-						EM_Gateways::event_booking_form_footer( $EM_Event );
-					}
-				},10,2);
+				add_action('em_booking_form_footer', array('EM_Gateways', 'em_booking_form_footer'),10,2);
 			
 		}
 		//booking gateways JS
@@ -216,6 +211,13 @@ class EM_Gateways {
 	static function event_booking_form_footer( $EM_Event ){
 		if(!$EM_Event->is_free(true) ){
 		    self::booking_form_footer();
+		}
+	}
+	
+	public static function em_booking_form_footer( $EM_Event ){
+		// if firing hook via the back-compat mode then don't proceed, since we'll also likely have the new hook above
+		if( !did_action('em_booking_form_before_confirmation') && !did_action('em_booking_form_before_confirm') ){
+			EM_Gateways::event_booking_form_footer( $EM_Event );
 		}
 	}
 	

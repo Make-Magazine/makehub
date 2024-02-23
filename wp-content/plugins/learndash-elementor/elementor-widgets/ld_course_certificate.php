@@ -48,7 +48,7 @@ class LearnDash_Elementor_Widget_Course_Certificate extends LearnDash_Elementor_
 	}
 
 	/** Documented in Elementor /includes/base/controls-stack.php */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$preview_course_id = 0;
 		if ( in_array( get_post_type(), learndash_get_post_types(), true ) ) {
 			$preview_course_id = learndash_get_course_id( get_the_id() );
@@ -362,7 +362,7 @@ class LearnDash_Elementor_Widget_Course_Certificate extends LearnDash_Elementor_
 				unset( $shortcode_pairs['preview_user_id'] );
 			}
 
-			$course_certficate_link = '#';
+			$course_certificate_link = '#';
 		} else {
 			unset( $shortcode_pairs['preview_course_id'] );
 			unset( $shortcode_pairs['preview_user_id'] );
@@ -378,19 +378,19 @@ class LearnDash_Elementor_Widget_Course_Certificate extends LearnDash_Elementor_
 			}
 
 			if ( ( ! empty( $shortcode_pairs['user_id'] ) ) && ( ! empty( $shortcode_pairs['course_id'] ) ) ) {
-				$course_certficate_link = learndash_get_course_certificate_link( $shortcode_pairs['course_id'], $shortcode_pairs['user_id'] );
+				$course_certificate_link = learndash_get_course_certificate_link( $shortcode_pairs['course_id'], $shortcode_pairs['user_id'] );
 			}
 		}
 
-		if ( ! empty( $course_certficate_link ) ) {
-			$certificate_alert = learndash_get_template_part(
+		if ( ! empty( $course_certificate_link ) ) {
+			$certificate_alert = learndash_elementor_get_template_part(
 				'modules/alert.php',
 				array(
 					'type'    => 'success ld-alert-certificate',
 					'icon'    => 'certificate',
 					'message' => $shortcode_pairs['message'],
 					'button'  => array(
-						'url'    => $course_certficate_link,
+						'url'    => $course_certificate_link,
 						'icon'   => 'download',
 						'label'  => $shortcode_pairs['label'],
 						'target' => '_new',

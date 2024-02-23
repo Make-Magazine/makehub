@@ -3,7 +3,7 @@
  * Plugin Name: GP Nested Forms
  * Description: Create forms within forms for better management of complex forms. Formception!
  * Plugin URI: https://gravitywiz.com/documentation/gravity-forms-nested-forms/
- * Version: 1.1.38
+ * Version: 1.1.50
  * Author: Gravity Wiz
  * Author URI: https://gravitywiz.com
  * License: GPL2
@@ -13,7 +13,7 @@
  * Domain Path: /languages
  */
 
-define( 'GP_NESTED_FORMS_VERSION', '1.1.38' );
+define( 'GP_NESTED_FORMS_VERSION', '1.1.50' );
 
 require 'includes/class-gp-bootstrap.php';
 

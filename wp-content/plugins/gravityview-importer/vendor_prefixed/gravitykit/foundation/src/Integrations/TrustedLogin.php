@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -28,23 +28,29 @@ class TrustedLogin {
 	const TL_API_KEY = '3b3dc46c0714cc8e';
 
 	/**
+	 * Access capabilities.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @var string Access capabilities.
+	 * @var string
 	 */
 	private $_capability = 'manage_options';
 
 	/**
+	 * TL Client class instance.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @var TrustedLoginClient TL Client class instance.
+	 * @var TrustedLoginClient
 	 */
 	private $_trustedlogin_client;
 
 	/**
+	 * Class instance.
+	 *
 	 * @since 1.0.0
 	 *
-	 * @var TrustedLogin Class instance.
+	 * @var TrustedLogin
 	 */
 	private static $_instance;
 
@@ -74,7 +80,6 @@ class TrustedLogin {
 			return;
 		}
 
-		add_action( 'trustedlogin/' . self::ID . '/logging/log', [ $this, 'log' ], 10, 4 );
 		add_filter( 'gk/foundation/integrations/helpscout/configuration', [ $this, 'add_tl_key_to_helpscout_beacon' ] );
 	}
 
@@ -98,7 +103,7 @@ class TrustedLogin {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @throws Exception TrustedLoginConfig throws an exception when the config object is empty (do not apply to us),
+	 * @throws Exception TrustedLoginConfig throws an exception when the config object is empty (do not apply to us).
 	 *
 	 * @return void
 	 */
@@ -107,17 +112,21 @@ class TrustedLogin {
 		$tl_logging = new TrustedLoginLogging( $tl_config );
 		$tl_form    = new TrustedLoginForm( $tl_config, $tl_logging, new TrustedLoginSupportUser( $tl_config, $tl_logging ), new TrustedLoginSiteAccess( $tl_config, $tl_logging ) );
 
-		$page_title = $menu_title = esc_html__( 'Grant Support Access', 'gk-gravityimport' );
+		$page_title = esc_html__( 'Grant Support Access', 'gk-gravityimport' );
+		$menu_title = $page_title;
 
-		AdminMenu::add_submenu_item( [
-			'page_title'         => $page_title,
-			'menu_title'         => $menu_title,
-			'capability'         => $this->_capability,
-			'id'                 => self::ID,
-			'callback'           => [ $tl_form, 'print_auth_screen' ],
-			'order'              => 1,
-			'hide_admin_notices' => true,
-		], 'bottom' );
+		AdminMenu::add_submenu_item(
+            [
+				'page_title'         => $page_title,
+				'menu_title'         => $menu_title,
+				'capability'         => $this->_capability,
+				'id'                 => self::ID,
+				'callback'           => [ $tl_form, 'print_auth_screen' ],
+				'order'              => 1,
+				'hide_admin_notices' => true,
+			],
+            'bottom'
+        );
 	}
 
 	/**
@@ -128,34 +137,6 @@ class TrustedLogin {
 	 * @return array
 	 */
 	public function get_config() {
-		/**
-		 * @filter `gk/foundation/integrations/trustedlogin/capabilities` Modifies the capabilities added/removed by TL.
-		 *
-		 * @since  1.0.0
-		 *
-		 * @param array $capabilities
-		 */
-		$capabilities = apply_filters( 'gk/foundation/integrations/trustedlogin/capabilities', [
-			'add'    => [
-				'gravityview_full_access' => esc_html__( 'We need access to Views to provide great support.', 'gk-gravityimport' ),
-				'gform_full_access'       => esc_html__( 'We will need to see and edit the forms, entries, and Gravity Forms settings to debug issues.', 'gk-gravityimport' ),
-				'install_plugins'         => esc_html__( 'We may need to manage plugins in order to debug conflicts on your site and add related GravityView functionality.', 'gk-gravityimport' ),
-				'update_plugins'          => '',
-				'deactivate_plugins'      => '',
-				'activate_plugins'        => '',
-			],
-			'remove' => [
-				'manage_woocommerce' => strtr(
-					esc_html_x( "We don't need to see your [plugin] details to provide support (if [plugin] is enabled).", 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-					[ 'plugin' => 'WooCommerce' ]
-				),
-				'view_shop_reports'  => strtr(
-					esc_html_x( "We don't need to see your [plugin] details to provide support (if [plugin] is enabled).", 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-					[ 'plugin' => 'Easy Digital Downloads' ]
-				),
-			],
-		] );
-
 		$config = [
 			'auth'            => [
 				'api_key' => self::TL_API_KEY,
@@ -164,10 +145,9 @@ class TrustedLogin {
 				'slug' => false, // Prevent TL from adding a menu item; we'll do it manually in the add_gk_submenu_item() method.
 			],
 			'role'            => 'administrator',
-			'caps'            => $capabilities,
+			'clone_role'      => false,
 			'logging'         => [
-				'enabled'   => true,
-				'threshold' => 'warning',
+				'enabled' => false,
 			],
 			'vendor'          => [
 				'namespace'    => self::ID,
@@ -203,29 +183,11 @@ class TrustedLogin {
 	}
 
 	/**
-	 * Overrides TL's internal logging with Foundation's logging.
-	 *
-	 * @internal  Once we require PHP 7.1, this will be a private method, and we'll use Closure::fromCallable().
-	 *
-	 * @since     1.0.0
-	 *
-	 * @param string                     $message Message to log.
-	 * @param string                     $method  Method where the log was called.
-	 * @param string                     $level   PSR-3 log level {@see https://www.php-fig.org/psr/psr-3/#5-psrlogloglevel}.
-	 * @param \WP_Error|\Exception|mixed $data    (optional) Error data. Ignored if $message is WP_Error.
-	 *
-	 * @return void
-	 */
-	public function log( $message, $method = '', $level = 'debug', $data = [] ) {
-		LoggerFramework::get_instance()->{$level}( $message );
-	}
-
-	/**
 	 * Updates Help Scout beacon with TL access key.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param array $configuration
+	 * @param array $configuration Help Scout beacon configuration data.
 	 *
 	 * @return array
 	 */

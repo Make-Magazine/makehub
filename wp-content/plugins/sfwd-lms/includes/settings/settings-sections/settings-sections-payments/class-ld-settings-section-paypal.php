@@ -6,6 +6,8 @@
  * @package LearnDash\Settings\Sections
  */
 
+use LearnDash\Core\Utilities\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -57,7 +59,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			if ( false === $this->setting_option_values ) {
+			if ( empty( $this->setting_option_values ) ) {
 				$sfwd_cpt_options = get_option( 'sfwd_cpt_options' );
 
 				if ( ( isset( $sfwd_cpt_options['modules']['sfwd-courses_options'] ) ) && ( ! empty( $sfwd_cpt_options['modules']['sfwd-courses_options'] ) ) ) {
@@ -71,7 +73,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							}
 						}
 
-						$this->setting_option_values[ $key ] = $val;
+						$this->setting_option_values[ Cast::to_string( $key ) ] = $val;
 					}
 				}
 			}

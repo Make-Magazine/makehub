@@ -1,7 +1,6 @@
 <?php
 namespace LearnDash\Course_Grid;
 
-use Error;
 use WP_Query;
 use LearnDash\Course_Grid\Utilities;
 
@@ -49,8 +48,8 @@ class AJAX {
         $order     = sanitize_text_field( $atts['order'] );
         $search    = isset( $filter['search'] ) ? sanitize_text_field( $filter['search'] ) : null;
         $pagination = sanitize_text_field( $atts['pagination'] );
-        $price_min = isset( $filter['price_min'] ) ? floatval( $filter['price_min'] ) : null;
-        $price_max = isset( $filter['price_max'] ) ? floatval( $filter['price_max'] ) : null;
+        $price_min = isset( $filter['price_min'] ) && is_numeric( $filter['price_min'] ) ? floatval( $filter['price_min'] ) : null;
+        $price_max = isset( $filter['price_max'] ) && is_numeric( $filter['price_max'] ) ? floatval( $filter['price_max'] ) : null;
 
         if ( isset( $filter['search'] ) ) {
             unset( $filter['search'] );
@@ -66,138 +65,13 @@ class AJAX {
 
         $posts = [];
 
-        $tax_query = [];
-
-        $taxonomies = array_filter( explode( ';', sanitize_text_field( $atts['taxonomies'] ) ) );
-
-        foreach ( $taxonomies as $taxonomy_entry ) {
-            $taxonomy_parts = explode( ':', $taxonomy_entry );
-
-            if ( empty( $taxonomy_parts[0] ) || empty( $taxonomy_parts[1] ) ) {
-                continue;
-            }
-
-            $taxonomy = trim( $taxonomy_parts[0] );
-            $terms = array_map( 'trim', explode( ',', $taxonomy_parts[1] ) );
-
-            if ( ! empty( $taxonomy ) && ! empty( $terms ) ) {
-                $tax_query[] = [
-                    'taxonomy' => $taxonomy,
-                    'field' => 'slug',
-                    'terms' => $terms,
-                ];
-            }
-        }
-        
-        if ( count( $tax_query ) > 1 ) {
-            $tax_query['relation'] = 'AND';
-        }
-
-        $post__in = null;
-        if ( in_array( $atts['post_type'], [ 'sfwd-courses', 'groups' ] ) && is_user_logged_in() ) {
-            $user_id = get_current_user_id();
-
-            if ( isset( $atts['enrollment_status'] ) && $atts['enrollment_status'] == 'enrolled' ) {
-
-                $courses = learndash_user_get_enrolled_courses( $user_id );
-
-                $group_ids = learndash_get_users_group_ids( $user_id );
-                $groups_courses = learndash_get_groups_courses_ids( $user_id, $group_ids );
-
-                $course_ids = array_merge( $courses, $groups_courses );
-
-                if ( $atts['post_type'] == 'sfwd-courses' ) {
-                    $post_ids = $course_ids;
-
-                    if ( isset( $atts['progress_status'] ) && ! empty( $atts['progress_status'] ) ) {
-                        $progress_status = [ strtoupper( $atts['progress_status'] ) ];
-    
-                        $activity_query_args = [
-                            'post_types'      => 'sfwd-courses',
-                            'activity_types'  => 'course',
-                            'activity_status' => $progress_status,
-                            'orderby_order'   => 'users.ID, posts.post_title',
-                            'date_format'     => 'F j, Y H:i:s',
-                            'per_page'        => '',
-                        ];
-                        $activity_query_args['user_ids'] = [ $user_id ];
-                        $activity_query_args['post_ids'] = $post_ids;
-                        
-                        $user_courses_reports = learndash_reports_get_activity( $activity_query_args );
-        
-                        $user_courses_ids = [];
-                        if ( ! empty( $user_courses_reports['results'] ) ) {
-                            foreach ( $user_courses_reports['results'] as $result ) {
-                                if ( in_array( 'COMPLETED', $progress_status, true ) ) {
-                                    if ( ! empty( $result->activity_completed ) ) {
-                                        $user_courses_ids[] = absint( $result->post_id );
-                                    }
-                                }
-                                if ( in_array( 'IN_PROGRESS', $progress_status, true ) ) {
-                                    if ( ( ! empty( $result->activity_started ) ) && ( empty( $result->activity_completed ) ) ) {
-                                        $user_courses_ids[] = absint( $result->post_id );
-                                    }
-                                }
-        
-                                if ( in_array( 'NOT_STARTED', $progress_status, true ) ) {
-                                    if ( empty( $result->activity_started ) ) {
-                                        $user_courses_ids[] = absint( $result->post_id );
-                                    }
-                                }
-                            }
-
-                            $post_ids = $user_courses_ids;
-                        }
-                    }
-
-                } elseif ( $atts['post_type'] == 'groups' ) {
-                    $post_ids = $group_ids;
-                }
-
-            } elseif ( isset( $atts['enrollment_status'] ) && $atts['enrollment_status'] == 'not-enrolled' ) {
-
-                $price_types = [ 'open', 'free', 'paynow', 'subscribe', 'closed' ];
-
-                $all_posts = [];
-                foreach ( $price_types as $price_type ) {
-                    $post_ids_by_price_type = learndash_get_posts_by_price_type( $atts['post_type'], $price_type );
-                    $all_posts = array_merge( $all_posts, $post_ids_by_price_type );
-                }
-                
-                $courses = learndash_user_get_enrolled_courses( $user_id );
-
-                $group_ids = learndash_get_users_group_ids( $user_id );
-                $groups_courses = learndash_get_groups_courses_ids( $user_id, $group_ids );
-
-                $course_ids = array_merge( $courses, $groups_courses );
-
-                if ( $atts['post_type'] == 'sfwd-courses' ) {
-                    $post_ids = array_diff( $all_posts, $course_ids );
-                } elseif ( $atts['post_type'] == 'groups' ) {
-                    $post_ids = array_diff( $all_posts, $group_ids );
-                }
-            }
-
-            if ( ! empty( $post_ids ) ) {
-                $post__in = $post_ids;
-            }
-        }
-
-        $query_args = [
-            'post_type'      => $post_type,
-            'posts_per_page' => $per_page,
-            'offset'         => 0,
-            'post_status'    => 'publish',
-            'orderby'        => $orderby,
-            'order'          => $order,
-            's'              => $search,
-            'tax_query'      => $tax_query,
-            'post__in'       => $post__in,
-        ];
+        $query_args = Utilities::build_posts_query_args( $atts );
+        $query_args['s'] = $search;
+        $query_args['offset'] = 0;
 
         if ( 
             in_array( $post_type, [ 'sfwd-courses', 'groups' ] ) 
-            && ( ! empty( $price_min ) || ! empty( $price_max ) )    
+            && ( isset( $price_min ) || isset( $price_max ) )    
         ) {
             $query_args['posts_per_page'] = -1;
         }
@@ -258,26 +132,29 @@ class AJAX {
 
             if ( 
                 in_array( $post_type, [ 'sfwd-courses', 'groups' ] ) 
-                && ( ! empty( $price_min ) || ! empty( $price_max ) )
+                && ( isset( $price_min ) || isset( $price_max ) )
                 && defined( 'LEARNDASH_VERSION' )
             ) {
                 // Filter posts
                 $posts = array_filter( $posts, function( $post ) use ( $price_min, $price_max ) {
                     $price = false;
+                    $price_number = false;
                     if ( $post->post_type == 'sfwd-courses' ) {
-                        $price = learndash_get_course_price( $post->ID )['price'];
+                        $price = \learndash_get_course_price( $post->ID );
+                        $price_number = floatval( $price['price'] );
                     } elseif ( $post->post_type == 'groups' ) {
-                        $price = learndash_get_group_price( $post->ID )['price'];
+                        $price = \learndash_get_group_price( $post->ID );
+                        $price_number = floatval( $price['price'] );
                     }
 
                     $price_min_check = true;
                     if ( $price_min === 0 || $price_min > 0 ) {
-                        $price_min_check = $price >= $price_min;
+                        $price_min_check = ( $price_number >= $price_min );
                     }
                     
                     $price_max_check = true;
-                    if ( ! empty( $price_max ) ) {
-                        $price_max_check = $price <= $price_max;
+                    if ( isset( $price_max ) ) {
+                        $price_max_check = ( $price_number <= $price_max ) || ( $price_max == 0 && $price['type'] == 'free' );
                     }
                     
                     if ( $price && $price_min_check && $price_max_check ) {

@@ -15,8 +15,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Search_Filter_Field_Post_Meta_Number {
 
-
+	private $plugin_slug;
+	private $sfid;
+	private $create_input;
 	private $use_transients = false;
+
 	public function __construct( $plugin_slug, $sfid ) {
 		$this->plugin_slug  = $plugin_slug;
 		$this->sfid         = $sfid;
@@ -370,8 +373,6 @@ class Search_Filter_Field_Post_Meta_Number {
 
 		global $searchandfilter;
 		$searchform                      = $searchandfilter->get( $this->sfid );
-		$this->auto_count                = $searchform->settings( 'enable_auto_count' );
-		$this->auto_count_deselect_emtpy = $searchform->settings( 'auto_count_deselect_emtpy' );
 
 		$min                = $args['min'];
 		$max                = $args['max'];
@@ -444,8 +445,6 @@ class Search_Filter_Field_Post_Meta_Number {
 
 		global $searchandfilter;
 		$searchform                      = $searchandfilter->get( $this->sfid );
-		$this->auto_count                = $searchform->settings( 'enable_auto_count' );
-		$this->auto_count_deselect_emtpy = $searchform->settings( 'auto_count_deselect_emtpy' );
 
 		$min                = $args['min'];
 		$max                = $args['max'];

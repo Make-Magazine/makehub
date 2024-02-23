@@ -3,7 +3,7 @@
         'name' => 'gravityview/gravityrevisions',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'ec00f4efcd25f973003f474100c216511df7fe9e',
+        'reference' => '0d2ca9a60c11095fbdef60bce7b10aee62103414',
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'gettext/gettext' => array(
-            'pretty_version' => 'v4.8.7',
-            'version' => '4.8.7.0',
-            'reference' => '3f7bc5ef23302a9059e64934f3d59e454516bec0',
+            'pretty_version' => 'v4.8.11',
+            'version' => '4.8.11.0',
+            'reference' => 'b632aaf5e4579d0b2ae8bc61785e238bff4c5156',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gettext/gettext',
             'aliases' => array(),
@@ -40,7 +40,7 @@
         'gravitykit/foundation' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '77b662681223db0da43c5d4545de0e8f6d0ba17b',
+            'reference' => '82d4b8c6b2d3989b8b2dbf829be0c72f6aef2f8a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gravitykit/foundation',
             'aliases' => array(
@@ -51,7 +51,7 @@
         'gravityview/gravityrevisions' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'ec00f4efcd25f973003f474100c216511df7fe9e',
+            'reference' => '0d2ca9a60c11095fbdef60bce7b10aee62103414',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -163,9 +163,9 @@
             'dev_requirement' => false,
         ),
         'symfony/polyfill-mbstring' => array(
-            'pretty_version' => 'v1.26.0',
-            'version' => '1.26.0.0',
-            'reference' => '9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e',
+            'pretty_version' => 'v1.28.0',
+            'version' => '1.28.0.0',
+            'reference' => '42292d99c55abe617799667f454222c54c60e229',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
@@ -189,7 +189,7 @@
         'trustedlogin/client' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3aecfa088ee2f864b516c1abef7229264a9e472a',
+            'reference' => '1c924f8dee1b10624223741b72e5ce83f1e45ce3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../trustedlogin/client',
             'aliases' => array(

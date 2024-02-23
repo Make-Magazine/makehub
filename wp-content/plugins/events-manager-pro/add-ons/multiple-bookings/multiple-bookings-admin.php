@@ -126,6 +126,7 @@ class EM_Multiple_Bookings_Admin {
 				<?php
 				$email_subject_tip = esc_html__emp('You can disable this email by leaving the subject blank.','events-manager');
 				em_options_radio_binary ( __( 'Email event owners?', 'em-pro' ), 'dbem_multiple_bookings_contact_email', sprintf(__( 'If enabled, additional emails will be sent to administrators and event owners for EVERY event booked based on the above %s settings.', 'em-pro' ), '<code>'.esc_html__emp( 'Booking Email Templates', 'events-manager').'</code>') );
+				em_options_radio_binary ( __( 'Send individual user emails?', 'em-pro' ), 'dbem_multiple_bookings_contact_email_user', sprintf(__( 'If enabled, additional emails will be sent to the booked user for EVERY event booked based on the above %s settings.', 'em-pro' ), '<code>'.esc_html__emp( 'Booking Email Templates', 'events-manager').'</code>') );
 				do_action('em_options_page_multiple_booking_email_templates_options_subtop');
 				?>
 				<tr class="em-header"><td colspan='2'><h4><?php esc_html_e_emp('Admin Emails', 'em-pro'); ?></h4></td></tr>

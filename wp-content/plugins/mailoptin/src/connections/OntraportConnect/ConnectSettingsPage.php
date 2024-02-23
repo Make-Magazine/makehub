@@ -18,11 +18,7 @@ class ConnectSettingsPage
         if (true === $connected) {
             $status = sprintf('<span style="color:#008000">(%s)</span>', __('Connected', 'mailoptin'));
         } else {
-            $msg = '';
-            if (is_string($connected)) {
-                $msg = esc_html(" &mdash; $connected");
-            }
-            $status = sprintf("<span style='color:#FF0000'>(%s$msg) </span>", __('Not Connected', 'mailoptin'));
+            $status = sprintf("<span style='color:#FF0000'>(%s) </span>", __('Not Connected', 'mailoptin'));
         }
 
         $settingsArg[] = array(

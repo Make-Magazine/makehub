@@ -546,17 +546,17 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		public function add_inline_actions( array $row_actions, WP_Post $post ): array {
 			$row_actions = parent::post_row_actions( $row_actions, $post );
 
-			$file_url = get_post_meta( $post->ID, 'upload', true );
+			$file_path = get_post_meta( $post->ID, 'upload', true );
 
 			$file_is_image = in_array(
-				strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) ),
+				strtolower( pathinfo( $file_path, PATHINFO_EXTENSION ) ),
 				array( 'jpg', 'jpeg', 'png', 'gif' ),
 				true
 			);
 
 			// Quick view.
 
-			if ( empty( $file_url ) || $file_is_image ) {
+			if ( empty( $file_path ) || $file_is_image ) {
 				$view_label = __( 'Quick View', 'learndash' );
 				$view_url   = admin_url(
 					sprintf(
@@ -576,6 +576,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			// Download.
+
+			$file_url = learndash_quiz_essay_get_download_url( $post->ID );
 
 			if ( ! empty( $file_url ) ) {
 				$row_actions['download'] = sprintf(
@@ -1248,7 +1250,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				return;
 			}
 
-			$file_url = get_post_meta( $essay->ID, 'upload', true );
+			$file_url = learndash_quiz_essay_get_download_url( $essay->ID );
 
 			if ( empty( $file_url ) ) {
 				$content = nl2br( $essay->post_content );

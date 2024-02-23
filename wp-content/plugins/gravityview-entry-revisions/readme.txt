@@ -1,7 +1,7 @@
 === GravityRevisions ===
 Tags: gravitykit, gravityview, gravity forms, revisions
 Requires at least: 5.1
-Tested up to: 6.3
+Tested up to: 6.4.2
 Contributors: The GravityKit Team
 License: GPL 2
 Requires PHP: 7.2.0
@@ -17,6 +17,12 @@ Track changes to Gravity Forms entries and restore from previous revisions. Requ
 4. You'll see a "Revisions" meta box on the entries page. Click the link next to the revision to compare versions, and restore.
 
 == Changelog ==
+
+= 1.2.11 on December 12, 2023 =
+
+* Updated: The single GravityRevisions setting has moved from Gravity Forms > Settings > Entry Revisions to GravityKit > Settings > GravityEdit
+    - This adjustment reflects the setting's exclusive connection to the functionality of the GravityEdit plugin
+* Updated: [Foundation](https://www.gravitykit.com/foundation/) to version 1.2.6
 
 = 1.2.10 on September 7, 2023 =
 
@@ -132,4 +138,4 @@ __Developer Updates:__
 * Launch!
 
 
-= 1698694728-4249 =
+= 1708712225-4249 =

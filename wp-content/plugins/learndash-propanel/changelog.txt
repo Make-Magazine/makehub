@@ -1,0 +1,112 @@
+= [2.2.2] =
+
+* Fixes an edge case when certain options were enabled that could cause certain fields to very large when editing specific content types
+
+= [2.2.1] =
+
+* Fix: Fixes an issue where certain fields were very large when editing different content types
+
+= [2.2.0] =
+
+* Feature: Added Block Editor support
+  - Note: Requires LearnDash LMS v4.8.0 or higher to be installed.
+* Fix: If a Course Report is generated without setting a Course, the Report can mistakenly look like rows of duplicate results. We added the Course Title to each row when no Course filter was applied to make it clear what each row refers to
+* Fix: The date fields in the Filtering Widget have had their styling updated to ensure they do not appear locked
+* Tweak: Widgets will now show a default view displaying the same data as if the Filtering Widget were submitted without choosing any settings
+* Tweak: If the Filtering Widget exists on a page and the other Widgets are given their own settings, those settings will be used on the initial page load rather than being ignored
+
+= [2.1.4.2] =
+
+* Security: Sanitized license form action
+* Tweak: Updated Chart.js version
+
+= [2.1.4.1] =
+
+* Feature: Added progress icon on front end when reports are displayed
+* Fix: Latex not rendering on quiz stats when accessed from ProPanel widget
+* Fix: Time format with timezone not working on start/end dates
+* Fix: SQL error missing syntax for multisite
+* Fix: Progress/not started filters not showing data when start date filter is set
+* Fix: PHP 8 deprecation notices
+* Fix: Reporting widget not working without filtering widget
+* Fix: Email sending message never goes away
+* Fix: Selected hour not showing in new start/end filters
+* Fix: Date picker format
+
+= [2.1.4] =
+
+* Feature: Added Filter by dates
+* Feature: Added RTL support
+* Fix: ProPanel Reporting widget not updating
+* Fix: Users results stats not showing in dashboard
+* Fix: 403 errors
+* Fix: ProPanel translation issues
+* Fix: Issue with LearnDash shortcodes when ProPanel is activated
+* Fix: Error on quiz statistics loading on front-end from ProPanel activity widget.
+
+= [2.1.3.1] =
+
+* Fix: Updated license and update calls to use SSL for secure connections.
+
+= [2.1.3] =
+
+* Feature: Added statistics link to Activity widget quiz row outputs
+* Fix: Updated mail feature to be compatible with SMTP plugins
+* Fix: Removed HTML tags from post type title for display in ProPanel widgets
+* Fix: Multisite reporting issue
+* Fix: Reporting filtering
+* Fix: Group Leader data reporting issue
+* Fix: Group Leader not seeing Course/Quiz export buttons issue
+* Fix: Incorrect charts
+* Fix: Fatal error upon deactivation
+
+= [2.1.2] =
+
+* Fix: Updated logic to be compatible with LearnDash v2.5
+
+= [2.1.1] =
+
+* Feature: Added download button to Reporting widget when Activity widget is not present
+* Feature: Added filters to allow changing of script priority
+* Tweak: Updated priority for admin scripts to 5
+* Fix: Issue with CSS/JS URL paths when using HTTPS
+* Fix: Issue with apostrophe in export
+* Fix: Shortcode for reporting
+* Fix: Logic on shortcode timing
+* Fix: Logic when running on WordPress multisite
+* Fix: Missing translation strings
+
+= [2.1.0] =
+
+* Feature: Added Group filtering
+* Feature: Added support for regular user access to dashboard widgets with propanel_widgets capability
+* Feature: Added front-end widget shortcodes for Filtering, Reporting, Progress Charts, and Overview
+* Feature: Added new front-end full page widgets view
+* Feature: Updated filtering and reporting so that they are now in separate widgets
+* Fix: Updated filtering logic to allow combination of Group and Course and User instead of course OR user
+* Fix: Updated Overview student count logic to count course enrollees and not just users
+* Fix: Display bug with IE11 browsers
+* Fix: Filtering issue for Group Leaders in no assigned groups
+* Fix: Logic on Progress Charts to re-initialized the javascript object when the filters change
+* Fix: Email message bug where apostrophes were not displaying properly
+* Tweak: Updated to work better with LearnDash 'include in reports' and 'auto-enroll' admin settings
+* Tweak: Updated email logic to send recipients as BCC
+* Tweak: Updated email logic to use current user as sender (can be changed using filters)
+
+= [2.0.2] =
+
+* Fix: Issue where large sites were having issues with Course filtering
+* Fix: Ordering on User filtering selector
+* Fix: Issue with front-end Activity stream shortcode not loading
+* Tweak: Updated reporting logic to include only selected user for download
+
+= [2.0.1] =
+
+* Feature: Added Polish translations
+* Fix: Issue where reporting headers were not properly translated
+* Fix: Issue where Activity dates were not properly translated
+* Fix: Issue where Reporting Full Page view was not loading
+
+= [2.0.0] =
+
+* Initial release of ProPanel v2.0 which is a complete rewrite of legacy versions.

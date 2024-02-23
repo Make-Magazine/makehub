@@ -35,10 +35,10 @@ class SendCampaign extends AbstractKlaviyoConnect
         parent::__construct();
 
         $this->email_campaign_id = $email_campaign_id;
-        $this->campaign_log_id = $campaign_log_id;
-        $this->campaign_subject = $campaign_subject;
-        $this->content_html = $content_html;
-        $this->content_text = $content_text;
+        $this->campaign_log_id   = $campaign_log_id;
+        $this->campaign_subject  = $campaign_subject;
+        $this->content_html      = $content_html;
+        $this->content_text      = $content_text;
     }
 
     /**
@@ -54,49 +54,136 @@ class SendCampaign extends AbstractKlaviyoConnect
 
             $campaign_title = $this->get_email_campaign_campaign_title($this->email_campaign_id);
 
-            $response = $this->klaviyo_instance()->create_template(
-                __('Template: ', 'mailoptin') . $this->campaign_subject,
-                $this->content_html
-            );
+            $result = $this->klaviyo_instance()->create_campaign([
+                'data' => [
+                    'type'       => 'campaign',
+                    'attributes' => [
+                        'name'              => $campaign_title,
+                        'audiences'         => [
+                            'included' => [$list_id]
+                        ],
+                        'send_strategy'     => [
+                            'method' => 'immediate'
+                        ],
+                        'campaign-messages' => [
+                            'data' => [
+                                [
+                                    'type'       => 'campaign-message',
+                                    'attributes' => [
+                                        'channel' => 'email',
+                                        'content' => [
+                                            'subject'    => $this->campaign_subject,
+                                            'from_email' => Settings::instance()->from_email(),
+                                            'from_label' => Settings::instance()->from_name()
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]);
 
-            if (self::is_http_code_not_success($response['status_code'])) {
-                self::save_campaign_error_log($response['body']->message, $this->campaign_log_id, $this->email_campaign_id);
-                return parent::ajax_failure($response['body']->message);
-            }
+            if (isset($result['body']->data->id)) {
 
-            if (isset($response['body']->id)) {
-                $template_id = $response['body']->id;
+                $created_campaign_id = $result['body']->data->id;
 
-                $result = $this->klaviyo_instance()->create_campaign([
-                    'list_id' => $list_id,
-                    'name' => $campaign_title,
-                    'template_id' => $template_id,
-                    'from_email' => Settings::instance()->from_email(),
-                    'from_name' => Settings::instance()->from_name(),
-                    'subject' => $this->campaign_subject,
-                ]);
+                $message_id = $result['body']->data->relationships->{'campaign-messages'}->data[0]->id;
 
-                if (isset($result['body']->id)) {
-                    $created_campaign_id = $result['body']->id;
-                    $this->klaviyo_instance()->send_immediately($created_campaign_id);
-                    AbstractCampaignLogMeta::add_campaignlog_meta($this->campaign_log_id, 'klaviyo_campaign_id', $created_campaign_id);
-                    $this->klaviyo_instance()->delete_template($template_id);
-                    return parent::ajax_success();
+                $template_id = $this->create_template();
+
+                if ($template_id) {
+
+                    if ($this->assign_campaign_message_template($template_id, $message_id)) {
+
+                        $result = $this->klaviyo_instance()->make_request('campaign-send-jobs/', [
+                            'data' => [
+                                'type' => 'campaign-send-job',
+                                'id'   => $created_campaign_id
+                            ]
+                        ], 'post');
+
+                        if (self::is_http_code_success($result['status_code'])) {
+
+                            AbstractCampaignLogMeta::add_campaignlog_meta($this->campaign_log_id, 'klaviyo_campaign_id', $created_campaign_id);
+                            $this->klaviyo_instance()->delete_template($template_id);
+
+                            return parent::ajax_success();
+                        }
+                    }
                 }
-
-                self::save_campaign_error_log($result['body']->message, $this->campaign_log_id, $this->email_campaign_id);
-
-                return parent::ajax_failure($result['body']->message);
             }
+
+            self::save_campaign_error_log(wp_json_encode($result['body']), $this->campaign_log_id, $this->email_campaign_id);
 
             $err = __('Unexpected error. Please try again', 'mailoptin');
-            self::save_campaign_error_log($err, $this->campaign_log_id, $this->email_campaign_id);
 
             return parent::ajax_failure($err);
 
         } catch (\Exception $e) {
             self::save_campaign_error_log($e->getMessage(), $this->campaign_log_id, $this->email_campaign_id);
+
             return parent::ajax_failure($e->getMessage());
         }
+    }
+
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
+    public function create_template()
+    {
+        $response = $this->klaviyo_instance()->create_template([
+                'data' => [
+                    'type'       => 'template',
+                    'attributes' => [
+                        'name'        => sprintf('Template: %s', $this->campaign_subject),
+                        'editor_type' => 'CODE',
+                        'html'        => $this->content_html,
+                        'text'        => $this->content_text
+                    ]
+                ]
+            ]
+        );
+
+        if (isset($response['body']->data->id)) {
+            return $response['body']->data->id;
+        }
+
+        self::save_campaign_error_log(wp_json_encode($response['body']), $this->campaign_log_id, $this->email_campaign_id);
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function assign_campaign_message_template($template_id, $message_id)
+    {
+        $response = $this->klaviyo_instance()->make_request('campaign-message-assign-template/', [
+            'data' => [
+                'type'          => 'campaign-message',
+                'id'            => $message_id,
+                'relationships' => [
+                    'template' => [
+                        'data' => [
+                            'type' => 'template',
+                            'id'   => $template_id
+                        ]
+                    ]
+                ]
+            ]
+        ],
+            'post'
+        );
+
+        if (self::is_http_code_success($response['status_code'])) {
+            return true;
+        }
+
+        self::save_campaign_error_log(wp_json_encode($response['body']), $this->campaign_log_id, $this->email_campaign_id);
+
+        return false;
     }
 }

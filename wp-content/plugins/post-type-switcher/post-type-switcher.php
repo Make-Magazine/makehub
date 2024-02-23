@@ -19,8 +19,8 @@
  * Domain Path:       /assets/lang/
  * Requires at least: 5.0
  * Requires PHP:      7.0
- * Tested up to:      5.8
- * Version:           3.2.1
+ * Tested up to:      6.4
+ * Version:           3.2.2
  */
 
 // Exit if accessed directly

@@ -40,8 +40,10 @@ do_action('em_booking_form_start', $EM_Event); // do not delete
 		<?php do_action('em_booking_form_status_closed', $EM_Event); // do not delete ?>
 	<?php else: ?>
 		<?php
-			// create a booking intent
-			echo $EM_Notices;
+			// output notices only if not in admin area, as it's already output via the admin_notices hook
+			if( !did_action('admin_notices') ) {
+				echo $EM_Notices;
+			}
 		?>
 		<?php 
 		if( !is_user_logged_in() && get_option('dbem_bookings_login_form') ){
@@ -125,7 +127,7 @@ do_action('em_booking_form_start', $EM_Event); // do not delete
 					/*
 					 * BOOKING SUMMARY
 					 */
-					if( get_option('dbem_bookings_summary') ){
+					if( get_option('dbem_bookings_summary') && (!$EM_Event->is_free() || get_option('dbem_bookings_summary_free')) ){
 						do_action('em_booking_form_before_summary', $EM_Event, $EM_Booking); // do not delete
 						?>
 						<section class="em-booking-form-section-summary" id="em-booking-form-section-summary-<?php echo $id; ?>">

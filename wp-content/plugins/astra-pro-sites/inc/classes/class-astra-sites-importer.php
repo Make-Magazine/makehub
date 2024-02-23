@@ -225,7 +225,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 
 			if ( ! astra_sites_is_valid_url( $wpforms_url ) ) {
 				/* Translators: %s is WP Forms URL. */
-				wp_send_json_error( sprintf( __( 'Invalid Request URL - %s', 'astra-sites' ), $wpforms_url ) );
+				wp_send_json_error( sprintf( __( 'Invalid WPform Request URL - %s', 'astra-sites' ), $wpforms_url ) );
 			}
 
 			if ( ! empty( $wpforms_url ) && function_exists( 'wpforms_encode' ) ) {
@@ -316,6 +316,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			if ( ! current_user_can( 'edit_posts' ) ) {
 				wp_send_json_error();
 			}
+
 			// Disable CartFlows import logging.
 			add_filter( 'cartflows_enable_log', '__return_false' );
 
@@ -379,7 +380,7 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			$url = astra_get_site_data( 'astra-site-spectra-settings' );
 			if ( ! astra_sites_is_valid_url( $url ) ) {
 				/* Translators: %s is XML URL. */
-				wp_send_json_error( sprintf( __( 'Invalid Request URL - %s', 'astra-sites' ), $url ) );
+				wp_send_json_error( sprintf( __( 'Invalid XML Request URL - %s', 'astra-sites' ), $url ) );
 			}
 
 			if ( ! empty( $url ) && is_callable( 'UAGB_Admin_Helper::get_instance' ) ) {
@@ -519,8 +520,8 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			$wxr_url = astra_get_site_data( 'astra-site-wxr-path' );
 
 			if ( ! astra_sites_is_valid_url( $wxr_url ) ) {
-				/* Translators: %s is XML URL. */
-				wp_send_json_error( sprintf( __( 'Invalid Request URL - %s', 'astra-sites' ), $wxr_url ) );
+				/* Translators: %s is WXR URL. */
+				wp_send_json_error( sprintf( __( 'Invalid WXR Request URL - %s', 'astra-sites' ), $wxr_url ) );
 			}
 
 			Astra_Sites_Importer_Log::add( 'Importing from XML ' . $wxr_url );
@@ -684,10 +685,13 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 			}
 
 			$demo_data = get_option( 'astra_sites_import_data', array() );
-
+			// Set permalink structure to use post name.
+			update_option( 'permalink_structure', '/%postname%/' );
+			
 			do_action( 'astra_sites_import_complete', $demo_data );
 
 			update_option( 'astra_sites_import_complete', 'yes', 'no' );
+			update_option( 'astra_sites_batch_process_complete', 'no' );
 			delete_transient( 'astra_sites_import_started' );
 
 			if ( wp_doing_ajax() ) {
@@ -822,6 +826,8 @@ if ( ! class_exists( 'Astra_Sites_Importer' ) ) {
 				Astra_Minify::refresh_assets();
 				Astra_Sites_Importer_Log::add( 'Cache for Astra Addon cleared.' );
 			}
+
+			Astra_Sites_Utils::third_party_cache_plugins_clear_cache();
 
 			$this->update_latest_checksums();
 

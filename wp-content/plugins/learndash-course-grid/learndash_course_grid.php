@@ -1,11 +1,19 @@
 <?php
+/**
+ * LearnDash LMS - Course Grid Main Plugin File.
+ *
+ * @since 1.0.0
+ *
+ * @package LearnDash\Course_Grid
+ */
+
 namespace LearnDash;
 
 /**
  * Plugin Name: LearnDash LMS - Course Grid
  * Plugin URI: https://www.learndash.com/
  * Description: Build LearnDash course grid easily.
- * Version: 2.0.4
+ * Version: 2.0.9
  * Author: LearnDash
  * Author URI: https://www.learndash.com/
  * Text Domain: learndash-course-grid
@@ -16,6 +24,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
 
+define( 'LEARNDASH_COURSE_GRID_VERSION', '2.0.9' );
+
 use LearnDash\Course_Grid\Admin\Meta_Boxes;
 use LearnDash\Course_Grid\Security;
 use LearnDash\Course_Grid\Skins;
@@ -24,6 +34,9 @@ use LearnDash\Course_Grid\Shortcodes;
 use LearnDash\Course_Grid\Blocks;
 use LearnDash\Course_Grid\Compatibility;
 
+/**
+ * Course_Grid class.
+ */
 class Course_Grid {
 	private static $instance;
 
@@ -35,12 +48,19 @@ class Course_Grid {
 
 	public $posts;
 
+	/**
+	 * Retrieves the singleton instance.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return Course_Grid
+	 */
 	public static function instance()
 	{
 		if ( ! isset( self::$instance ) || ! self::$instance instanceof self ) {
 			self::$instance = new self;
 		}
-		
+
 		return self::$instance;
 	}
 
@@ -50,9 +70,7 @@ class Course_Grid {
 
 		spl_autoload_register( [ $this, 'autoload' ] );
 
-		add_action( 'plugins_loaded', function() {
-			$this->load_translations();
-		} );
+		add_action( 'plugins_loaded', [ $this, 'load_translations' ] );
 
 		$this->security   = new Security();
 		$this->skins      = new Skins();
@@ -65,24 +83,29 @@ class Course_Grid {
 		include_once LEARNDASH_COURSE_GRID_PLUGIN_PATH . 'includes/functions.php';
 
 		// Admin
-		$this->admin = new \stdClass();
-		$this->admin->meta_boxes = new Meta_Boxes();
+		if ( is_admin() ) {
+			$this->admin = new \stdClass();
+			$this->admin->meta_boxes = new Meta_Boxes();
+		}
 	}
 
+	/**
+	 * Defines constants used by the plugin
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return void
+	 */
 	public function define_constants()
 	{
-		if ( ! defined( 'LEARNDASH_COURSE_GRID_VERSION' ) ) {
-			define( 'LEARNDASH_COURSE_GRID_VERSION', '2.0.4' );
-		}
-		
 		if ( ! defined( 'LEARNDASH_COURSE_GRID_FILE' ) ) {
 			define( 'LEARNDASH_COURSE_GRID_FILE', __FILE__ );
-		}		
-		
+		}
+
 		if ( ! defined( 'LEARNDASH_COURSE_GRID_PLUGIN_PATH' ) ) {
 			define( 'LEARNDASH_COURSE_GRID_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 		}
-		
+
 		if ( ! defined( 'LEARNDASH_COURSE_GRID_PLUGIN_URL' ) ) {
 			define( 'LEARNDASH_COURSE_GRID_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 		}
@@ -102,19 +125,28 @@ class Course_Grid {
 		if ( ! defined( 'LEARNDASH_COURSE_GRID_PLUGIN_ASSET_URL' ) ) {
 			define( 'LEARNDASH_COURSE_GRID_PLUGIN_ASSET_URL', LEARNDASH_COURSE_GRID_PLUGIN_URL . 'assets/' );
 		}
-		
-		// Added for backward compatibility
+
+		// Added for backward compatibility.
 		if ( ! defined( 'LEARNDASH_COURSE_GRID_COLUMNS' ) ) {
 			define( 'LEARNDASH_COURSE_GRID_COLUMNS', 3 );
-		}	
+		}
 	}
 
+	/**
+	 * Autoload function for dynamically loading classes based on the LearnDash Course Grid namespace.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param  string $class The fully-qualified class name to be autoloaded.
+	 *
+	 * @return void
+	 */
 	public function autoload( $class )
 	{
 		$class_components = explode( '\\', $class );
 		$class_file = str_replace( '_', '-', strtolower( $class_components[ count( $class_components ) - 1 ] ) );
 		$filename = $class_file . '.php';
-		
+
 		$file = false;
 
 		if ( strpos( $class, 'LearnDash\\Course_Grid\\Shortcodes\\' ) !== false ) {
@@ -126,7 +158,7 @@ class Course_Grid {
 		} elseif ( strpos( $class, 'LearnDash\\Course_Grid\\Lib' ) !== false ) {
 			$file = 'includes/lib/class-' . $filename;
 		} elseif ( strpos( $class, 'LearnDash\\Course_Grid\\' ) !== false ) {
-			$file = 'includes/class-' . $filename;	
+			$file = 'includes/class-' . $filename;
 		}
 
 		if ( $file && file_exists( LEARNDASH_COURSE_GRID_PLUGIN_PATH . $file ) ) {
@@ -137,8 +169,10 @@ class Course_Grid {
 	public function load_translations()
 	{
 		$locale = apply_filters( 'plugin_locale', get_locale(), 'learndash-course-grid' );
+
 		load_textdomain( 'learndash-course-grid', WP_LANG_DIR . '/plugins/learndash-course-grid-' . $locale . '.mo' );
-		load_plugin_textdomain( 'learndash-course-grid', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );                
+
+		load_plugin_textdomain( 'learndash-course-grid', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 
 		include LEARNDASH_COURSE_GRID_PLUGIN_PATH . 'includes/class-translations.php';
 	}

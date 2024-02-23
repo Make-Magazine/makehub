@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use LearnDash\Core\Models\Product;
+use LearnDash\Core\Utilities\Cast;
 
 /**
  * LearnDash LD30 Shows registration form for user registration
@@ -1367,15 +1368,12 @@ function learndash_reset_password_output( $attr = array() ): void {
 		&& ! empty( $_POST['learndash-reset-password-form-post-nonce'] )
 		&& wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['learndash-reset-password-form-post-nonce'] ) ), 'learndash-reset-password-form-post-nonce' )
 	) {
-		$new_password = sanitize_text_field( wp_unslash( $_POST['reset_password'] ) );
-		$user         = get_user_by( 'login', sanitize_text_field( wp_unslash( $_POST['user_login'] ) ) );
+		$user = get_user_by( 'login', sanitize_text_field( wp_unslash( $_POST['user_login'] ) ) );
 
 		if ( $user ) {
 			$key = sanitize_text_field( wp_unslash( $_GET['key'] ?? '' ) );
 
-			if ( ! learndash_reset_password_verification( $user, $key ) instanceof WP_Error ) {
-				learndash_reset_password_set_user_new_password( $user, $new_password );
-			} else {
+			if ( learndash_reset_password_verification( $user, $key ) instanceof WP_Error ) {
 				$status['message'] = esc_html__( 'Invalid user, please check your reset password link and try again.', 'learndash' );
 				$status['type']    = 'warning';
 			}
@@ -1386,6 +1384,7 @@ function learndash_reset_password_output( $attr = array() ): void {
 		$status['type']    = 'success';
 	}
 	?>
+	<div class="<?php echo ( 'ld30' === $active_template_key ) ? esc_attr( learndash_get_wrapper_class() ) : 'learndash-wrapper'; ?>">
 	<div id="learndash-reset-password-wrapper" <?php echo ( ! empty( $form_width ) ) ? 'style="width: ' . esc_attr( $form_width ) . 'px;"' : ''; ?>>
 	<?php
 	if ( ! empty( $status ) ) {
@@ -1421,9 +1420,11 @@ function learndash_reset_password_output( $attr = array() ): void {
 		echo '';
 	} elseif ( isset( $_GET['password_reset'] ) && 'true' === $_GET['password_reset'] ) {
 		wp_login_form(
-			array(
-				'redirect' => get_permalink( learndash_get_reset_password_page_id() ),
-			)
+			[
+				'redirect' => learndash_get_reset_password_success_page_id() > 0
+					? (string) get_permalink( learndash_get_reset_password_success_page_id() )
+					: home_url(),
+			]
 		);
 	} else {
 		?>
@@ -1531,7 +1532,7 @@ function learndash_reset_password_email_message( $user_data ): string {
  * @param WP_User $user  WP_User object.
  * @param string  $key   Reset password activation key.
  *
- * @return object WP_User object on success or WP_Error object on invalid/expired key
+ * @return WP_User|WP_Error WP_User object on success or WP_Error object on invalid/expired key.
  */
 function learndash_reset_password_verification( $user, $key ) {
 	return check_password_reset_key( $key, $user->user_login );
@@ -1549,14 +1550,18 @@ function learndash_reset_password_verification( $user, $key ) {
  */
 function learndash_reset_password_set_user_new_password( $user, $new_password ): void {
 	reset_password( $user, $new_password );
+
 	/**
 	 * Fires after the user password has been updated
 	 *
 	 * @since 4.4.0
 	 */
 	do_action( 'learndash_reset_password_success' );
-	remove_query_arg( 'action', get_permalink() );
-	learndash_safe_redirect( add_query_arg( 'password_reset', 'true', get_permalink() ) );
+
+	$permalink = remove_query_arg( 'action', get_permalink() );
+	$permalink = add_query_arg( 'password_reset', 'true', $permalink );
+
+	learndash_safe_redirect( $permalink );
 }
 
 /**
@@ -1617,3 +1622,62 @@ if ( ! function_exists( 'learndash_registration_page_get_id' ) ) {
 		);
 	}
 }
+
+/**
+ * Returns the reset password success page ID or 0 if not set.
+ *
+ * @since 4.8.0
+ *
+ * @return int
+ */
+function learndash_get_reset_password_success_page_id(): int {
+	$page_id = LearnDash_Settings_Section::get_section_setting(
+		'LearnDash_Settings_Section_Registration_Pages',
+		'reset_password_success'
+	);
+
+	return Cast::to_int( $page_id );
+}
+
+/**
+ * Processes the password reset redirect.
+ *
+ * @since 4.12.0
+ *
+ * @return void
+ */
+function learndash_process_password_reset_redirect(): void {
+	if (
+		empty( $_GET['key'] )
+		|| empty( $_POST['user_login'] )
+		|| empty( $_POST['reset_password'] )
+		|| empty( $_POST['learndash-reset-password-form-post-nonce'] )
+		|| ! wp_verify_nonce(
+			sanitize_text_field( wp_unslash( $_POST['learndash-reset-password-form-post-nonce'] ) ),
+			'learndash-reset-password-form-post-nonce'
+		)
+	) {
+		return;
+	}
+
+	$user = get_user_by(
+		'login',
+		sanitize_text_field( wp_unslash( $_POST['user_login'] ) )
+	);
+
+	if ( ! $user instanceof WP_User ) {
+		return;
+	}
+
+	$key = sanitize_text_field( wp_unslash( $_GET['key'] ) );
+
+	if ( learndash_reset_password_verification( $user, $key ) instanceof WP_Error ) {
+		return;
+	}
+
+	$new_password = sanitize_text_field( wp_unslash( $_POST['reset_password'] ) );
+
+	learndash_reset_password_set_user_new_password( $user, $new_password );
+}
+
+add_action( 'init', 'learndash_process_password_reset_redirect' );

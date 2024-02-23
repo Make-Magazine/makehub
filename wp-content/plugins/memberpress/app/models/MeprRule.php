@@ -210,6 +210,8 @@ class MeprRule extends MeprCptModel {
       $all_types = array('all' => __('All Content', 'memberpress'));
       foreach( $types as $type_array ) { $all_types = array_merge( $all_types, $type_array ); }
 
+      $all_types = MeprHooks::apply_filters('mepr-rule-types-before-partial', $all_types);
+
       $all_types = array_merge(
         $all_types,
         array( 'partial' => __('Partial', 'memberpress'),
@@ -256,9 +258,11 @@ class MeprRule extends MeprCptModel {
       $contents[$type] = self::get_tax_array($matches[1]);
       return $contents[$type];
     }
+    elseif($type == 'partial' || $type == 'custom') {
+      $contents[$type] = false;
+    }
 
-    $contents[$type] = false;
-    return $contents[$type];
+    return MeprHooks::apply_filters('mepr-rule-contents-array', $contents, $type);
   }
 
   public static function search_content($type, $search = '') {
@@ -274,7 +278,7 @@ class MeprRule extends MeprCptModel {
             preg_match('#^all_tax_(.*?)$#', $type, $matches) )
       return self::search_taxs($matches[1],$search);
 
-    return false;
+    return MeprHooks::apply_filters('mepr-rule-search-content', false, $type, $search);
   }
 
   public static function get_content($type,$id) {
@@ -290,7 +294,7 @@ class MeprRule extends MeprCptModel {
             preg_match('#^all_tax_(.*?)$#', $type, $matches) )
       return self::get_tax($matches[1],$id);
 
-    return false;
+    return MeprHooks::apply_filters('mepr-rule-content', false, $type, $id);
   }
 
   public static function type_has_contents($type) {
@@ -306,7 +310,7 @@ class MeprRule extends MeprCptModel {
             preg_match('#^all_tax_(.*?)$#', $type, $matches) )
       return self::taxs_have_contents($matches[1]);
 
-    return false;
+    return MeprHooks::apply_filters('mepr-rule-has-content', false, $type);
   }
 
   public static function singles_have_contents($type) {
@@ -616,6 +620,8 @@ class MeprRule extends MeprCptModel {
               $post_rules[] = $curr_rule;
             }
           }
+
+          $post_rules = MeprHooks::apply_filters('mepr-extend-post-rules', $post_rules, $curr_rule, $context);
         }
         elseif($curr_rule->mepr_type == 'custom' && is_string($context)) {
           $uri = empty($context) ? esc_url($_SERVER['REQUEST_URI']) : $context;

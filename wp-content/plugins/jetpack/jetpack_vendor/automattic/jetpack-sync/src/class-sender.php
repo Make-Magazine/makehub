@@ -25,6 +25,24 @@ class Sender {
 	const NEXT_SYNC_TIME_OPTION_NAME = 'jetpack_next_sync_time';
 
 	/**
+	 * Name of the transient responsible for temprorarily disabling Sync sending during Pulls.
+	 *
+	 * @access public
+	 *
+	 * @var string
+	 */
+	const TEMP_SYNC_DISABLE_TRANSIENT_NAME = 'jetpack_disable_sync_sending';
+
+	/**
+	 * Expiry of the transient responsible for temprorarily disabling Sync sending during Pulls.
+	 *
+	 * @access public
+	 *
+	 * @var int
+	 */
+	const TEMP_SYNC_DISABLE_TRANSIENT_EXPIRY = MINUTE_IN_SECONDS;
+
+	/**
 	 * Sync timeout after a WPCOM error.
 	 *
 	 * @access public
@@ -295,7 +313,7 @@ class Sender {
 
 		$this->continue_full_sync_enqueue();
 		// immediate full sync sends data in continue_full_sync_enqueue.
-		if ( false === strpos( get_class( $sync_module ), 'Full_Sync_Immediately' ) ) {
+		if ( ! str_contains( get_class( $sync_module ), 'Full_Sync_Immediately' ) ) {
 			return $this->do_sync_and_set_delays( $this->full_sync_queue );
 		} else {
 			$status = $sync_module->get_status();
@@ -440,6 +458,10 @@ class Sender {
 			return new WP_Error( 'sender_disabled_for_queue_' . $queue->id );
 		}
 
+		if ( get_transient( self::TEMP_SYNC_DISABLE_TRANSIENT_NAME ) ) {
+			return new WP_Error( 'sender_temporarily_disabled_while_pulling' );
+		}
+
 		// Return early if we've gotten a retry-after header response.
 		$retry_time = get_option( Actions::RETRY_AFTER_PREFIX . $queue->id );
 		if ( $retry_time ) {
@@ -509,6 +531,11 @@ class Sender {
 		 * This is expensive, but the only way to really know :/
 		 */
 		foreach ( $items as $key => $item ) {
+			if ( ! is_array( $item ) ) {
+				$skipped_items_ids[] = $key;
+				continue;
+			}
+
 			// Suspending cache addition help prevent overloading in memory cache of large sites.
 			wp_suspend_cache_addition( true );
 			/**
@@ -531,7 +558,7 @@ class Sender {
 			}
 			$encoded_item = $this->codec->encode( $item );
 			$upload_size += strlen( $encoded_item );
-			if ( $upload_size > $this->upload_max_bytes && count( $items_to_send ) > 0 ) {
+			if ( $upload_size > $this->upload_max_bytes && array() !== $items_to_send ) {
 				break;
 			}
 			$items_to_send[ $key ] = $encode ? $encoded_item : $item;
@@ -574,6 +601,7 @@ class Sender {
 		 * Now that we're sure we are about to sync, try to ignore user abort
 		 * so we can avoid getting into a bad state.
 		 */
+		// https://plugins.trac.wordpress.org/ticket/2041
 		if ( function_exists( 'ignore_user_abort' ) ) {
 			ignore_user_abort( true );
 		}
@@ -641,11 +669,9 @@ class Sender {
 			} else {
 				// Detect if the last item ID was an error.
 				$had_wp_error = is_wp_error( end( $processed_item_ids ) );
-				if ( $had_wp_error ) {
-					$wp_error = array_pop( $processed_item_ids );
-				}
+				$wp_error     = $had_wp_error ? array_pop( $processed_item_ids ) : null;
 				// Also checkin any items that were skipped.
-				if ( count( $skipped_items_ids ) > 0 ) {
+				if ( array() !== $skipped_items_ids ) {
 					$processed_item_ids = array_merge( $processed_item_ids, $skipped_items_ids );
 				}
 				$processed_items = array_intersect_key( $items, array_flip( $processed_item_ids ) );

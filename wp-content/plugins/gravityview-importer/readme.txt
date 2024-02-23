@@ -1,7 +1,7 @@
 === GravityImport ===
 Tags: gravitykit, gravityview, gravity forms, import
 Requires at least: 5.0
-Tested up to: 6.3
+Tested up to: 6.4.2
 Stable tag: trunk
 Contributors: The GravityKit Team
 License: GPL 3 or higher
@@ -20,6 +20,21 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravitykit.c
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.4.10 on January 25, 2024 =
+
+This release introduces a new filter for developers to modify UI data, resolves a PHP 8.1+ deprecation notice, and updates the [Foundation](https://www.gravitykit.com/foundation/) framework, enhancing support for sites that use object caching plugins.
+
+#### 🐛 Fixed
+- A deprecation notice in PHP 8.1+ caused by passing `null` as a parameter to built-in string functions.
+
+#### 🔄 Updated
+* [Foundation](https://www.gravitykit.com/foundation/) was updated to version 1.2.7.
+  - Improved the setting and retrieval of transients when using object cache plugins.
+  - Fixed a JavaScript warning that appeared during the deactivation of license keys.
+
+#### 💻 Developer Updates
+* Added a `gk/gravityimport/ui/form-data` filter to modify the form data object for use in the UI.
 
 = 2.4.9 on September 7, 2023 =
 
@@ -479,4 +494,4 @@ _Special thanks to Vlad and Gennady for their hard work on this release!_
 == Upgrade Notice ==
 
 
-= 1698694699-4249 =
+= 1708712199-4249 =

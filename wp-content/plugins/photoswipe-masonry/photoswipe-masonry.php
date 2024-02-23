@@ -6,7 +6,7 @@ Description: This is a image gallery plugin for WordPress built using PhotoSwipe
 <a href="http://photoswipe.com/">PhotoSwipe</a>
 Author: Web Design Gold Coast
 Author URI: http://thriveweb.com.au/
-Version: 1.2.18
+Version: 1.2.26
 Text Domain: photoswipe-masonry
 */
 
@@ -370,7 +370,7 @@ class photoswipe_plugin_options
 								$caption_style = " ";
 							endif;
 							?>
-							<figcaption class="photoswipe-gallery-caption" style="<?php esc_attr_e($caption_style); ?>"><?php esc_attr_e($image_caption); ?></figcaption>
+							<figcaption class="photoswipe-gallery-caption" style="<?php esc_attr_e($caption_style); ?>"><?php echo wp_kses_post($image_caption); ?></figcaption>
 
 						</figure>
 				<?php

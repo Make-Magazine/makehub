@@ -144,23 +144,20 @@ class EM_Multiple_Booking extends EM_Booking{
 	
 	function validate_bookings_spaces(){
 	    $result = true;
+		$had_validation_filter = has_filter('emp_form_show_reg_fields', '__return_false');
 	    foreach( $this->get_bookings() as $EM_Booking ){ /* @var $EM_Booking EM_Booking */
 	        $EM_Booking->errors = array();
 	        if( empty($EM_Booking->booking_id) ){ //only do this for non-saved bookings
-	            $has_space = true;
-		        foreach($EM_Booking->get_tickets_bookings()->tickets_bookings as $EM_Ticket_Booking ){ /* @var $EM_Ticket_Booking EM_Ticket_Booking */
-		            if( $EM_Ticket_Booking->get_spaces() > $EM_Ticket_Booking->get_ticket()->get_available_spaces() ){
-		                $has_space = false;
-		                break;
-		            }
-		        }
-		        if( !$has_space ){
-		            $this->add_error( sprintf(__('Unfortunately, your booking for %s was removed from your cart as there are not enough spaces anymore.'), $EM_Booking->get_event()->output('#_EVENTLINK')) );
-		            unset($this->bookings[$EM_Booking->event_id]);
-		            $result = false;
-		        }
+				if( !$EM_Booking->validate() ) {
+					$this->add_error( sprintf(__('Unfortunately, your booking for %s was removed from your cart for the following reasons: %s'), $EM_Booking->get_event()->output('#_EVENTLINK'), '<ul><li>'. implode('</li><li>',$EM_Booking->get_errors()) .'</li></ul>') );
+					unset($this->bookings[$EM_Booking->event_id]);
+					$result = false;
+				}
 	        }
 	    }
+		// remove filter added by em_booking_validate hook whilst checking booking spaces
+		if( !$had_validation_filter ) remove_filter('emp_form_show_reg_fields', '__return_false');
+		// return result of all booking validations, errors added to $this->errors
 	    return apply_filters('em_multiple_booking_validate_bookings_spaces', $result, $this);
 	}
 	
@@ -412,12 +409,12 @@ class EM_Multiple_Booking extends EM_Booking{
 	 * @return boolean
 	 */
 	function set_status($status, $email = true, $ignore_spaces = false){
-	    $result = parent::set_status($status, $email, true);
+	    $result = parent::set_status($status, false, true);
 	    if( $result ){
 		    //we're going to set all of the bookings to this status with one SQL statement, to prevent unecessary hooks from firing
 		    $booking_ids = array();
 			foreach($this->get_bookings() as $EM_Booking){
-				$EM_Booking->previous_status = $this->booking_status;
+				$EM_Booking->previous_status = $EM_Booking->booking_status;
 				$EM_Booking->booking_status = $status;
 				if( !empty($EM_Booking->booking_id) ){
 				    $booking_ids[] = $EM_Booking->booking_id;
@@ -436,6 +433,21 @@ class EM_Multiple_Booking extends EM_Booking{
 			}else{
 				EM_Pro::log( "Tried to update booking status for MB Booking ID {$this->booking_id} but could not locate any bookings within this Multiple Booking", 'multiple-bookings');
 			}
+			// send emails now after all is done, copied from EM_Booking::set_status
+		    if( $email ){
+			    $func_args = func_get_args();
+			    $email_args = !empty($func_args[3]) && is_array($func_args[3]) ? $func_args[3] : array();
+			    $email_args = array_merge( array('email_admin'=> true, 'force_resend' => false, 'email_attendee' => true), $email_args );
+			    if( $this->email( !empty($email_args['email_admin']), !empty($email_args['force_resend']), !empty($email_args['email_attendee'])) ){
+				    if( $this->mails_sent > 0 ){
+					    $this->feedback_message .= " ".__('Email Sent.','events-manager');
+				    }
+			    }else{
+				    //extra errors may be logged by email() in EM_Object
+				    $this->feedback_message .= ' <span style="color:red">'.__('ERROR : Email Not Sent.','events-manager').'</span>';
+				    $this->add_error(__('ERROR : Email Not Sent.','events-manager'));
+			    }
+		    }
 	    }
 		return apply_filters('em_multiple_booking_set_status', $result, $this);
 	}
@@ -507,9 +519,9 @@ class EM_Multiple_Booking extends EM_Booking{
 	//since we're always dealing with a single email
 	function email( $email_admin = true, $force_resend = false, $email_attendee = true ){
 		do_action('em_multiple_booking_email_before_send', $this);
-		if( get_option('dbem_multiple_bookings_contact_email') ){ //we also email individual booking emails to the individual event owners
+		if( get_option('dbem_multiple_bookings_contact_email') || get_option('dbem_multiple_bookings_contact_email_user') ){ //we also email individual booking emails to the individual event owners
 			foreach($this->get_bookings() as $EM_Booking){
-				$EM_Booking->email($email_admin, $force_resend, false);
+				$EM_Booking->email( $email_admin && get_option('dbem_multiple_bookings_contact_email'), $force_resend, $email_attendee && get_option('dbem_multiple_bookings_contact_email_user'));
 			}
 		}
 		add_filter('pre_option_dbem_bookings_contact_email', '__return_zero', 100); // prevent emailing owner of ownerless event for a mb wrapper

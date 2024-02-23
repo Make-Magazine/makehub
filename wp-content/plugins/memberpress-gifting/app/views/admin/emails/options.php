@@ -31,7 +31,7 @@
      data-body-id="<?php echo $email->field_name('body', true); ?>"><?php _e('Reset to Default', 'memberpress-gifting'); ?></a>
   <img src="<?php echo MEPR_IMAGES_URL . '/square-loader.gif'; ?>" alt="<?php _e('Loading...', 'memberpress-gifting'); ?>" id="mepr-loader-<?php echo $email->dashed_name(); ?>" class="mepr_loader" />
 </p>
-<div id="edit-<?php echo $email->dashed_name(); ?>" class="mepr-hidden mpgft-options-pane mpgft-edit-email">
+<div id="edit-<?php echo $email->dashed_name(); ?>" class="mepr-hidden mepr-edit-email mepr-options-pane mpgft-options-pane mpgft-edit-email">
   <ul>
     <li>
       <span class="mpgft-field-label"><?php _e('Subject', 'memberpress-gifting'); ?></span><br/>

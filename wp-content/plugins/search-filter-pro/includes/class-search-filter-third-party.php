@@ -27,6 +27,7 @@ class Search_Filter_Third_Party {
 	private $sfid                    = 0;
 
 	public $cache_table_name;
+	private $woocommerce;
 
 	public function __construct() {
 		global $wpdb;

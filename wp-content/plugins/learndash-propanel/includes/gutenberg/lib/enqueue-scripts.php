@@ -2,43 +2,42 @@
 
 /**
  * Enqueues block editor styles and scripts.
- * 
+ *
  * Fires on `enqueue_block_editor_assets` hook.
  */
 function learndash_propanel_editor_scripts() {
 	// Make paths variables so we don't write em twice ;).
-	$learndash_block_path        = '../assets/js/editor.blocks.js';
-	$learndash_editor_style_path = '../assets/css/blocks.editor.css';
+	$learndash_block_path        = '../assets/js/index.js';
+	$learndash_editor_style_path = '../assets/js/index.css';
+	$learndash_block_dependencies = include dirname( dirname( __FILE__ ) ) . '/assets/js/index.asset.php';
+
+	wp_enqueue_style( 'ld-propanel-style', LD_PP_PLUGIN_URL . 'dist/css/ld-propanel.css', null, LD_PP_VERSION );
+
+	wp_register_script( 'ld-propanel-chart-script', LD_PP_PLUGIN_URL . 'dist/vendor/Chart.js', array( 'jquery' ), LD_PP_VERSION, false );
+
+	$learndash_block_dependencies['dependencies'] = array_merge(
+		$learndash_block_dependencies['dependencies'],
+		array(
+			'ld-propanel-chart-script',
+			'ldlms-blocks-js'
+		)
+	);
 
 	// Enqueue the bundled block JS file.
 	wp_enqueue_script(
 		'ld-propanel-blocks-js',
 		plugins_url( $learndash_block_path, __FILE__ ),
-		array( 'wp-i18n', 'wp-element', 'wp-blocks', 'wp-components', 'wp-editor' ),
+		$learndash_block_dependencies['dependencies'],
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
 
-	/**
-	 * @TODO: This needs to move to an external JS library since it will be used globally.
-	 */
-	$ldlms                                       = array(
-		'settings' => array(),
+	$ldlms_settings = array(
+		'settings' => array(
+			'per_page' => LearnDash_Settings_Section_General_Per_Page::get_section_settings_all()
+		),
+		'nonce' => wp_create_nonce( 'ld-propanel' )
 	);
-	$ldlms_settings['settings']['custom_labels'] = LearnDash_Settings_Section_Custom_Labels::get_section_settings_all();
-	if ( ( is_array( $ldlms_settings['settings']['custom_labels'] ) ) && ( ! empty( $ldlms_settings['settings']['custom_labels'] ) ) ) {
-		foreach ( $ldlms_settings['settings']['custom_labels'] as $key => $val ) {
-			if ( empty( $val ) ) {
-				$ldlms_settings['settings']['custom_labels'][ $key ] = LearnDash_Custom_Label::get_label( $key );
-				if ( substr( $key, 0, strlen( 'button' ) ) != 'button' ) {
-					$ldlms_settings['settings']['custom_labels'][ $key . '_lower' ] = learndash_get_custom_label_lower( $key );
-					$ldlms_settings['settings']['custom_labels'][ $key . '_slug' ]  = learndash_get_custom_label_slug( $key );
-				}
-			}
-		}
-	}
 
-	$ldlms_settings['settings']['per_page']           = LearnDash_Settings_Section_General_Per_Page::get_section_settings_all();
-	
 	// Load the MO file translations into wp.i18n script hook.
 	//learndash_load_inline_script_locale_data();
 
@@ -52,13 +51,9 @@ function learndash_propanel_editor_scripts() {
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
 	wp_style_add_data( 'ld-propanel-blocks-editor-css', 'rtl', 'replace' );
-
-	// Call our function to load CSS/JS used by the shortcodes.
-	//$ld_propanel = LearnDash_ProPanel::get_instance();
-	//$ld_propanel->scripts( true );
 }
 // Hook scripts function into block editor hook.
-add_action( 'enqueue_block_editor_assets', 'learndash_propanel_editor_scripts' );
+add_action( 'enqueue_block_editor_assets', 'learndash_propanel_editor_scripts', 11 );
 
 /**
  * Registers a custom block category.

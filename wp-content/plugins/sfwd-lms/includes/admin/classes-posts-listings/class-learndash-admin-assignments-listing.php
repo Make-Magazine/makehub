@@ -675,19 +675,26 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * @since 4.1.0
 		 *
 		 * @param array   $row_actions Existing Row actions for an assignment.
-		 * @param WP_Post $post Assignment post for the current row.
+		 * @param WP_Post $post        Assignment post for the current row.
 		 *
 		 * @return array $row_actions
 		 */
 		public function post_row_actions( $row_actions = array(), $post = null ): array {
+			if ( ! $post ) {
+				return $row_actions;
+			}
+
 			$row_actions = parent::post_row_actions( $row_actions, $post );
 
-			$file_url = get_post_meta( $post->ID, 'file_link', true );
+			$file_name = get_post_meta( $post->ID, 'file_name', true );
+
+			// Path is not accessible. We need to grab the download URL.
+			$file_url = learndash_assignment_get_download_url( $post->ID );
 
 			// Quick view.
 
 			$file_is_image = in_array(
-				strtolower( pathinfo( $file_url, PATHINFO_EXTENSION ) ),
+				strtolower( pathinfo( $file_name, PATHINFO_EXTENSION ) ),
 				array( 'jpg', 'jpeg', 'png', 'gif' ),
 				true
 			);
@@ -698,7 +705,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$row_actions['quick_view'] = sprintf(
 					'<a class="view-learndash-assignment" href="%s" data-title="%s" aria-label="%s">%s</a>',
 					esc_url( $file_url ),
-					esc_attr( get_post_meta( $post->ID, 'file_name', true ) ),
+					esc_attr( $file_name ),
 					esc_attr( $view_label ),
 					esc_html( $view_label )
 				);

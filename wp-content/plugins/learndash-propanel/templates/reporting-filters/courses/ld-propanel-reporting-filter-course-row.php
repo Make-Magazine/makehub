@@ -36,8 +36,18 @@ switch ( $header_key ) {
 		break;
 
 	case 'progress':
-		?>
-		<div class="progress-bar" title="<?php echo sprintf( 
+		if ( (int) $course_id === 0 ) : ?>
+			<strong title="<?php echo esc_attr(
+				sprintf(
+					// translators: Course title.
+					__( '%s title', 'ld_propanel' ),
+					learndash_get_custom_label( 'course' )
+				)
+			); ?>" class="course-title">
+				<?php echo esc_html( get_the_title( $activity->post_id ) ); ?>
+			</strong>
+		<?php endif; ?>
+		<div class="progress-bar" title="<?php echo sprintf(
 			// translators: Number of completed course steps.
 			esc_html_x( '%1$d of %2$d steps completed', 'Number of completed course steps', 'ld_propanel' ), absint( LearnDash_ProPanel_Activity::get_activity_steps_completed( $activity ) ), absint( LearnDash_ProPanel_Activity::get_activity_steps_total( $activity ) ) ); ?>">
 			<?php

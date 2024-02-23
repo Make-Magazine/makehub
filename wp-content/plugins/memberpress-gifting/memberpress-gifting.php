@@ -1,13 +1,13 @@
 <?php
 /*
 Plugin Name: Memberpress Gifting
-Plugin URI: https://memberpress.com/
+Plugin URI: https://memberpress.com/addons/gifting/
 Description: Allow your MemberPress Memberships to be gifted
 Author: MemberPress
 Author URI: https://memberpress.com/
 Text Domain: memberpress-gifting
 Domain Path: /i18n
-Version: 1.1.24
+Version: 1.1.28
 Copyright: 2004-2022, Caseproof, LLC
 */
 

@@ -34,14 +34,19 @@ class Subscription extends AbstractKlaviyoConnect
 
             $name_split = self::get_first_last_names($this->name);
 
-            $properties = apply_filters('mo_connections_klaviyo_properties', [], $this->optin_campaign_id);
+            $properties = apply_filters('mo_connections_klaviyo_properties', [
+                'main' => [
+                    'email'      => $this->email,
+                    'first_name' => $name_split[0],
+                    'last_name'  => $name_split[1],
+                ]
+            ], $this->optin_campaign_id);
 
             if (defined('MAILOPTIN_DETACH_LIBSODIUM')) {
-                $properties['optin_campaign'] = OptinCampaignsRepository::get_optin_campaign_name($this->optin_campaign_id);
-                $properties['conversion_url'] = $this->extras['conversion_page'];
-                $properties['referrer_url']   = $this->extras['referrer'];
-                $properties['ip_address']     = \MailOptin\Core\get_ip_address();
-                $properties['user_agent']     = $this->extras['user_agent'];
+                $properties['extra']['optin_campaign'] = OptinCampaignsRepository::get_optin_campaign_name($this->optin_campaign_id);
+                $properties['extra']['conversion_url'] = $this->extras['conversion_page'];
+                $properties['extra']['referrer_url']   = $this->extras['referrer'];
+                $properties['extra']['user_agent']     = $this->extras['user_agent'];
             }
 
             $form_custom_fields    = $this->form_custom_fields();
@@ -59,33 +64,43 @@ class Subscription extends AbstractKlaviyoConnect
                     if (is_array($value)) {
                         $value = implode(', ', $value);
                     }
-                    $properties[$KlaviyoFieldKey] = esc_attr($value);
+
+                    if (in_array($KlaviyoFieldKey, ['$address1', '$address2', '$city', '$country', '$region', '$zip'])) {
+                        $properties['main']['location'][str_replace('$', '', $KlaviyoFieldKey)] = esc_attr($value);
+                        continue;
+                    }
+
+                    $properties['main'][str_replace('$', '', $KlaviyoFieldKey)] = esc_attr($value);
                 }
+
+                $properties['main']['location']['ip'] = \MailOptin\Core\get_ip_address();
 
                 foreach ($form_custom_fields as $field) {
                     $field_id    = $field['cid'];
                     $placeholder = $field['placeholder'];
 
                     if ( ! in_array($field_id, $mapped_custom_fields)) {
-                        $properties[$placeholder] = esc_attr($this->extras[$field_id]);
+                        $properties['extra'][$placeholder] = esc_attr($this->extras[$field_id]);
                     }
                 }
             }
 
             if (isset($this->extras['mo-acceptance']) && $this->extras['mo-acceptance'] == 'yes') {
-                $gdpr_tag              = apply_filters('mo_connections_klaviyo_acceptance_tag', 'gdpr');
-                $properties[$gdpr_tag] = 'true';
+                $gdpr_tag                       = apply_filters('mo_connections_klaviyo_acceptance_tag', 'gdpr');
+                $properties['extra'][$gdpr_tag] = 'true';
             }
 
             $response = $this->klaviyo_instance()->add_subscriber(
                 $this->list_id,
-                $this->email,
-                $name_split[0],
-                $name_split[1],
                 $properties
             );
 
             if ($response['status_code'] >= 200 && $response['status_code'] <= 299) {
+                return parent::ajax_success();
+            }
+
+            // contact already exist, so success
+            if (isset($response['body']->errors[0]->code) && $response['body']->errors[0]->code == 'duplicate_profile') {
                 return parent::ajax_success();
             }
 

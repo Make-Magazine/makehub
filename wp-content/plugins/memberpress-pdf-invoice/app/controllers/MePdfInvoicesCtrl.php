@@ -316,36 +316,37 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       $prd        = new MeprProduct($txn->product_id);
       $show_coupon = true;
 
-      if($sub) {
-        $amount = $sub->price; // Attempt to get price from Subscription
+      $amount = $sub ? $sub->price : $txn->amount;
 
-        // Add the tax amount to the subtotal if we are showing tax as negative
-        if($show_negative_tax_on_invoice && $sub->tax_reversal_amount > 0) {
-          $amount = $amount + $sub->tax_reversal_amount;
-        }
+      // Add the tax amount to the subtotal if we are showing tax as negative
+      if($sub && $show_negative_tax_on_invoice && $sub->tax_reversal_amount > 0) {
+        $amount = $amount + $sub->tax_reversal_amount;
+      }
+      elseif(!$sub && $show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
+        $amount = $amount + $txn->tax_reversal_amount;
+      }
 
-        //For standard discounts the subscription price will be the price after the coupon, so either reverse and show coupon,
-        //or hide the coupon, defaults to reverse, to hide coupon they can use the filter to set to false
-        if ($coupon->discount_amount > 0 && apply_filters('mepr-pdf-invoice-reverse-coupon', true, $txn, $mepr_options, $prd, $current_user)) {
-          //Since we store the after coupon price when the coupon is standard discount type, then we have to reverse that for the invoice
-          if ($coupon->discount_type == 'percent') {
-            $amount = $amount / (1 - ($coupon->discount_amount / 100)); //Convert the percent to decimal, subtract from 1, then dive
-          } else if ($coupon->discount_type == 'dollar') {
-            $amount = $amount + $coupon->discount_amount;
-          }
-        } elseif ($coupon->discount_mode == 'standard') {
-          $show_coupon = false;
+      if (!$sub && $coupon->discount_mode == 'first-payment' && $coupon->first_payment_discount_amount > 0) {
+        // For one-time/non-recurring subscriptions, we can't pull in the price before the discount, so we need to calculate the original amount
+        // as we do for standard coupons.
+        if ($coupon->first_payment_discount_type == 'percent') {
+          $amount = $amount / (1 - ($coupon->first_payment_discount_amount / 100));
+        } else if ($coupon->first_payment_discount_type == 'dollar') {
+          $amount = $amount + $coupon->first_payment_discount_amount;
         }
       }
-      else {
-        if($show_negative_tax_on_invoice && $txn->tax_reversal_amount > 0) {
-          $amount = $txn->total;
-          $cpn_amount = MeprUtils::format_float((float) $amount - (float) $txn->amount - (float) $txn->tax_reversal_amount);
+      //For standard discounts the subscription price will be the price after the coupon, so either reverse and show coupon,
+      //or hide the coupon, defaults to reverse, to hide coupon they can use the filter to set to false
+      elseif ($coupon->discount_amount > 0 && apply_filters('mepr-pdf-invoice-reverse-coupon', true, $txn, $mepr_options, $prd, $current_user)) {
+        //Since we store the after coupon price when the coupon is standard discount type, then we have to reverse that for the invoice
+        if ($coupon->discount_type == 'percent') {
+          $amount = $coupon->discount_amount == 100 ? 0 : $amount / (1 - ($coupon->discount_amount / 100)); //Convert the percent to decimal, subtract from 1, then dive
+        } else if ($coupon->discount_type == 'dollar') {
+          $amount = $amount + $coupon->discount_amount;
         }
-        else {
-          $remove_tax = $calculate_taxes && $tax_inclusive && $txn->tax_rate > 0;
-          $amount = $remove_tax ? ($txn->total/(1+($txn->tax_rate/100))) : $txn->total;
-        }
+      }
+      elseif ($coupon->discount_mode == 'standard') {
+        $show_coupon = false;
       }
 
       if(apply_filters('mepr-pdf-invoice-show-coupon', $show_coupon, $txn, $mepr_options, $prd, $current_user)) {
@@ -367,12 +368,16 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
     }
 
     if ($sub && $coupon) {
-      $_REQUEST['mepr_get_real_payment'] = true; // ensure we don't get subscription confirmation txn back
-      $first_txn = $sub->first_txn();
+      // Check if this invoice is for the first payment when using a first payment discount coupon.
+      // We need to check both the first real payment and subscription confirmation txn since the confirmation txn
+      // may be used to display the invoice from the RL Thank You page.
+      $first_txns = array((int) $sub->first_txn_id);
+      $_REQUEST['mepr_get_real_payment'] = true; // ensure we don't get subscription confirmation txn back this time
+      $first_txns[] = (int) $sub->first_txn_id;
 
       if ( $coupon->discount_mode == 'first-payment' &&
            empty( $coupon->discount_amount ) &&
-           $first_txn->id != $txn->id
+           !in_array((int) $txn->id, $first_txns, true)
       ) {
         // Do not apply coupon to this transaction if it's renewal payment
         // and this coupon is first-payment discount with 0 standard discount
@@ -490,6 +495,15 @@ class MePdfInvoicesCtrl extends MeprBaseCtrl {
       'desc'   => $cpn_desc,
       'amount' => $cpn_amount,
     );
+
+    //If the coupon amount is HIGHER than the membership renewal price.
+    if( $cpn_id > 0 && $coupon && $coupon->discount_mode == 'trial-override'
+      && $sub && $sub instanceof MeprSubscription && $sub->trial
+      && $coupon->trial_amount > $prd->price
+    ){
+      $this->invoice['items'][$sub->product_id]['amount'] = $txn->amount;
+      $this->invoice['coupon']['amount'] = '0';
+    }
 
     $this->invoice['tax_items'] = $tax_items;
 

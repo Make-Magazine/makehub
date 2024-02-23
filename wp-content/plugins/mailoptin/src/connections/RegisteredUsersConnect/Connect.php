@@ -32,6 +32,8 @@ class Connect extends AbstractConnect implements ConnectionInterface
         add_action('plugins_loaded', array($this, 'init'));
         add_action('init', [$this, 'unsubscribe_handler']);
         add_action('init', [$this, 'view_online_version']);
+
+        add_action('delete_user', [$this, 'unsubscribe_deleted_users']);
     }
 
     public function init()
@@ -236,6 +238,18 @@ class Connect extends AbstractConnect implements ConnectionInterface
                 }
             }
         }
+    }
+
+    public function unsubscribe_deleted_users($user_id)
+    {
+        $email = get_userdata($user_id)->user_email;
+
+        $email  = base64_encode($email);
+        $bucket = get_option('mo_wp_user_unsubscribers', []);
+
+        $a = array_diff($bucket, [$email]);
+
+        update_option('mo_wp_user_unsubscribers', $a);
     }
 
     /**

@@ -24,16 +24,21 @@ class Email_Bookings {
 			$EM_Event = em_get_event($_POST['event_id']);
 			list($booking_statuses, $ticket_types) = self::get_filters();
 			if( empty($_POST['subject']) ){
-				$EM_Notices->add_error('Please add an email subject.', 'events-manager-emails');
+				$EM_Notices->add_error('Please add an email subject.', 'events-manager-pro');
 			}else{
-				$subject = sanitize_text_field($_POST['subject']);
+				$subject = sanitize_text_field( wp_unslash($_POST['subject']) );
 			}
 			if( empty($_POST['message']) ){
-				$EM_Notices->add_error('Please provide some email message content to send.', 'events-manager-emails');
+				$EM_Notices->add_error('Please provide some email message content to send.', 'events-manager-pro');
 			}else{
-				$message = sanitize_text_field($_POST['message']);
+				$message = sanitize_textarea_field( wp_unslash($_POST['message']) );
 			}
-			if( !empty($subject) && !empty($message) && !empty($booking_statuses) && !empty($ticket_types) ){
+			if( empty($_POST['reply_to']) || !is_email($_POST['reply_to']) ){
+				$EM_Notices->add_error('Please provide a valid reply-to email address.', 'events-manager-pro');
+			}else{
+				$reply_to = sanitize_text_field($_POST['reply_to']);
+			}
+			if( !empty($subject) && !empty($message) && !empty($booking_statuses) && !empty($ticket_types) && !empty($reply_to) ){
 				//get bookings of a certain status
 				global $wpdb;
 				$sql = 'SELECT booking_id FROM '.EM_BOOKINGS_TABLE.' WHERE booking_status IN ('. implode(',', $booking_statuses) .') AND booking_id IN (SELECT booking_id FROM '.EM_TICKETS_BOOKINGS_TABLE.' WHERE ticket_id IN ('. implode(',', $ticket_types) .')) AND event_id='.absint($EM_Event->event_id);
@@ -93,6 +98,7 @@ class Email_Bookings {
 					}
 					//send mail
 					$EM_Mailer = new EM_Mailer();
+					$args = array('reply-to' => $reply_to);
 					$emails_sent = $email_errors = array();
 					$messages_failed = $messages_sent = 0;
 					$inserts = array(); // for batch sending
@@ -104,7 +110,7 @@ class Email_Bookings {
 						$message_email = $EM_Booking->output($message, 'email');
 						if( !empty($_REQUEST['send_direct']) && current_user_can('manage_others_bookings') ){
 							// send directly
-							if( !$EM_Mailer->send( $subject_email, $message_email, $EM_Booking->get_person()->user_email, $attachments ) ){
+							if( !$EM_Mailer->send( $subject_email, $message_email, $EM_Booking->get_person()->user_email, $attachments, $args ) ){
 								$messages_failed++;
 								$email_errors = array_merge($email_errors, $EM_Mailer->errors);
 							}else{
@@ -112,24 +118,24 @@ class Email_Bookings {
 								$emails_sent[] = $email;
 							}
 						}else{
-							$inserts[] = $wpdb->prepare( '(%d, %d, %d, %s, %s, %s)', array( 'event_id' => $EM_Booking->event_id, 'booking_id' => $EM_Booking->booking_id, 'batch_id' => $batch_id, 'email' => $EM_Booking->get_person()->user_email, 'subject' => $subject_email, 'body' => $message_email) );
+							$inserts[] = $wpdb->prepare( '(%d, %d, %d, %s, %s, %s, %s)', array( 'event_id' => $EM_Booking->event_id, 'booking_id' => $EM_Booking->booking_id, 'batch_id' => $batch_id, 'email' => $EM_Booking->get_person()->user_email, 'subject' => $subject_email, 'body' => $message_email, 'args' => serialize($args)) );
 						}
 					}
 					if( !empty($_REQUEST['send_direct']) && current_user_can('manage_others_bookings') ){
 						if( $messages_sent && !$messages_failed ){
 							//total success
-							$msg = sprintf( esc_html__('Successfully sent %d email(s).', 'events-manager-emails'), $messages_sent );
+							$msg = sprintf( esc_html__('Successfully sent %d email(s).', 'events-manager-pro'), $messages_sent );
 							$EM_Notices->add_confirm( $msg );
 						}elseif( $messages_sent && $messages_failed ){
-							$msg = sprintf( esc_html__('Successfully sent %d email(s), however, %d could not be sent.', 'events-manager-emails'), $messages_sent, $messages_failed );
+							$msg = sprintf( esc_html__('Successfully sent %d email(s), however, %d could not be sent.', 'events-manager-pro'), $messages_sent, $messages_failed );
 							$EM_Notices->add_info($msg);
 						}else{
 							//total failure
-							$fail_msg = sprintf( esc_html__('Email sending failed. Please see error messages below:', 'events-manager-emails'), $messages_sent );
+							$fail_msg = sprintf( esc_html__('Email sending failed. Please see error messages below:', 'events-manager-pro'), $messages_sent );
 						}
 						if( $messages_failed ){
 							if( !$fail_msg ){
-								$fail_msg =  sprintf( esc_html__('We encountered errors sending emails. Please see error messages below:', 'events-manager-emails'), $messages_sent );
+								$fail_msg =  sprintf( esc_html__('We encountered errors sending emails. Please see error messages below:', 'events-manager-pro'), $messages_sent );
 							}
 							$error_list = '<ul>';
 							foreach( $email_errors as $error ){
@@ -141,25 +147,25 @@ class Email_Bookings {
 					}else{
 						// insert it all now
 						if( !empty($inserts) ) {
-							$insert_result = $wpdb->query('INSERT INTO '. EM_EMAIL_QUEUE_TABLE .' (event_id, booking_id, batch_id, email, subject, body) VALUES '. implode(',', $inserts));
+							$insert_result = $wpdb->query('INSERT INTO '. EM_EMAIL_QUEUE_TABLE .' (event_id, booking_id, batch_id, email, subject, body, args) VALUES '. implode(',', $inserts));
 							if( $insert_result !== false ){
-								$msg = sprintf( esc_html__('Successfully queued %d email(s) for sending. These will be sent within a few minutes.', 'events-manager-emails'), $insert_result );
+								$msg = sprintf( esc_html__('Successfully queued %d email(s) for sending. These will be sent within a few minutes.', 'events-manager-pro'), $insert_result );
 								$EM_Notices->add_confirm($msg);
 							}else{
 								if( current_user_can('manage_others_bookings') ){
-									$fail_msg = sprintf( esc_html__('Email sending failed. Please see error messages below:', 'events-manager-emails'), $messages_sent );
+									$fail_msg = sprintf( esc_html__('Email sending failed. Please see error messages below:', 'events-manager-pro'), $messages_sent );
 									$fail_msg .= '<br>'. $wpdb->last_error;
 								}else{
-									$fail_msg = sprintf( esc_html__('Email sending failed. Please contact site admins for assistance.', 'events-manager-emails'), $messages_sent );
+									$fail_msg = sprintf( esc_html__('Email sending failed. Please contact site admins for assistance.', 'events-manager-pro'), $messages_sent );
 								}
 								$EM_Notices->add_error( $fail_msg );
 							}
 						}else{
-							$EM_Notices->add_error('No bookings to email according to chosen options.', 'events-manager-emails');
+							$EM_Notices->add_error('No bookings to email according to chosen options.', 'events-manager-pro');
 						}
 					}
 				}else{
-					$EM_Notices->add_error('No bookings to email according to chosen options.', 'events-manager-emails');
+					$EM_Notices->add_error('No bookings to email according to chosen options.', 'events-manager-pro');
 				}
 			}
 		}
@@ -170,14 +176,14 @@ class Email_Bookings {
 		$booking_statuses = array();
 		$ticket_types = array();
 		if( empty($_POST['booking_status']) ){
-			$EM_Notices->add_error('Please select at least one booking status to send emails to.', 'events-manager-emails');
+			$EM_Notices->add_error('Please select at least one booking status to send emails to.', 'events-manager-pro');
 		}else{
 			foreach($_POST['booking_status'] as $status ){
 				$booking_statuses[] = absint($status);
 			}
 		}
 		if( empty($_POST['ticket_types']) ){
-			$EM_Notices->add_error('Please select bookings containing at least one ticket type to send emails to.', 'events-manager-emails');
+			$EM_Notices->add_error('Please select bookings containing at least one ticket type to send emails to.', 'events-manager-pro');
 		}else{
 			foreach($_POST['ticket_types'] as $ticket_id ){
 				$ticket_types[] = absint($ticket_id);
@@ -263,13 +269,13 @@ class Email_Bookings {
 		?>
 		<div class='wrap'>
 			<?php if( is_admin() ): ?>
-				<h1 class="wp-heading-inline"><?php esc_html_e('Email Attendees','events-manager-emails'); ?></h1>
+				<h1 class="wp-heading-inline"><?php esc_html_e('Email Attendees','events-manager-pro'); ?></h1>
 				<a href="<?php echo esc_url($EM_Event->get_bookings_url()); ?>" class="<?php echo $header_button_classes; ?>"><?php echo esc_html(sprintf(__('Go back to &quot;%s&quot; bookings','em-pro'), $EM_Event->name)) ?></a>
 				<hr class="wp-header-end" />
 				<?php $h = 'h2'; ?>
 			<?php else: ?>
 				<h2>
-					<?php esc_html_e('Email Attendees','events-manager-emails'); ?>
+					<?php esc_html_e('Email Attendees','events-manager-pro'); ?>
 					<a href="<?php echo esc_url($EM_Event->get_bookings_url()); ?>" class="<?php echo $header_button_classes; ?>"><?php echo esc_html(sprintf(__('Go back to &quot;%s&quot; bookings','em-pro'), $EM_Event->name)) ?></a>
 				</h2>
 				<?php $h = 'h3'; ?>
@@ -298,10 +304,10 @@ class Email_Bookings {
 				</p>
 			</div>
 			<form action="" method="post" enctype="multipart/form-data" class="em-email-event-bookings">
-				<?php echo "<$h>". esc_html__('Email Filters', 'events-manager-emails') ."</$h>"; ?>
-				<p><?php esc_html_e('Choose from the set of options below to limit which attendees will receive this email. By default, all users who have an approved/confirmed ticket will receive this message.', 'events-manager-emails'); ?></p>
+				<?php echo "<$h>". esc_html__('Email Filters', 'events-manager-pro') ."</$h>"; ?>
+				<p><?php esc_html_e('Choose from the set of options below to limit which attendees will receive this email. By default, all users who have an approved/confirmed ticket will receive this message.', 'events-manager-pro'); ?></p>
 				<fieldset>
-					<legend><?php esc_html_e('Booking Statuses', 'events-manager-emails'); ?></legend>
+					<legend><?php esc_html_e('Booking Statuses', 'events-manager-pro'); ?></legend>
 					<?php
 					if( !empty($_POST['booking_status']) ){
 						$booking_statuses = $_POST['booking_status'];
@@ -316,46 +322,51 @@ class Email_Bookings {
 					?>
 				</fieldset>
 				<fieldset>
-					<legend><?php esc_html_e('Ticket Types', 'events-manager-emails'); ?></legend>
+					<legend><?php esc_html_e('Ticket Types', 'events-manager-pro'); ?></legend>
 					<?php foreach( $EM_Event->get_tickets() as $EM_Ticket ): /* @var \EM_Ticket $EM_Ticket */ ?>
 						<label><input type="checkbox" name="ticket_types[]" class="ticket-types-filter" value="<?php echo esc_attr($EM_Ticket->ticket_id); ?>" <?php if( empty($_POST['ticket_types']) || in_array($EM_Ticket->ticket_id, $_POST['ticket_types']) ) echo 'checked'; ?>> <?php echo esc_html($EM_Ticket->ticket_name); ?></label><br>
 					<?php endforeach; ?>
 				</fieldset>
-				<?php echo "<$h>". esc_html__('Email Content', 'events-manager-emails') ."</$h>"; ?>
-				<p><?php esc_html_e('The template below will be sent to all users matching the filters above. You can also add multiple attachments below.', 'events-manager-emails'); ?></p>
+				<?php echo "<$h>". esc_html__('Reply To', 'events-manager-pro') ."</$h>"; ?>
+				<p><?php echo sprintf( esc_html__('The email will be sent from %s, but when the user the following email will be used instead.', 'events-manager-pro'), '<code>' . get_option('dbem_mail_sender_address') . '</code>' ); ?></p>
+				<p>
+					<input name="reply_to" type="text" class="widefat" placeholder="<?php esc_attr_e('Reply To', 'events-manager-pro'); ?>" aria-label="<?php esc_attr_e('Reply To', 'events-manager-pro'); ?>" value="<?php echo esc_attr( get_user_by( 'id', $EM_Event->get_owner() )->user_email ); ?>" id="em_emails_form_reply_to">
+				</p>
+				<?php echo "<$h>". esc_html__('Email Content', 'events-manager-pro') ."</$h>"; ?>
+				<p><?php esc_html_e('The template below will be sent to all users matching the filters above. You can also add multiple attachments below.', 'events-manager-pro'); ?></p>
 				<p><em><?php echo $bookings_placeholder_tip; ?></em></p>
 				<p>
-					<input name="subject" type="text" class="widefat" placeholder="<?php esc_attr_e('Email Subject', 'events-manager-emails'); ?>" aria-label="<?php esc_attr_e('Email Subject', 'events-manager-emails'); ?>" value="<?php echo esc_attr($subject); ?>">
+					<input name="subject" type="text" class="widefat" placeholder="<?php esc_attr_e('Email Subject', 'events-manager-pro'); ?>" aria-label="<?php esc_attr_e('Email Subject', 'events-manager-pro'); ?>" value="<?php echo esc_attr($subject); ?>" id="em_emails_form_subject">
 				</p>
 				<p>
-					<textarea name="message" type="text" class="widefat" placeholder="<?php esc_attr_e('Email Message', 'events-manager-emails'); ?>" aria-label="<?php esc_attr_e('Email Message', 'events-manager-emails'); ?>"><?php echo esc_html($message); ?></textarea>
+					<textarea name="message" type="text" class="widefat" placeholder="<?php esc_attr_e('Email Message', 'events-manager-pro'); ?>" aria-label="<?php esc_attr_e('Email Message', 'events-manager-pro'); ?>" id="em_emails_form_message"><?php echo esc_html($message); ?></textarea>
 				</p>
 				<div class="em-uploads-box" data-input-name="email_attachments" data-max="<?php echo wp_max_upload_size(); ?>" data-max-error="<?php echo sprintf(esc_html__('You have exceeded the permitted upload amount, maximum file uploads cannot exceed %s.', 'events-manager'), size_format(wp_max_upload_size())); ?>">
-					<div class="dragover-placeholder flex-center"><?php esc_html_e('Drop Files Here', 'events-manager-emails'); ?></div>
+					<div class="dragover-placeholder flex-center"><?php esc_html_e('Drop Files Here', 'events-manager-pro'); ?></div>
 					<div class="uploads-box-ui flex-center">
-						<p class="upload-item-drop-instructions"><?php esc_html_e('Drop files to upload', 'events-manager-emails'); ?></p>
-						<p class="upload-item-drop-instructions"><?php esc_html_e('or', 'events-manager-emails'); ?></p>
+						<p class="upload-item-drop-instructions"><?php esc_html_e('Drop files to upload', 'events-manager-pro'); ?></p>
+						<p class="upload-item-drop-instructions"><?php esc_html_e('or', 'events-manager-pro'); ?></p>
 						<label class="uploads-box-add button-secondary">
-							<?php esc_html_e('Select Files', 'events-manager-emails'); ?>
+							<?php esc_html_e('Select Files', 'events-manager-pro'); ?>
 							<input type="file" class="button-secondary" multiple>
 						</label>
 					</div>
 					<div class="uploads-box"></div>
 				</div>
 				<p>
-					<input type="checkbox" name="avoid_duplicates" value="1" <?php echo !isset($_POST['avoid_duplicates']) || $_POST['avoid_duplicates'] ? 'checked':''; ?>> <?php esc_html_e('Send one message per email address if there are multiple bookings.', 'events-manager-emails'); ?>
+					<input type="checkbox" name="avoid_duplicates" value="1" <?php echo !isset($_POST['avoid_duplicates']) || $_POST['avoid_duplicates'] ? 'checked':''; ?>> <?php esc_html_e('Send one message per email address if there are multiple bookings.', 'events-manager-pro'); ?>
 				</p>
 				<?php if( current_user_can('manage_others_bookings') ): ?>
 				<p>
-					<input type="checkbox" name="send_direct" value="1" <?php if( !empty($_POST['send_direct']) ) echo 'checked'; ?>> <?php esc_html_e('Send messages immediately and skip queueing, not advised for large list of emails as this could fail during the process but after having sent some emails already.', 'events-manager-emails'); ?>
+					<input type="checkbox" name="send_direct" value="1" <?php if( !empty($_POST['send_direct']) ) echo 'checked'; ?>> <?php esc_html_e('Send messages immediately and skip queueing, not advised for large list of emails as this could fail during the process but after having sent some emails already.', 'events-manager-pro'); ?>
 				</p>
 				<?php endif; ?>
 				<div class="email-estimation"></div>
 				<p>
 					<?php
-					$estimate = esc_attr__('Estimate', 'events-manager-emails');
-					$estimating = esc_attr__('Estimating ...', 'events-manager-emails');
-					$confirm = esc_attr__('Confirm and Send', 'events-manager-emails');
+					$estimate = esc_attr__('Estimate', 'events-manager-pro');
+					$estimating = esc_attr__('Estimating ...', 'events-manager-pro');
+					$confirm = esc_attr__('Confirm and Send', 'events-manager-pro');
 					?>
 					<button type="submit" class="button-primary submit" data-confirm="<?php echo $confirm; ?>" data-estimating="<?php echo $estimating; ?>" data-estimate="<?php echo $estimate ?>"><?php echo $estimate; ?></button>
 					<input type="hidden" name="email_event_bookings" value="<?php echo wp_create_nonce('email_event_bookings_'. $EM_Event->event_id); ?>">

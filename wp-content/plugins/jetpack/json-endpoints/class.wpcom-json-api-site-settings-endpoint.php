@@ -111,13 +111,14 @@ new WPCOM_JSON_API_Site_Settings_Endpoint(
 			'markdown_supported'                      => '(bool) Whether markdown is supported for this site',
 			'wpcom_publish_posts_with_markdown'       => '(bool) Whether markdown is enabled for posts',
 			'wpcom_publish_comments_with_markdown'    => '(bool) Whether markdown is enabled for comments',
-			'amp_is_enabled'                          => '(bool) Whether AMP is enabled for this site',
 			'site_icon'                               => '(int) Media attachment ID to use as site icon. Set to zero or an otherwise empty value to clear',
 			'api_cache'                               => '(bool) Turn on/off the Jetpack JSON API cache',
 			'posts_per_page'                          => '(int) Number of posts to show on blog pages',
 			'posts_per_rss'                           => '(int) Number of posts to show in the RSS feed',
 			'rss_use_excerpt'                         => '(bool) Whether the RSS feed will use post excerpts',
 			'launchpad_screen'                        => '(string) Whether or not launchpad is presented and what size it will be',
+			'sm_enabled'                              => '(bool) Whether the newsletter subscribe modal is enabled',
+			'wpcom_ai_site_prompt'                    => '(string) User input in the AI site prompt',
 		),
 
 		'response_format'     => array(
@@ -203,7 +204,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 	 *
 	 * @param array $copy_dirs Array of files to be included in theme context.
 	 */
-	public function wpcom_restapi_copy_theme_plugin_actions( $copy_dirs ) {
+	public static function wpcom_restapi_copy_theme_plugin_actions( $copy_dirs ) {
 		$theme_name        = get_stylesheet();
 		$default_file_name = WP_CONTENT_DIR . "/mu-plugins/infinity/themes/{$theme_name}.php";
 
@@ -355,6 +356,14 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						)
 					);
 
+					$newsletter_categories   = maybe_unserialize( get_option( 'wpcom_newsletter_categories', array() ) );
+					$newsletter_category_ids = array_map(
+						function ( $newsletter_category ) {
+							return $newsletter_category['term_id'];
+						},
+						$newsletter_categories
+					);
+
 					$api_cache = $site->is_jetpack() ? (bool) get_option( 'jetpack_api_cache_enabled' ) : true;
 
 					$response[ $key ] = array(
@@ -432,26 +441,28 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						'site_icon'                        => $this->get_cast_option_value_or_null( 'site_icon', 'intval' ),
 						Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION => get_option( Jetpack_SEO_Utils::FRONT_PAGE_META_OPTION, '' ),
 						Jetpack_SEO_Titles::TITLE_FORMATS_OPTION => get_option( Jetpack_SEO_Titles::TITLE_FORMATS_OPTION, array() ),
-						'amp_is_supported'                 => (bool) function_exists( 'wpcom_is_amp_supported' ) && wpcom_is_amp_supported( $blog_id ),
-						'amp_is_enabled'                   => (bool) function_exists( 'wpcom_is_amp_enabled' ) && wpcom_is_amp_enabled( $blog_id ),
-						'amp_is_deprecated'                => (bool) function_exists( 'wpcom_is_amp_deprecated' ) && wpcom_is_amp_deprecated( $blog_id ),
 						'api_cache'                        => $api_cache,
 						'posts_per_page'                   => (int) get_option( 'posts_per_page' ),
 						'posts_per_rss'                    => (int) get_option( 'posts_per_rss' ),
 						'rss_use_excerpt'                  => (bool) get_option( 'rss_use_excerpt' ),
 						'launchpad_screen'                 => (string) get_option( 'launchpad_screen' ),
 						'wpcom_featured_image_in_email'    => (bool) get_option( 'wpcom_featured_image_in_email' ),
+						'wpcom_newsletter_categories'      => $newsletter_category_ids,
+						'wpcom_newsletter_categories_enabled' => (bool) get_option( 'wpcom_newsletter_categories_enabled' ),
+						'sm_enabled'                       => (bool) get_option( 'sm_enabled' ),
 						'wpcom_gifting_subscription'       => (bool) get_option( 'wpcom_gifting_subscription', $this->get_wpcom_gifting_subscription_default() ),
+						'wpcom_reader_views_enabled'       => (bool) get_option( 'wpcom_reader_views_enabled', true ),
 						'wpcom_subscription_emails_use_excerpt' => $this->get_wpcom_subscription_emails_use_excerpt_option(),
 						'show_on_front'                    => (string) get_option( 'show_on_front' ),
 						'page_on_front'                    => (string) get_option( 'page_on_front' ),
 						'page_for_posts'                   => (string) get_option( 'page_for_posts' ),
 						'subscription_options'             => (array) get_option( 'subscription_options' ),
+						'jetpack_verbum_subscription_modal' => (bool) get_option( 'jetpack_verbum_subscription_modal', true ),
 					);
 
 					if ( defined( 'IS_WPCOM' ) && IS_WPCOM ) {
-						$response[ $key ]['wpcom_publish_posts_with_markdown']    = (bool) WPCom_Markdown::is_posting_enabled();
-						$response[ $key ]['wpcom_publish_comments_with_markdown'] = (bool) WPCom_Markdown::is_commenting_enabled();
+						$response[ $key ]['wpcom_publish_posts_with_markdown']    = (bool) WPCom_Markdown::get_instance()->is_posting_enabled();
+						$response[ $key ]['wpcom_publish_comments_with_markdown'] = (bool) WPCom_Markdown::get_instance()->is_commenting_enabled();
 
 						// WPCOM-specific Infinite Scroll Settings.
 						if ( is_callable( array( 'The_Neverending_Home_Page', 'get_settings' ) ) ) {
@@ -524,7 +535,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					 * - 5 days before the monthly plan expiration.
 					 * This is to match the gifting banner logic.
 					 */
-					$days_of_warning          = false !== strpos( $purchase->product_slug, 'monthly' ) ? 5 : 54;
+					$days_of_warning          = str_contains( $purchase->product_slug, 'monthly' ) ? 5 : 54;
 					$seconds_until_expiration = strtotime( $purchase->expiry_date ) - time();
 					if ( $seconds_until_expiration >= $days_of_warning * DAY_IN_SECONDS ) {
 						return false;
@@ -563,8 +574,20 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 	 * Get GA tracking code.
 	 */
 	protected function get_google_analytics() {
-		$option_name = defined( 'IS_WPCOM' ) && IS_WPCOM ? 'wga' : 'jetpack_wga';
+		$option_name = $this->get_google_analytics_option_name();
+
 		return get_option( $option_name );
+	}
+
+	/**
+	 * Get GA tracking code option name.
+	 */
+	protected function get_google_analytics_option_name() {
+		/** This filter is documented in class.json-api-endpoints.php */
+		$is_jetpack  = true === apply_filters( 'is_jetpack_site', false, get_current_blog_id() );
+		$option_name = $is_jetpack ? 'jetpack_wga' : 'wga';
+
+		return $option_name;
 	}
 
 	/**
@@ -681,8 +704,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						return new WP_Error( 'invalid_code', 'Invalid UA ID' );
 					}
 
-					$is_wpcom    = defined( 'IS_WPCOM' ) && IS_WPCOM;
-					$option_name = $is_wpcom ? 'wga' : 'jetpack_wga';
+					$option_name = $this->get_google_analytics_option_name();
 
 					$wga         = get_option( $option_name, array() );
 					$wga['code'] = $value['code']; // maintain compatibility with wp-google-analytics.
@@ -706,6 +728,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					/** This action is documented in modules/widgets/social-media-icons.php */
 					do_action( 'jetpack_bump_stats_extras', 'google-analytics', $enabled_or_disabled );
 
+					$is_wpcom = defined( 'IS_WPCOM' ) && IS_WPCOM;
 					if ( $is_wpcom ) {
 						$business_plugins = WPCOM_Business_Plugins::instance();
 						$business_plugins->activate_plugin( 'wp-google-analytics' );
@@ -725,6 +748,8 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 				case 'jetpack_testimonial':
 				case 'jetpack_portfolio':
 				case 'jetpack_comment_likes_enabled':
+				case 'wpcom_reader_views_enabled':
+				case 'jetpack_verbum_subscription_modal':
 					// settings are stored as 1|0.
 					$coerce_value = (int) $value;
 					if ( update_option( $key, $coerce_value ) ) {
@@ -799,9 +824,25 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					break;
 
 				case 'subscription_options':
-					$sanitized_value = (array) $value;
+					if ( ! is_array( $value ) ) {
+						break;
+					}
+
+					$allowed_keys   = array( 'invitation', 'comment_follow', 'welcome' );
+					$filtered_value = array_filter(
+						$value,
+						function ( $key ) use ( $allowed_keys ) {
+							return in_array( $key, $allowed_keys, true );
+						},
+						ARRAY_FILTER_USE_KEY
+					);
+
+					if ( empty( $filtered_value ) ) {
+						break;
+					}
+
 					array_walk_recursive(
-						$sanitized_value,
+						$filtered_value,
 						function ( &$value ) {
 							$value = wp_kses(
 								$value,
@@ -814,13 +855,11 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 						}
 					);
 
-					$has_correct_length  = count( $sanitized_value ) === 2;
-					$required_keys_exist = array_key_exists( 'invitation', $sanitized_value )
-						&& array_key_exists( 'comment_follow', $sanitized_value );
-					$is_valid            = $has_correct_length && $required_keys_exist;
+					$old_subscription_options = get_option( 'subscription_options' );
+					$new_subscription_options = array_merge( $old_subscription_options, $filtered_value );
 
-					if ( $is_valid && update_option( $key, $sanitized_value ) ) {
-						$updated[ $key ] = $sanitized_value;
+					if ( update_option( $key, $new_subscription_options ) ) {
+						$updated[ $key ] = $filtered_value;
 					}
 					break;
 
@@ -964,15 +1003,6 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 					}
 					break;
 
-				case 'amp_is_enabled':
-					if ( function_exists( 'wpcom_update_amp_enabled' ) ) {
-						$saved = wpcom_update_amp_enabled( $blog_id, $value );
-						if ( $saved ) {
-							$updated[ $key ] = (bool) $value;
-						}
-					}
-					break;
-
 				case 'rss_use_excerpt':
 					update_option( 'rss_use_excerpt', (int) (bool) $value );
 					break;
@@ -1001,6 +1031,54 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 
 				case 'wpcom_featured_image_in_email':
 					update_option( 'wpcom_featured_image_in_email', (int) (bool) $value );
+					$updated[ $key ] = (int) (bool) $value;
+					break;
+
+				case 'wpcom_newsletter_categories':
+					$sanitized_category_ids = (array) $value;
+
+					array_walk_recursive(
+						$sanitized_category_ids,
+						function ( &$value ) {
+							if ( is_int( $value ) && $value > 0 ) {
+								return;
+							}
+
+							$value = (int) $value;
+							if ( $value <= 0 ) {
+								$value = null;
+							}
+						}
+					);
+
+					$sanitized_category_ids = array_unique(
+						array_filter(
+							$sanitized_category_ids,
+							function ( $category_id ) {
+								return $category_id !== null;
+							}
+						)
+					);
+
+					$new_value = array_map(
+						function ( $category_id ) {
+							return array( 'term_id' => $category_id );
+						},
+						$sanitized_category_ids
+					);
+
+					if ( update_option( $key, $new_value ) ) {
+						$updated[ $key ] = $new_value;
+					}
+					break;
+
+				case 'wpcom_newsletter_categories_enabled':
+					update_option( 'wpcom_newsletter_categories_enabled', (int) (bool) $value );
+					$updated[ $key ] = (int) (bool) $value;
+					break;
+
+				case 'sm_enabled':
+					update_option( 'sm_enabled', (int) (bool) $value );
 					$updated[ $key ] = (int) (bool) $value;
 					break;
 
@@ -1060,7 +1138,7 @@ class WPCOM_JSON_API_Site_Settings_Endpoint extends WPCOM_JSON_API_Endpoint {
 			}
 		}
 
-		if ( count( $jetpack_relatedposts_options ) ) {
+		if ( $jetpack_relatedposts_options !== array() ) {
 			// track new jetpack_relatedposts options against old.
 			$old_relatedposts_options = Jetpack_Options::get_option( 'relatedposts' );
 

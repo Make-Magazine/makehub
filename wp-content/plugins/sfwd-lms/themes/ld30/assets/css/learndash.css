@@ -738,7 +738,6 @@
   padding: 1em;
   line-height: 1.25em;
   background-color: #019e7c;
-  padding-right: 3em;
 }
 
 .learndash-wrapper .learndash_mark_complete_button .ld-icon,
@@ -2634,6 +2633,11 @@
 }
 
 .learndash-wrapper .ld-status-unlocked {
+  background-color: #ebf8fd;
+  color: #00a2e8;
+}
+
+.learndash-wrapper .ld-status-alert {
   background-color: #ebf8fd;
   color: #00a2e8;
 }

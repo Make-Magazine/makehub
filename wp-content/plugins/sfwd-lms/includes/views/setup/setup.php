@@ -9,6 +9,8 @@
  * @var array<string, string> $overview_article
  */
 
+use LearnDash\Core\Utilities\Cast;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
 }
@@ -34,7 +36,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php foreach ( $steps as $step ) : ?>
 		<div
 			class="box <?php echo esc_attr( $step['class'] ); ?>"
-			data-url="<?php echo esc_url( $step['url'] ); ?>"
+			data-url="<?php echo esc_url( Cast::to_string( $step['url'] ) ); ?>"
 			data-completed="<?php echo esc_attr( (string) $step['completed'] ); ?>"
 		>
 			<div class="heading">

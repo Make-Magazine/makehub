@@ -90,7 +90,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @var Learndash_Payment_Gateway[]
+		 * @var static[]
 		 */
 		private static $gateways = array();
 
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 *
 		 * @since 4.5.0
 		 *
-		 * @var Learndash_Payment_Gateway[]
+		 * @var static[]
 		 */
 		private static $active_gateways = array();
 
@@ -348,6 +348,24 @@ if ( ! class_exists( 'Learndash_Payment_Gateway' ) ) {
 		 * @return void
 		 */
 		abstract public function process_webhook(): void;
+
+		/**
+		 * Returns an instance of the payment gateway initiated by LD.
+		 *
+		 * @since 4.10.0
+		 *
+		 * @return static|null Initiated instance or null if it was never initiated by LD (look `learndash_payment_gateways` filter).
+		 */
+		public static function get_initiated_instance(): ?self {
+			foreach ( self::$gateways as $gateway ) {
+				// It must be exactly the same class.
+				if ( get_class( $gateway ) === static::class ) {
+					return $gateway;
+				}
+			}
+
+			return null;
+		}
 
 		/**
 		 * Gets payment gateways select. Keys are gateway names and values are gateway labels.

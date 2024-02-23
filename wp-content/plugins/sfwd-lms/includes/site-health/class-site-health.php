@@ -186,15 +186,25 @@ if ( ! class_exists( 'Learndash_Site_Health' ) ) {
 		 * @return array
 		 */
 		private function map_settings_fields(): array {
+			// Settings.
+
 			$shared_steps_enabled  = learndash_is_course_shared_steps_enabled();
 			$focus_mode_enabled    = $this->focus_mode_is_enabled();
 			$is_rtl                = is_rtl();
 			$registration_page_set = learndash_registration_page_is_set();
 			$currency_code         = learndash_get_currency_code();
 			$nested_urls_enabled   = 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'nested_urls' );
-			$paypal_configured     = ( new Learndash_Paypal_IPN_Gateway() )->is_ready();
-			$stripe_configured     = ( new Learndash_Stripe_Gateway() )->is_ready();
-			$razorpay_configured   = ( new Learndash_Razorpay_Gateway() )->is_ready();
+
+			// Gateways.
+
+			$paypal_gateway    = Learndash_Paypal_IPN_Gateway::get_initiated_instance();
+			$paypal_configured = $paypal_gateway && $paypal_gateway->is_ready();
+
+			$stripe_gateway    = Learndash_Stripe_Gateway::get_initiated_instance();
+			$stripe_configured = $stripe_gateway && $stripe_gateway->is_ready();
+
+			$razorpay_gateway    = Learndash_Razorpay_Gateway::get_initiated_instance();
+			$razorpay_configured = $razorpay_gateway && $razorpay_gateway->is_ready();
 
 			return array(
 				'shared_course_steps'            => array(

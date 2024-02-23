@@ -179,6 +179,10 @@ class Gift extends lib\BaseModel {
   public static function can_you_buy_me($product) {
     global $user_ID;
 
+    if ( $product->price <= 0.00 || 'on' !== $product->allow_gifting) {
+      return false;
+    }
+
     // Admins can see & purchase anything
     if(lib\Utils::is_logged_in_and_an_admin()) {
       return true;
@@ -186,10 +190,6 @@ class Gift extends lib\BaseModel {
 
     if(lib\Utils::is_user_logged_in()) {
       $user = new \MeprUser($user_ID);
-    }
-
-    if ( $product->price <= 0.00 || 'on' !== $product->allow_gifting) {
-      return false;
     }
 
 

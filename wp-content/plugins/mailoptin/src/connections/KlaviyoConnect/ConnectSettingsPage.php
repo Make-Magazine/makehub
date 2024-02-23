@@ -35,7 +35,7 @@ class ConnectSettingsPage
                 'label'         => __('Enter API Key', 'mailoptin'),
                 'description'   => sprintf(
                     __('Log in to your %sKlaviyo account%s to get your api key.', 'mailoptin'),
-                    '<a target="_blank" href="https://www.klaviyo.com/account#api-keys-tab">',
+                    '<a target="_blank" href="https://www.klaviyo.com/settings/account/api-keys">',
                     '</a>'
                 ),
             )

@@ -46,6 +46,12 @@ class Gateway {
 	 */
 	public static $supports_multiple_bookings = false;
 	/**
+	 * If your gateway is apt for manual bookings (for example, PayPal Standard is not) so that admins can manually enter payment info, such as card info over phone, then set this to true
+	 *
+	 * @var boolean
+	 */
+	public static $supports_manual_bookings = false;
+	/**
 	 * Associative array of supported WP REST API endpoints which are automatically gnerated by this base class, the endpoint name is the array key.
 	 * Value of each array item can either be a boolean value or a set of array items which are passed onto the register_rest_route() function, overriding the default arguments supplied by base class.
 	 * Classes can always add their own alongside these by overriding the register_handle_payment_api() function.
@@ -83,10 +89,16 @@ class Gateway {
 	 */
 	public static $has_timeout = false;
 	/**
-	 * Counts bookings with pending spaces for availability
+	 * Counts bookings with pending spaces for availability, if pending spaces are enabled in general EM settings.
 	 * @var boolean
 	 */
 	public static $count_pending_spaces = false;
+	/**
+	 * Blocks bookings with pending spaces for availability, even if approvals setting is disabled in general EM settings. This should be enabled for any payment gateway where online
+	 * transactions are near-instantaneous, such as PayPal, Stripe, etc. otherwise double-bookings could occur if approvals or reserving pending spages is disabled.
+	 * @var boolean
+	 */
+	public static $reserve_pending_spaces = true;
 	/**
 	 * If gateway can have option to manually approve a booking after payment. Not always desirable, such as an offline payment essentially being manually approved already.
 	 * @var boolean
@@ -166,12 +178,13 @@ class Gateway {
 		if( static::is_active() ){
 			add_filter('em_booking_output_placeholder',array( static::class, 'em_booking_output_placeholder'),1,4); //add booking placeholders
 			if( !empty(static::$rest_api) ){
-				add_action('rest_api_init', array( get_called_class(), 'register_api' ));
+				add_action('rest_api_init', array( static::class, 'register_api' ));
 			}
 			if( static::$payment_return ){
 				// old-style
 				add_action('em_handle_payment_return_' . static::$gateway, array( static::class, 'handle_payment_return') ); //handle return payment notifications
 			}
+			add_filter('em_manual_booking_success_' . static::$gateway, array( static::class, 'em_manual_booking_success' ) );
 			if( !empty(static::$status_txt) ){
 				//Booking UI
 				add_filter('em_my_bookings_booked_message', array( static::class, 'em_my_bookings_booked_message'),10,2);
@@ -194,7 +207,7 @@ class Gateway {
 		}
 		
 		// Modify spaces calculations, required even if inactive, due to previously made bookings whilst this may have been active
-		if( static::$count_pending_spaces && get_option('em_'.static::$gateway.'_reserve_pending') ){
+		if( static::$reserve_pending_spaces || ( static::$count_pending_spaces && get_option( 'em_' . static::$gateway . '_reserve_pending') ) ){
 			add_filter('em_bookings_get_pending_spaces', array( static::class, 'em_bookings_get_pending_spaces'),1,3);
 			add_filter('em_ticket_get_pending_spaces', array( static::class, 'em_ticket_get_pending_spaces'),1,3);
 			add_filter('em_booking_is_reserved', array( static::class, 'em_booking_is_reserved'),1,2);
@@ -361,7 +374,7 @@ class Gateway {
 		if( !empty(static::$rest_api['notify']) ){
 			$route = array(
 				'methods'  => 'GET,POST',
-				'callback' => array( get_called_class(), 'handle_api_notify' ),
+				'callback' => array( static::class, 'handle_api_notify' ),
 				'permission_callback' => '__return_true', // 5.5. compat
 			);
 			if( is_array( static::$rest_api['notify']) ){
@@ -378,7 +391,7 @@ class Gateway {
 		if( !empty(static::$rest_api['cancel']) ){
 			$route = array(
 				'methods'  => 'GET,POST',
-				'callback' => array( get_called_class(), 'handle_api_cancel' ),
+				'callback' => array( static::class, 'handle_api_cancel' ),
 				'permission_callback' => '__return_true', // 5.5. compat
 			);
 			if( is_array( static::$rest_api['cancel']) ){
@@ -390,7 +403,7 @@ class Gateway {
 		if( !empty(static::$rest_api['capture']) ){
 			$route = array(
 				'methods'  => 'GET,POST',
-				'callback' => array( get_called_class(), 'handle_api_capture' ),
+				'callback' => array( static::class, 'handle_api_capture' ),
 				'permission_callback' => '__return_true', // 5.5. compat
 			);
 			if( is_array( static::$rest_api['capture']) ){
@@ -442,6 +455,8 @@ class Gateway {
 						$response = array();
 						$message = get_option( 'em_' . static::$gateway . '_booking_feedback_cancelled' );
 						if( $message ) {
+							$response['success'] = true;
+							$response['type'] = 'info';
 							$response['message'] = $message;
 						}
 						return new WP_REST_Response( $response, 200 );
@@ -636,20 +651,20 @@ class Gateway {
 * ------------------------------------------------------------------------------------------------------------------------------------------------------ */
 	
 	/**
-	 * Modifies pending spaces calculations to include paypal bookings, but only if PayPal bookings are set to time-out (i.e. they'll get deleted after x minutes), therefore can be considered as 'pending' and can be reserved temporarily.
+	 * Modifies pending spaces calculations to include gateway bookings, but only if gateway bookings are set to time-out (i.e. they'll get deleted after x minutes), therefore can be considered as 'pending' and can be reserved temporarily.
 	 * @param integer $count
 	 * @param EM_Bookings $EM_Bookings
 	 * @return integer
 	 */
 	public static function em_bookings_get_pending_spaces($count, $EM_Bookings, $force_refresh = false){
 		global $wpdb;
-		if( !array_key_exists($EM_Bookings->event_id, static::$event_pending_spaces) || $force_refresh ){
-			$sql = 'SELECT SUM(booking_spaces) FROM '.EM_BOOKINGS_TABLE. ' WHERE booking_status=%d AND event_id=%d AND booking_meta LIKE %s';
-			$gateway_filter = '%s:7:"gateway";s:'.strlen(static::$gateway).':"'.static::$gateway.'";%';
-			$pending_spaces = $wpdb->get_var( $wpdb->prepare($sql, array(static::$status, $EM_Bookings->event_id, $gateway_filter)) );
-			static::$event_pending_spaces[$EM_Bookings->event_id] = $pending_spaces > 0 ? $pending_spaces : 0;
+		if( empty(self::$event_pending_spaces[static::$gateway]) || !array_key_exists($EM_Bookings->event_id, self::$event_pending_spaces[static::$gateway]) || $force_refresh ){
+			$sql = "SELECT SUM(booking_spaces) FROM ".EM_BOOKINGS_TABLE. " b LEFT JOIN ". EM_BOOKINGS_META_TABLE . " bt ON b.booking_id=bt.booking_id AND meta_key='gateway' WHERE booking_status=%d AND event_id=%d AND meta_value=%s";
+			$pending_spaces = $wpdb->get_var( $wpdb->prepare($sql, array(static::$status, $EM_Bookings->event_id, static::$gateway)) );
+			if( empty(self::$event_pending_spaces[static::$gateway]) ) self::$event_pending_spaces[static::$gateway] = array();
+			self::$event_pending_spaces[static::$gateway][$EM_Bookings->event_id] = $pending_spaces > 0 ? $pending_spaces : 0;
 		}
-		return $count + static::$event_pending_spaces[$EM_Bookings->event_id];
+		return $count + self::$event_pending_spaces[static::$gateway][$EM_Bookings->event_id];
 	}
 	
 	/**
@@ -659,14 +674,14 @@ class Gateway {
 	 * @return boolean
 	 */
 	public static function em_booking_is_reserved( $result, $EM_Booking ){
-		if( $EM_Booking->booking_status == static::$status && static::uses_gateway($EM_Booking) && get_option('dbem_bookings_approval_reserved') ){
+		if( $EM_Booking->booking_status == static::$status && static::uses_gateway($EM_Booking) && ( static::$reserve_pending_spaces || get_option('dbem_bookings_approval_reserved') ) ){
 			return true;
 		}
 		return $result;
 	}
 	
 	public static function em_booking_is_pending( $result, $EM_Booking ){
-		if( $EM_Booking->booking_status == static::$status  && static::uses_gateway($EM_Booking) && static::$count_pending_spaces && get_option('em_'.static::$gateway.'_reserve_pending')  ){
+		if( $EM_Booking->booking_status == static::$status  && static::uses_gateway($EM_Booking) && ( static::$reserve_pending_spaces || (static::$count_pending_spaces && get_option('em_'.static::$gateway.'_reserve_pending')) )  ){
 			return true;
 		}
 		return $result;
@@ -721,12 +736,21 @@ class Gateway {
 	public static function thank_you_message(){
 		echo static::get_thank_you_message();
 	}
+	
 	/**
 	 * Returns thank you message from gateway settings.
 	 * @return string
 	 */
 	public static function get_thank_you_message(){
 		return "<div class='em-notice em-notice-success em-booking-message em-booking-message-success'>" . static::get_option('booking_feedback_completed') . '</div>';
+	}
+	
+	/**
+	 * Outputs info or takes action on gateway transaction if applicable.
+	 */
+	public static function em_manual_booking_success(){
+		static::handle_payment_return();
+		return static::get_option('booking_feedback_completed');
 	}
 	
 	/**
@@ -930,7 +954,7 @@ class Gateway {
 			$uuid = $EM_Booking->booking_meta['uuid'];
 		}
 		$invoice_id = $uuid .'#'. $EM_Booking->booking_id;
-		return apply_filters('em_gateway_'. static::$gateway. '_get_invoice_id', $invoice_id, $EM_Booking, get_called_class());
+		return apply_filters('em_gateway_'. static::$gateway. '_get_invoice_id', $invoice_id, $EM_Booking, static::class);
 	}
 	
 	/**
@@ -1011,11 +1035,13 @@ class Gateway {
 	}
 	
 	/**
-	 * If gateway supports sandbox/live mode, returns true if in live/production mode. Returns a boolean value or an array if in limited test mode.
+	 * If gateway supports sandbox/live mode, returns true if in live/production mode. Returns a boolean value if in limited test mode.
 	 *
-	 * @return bool|array
+	 * @param string $context
+	 * @param EM_Booking|EM_Event|null $object
+	 * @return bool
 	 */
-	public static function is_displayable(){
+	public static function is_displayable( $context = 'bookings', $object = null ) {
 		$is_displayable = true;
 		if( static::is_test_mode() ){
 			// check against IP and User ID
@@ -1025,6 +1051,9 @@ class Gateway {
 				'events' => get_option('em_'. static::$gateway . '_test_hide_events'),
 			);
 			$is_displayable = static::check_conditions( $check );
+			if( is_array($is_displayable) ) {
+				$is_displayable = in_array(true, $is_displayable);
+			}
 		}
 		return $is_displayable;
 	}
@@ -1119,9 +1148,9 @@ class Gateway {
 	public static function booking_form_button(){
 		ob_start();
 		if( preg_match('/https?:\/\//',get_option('em_'. static::$gateway . "_button")) ): ?>
-			<input type="image" class="em-booking-submit em-gateway-button" id="em-gateway-button-<?php echo static::$gateway; ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" src="<?php echo get_option('em_'. static::$gateway . "_button"); ?>" alt="<?php echo static::$title; ?>" />
+			<input type="image" class="em-booking-submit em-gateway-button em-gateway-button-image" id="em-gateway-button-<?php echo static::$gateway; ?>" data-gateway="<?php echo esc_attr(static::$gateway); ?>" src="<?php echo get_option('em_'. static::$gateway . "_button"); ?>" alt="<?php echo static::$title; ?>" />
 		<?php else: ?>
-			<input type="submit" class="em-booking-submit em-gateway-button" id="em-gateway-button-<?php echo static::$gateway; ?>" value="<?php echo get_option('em_'. static::$gateway . "_button",static::$title); ?>" />
+			<input type="submit" class="em-booking-submit em-gateway-button em-button" id="em-gateway-button-<?php echo static::$gateway; ?>" value="<?php echo get_option('em_'. static::$gateway . "_button",static::$title); ?>" />
 		<?php endif;
 		return ob_get_clean();
 	}

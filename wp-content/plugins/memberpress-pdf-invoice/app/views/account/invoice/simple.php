@@ -89,7 +89,13 @@ $color = isset($invoice->color) && !empty($invoice->color) ? $invoice->color : '
         <?php if ( $invoice->show_quantity ) : ?>
       <td>&nbsp;</td>
       <?php endif; ?>
-      <td class="mp-currency-cell">-<?php echo MeprAppHelper::format_currency( $invoice->coupon['amount'], true, false ); ?></td>
+      <td class="mp-currency-cell">
+        <?php if( $invoice->coupon['amount'] !== '0' ) : ?>
+          -<?php echo MeprAppHelper::format_currency( $invoice->coupon['amount'], true, false ); ?>
+        <?php else : ?>
+          &nbsp;
+        <?php endif; ?>
+      </td>
     </tr>
     <?php endif; ?>
 

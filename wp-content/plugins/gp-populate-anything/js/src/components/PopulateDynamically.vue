@@ -85,6 +85,21 @@ export default Vue.extend({
 		},
 	},
 	computed: {
+		primaryPropertyComponent: function() {
+			/**
+			 * Filter the Vue component used for primary properties.
+			 *
+			 * Mostly used by other perks to add additional UI around the primary property selection such as splitting
+			 * it up into multiple selects.
+			 *
+			 * @param {ExtendedVue} component The Vue component for Populate Anything in the Form Editor. Defaults to `null`.
+			 * @param {ExtendedVue} vm The Vue instance.
+			 * @param {Vue} Vue The Vue constructor.
+			 *
+			 * @since 2.0.14
+			 */
+			return window.gform.applyFilters('gppa_primary_property_component', null, this, Vue);
+		},
 		fieldSettingMap: function () {
 			var prefix = 'gppa-' + this.populate + '-';
 
@@ -144,10 +159,20 @@ export default Vue.extend({
 		},
 		primaryPropertyComputed: function () {
 			if (this.usingFieldObjectType) {
-				return this.fieldObjectTypeTargetFieldSettings['gppa-choices-primary-property'];
+				return window.gform.applyFilters( 'gppa_primary_property_computed', this.fieldObjectTypeTargetFieldSettings['gppa-choices-primary-property'], this );
 			}
 
-			return this.primaryProperty;
+			/**
+			 * Filter the computed primary property in the form editor.
+			 *
+			 * Mostly used by other perks to determine if the primary property is fully ready to be used.
+			 *
+			 * @param {string} primaryProperty The primary property.
+			 * @param {VueExtended} vm The Vue instance.
+			 *
+			 * @since 2.0.14
+			 */
+			return window.gform.applyFilters( 'gppa_primary_property_computed', this.primaryProperty, this );
 		},
 		usingFieldObjectType: function () {
 			return this.objectType.indexOf('field_value_object') === 0;
@@ -228,7 +253,12 @@ export default Vue.extend({
 			return window.gform.applyFilters('gppa_is_supported_field', false, this.field, this.populate, this);
 		},
 		templateRows: function () {
-			var templateRows = [];
+			var templateRows: {
+				id: string,
+				label: string,
+				required?: boolean,
+				shouldShow?: (field: any, populate: string) => boolean
+			}[] = [];
 
 			if (!this.field) {
 				return templateRows;
@@ -274,7 +304,16 @@ export default Vue.extend({
 			 * @param {Object}   The current field shown in the Form Editor.
 			 * @param {String}   What's being populated. Either "choices" or "values"
 			 */
-			return window.gform.applyFilters( 'gppa_template_rows', templateRows, this.field, this.populate );
+			templateRows = window.gform.applyFilters( 'gppa_template_rows', templateRows, this.field, this.populate );
+
+			// Loops through all template rows, if they have a shouldShow function property set, evaluate it. If it returns false, remove the row.
+			return templateRows.filter((templateRow) => {
+				if (typeof templateRow?.shouldShow === 'function') {
+					return templateRow.shouldShow(this.field, this.populate);
+				}
+
+				return true;
+			});
 		},
 	},
 	methods: {
@@ -472,7 +511,7 @@ export default Vue.extend({
 			}
 		},
 		resetPropertyValues: function (keepPrimaryPropertyValues) {
-			var primaryPropertyValues = Object.assign({}, this.propertyValues['primary-property'] || {});
+			var primaryPropertyValues = [...(this.propertyValues?.['primary-property'] ?? [])];
 			this.propertyValues = this.defaultData().propertyValues;
 
 			if (keepPrimaryPropertyValues && Object.keys(primaryPropertyValues).length) {
@@ -486,6 +525,7 @@ export default Vue.extend({
 				'action': 'gppa_get_object_type_properties',
 				'object-type': this.objectTypeInstance.id,
 				'populate': this.populate,
+				'security': window.GPPA_ADMIN.nonce,
 			};
 
 			if ('primary-property' in this.objectTypeInstance && this.primaryPropertyComputed) {
@@ -512,7 +552,8 @@ export default Vue.extend({
 			var ajaxArgs = {
 				'action': 'gppa_get_property_values',
 				'object-type': this.objectTypeInstance.id,
-				'property': property
+				'property': property,
+				'security': window.GPPA_ADMIN.nonce,
 			};
 
 			if ('primary-property' in this.objectTypeInstance && this.primaryPropertyComputed && property !== 'primary-property') {
@@ -602,25 +643,28 @@ export default Vue.extend({
 
 			<template v-if="objectType">
 				<template v-if="'primary-property' in objectTypeInstance && !usingFieldObjectType">
-					<label class="section_label gppa-primary-property-label"
-						   style="margin-top: 15px;">{{ objectTypeInstance['primary-property'].label }}</label>
+					<template v-if="!primaryPropertyComponent">
+						<label class="section_label gppa-primary-property-label"
+							style="margin-top: 15px;">{{ objectTypeInstance['primary-property'].label }}</label>
 
-					<select key="loading" class="gppa-primary-property" v-if="!('primary-property' in propertyValues)"
-							disabled>
-						<option value="" disabled selected>{{ i18nStrings.loadingEllipsis }}</option>
-					</select>
-					<select v-else class="gppa-primary-property" v-model="primaryProperty"
-							@change="changePrimaryProperty">
-						<option v-if="!primaryProperty" value="" hidden disabled selected>{{
-							i18nStrings.selectAnItem.replace(/%s/g,
-							objectTypeInstance['primary-property']['label']) }}
-						</option>
+						<select key="loading" class="gppa-primary-property" v-if="!('primary-property' in propertyValues)"
+								disabled>
+							<option value="" disabled selected>{{ i18nStrings.loadingEllipsis }}</option>
+						</select>
+						<select v-else class="gppa-primary-property" v-model="primaryProperty"
+								@change="changePrimaryProperty">
+							<option v-if="!primaryProperty" value="" hidden disabled selected>{{
+								i18nStrings.selectAnItem.replace(/%s/g,
+									objectTypeInstance['primary-property']['label']) }}
+							</option>
 
-						<option v-for="option in propertyValues['primary-property']"
-								v-bind:value="option.value">
-							{{ truncateStringMiddle(option.label) }}
-						</option>
-					</select>
+							<option v-for="option in propertyValues['primary-property']"
+									v-bind:value="option.value">
+								{{ truncateStringMiddle(option.label) }}
+							</option>
+						</select>
+					</template>
+					<component v-if="primaryPropertyComponent" :is="primaryPropertyComponent"></component>
 				</template>
 
 				<div class="gppa-main-settings"
@@ -632,7 +676,7 @@ export default Vue.extend({
 
 						<div class="gppa-filter-groups" :aria-label="i18nStrings.filterGroups" aria-role="group">
 							<template v-for="(filters, filterGroupIndex) in filterGroups">
-								<div class="gppa-filter-group" :aria-label="i18nStrings.filterGroupAriaLabel.format( filterGroupIndex + 1 )" aria-role="group">
+								<div class="gppa-filter-group" :aria-label="i18nStrings.filterGroupAriaLabel.gformFormat( filterGroupIndex + 1 )" aria-role="group">
 									<gppa-filter v-for="(filter, filterIndex) in filters"
 												 :field="field"
 												 :filter="filter"

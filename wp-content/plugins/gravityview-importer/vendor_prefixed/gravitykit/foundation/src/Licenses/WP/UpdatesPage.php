@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -19,9 +19,11 @@ use WP_Error;
  */
 class UpdatesPage {
 	/**
+	 * Class instance.
+	 *
 	 * @since 1.2.0
 	 *
-	 * @var UpdatesPage Class instance.
+	 * @var UpdatesPage
 	 */
 	private static $_instance;
 
@@ -72,49 +74,57 @@ class UpdatesPage {
 			return;
 		}
 
-		$products = array_filter( ProductManager::get_instance()->get_products_data( [ 'key_by' => 'path' ] ), function ( $product ) {
-			return ! $product['third_party'] && $product['update_available'] && ( ! $product['checked_dependencies'][ $product['server_version'] ]['status'] ?? false );
-		} );
+		$products = array_filter(
+			ProductManager::get_instance()->get_products_data( [ 'key_by' => 'path' ] ),
+			function ( $product ) {
+				return ! $product['third_party'] && $product['update_available'] && ( ! $product['checked_dependencies'][ $product['server_version'] ]['status'] ?? false );
+			}
+		);
 
-		$product_html_markup = array_map( function ( $product ) {
-			$product_logo_text = strtr(
-				esc_html__( '[product] logo', 'gk-gravityimport' ),
-				[
-					'[product]' => $product['name'],
-				]
-			);
+		$product_html_markup = array_map(
+			function ( $product ) {
+				$product_logo_text = strtr(
+					esc_html__( '[product] logo', 'gk-gravityimport' ),
+					[
+						'[product]' => $product['name'],
+					]
+				);
 
-			$update_description_text = strtr(
-				esc_html_x( 'You have version [current_version] installed. Before updating to [new_version], please [link]review the requirements[/link].', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-				[
-					'[current_version]' => $product['installed_version'],
-					'[new_version]'     => $product['server_version'],
-					'[link]'            => '<a href="' . esc_url_raw( add_query_arg( [ 'action' => 'update' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ) . '">',
-					'[/link]'           => '</a>',
-				]
-			);
+				$update_description_text = strtr(
+					esc_html_x( 'You have version [current_version] installed. Before updating to [new_version], please [link]review the requirements[/link].', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
+					[
+						'[current_version]' => $product['installed_version'],
+						'[new_version]'     => $product['server_version'],
+						'[link]'            => '<a href="' . esc_url_raw( add_query_arg( [ 'action' => 'update' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ) . '">',
+						'[/link]'           => '</a>',
+					]
+				);
 
-			return <<<HTML
+				return <<<HTML
 <tr>
 	<td class="check-column"></td>
 	<td class="plugin-title">
 		<p>
-			<img src="${product['icon']}" alt="${$product_logo_text}">
-			<strong>${product['name']}</strong>
-			${update_description_text}
+			<img src="{$product['icon']}" alt="{$$product_logo_text}">
+			<strong>{$product['name']}</strong>
+			{$update_description_text}
 		</p>
 	</td>
 </tr>
 HTML;
-		}, $products );
+			},
+			$products
+		);
 
-		$product_html_markup = json_encode( array_combine( array_keys( $products ), $product_html_markup ) );
+		$product_html_markup = wp_json_encode( array_combine( array_keys( $products ), $product_html_markup ) );
 
 		// Update table row of each product with unmet dependencies.
-		add_filter( 'gk/foundation/inline-scripts', function ( $scripts ) use ( $product_html_markup ) {
-			$scripts[]['script'] = <<<JS
+		add_filter(
+			'gk/foundation/inline-scripts',
+			function ( $scripts ) use ( $product_html_markup ) {
+				$scripts[]['script'] = <<<JS
 document.addEventListener( 'DOMContentLoaded', function () {
-	const product_rows = ${product_html_markup};
+	const product_rows = {$product_html_markup};
 
 	document.querySelectorAll( '#update-plugins-table td.check-column input' ).forEach( input => {
 		if ( product_rows[ input.value ] === undefined ) {
@@ -126,16 +136,17 @@ document.addEventListener( 'DOMContentLoaded', function () {
 } );
 JS;
 
-			return $scripts;
-		} );
+				return $scripts;
+			}
+		);
 	}
 
 	/**
 	 * Optionally prevents updating a product if it has unmet dependencies.
 	 * While we prevent that from the Plugins and Updates pages, let's take a step further and prevent it in the backend when WP is about to install the product.
 	 *
-	 * @param bool|WP_Error $response
-	 * @param array         $args
+	 * @param bool|WP_Error $response Update response.
+	 * @param array         $args     Extra arguments passed to hooked filters.
 	 *
 	 * @return bool|WP_Error
 	 */
@@ -150,13 +161,16 @@ JS;
 			return $response;
 		}
 
-		return new WP_Error( 'gk_product_unmet_dependency', strtr(
-			esc_html_x( 'This product has unmet dependencies. [link]Review the requirements[/link] and try updating again.', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
-			[
-				'[link]'  => '<a href="' . esc_url_raw( add_query_arg( [ 'action' => 'update' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ) . '" target="_parent">',
-				'[/link]' => '</a>',
-			]
-		) );
+		return new WP_Error(
+			'gk_product_unmet_dependency',
+			strtr(
+				esc_html_x( 'This product has unmet dependencies. [link]Review the requirements[/link] and try updating again.', 'Placeholders inside [] are not to be translated.', 'gk-gravityimport' ),
+				[
+					'[link]'  => '<a href="' . esc_url_raw( add_query_arg( [ 'action' => 'update' ], Framework::get_instance()->get_link_to_product_search( $product['id'] ) ) ) . '" target="_parent">',
+					'[/link]' => '</a>',
+				]
+			)
+		);
 	}
 
 	/**

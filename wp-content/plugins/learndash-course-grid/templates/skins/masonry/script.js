@@ -30,24 +30,21 @@ function learndash_course_grid_init_masonry( items_wrapper ) {
     } );
 }
 
-( function() {
-    /**
-     * Responsive design
-     */
-    function init_responsive_design() {
-        const wrappers = document.querySelectorAll( '.learndash-course-grid[data-skin="masonry"]' );
-        wrappers.forEach( function( wrapper ) {
-            const items_wrapper = wrapper.querySelector( '.items-wrapper.masonry' );
-            
-            learndash_course_grid_init_masonry( items_wrapper );
-        } );
-    }
+function learndash_course_grid_init_masonry_responsive_design() {
+    const wrappers = document.querySelectorAll( '.learndash-course-grid[data-skin="masonry"]' );
+    wrappers.forEach( function( wrapper ) {
+        const items_wrapper = wrapper.querySelector( '.items-wrapper.masonry' );
+        
+        learndash_course_grid_init_masonry( items_wrapper );
+    } );
+}
 
-    window.addEventListener( 'resize', function( e ) {
-        init_responsive_design();
+( function() {
+    window.addEventListener( 'resize', function() {
+        learndash_course_grid_init_masonry_responsive_design();
     } );
     
-    window.addEventListener( 'load', function( e ) {
-        init_responsive_design();
+    window.addEventListener( 'load', function() {
+        learndash_course_grid_init_masonry_responsive_design();
     } );
 } )();

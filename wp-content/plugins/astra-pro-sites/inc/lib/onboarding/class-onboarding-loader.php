@@ -52,6 +52,9 @@ class Intelligent_Starter_Templates_Loader {
 		// Starter Content.
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-onboarding-setup.php';
 		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-reporting.php';
+		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-helper.php';
+		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-integration.php';
+		require_once INTELLIGENT_TEMPLATES_DIR . 'classes/class-astra-sites-zipwp-api.php';
 
 		// Admin Menu.
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
@@ -136,7 +139,7 @@ class Intelligent_Starter_Templates_Loader {
 
 		wp_localize_script( 'jquery', 'astraSitesVars', $data );
 
-		$file = INTELLIGENT_TEMPLATES_DIR . 'assets/dist/main.asset.php';
+		$file = INTELLIGENT_TEMPLATES_DIR . 'assets/dist/onboarding/main.asset.php';
 		if ( ! file_exists( $file ) ) {
 			return;
 		}
@@ -149,7 +152,7 @@ class Intelligent_Starter_Templates_Loader {
 
 		wp_register_script(
 			'starter-templates-onboarding',
-			INTELLIGENT_TEMPLATES_URI . 'assets/dist/main.js',
+			INTELLIGENT_TEMPLATES_URI . 'assets/dist/onboarding/main.js',
 			array_merge( $asset['dependencies'] ),
 			$asset['version'],
 			true
@@ -159,6 +162,10 @@ class Intelligent_Starter_Templates_Loader {
 			'starter-templates-onboarding', 'wpApiSettings', array(
 				'root' => esc_url_raw( get_rest_url() ),
 				'nonce' => ( wp_installing() && ! is_multisite() ) ? '' : wp_create_nonce( 'wp_rest' ),
+				'zipwp_auth' => array(
+					'screen_url'   => ZIPWP_APP,
+					'redirect_url' => admin_url( 'themes.php?page=starter-templates' ),
+				),
 			)
 		);
 
@@ -166,10 +173,12 @@ class Intelligent_Starter_Templates_Loader {
 
 		wp_enqueue_media();
 		wp_enqueue_script( 'starter-templates-onboarding' );
-
-		wp_enqueue_style( 'starter-templates-onboarding', INTELLIGENT_TEMPLATES_URI . 'assets/dist/style-main.css', array(), $asset['version'] );
+		// Set the script translations.
+		wp_set_script_translations( 'starter-templates-onboarding', 'astra-sites' );
+		
+		wp_enqueue_style( 'starter-templates-onboarding', INTELLIGENT_TEMPLATES_URI . 'assets/dist/onboarding/style-main.css', array(), $asset['version'] );
 		wp_style_add_data( 'starter-templates-onboarding', 'rtl', 'replace' );
-
+		
 		// Load fonts from Google.
 		wp_enqueue_style( 'starter-templates-onboarding-google-fonts', $this->google_fonts_url(), array( 'starter-templates-onboarding' ), 'all' );
 	}
@@ -215,6 +224,7 @@ class Intelligent_Starter_Templates_Loader {
 			'firstImportStatus' => get_option( 'astra_sites_import_complete', false ),
 			'supportLink' => 'https://wpastra.com/starter-templates-support/?ip=' . Astra_Sites_Helper::get_client_ip(),
 			'isBrizyEnabled'=> get_option( 'st-brizy-builder-flag'),
+			'isElementorDisabled'=> get_option( 'st-elementor-builder-flag'),
 			'analytics' => get_site_option( 'bsf_analytics_optin', false ),
 			'phpVersion' => PHP_VERSION,
 			'reportError' => $this->should_report_error(),
@@ -251,6 +261,7 @@ class Intelligent_Starter_Templates_Loader {
 		$fonts_url = '';
 		$font_families = array(
 			'Inter:400,500,600',
+			'Figtree:400,500,600,700'
 		);
 
 		$query_args = array(
@@ -270,6 +281,7 @@ class Intelligent_Starter_Templates_Loader {
 	 */
 	public function st_brizy_flag_field() {
 		register_setting( 'general', 'st-brizy-builder-flag', 'esc_attr' );
+		register_setting( 'general', 'st-elementor-builder-flag', 'esc_attr' );
 		add_settings_field('st-brizy-builder-flag', '<label for="st-brizy-builder-flag">'. 'Starter Templates' . '</label>' , array($this, 'st_brizy_flag') , 'general' );
 	}
 
@@ -280,12 +292,19 @@ class Intelligent_Starter_Templates_Loader {
 	 */
 	public function st_brizy_flag() {
 		$value = get_option( 'st-brizy-builder-flag');
+		$elementor_value = get_option( 'st-elementor-builder-flag');
 		ob_start();
 		?>
-			<label>
-				<input id='st-brizy-builder-flag' type='checkbox' name='st-brizy-builder-flag' value='1' <?php checked(1, $value, true); ?>>
-				<?php _e('Enable Brizy Page Builder Templates in Starter Templates','astra-sites'); ?>
-			</label>
+			<div style="display:flex;flex-direction:column;gap:15px;padding:10px;">
+				<label>
+					<input id='st-brizy-builder-flag' type='checkbox' name='st-brizy-builder-flag' value='1' <?php checked(1, $value, true); ?>>
+					<?php _e('Enable Brizy Page Builder Templates in Starter Templates','astra-sites'); ?>
+				</label>
+				<label>
+					<input id='st-elementor-builder-flag' type='checkbox' name='st-elementor-builder-flag' value='1' <?php checked(1, $elementor_value, true); ?>>
+					<?php _e('Disable Elementor Page Builder Templates in Starter Templates','astra-sites'); ?>
+				</label>
+			</div>	
 		<?php
 		echo ob_get_clean();
 	}

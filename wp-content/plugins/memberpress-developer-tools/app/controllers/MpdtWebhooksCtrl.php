@@ -97,6 +97,15 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
     if($send_now || (defined('DOING_CRON') && DOING_CRON)) {
       $data = $this->prepare_data($event,$data->rec,$data);
 
+      $event_info = $this->events[$event];
+      if( true === apply_filters('mpdt-webook-validate-member-data', true, $data, $event, $webhook)
+        && isset($data['member'])
+        && ( ! is_array($data['member']) || 0 === $data['member'] )
+        && in_array($event_info->type, apply_filters('mpdt-webook-member-data-event-types',array('subscription','transaction'), $data, $event, $webhook)) ) {
+        // MeprJobs handles this like a boss
+        throw new Exception(__('Invalid member or member doesn\'t exist.', 'memberpress', 'memberpress-developer-tools'));
+      }
+
       if( isset($data['event_args']) ){
         unset($data['event_args']);
       }
@@ -203,7 +212,17 @@ class MpdtWebhooksCtrl extends MpdtBaseCtrl {
       $data->event_args = $evt_data['data']['event_args'];
     }
 
-    $this->send_to_all_webhooks($event, $data, true);
+    try {
+      $this->send_to_all_webhooks($event, $data, true);
+    } catch (Exception $e) {
+      exit(
+        json_encode(
+          array(
+            'errors' => array(sprintf(__('Event %s failed to send: %s', 'memberpress-developer-tools'), $event, $e->getMessage()))
+          )
+        )
+      );
+    }
 
     exit(
       json_encode(

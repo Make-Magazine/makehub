@@ -23,7 +23,6 @@
 					</select>
 					<gppa-select-with-custom v-else :value="value[templateRow.id]"
 											 @change="updateTemplate(templateRow.id, $event)"
-											 :inject-custom-value-option="true"
 											 :loading="!propertiesLoaded"
 											 :object-type-instance="objectTypeInstance"
 											 :flattened-properties="flattenedProperties">
@@ -31,6 +30,8 @@
 							v-if="!value[templateRow.label] || !value[templateRow.label].value"
 							value="">&ndash; Property &ndash;
 						</option>
+
+						<option value="gf_custom">{{ i18nStrings.addCustomValue }}</option>
 
 						<option v-for="option in templatePropertiesUngrouped" v-bind:value="option.value">
 							{{ truncateStringMiddle(option.label) }}

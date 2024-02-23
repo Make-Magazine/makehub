@@ -1,3 +1,33 @@
+Version 1.36.29, Monday, 29th January 2024
+- Improvement: Compatibility with latest Elementor and Elementor Pro 3.19 version.
+- Fix: Gravity Forms Styler - Button style and typography controls not working.
+
+Version 1.36.28, Wednesday, 27th December 2023
+- Fix: Gravity Forms Styler - Button style controls not working.
+- Fix: Video - Fatal error due to undefined datetime function.
+
+Version 1.36.27, Wednesday, 20th December 2023
+- Improvement: Video - Added missing timezone to 'uploadDate' datetime property.
+- Improvement: Twitter Feed - Updated the Logo.
+- Fix: Woo - Checkout -  Clicking "Next" scrolls the page to the bottom for Multistep layout.
+- Fix: Cross Site Copy Paste not working on cross domains.
+
+Version 1.36.26, Thursday, 30th November 2023
+- Improvement: Compatibility with latest Elementor and Elementor Pro 3.18 version.
+- Improvement: Twitter Feed - Added support to Twitter version 2 API.
+- Fix: Posts - UI display issue for embedded iframe code in page block excerpts.
+- Fix: Video Gallery - Wistia video thumbnails now display correctly.
+- Fix: Video - Wistia video thumbnails now display correctly.
+
+Version 1.36.25, Thursday, 9th November 2023
+- Improvement: Compatibility with latest WordPress version 6.4
+- Improvement: User Registration Form - Accessibility support to the form label attribute.
+- Fix: Posts - Posts view with proper ellipses display.
+- Fix: Posts -  When setting a query offset above 0, pagination wasn't functioning properly.
+- Fix: Navigation Menu - Console error for undefined property 'left'. 
+- Fix: Navigation Menu - Console error for undefined property 'distance_from_menu'. 
+- Fix: Woo Products - Pagination encountered problems when the query offset was set above 0.
+
 Version 1.36.24, Thursday, 19th October 2023
 - Improvement: Compatibility with latest Elementor and Elementor Pro 3.17 version.
 - Fix: Posts - Masonry layout problem with delayed jQuery loading.

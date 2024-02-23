@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS - ProPanel
  * Plugin URI: http://www.learndash.com
  * Description: Easily manage and view your LearnDash LMS activity.
- * Version: 2.1.4.2
+ * Version: 2.2.2
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * License: GPL-2.0+
@@ -11,7 +11,7 @@
  * Text Domain: ld_propanel
  * Domain Path: /languages
  * @package LearnDash_ProPanel
- * @version 2.1.4
+ * @version 2.2.0
  *
  */
 
@@ -24,21 +24,14 @@ if ( ! defined( 'WPINC' ) ) {
  * Setup Constants
  */
 
-if ( ! defined( 'LD_PP_VERSION' ) ) {
-	define( 'LD_PP_VERSION', '2.1.4.2' );
-}
+define( 'LD_PP_VERSION', '2.2.2' );
 
 if ( ! defined( 'LD_PP_PLUGIN_DIR' ) ) {
-	//define( 'LD_PP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
-	$WP_PLUGIN_DIR_tmp = str_replace( '\\', '/', WP_PLUGIN_DIR );
-	define( 'LD_PP_PLUGIN_DIR', trailingslashit( $WP_PLUGIN_DIR_tmp . '/' . basename( dirname( __FILE__ ) ) ) );
+	define( 'LD_PP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 }
 
 if ( ! defined( 'LD_PP_PLUGIN_URL' ) ) {
-	//define( 'LD_PP_PLUGIN_URL', plugin_dir_url( __FILE__  ) );
-	$url = trailingslashit( WP_PLUGIN_URL . '/' . basename( dirname( __FILE__ ) ) );
-	$url = str_replace( array( 'https://', 'http://' ), array( '//', '//' ), $url );
-	define( 'LD_PP_PLUGIN_URL', $url );
+	define( 'LD_PP_PLUGIN_URL', trailingslashit( plugins_url( '', __FILE__ ) ) );
 }
 
 $learndash_shortcode_used = false;
@@ -52,9 +45,14 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-ld-propanel.php';
 /**
  * Support for Gutenberg Editor
  */
-if ( ( defined( 'LEARNDASH_GUTENBERG' ) ) && ( LEARNDASH_GUTENBERG === true ) ) {
-	require_once dirname( __FILE__ ) . '/includes/gutenberg/index.php';
-}
+add_action(
+	'plugins_loaded',
+	function() {
+		if ( defined( 'LEARNDASH_VERSION' ) && version_compare( LEARNDASH_VERSION, '4.8.0', '>=' ) ) {
+			require_once dirname( __FILE__ ) . '/includes/gutenberg/index.php';
+		}
+	}
+);
 
 
 add_action(

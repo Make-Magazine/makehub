@@ -15,7 +15,7 @@
 }
 
 .gform-theme--framework .gpnf-nested-entries {
-	margin-bottom: var(--gform-theme-padding-block);
+	margin-bottom: var(--gf-padding-y, var(--gform-theme-padding-block));
 }
 
 .gpnf-nested-entries th,
@@ -37,8 +37,8 @@
 
 .gform-theme--framework .gpnf-nested-entries th,
 .gform-theme--framework .gpnf-nested-entries td {
-	font-size: var(--gform-theme-font-size-primary);
-	padding: var(--gform-theme-padding-block);
+	font-size: var(--gf-font-size-primary, var(--gform-theme-font-size-primary));
+	padding: var(--gf-padding-y, var(--gform-theme-padding-block));
 }
 
 .gpnf-no-entries td {
@@ -100,7 +100,7 @@
 }
 
 .gform-theme--framework .gpnf-add-entry-max {
-	margin: var(--gform-theme-padding-block);
+	margin: var(--gf-padding-y, var(--gform-theme-padding-block));
 }
 
 .gpnf-add-entry + .gfspinner {
@@ -117,7 +117,7 @@
  * Theme Framework integration
  */
 .gform-theme--framework table.gpnf-nested-entries {
-	border-radius: var(--gform-theme-control-border-radius);
+	border-radius: var(--gf-ctrl-radius, var(--gform-theme-control-border-radius));
 	border-collapse: separate;
 }
 
@@ -129,13 +129,13 @@
 
 /* High-specificity needed here */
 .gform-theme--framework .gpnf-row-actions ul li.delete .delete-button.gform-theme-button--simple {
-	color: var(--gform-theme-color-danger);
-	transition: all var(--gform-theme-local-transition), visibility 1ms;
+	color: var(--gf-color-danger, var(--gform-theme-color-danger));
+	transition: all var(--gf-local-transition, var(--gform-theme-local-transition)), visibility 1ms;
 }
 
 /* High-specificity needed here */
 .gform-theme--framework .gpnf-row-actions ul li.edit .edit-button.gform-theme-button--secondary {
-	transition: all var(--gform-theme-local-transition), visibility 1ms;
+	transition: all var(--gf-local-transition, var(--gform-theme-local-transition)), visibility 1ms;
 }
 
 .gform-theme--framework .gpnf-row-actions .delete-button:hover {
@@ -149,8 +149,8 @@
 
 .gform-theme--framework .gpnf-add-entry + .gfspinner {
 	display: inline-block;
-	margin-top: calc(var(--gform-theme-control-button-padding-inline-md) - 8px);
-	margin-left: var(--gform-theme-control-button-padding-inline-sm);
+	margin-top: calc(var(--gf-ctrl-btn-padding-x-md, var(--gform-theme-control-button-padding-inline-md)) - 8px);
+	margin-left: var(--gf-ctrl-btn-padding-x-sm, var(--gform-theme-control-button-padding-inline-sm));
 }
 
 @media only screen and (max-width: 760px), (min-device-width: 760px) and (max-device-width: 1024px) {

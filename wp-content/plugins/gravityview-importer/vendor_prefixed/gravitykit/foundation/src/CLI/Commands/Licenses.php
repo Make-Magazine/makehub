@@ -2,7 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by The GravityKit Team on 07-September-2023 using Strauss.
+ * Modified by The GravityKit Team on 25-January-2024 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -26,8 +26,8 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @since      1.2.0
 	 *
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array $args       Command arguments.
+	 * @param array $assoc_args Command associative arguments.
 	 *
 	 * @subcommand list
 	 *
@@ -67,8 +67,8 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @since      1.2.0
 	 *
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array $args       Command arguments.
+	 * @param array $assoc_args Command associative arguments.
 	 *
 	 * @subcommand check
 	 *
@@ -117,8 +117,7 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @since      1.2.0
 	 *
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array $args       Command arguments.
 	 *
 	 * @subcommand activate
 	 *
@@ -138,7 +137,7 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @return void
 	 */
-	public function activate( array $args) {
+	public function activate( array $args ) {
 		if ( ! isset( $args[0] ) ) {
 			WP_CLI::error( 'Please provide a license key.' );
 		}
@@ -156,7 +155,7 @@ class Licenses extends AbstractCommand {
 		$error = false;
 
 		foreach ( $keys as $key ) {
-			WP_CLI::line( "Activating ${key}…" );
+			WP_CLI::line( "Activating {$key}…" );
 
 			if ( isset( $licenses[ $key ] ) ) {
 				WP_CLI::warning( "License is already activate.\n", false );
@@ -187,8 +186,7 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @since      1.2.0
 	 *
-	 * @param array $args
-	 * @param array $assoc_args
+	 * @param array $args       Command arguments.
 	 *
 	 * @subcommand deactivate
 	 *
@@ -226,7 +224,7 @@ class Licenses extends AbstractCommand {
 		$error = false;
 
 		foreach ( $keys as $key ) {
-			WP_CLI::line( "Deactivating ${key}…" );
+			WP_CLI::line( "Deactivating {$key}…" );
 
 			if ( ! isset( $licenses[ $key ] ) ) {
 				WP_CLI::warning( "License is not active.\n", false );
@@ -282,7 +280,7 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @interal
 	 *
-	 * @param array $licenses
+	 * @param array $licenses Licenses data.
 	 *
 	 * @return void
 	 */
@@ -302,8 +300,8 @@ class Licenses extends AbstractCommand {
 	 *
 	 * @interal
 	 *
-	 * @param array  $licenses
-	 * @param string $format Output format: table, json.
+	 * @param array  $licenses Licenses data.
+	 * @param string $format   Output format: table, json.
 	 *
 	 * @return void
 	 */
@@ -321,10 +319,13 @@ class Licenses extends AbstractCommand {
 			'Activations Left',
 		];
 
-		if ( $format === 'json' ) {
-			$columns = array_map( function ( $value ) {
-				return strtolower( str_replace( ' ', '_', $value ) );
-			}, $columns );
+		if ( 'json' === $format ) {
+			$columns = array_map(
+				function ( $value ) {
+					return strtolower( str_replace( ' ', '_', $value ) );
+				},
+				$columns
+			);
 		}
 
 		foreach ( $licenses as &$license ) {
@@ -339,7 +340,8 @@ class Licenses extends AbstractCommand {
 					$license['license_limit'],
 					$license['site_count'],
 					$license['activations_left'],
-				] );
+				]
+			);
 
 			$license = $_license;
 		}

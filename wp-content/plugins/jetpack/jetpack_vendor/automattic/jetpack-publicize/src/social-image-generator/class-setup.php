@@ -7,6 +7,8 @@
 
 namespace Automattic\Jetpack\Publicize\Social_Image_Generator;
 
+use Automattic\Jetpack\Publicize\Jetpack_Social_Settings\Settings;
+
 /**
  * Class for setting up Social Image Generator-related functionality.
  */
@@ -15,7 +17,7 @@ class Setup {
 	 * Initialise SIG-related functionality.
 	 */
 	public function init() {
-		if ( ! ( new Settings() )->is_available() ) {
+		if ( ! ( new Settings() )->is_sig_available() ) {
 			return;
 		}
 
@@ -23,8 +25,11 @@ class Setup {
 		// We're using the `wp_after_insert_post` hook because we need access to the updated post meta. By using the default priority
 		// of 10 we make sure that our code runs before Sync processes the post.
 		add_action( 'wp_after_insert_post', array( $this, 'generate_token_on_save' ), 10, 3 );
-		add_action( 'rest_api_init', array( new REST_Settings_Controller(), 'register_routes' ) );
 		add_action( 'rest_api_init', array( new REST_Token_Controller(), 'register_routes' ) );
+
+		// Flagged to be removed after deprecation.
+		// @deprecated $$next_version$$
+		add_action( 'rest_api_init', array( new REST_Settings_Controller(), 'register_routes' ) );
 	}
 
 	/**
@@ -73,7 +78,9 @@ class Setup {
 			return;
 		}
 
-		if ( ! $publicize->has_social_image_generator_feature() ) {
+		$settings = new Settings();
+
+		if ( ! $settings->is_sig_available() ) {
 			return;
 		}
 
@@ -81,14 +88,12 @@ class Setup {
 			return;
 		}
 
-		if ( ! ( new Settings() )->is_enabled() ) {
-			return;
-		}
-
+		// Set SIG to be enabled by default for new posts if the toggle is on.
 		$post_settings = new Post_Settings( $post_id );
 		if (
 			! $update &&
 			'auto-draft' === $post->post_status &&
+			$settings->get_settings()['socialImageGeneratorSettings']['enabled'] &&
 			empty( $post_settings->get_settings( true ) )
 		) {
 			$post_settings->update_setting( 'enabled', true );
@@ -96,6 +101,10 @@ class Setup {
 		}
 
 		if ( $post->post_status === 'auto-draft' ) {
+			return;
+		}
+
+		if ( ! $post_settings->is_enabled() ) {
 			return;
 		}
 

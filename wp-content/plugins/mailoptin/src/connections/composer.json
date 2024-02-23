@@ -51,6 +51,7 @@
       "MailOptin\\NewsmanConnect\\": "NewsmanConnect/",
       "MailOptin\\EgoiConnect\\": "EgoiConnect/",
       "MailOptin\\IContactConnect\\": "IContactConnect/",
+      "MailOptin\\FlodeskConnect\\": "FlodeskConnect/",
       "MailOptin\\ElementorConnect\\": "ElementorConnect/",
       "MailOptin\\WPFormsConnect\\": "WPFormsConnect/",
       "MailOptin\\GravityFormsConnect\\": "GravityFormsConnect/",

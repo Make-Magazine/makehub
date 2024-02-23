@@ -46,6 +46,25 @@ $suggestion_link = astra_sites_get_suggestion_link();
 						<i class="eicon-search"></i>
 					</div>
 				</div>
+				<?php
+					// Check flexbox container, If inactive then activate it.
+					$flexbox_container = get_option( 'elementor_experiment-container' );
+					// Check if the value is 'inactive'.
+				if ( 'inactive' === $flexbox_container ) { 
+					?>
+						<div class="ast-sites-container-notice-wrap">
+							<div class="ast-sites-container-notice-content">
+								<p><?php esc_html_e( "We've observed that the 'Flexbox Container' setting in your Elementor configuration is currently inactive. To ensure a seamless import, please active this option.", 'astra-sites' ); ?></p>
+								<div class="ast-sites-container-notice-actions">
+									<a href="<?php echo esc_url( home_url( '/wp-admin/admin.php?page=elementor#tab-experiments' ) ); ?>" class="ast-sites-container-notice-button" >
+										<span><?php esc_html_e( 'Activate it!', 'astra-sites' ); ?></span>
+									</a>
+								</div>
+							</div>
+						</div>
+					<?php 
+				}
+				?>
 				<div id="ast-sites-floating-notice-wrap-id" class="ast-sites-floating-notice-wrap"><div class="ast-sites-floating-notice"></div></div>
 				<?php
 				$manual_sync = get_site_option( 'astra-sites-manual-sync-complete', 'no' );
@@ -177,7 +196,7 @@ $suggestion_link = astra_sites_get_suggestion_link();
 						<h3 class="theme-name">{{site_title}}</h3>
 					</div>
 					<# if ( site_type && 'free' !== site_type ) { #>
-						<?php /* translators: %s are white label strings. */ ?>
+						<?php /* translators: %1$s are white label strings. */ ?>
 						<div class="agency-ribbons" title="<?php printf( esc_attr__( 'This premium template is accessible with %1$s "Premium" Package.', 'astra-sites' ), esc_html( Astra_Sites_White_Label::get_instance()->get_white_label_name() ) ); ?>"><img class="premium-crown-icon" src="<?php echo esc_url( ASTRA_SITES_URI . 'inc/assets/images/premium-crown.svg' ); ?>" alt="premium-crown"><?php esc_html_e( 'Premium', 'astra-sites' ); ?></div>
 					<# } #>
 				</div>
@@ -304,7 +323,7 @@ $suggestion_link = astra_sites_get_suggestion_link();
 					<# } #>
 				</div>
 				<# if ( site_type && 'free' !== site_type ) { #>
-					<?php /* translators: %s are white label strings. */ ?>
+					<?php /* translators: %1$s are white label strings. */ ?>
 					<div class="agency-ribbons" title="<?php printf( esc_attr__( 'This premium template is accessible with %1$s "Premium" Package.', 'astra-sites' ), esc_html( Astra_Sites_White_Label::get_instance()->get_white_label_name() ) ); ?>"><?php esc_html_e( 'Premium', 'astra-sites' ); ?></div>
 				<# } #>
 			</div>
@@ -390,8 +409,15 @@ $suggestion_link = astra_sites_get_suggestion_link();
 					<h3 class="theme-name"><strong>{{title1}}</strong>{{title2}}</h3>
 				</div>
 				<# if ( site_type && 'free' !== site_type ) { #>
-					<?php /* translators: %1$s External Link */ ?>
-					<div class="agency-ribbons" title="<?php printf( esc_attr__( 'This premium template is accessible with %1$s "Premium" Package.', 'astra-sites' ), esc_html( Astra_Sites_White_Label::get_instance()->get_white_label_name() ) ); ?>"><?php esc_html_e( 'Premium', 'astra-sites' ); ?></div>
+					<div class="agency-ribbons" title="
+					<?php
+						/* translators: %1$s are white label strings. */
+						printf( esc_attr__( 'This premium template is accessible with %1$s "Premium" Package.', 'astra-sites' ), esc_html( Astra_Sites_White_Label::get_instance()->get_white_label_name() ) ); 
+					?>
+						"
+						>
+						<?php esc_html_e( 'Premium', 'astra-sites' ); ?>
+					</div>
 				<# } #>
 			</div>
 		</div>

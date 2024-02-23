@@ -15,6 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use LearnDash\Core\App;
 use LearnDash\Core\Provider;
+use LearnDash\Core\API;
+use LearnDash\Core\Utilities\Cast;
 
 
 if ( ! class_exists( 'SFWD_LMS' ) ) {
@@ -142,6 +144,10 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				function () {
 					if ( get_option( 'learndash_activation' ) ) {
 						$this->activate();
+
+						// Activate the LearnDash Hub plugin (Licensing & Management).
+						learndash_activate_learndash_hub();
+
 						delete_option( 'learndash_activation' );
 					}
 				}
@@ -1587,18 +1593,19 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $course_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'         => learndash_post_type_has_archive( 'sfwd-courses' ),
-						'hierarchical'        => false,
-						'supports'            => array_merge(
+						'has_archive'           => learndash_post_type_has_archive( 'sfwd-courses' ),
+						'hierarchical'          => false,
+						'supports'              => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'supports' )
 						),
-						'labels'              => $course_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
+						'labels'                => $course_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
+						'rest_controller_class' => API\Controllers\Courses::class,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Course.
@@ -1871,17 +1878,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $lesson_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'         => learndash_post_type_has_archive( 'sfwd-lessons' ),
-						'supports'            => array_merge(
+						'has_archive'           => learndash_post_type_has_archive( 'sfwd-lessons' ),
+						'supports'              => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'supports' )
 						),
-						'labels'              => $lesson_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
+						'labels'                => $lesson_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
+						'rest_controller_class' => API\Controllers\Lessons::class,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Lesson.
@@ -2026,17 +2034,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $topic_taxonomies,
 					'cpt_options'        => array(
-						'supports'            => array_merge(
+						'supports'              => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'supports' )
 						),
-						'has_archive'         => learndash_post_type_has_archive( 'sfwd-topic' ),
-						'labels'              => $lesson_topic_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
+						'has_archive'           => learndash_post_type_has_archive( 'sfwd-topic' ),
+						'labels'                => $lesson_topic_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
+						'rest_controller_class' => API\Controllers\Topics::class,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Topic.
@@ -2186,18 +2195,19 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $quiz_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'         => learndash_post_type_has_archive( 'sfwd-quiz' ),
-						'hierarchical'        => false,
-						'supports'            => array_merge(
+						'has_archive'           => learndash_post_type_has_archive( 'sfwd-quiz' ),
+						'hierarchical'          => false,
+						'supports'              => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'supports' )
 						),
-						'labels'              => $quiz_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
+						'labels'                => $quiz_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
+						'rest_controller_class' => API\Controllers\Quizzes::class,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Quiz.
@@ -2283,16 +2293,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => false,
 					'taxonomies'         => $question_taxonomies,
 					'cpt_options'        => array(
-						'public'              => false,
-						'hierarchical'        => false,
-						'supports'            => array( 'title', 'thumbnail', 'editor', 'author', 'revisions', 'page-attributes' ),
-						'labels'              => $question_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => true,
-						'show_in_nav_menus'   => false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => true,
+						'public'                => false,
+						'hierarchical'          => false,
+						'supports'              => array( 'title', 'thumbnail', 'editor', 'author', 'revisions', 'page-attributes' ),
+						'labels'                => $question_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => true,
+						'show_in_nav_menus'     => false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::QUESTION ) ) || LearnDash_REST_API::gutenberg_enabled( LDLMS_Post_Types::get_post_type_slug( LDLMS_Post_Types::QUESTION ) ),
+						'rest_controller_class' => API\Controllers\Questions::class,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Question.
@@ -2322,18 +2333,19 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => array(),
 					'cpt_options'        => array(
-						'public'              => true,
-						'hierarchical'        => false,
-						'has_archive'         => false,
-						'supports'            => array( 'title', 'editor', 'custom-fields', 'thumbnail', 'revisions' ),
-						'labels'              => $exam_labels,
-						'capability_type'     => 'course',
-						'exclude_from_search' => true,
-						'show_in_nav_menus'   => false,
-						'capabilities'        => $course_capabilities,
-						'map_meta_cap'        => true,
-						'show_in_rest'        => LearnDash_REST_API::enabled( $exam_post_type_slug ) || LearnDash_REST_API::gutenberg_enabled( $exam_post_type_slug ),
-						'template'            => array(
+						'public'                => true,
+						'hierarchical'          => false,
+						'has_archive'           => false,
+						'supports'              => array( 'title', 'editor', 'custom-fields', 'thumbnail', 'revisions' ),
+						'labels'                => $exam_labels,
+						'capability_type'       => 'course',
+						'exclude_from_search'   => true,
+						'show_in_nav_menus'     => false,
+						'capabilities'          => $course_capabilities,
+						'map_meta_cap'          => true,
+						'show_in_rest'          => LearnDash_REST_API::enabled( $exam_post_type_slug ) || LearnDash_REST_API::gutenberg_enabled( $exam_post_type_slug ),
+						'rest_controller_class' => API\Controllers\Exams::class,
+						'template'              => array(
 							array( 'learndash/ld-exam' ),
 						),
 					),
@@ -2358,15 +2370,16 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'post_type'          => $coupon_post_type_slug,
 					'template_redirect'  => false,
 					'cpt_options'        => array(
-						'public'              => false,
-						'hierarchical'        => false,
-						'has_archive'         => false,
-						'supports'            => array( 'title' ),
-						'labels'              => $coupon_labels,
-						'exclude_from_search' => true,
-						'show_in_nav_menus'   => false,
-						'capabilities'        => learndash_get_admin_coupons_capabilities(),
-						'show_in_rest'        => false,
+						'public'                => false,
+						'hierarchical'          => false,
+						'has_archive'           => false,
+						'supports'              => array( 'title' ),
+						'labels'                => $coupon_labels,
+						'exclude_from_search'   => true,
+						'show_in_nav_menus'     => false,
+						'capabilities'          => learndash_get_admin_coupons_capabilities(),
+						'show_in_rest'          => false,
+						'rest_controller_class' => API\Controllers\Coupons::class,
 					),
 					'options_page_title' => sprintf(
 					// translators: placeholder: Coupon.
@@ -2418,16 +2431,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'options_page_title' => esc_html__( 'LearnDash Certificates Options', 'learndash' ),
 				'default_options'    => $cert_defaults,
 				'cpt_options'        => array(
-					'labels'              => $certificates_labels,
-					'exclude_from_search' => true,
-					'has_archive'         => false,
-					'hierarchical'        => false,
-					'supports'            => array( 'title', 'editor', 'thumbnail', 'author', 'revisions' ),
-					'show_in_nav_menus'   => false,
-					'capability_type'     => 'course',
-					'capabilities'        => $course_capabilities,
-					'map_meta_cap'        => true,
-					'show_in_rest'        => false,
+					'labels'                => $certificates_labels,
+					'exclude_from_search'   => true,
+					'has_archive'           => false,
+					'hierarchical'          => false,
+					'supports'              => array( 'title', 'editor', 'thumbnail', 'author', 'revisions' ),
+					'show_in_nav_menus'     => false,
+					'capability_type'       => 'course',
+					'capabilities'          => $course_capabilities,
+					'map_meta_cap'          => true,
+					'show_in_rest'          => false,
+					'rest_controller_class' => API\Controllers\Certificates::class,
 				),
 			);
 
@@ -2604,19 +2618,20 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'template_redirect' => true,
 				'taxonomies'        => $group_taxonomies,
 				'cpt_options'       => array(
-					'supports'            => array_merge(
+					'supports'              => array_merge(
 						array( 'title', 'editor', 'author' ),
 						LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'supports' )
 					),
-					'has_archive'         => learndash_post_type_has_archive( 'groups' ),
-					'labels'              => $group_labels,
-					'capability_type'     => 'groups',
-					'hierarchical'        => learndash_is_groups_hierarchical_enabled(),
-					'public'              => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === 'yes' ) ? true : false,
-					'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-					'capabilities'        => $group_capabilities,
-					'map_meta_cap'        => true,
-					'show_in_rest'        => LearnDash_REST_API::enabled( 'groups' ) || LearnDash_REST_API::gutenberg_enabled( 'groups' ),
+					'has_archive'           => learndash_post_type_has_archive( 'groups' ),
+					'labels'                => $group_labels,
+					'capability_type'       => 'groups',
+					'hierarchical'          => learndash_is_groups_hierarchical_enabled(),
+					'public'                => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === 'yes' ) ? true : false,
+					'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+					'capabilities'          => $group_capabilities,
+					'map_meta_cap'          => true,
+					'show_in_rest'          => LearnDash_REST_API::enabled( 'groups' ) || LearnDash_REST_API::gutenberg_enabled( 'groups' ),
+					'rest_controller_class' => API\Controllers\Groups::class,
 				),
 				'default_options'   => array(),
 				'fields'            => array(),
@@ -2655,12 +2670,14 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => false,
 					'options_page_title' => esc_html__( 'LearnDash Transactions Options', 'learndash' ),
 					'cpt_options'        => array(
-						'supports'            => array( 'title', 'custom-fields', 'page-attributes' ),
-						'exclude_from_search' => true,
-						'publicly_queryable'  => false,
-						'show_in_nav_menus'   => false,
-						'show_in_admin_bar'   => false,
-						'hierarchical'        => true,
+						'supports'              => array( 'title', 'custom-fields', 'page-attributes' ),
+						'exclude_from_search'   => true,
+						'publicly_queryable'    => false,
+						'show_in_nav_menus'     => false,
+						'show_in_admin_bar'     => false,
+						'hierarchical'          => true,
+						'show_in_rest'          => false,
+						'rest_controller_class' => API\Controllers\Transactions::class,
 					),
 					'fields'             => array(),
 					'default_options'    => array(
@@ -2778,6 +2795,15 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					$atts['type'] = explode( ',', $atts['type'] );
 				}
 				$atts['type'] = array_map( 'trim', $atts['type'] );
+			}
+
+			// Protect group ID.
+			if (
+				! learndash_shortcode_can_current_user_access_post(
+					Cast::to_int( $atts['group_id'] )
+				)
+			) {
+				return '';
 			}
 
 			if ( ! empty( $atts['group_id'] ) ) {
@@ -4841,18 +4867,16 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				$template_filename .= '.php';
 			}
 
-			/**
-			 * Filters template file name.
-			 *
-			 * @since 3.0.0
-			 *
-			 * @param string     $template_filename Template file name.
-			 * @param string     $name              Template name.
-			 * @param array|null $args              Template data.
-			 * @param bool|null  $echo              Whether to echo the template output or not.
-			 * @param bool       $return_file_path  Whether to return file or path or not.
-			 */
-			$template_filename = apply_filters( 'learndash_template_filename', $template_filename, $name, $args, $echo, $return_file_path );
+			/** This filter is documented in src/Core/Template/Template.php */
+			$template_filename = apply_filters(
+				'learndash_template_filename',
+				$template_filename,
+				$name,
+				$args,
+				$echo,
+				$return_file_path,
+				null
+			);
 
 			if ( empty( $template_filename ) ) {
 				return;

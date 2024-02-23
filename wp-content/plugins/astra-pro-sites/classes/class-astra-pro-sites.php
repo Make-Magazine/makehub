@@ -120,7 +120,42 @@ if ( ! class_exists( 'Astra_Pro_Sites' ) ) :
 		 * @since 1.0.0
 		 */
 		public function load_textdomain() {
-			load_plugin_textdomain( 'astra-sites' );
+			// Default languages directory.
+			$lang_dir = ASTRA_PRO_SITES_DIR . 'languages/';
+
+			// Traditional WordPress plugin locale filter.
+			global $wp_version;
+
+			$get_locale = get_locale();
+
+			if ( $wp_version >= 4.7 ) {
+				$get_locale = get_user_locale();
+			}
+
+			/**
+			 * Language Locale for plugin
+			 *
+			 * @var $get_locale The locale to use.
+			 * Uses get_user_locale()` in WordPress 4.7 or greater,
+			 * otherwise uses `get_locale()`.
+			 */
+			$locale = apply_filters( 'plugin_locale', $get_locale, 'astra-sites' );
+			$mofile = sprintf( '%1$s-%2$s.mo', 'astra-sites', $locale );
+
+			// Setup paths to current locale file.
+			$mofile_global = WP_LANG_DIR . '/plugins/' . $mofile;
+			$mofile_local  = $lang_dir . $mofile;
+
+			if ( file_exists( $mofile_global ) ) {
+				// Look in global /wp-content/languages/astra-sites/ folder.
+				load_textdomain( 'astra-sites', $mofile_global );
+			} elseif ( file_exists( $mofile_local ) ) {
+				// Look in local /wp-content/plugins/astra-sites/languages/ folder.
+				load_textdomain( 'astra-sites', $mofile_local );
+			} else {
+				// Load the default language files.
+				load_plugin_textdomain( 'astra-sites', false, $lang_dir );
+			}
 		}
 
 		/**

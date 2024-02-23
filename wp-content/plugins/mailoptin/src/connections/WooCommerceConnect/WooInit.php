@@ -460,7 +460,13 @@ class WooInit
             }
         }
 
-        return $fields;
+        $fields['mowoo_product_names']        = esc_html__('Last Order Product Names', 'mailoptin');
+        $fields['mowoo_order_total']          = esc_html__('Last Order Total', 'mailoptin');
+        $fields['mowoo_order_date']           = esc_html__('Last Order Date', 'mailoptin');
+        $fields['mowoo_order_payment_method'] = esc_html__('Last Order Payment Method', 'mailoptin');
+        $fields['mowoo_order_notes']          = esc_html__('Last Order Notes', 'mailoptin');
+
+        return apply_filters('mailoptin_woocommerce_mapping_checkout_fields', $fields, $this);
     }
 
     /**
@@ -563,6 +569,7 @@ class WooInit
 
         //escape webhook connection
         unset($connections['WebHookConnect']);
+        unset($connections['WordPressUserRegistrationConnect']);
 
         return $connections;
     }
@@ -634,8 +641,47 @@ class WooInit
     }
 
     /**
+     * @param \WC_Order $order
+     *
+     * @return array
+     */
+    private function get_product_names_from_order($order)
+    {
+        $product_names = [];
+
+        // Get items in the order
+        $items = $order->get_items();
+
+        // Loop through each item in the order
+        foreach ($items as $item_id => $item) {
+            /** @var \WC_Product $product */
+            $product         = $item->get_product();
+            $product_names[] = $product->get_name();
+        }
+
+        return implode(',', $product_names);
+    }
+
+    /**
+     * @param \WC_Order $order
+     *
+     *
+     * @return string
+     */
+    private function get_order_paid_date($order)
+    {
+        $date = $order->get_date_paid();
+
+        if (is_object($date)) {
+            return $date->date('Y-m-d');
+        }
+
+        return '';
+    }
+
+    /**
      * @param $field_id
-     * @param $order
+     * @param \WC_Order $order
      *
      * @return mixed
      */
@@ -643,11 +689,15 @@ class WooInit
     {
         $user = $order->get_user();
 
-        $hashmap = [
-            'order_comments'   => $order->get_customer_note(),
-            'account_username' => $user ? $user->user_login : '',
-            'account_password' => ''
-        ];
+        $hashmap = apply_filters('mailoptin_woocommerce_mapping_field_hashmap_value', [
+            'order_comments'             => $order->get_customer_note(),
+            'account_username'           => $user ? $user->user_login : '',
+            'account_password'           => '',
+            'mowoo_product_names'        => $this->get_product_names_from_order($order),
+            'mowoo_order_total'          => $order->get_total(),
+            'mowoo_order_date'           => $this->get_order_paid_date($order),
+            'mowoo_order_payment_method' => $order->get_payment_method_title()
+        ], $field_id, $order);
 
         if (isset($hashmap[$field_id])) return $hashmap[$field_id];
 

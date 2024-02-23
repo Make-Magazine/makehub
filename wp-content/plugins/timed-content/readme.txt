@@ -3,8 +3,8 @@
 Contributors: kjvtough, awelzel
 Tags: marketing, marketing tool, post, page, date, time, timer, timed, show, hide, content, schedule, display
 Requires at least: 3.8
-Tested up to: 6.3
-Stable tag: 2.77
+Tested up to: 6.4
+Stable tag: 2.80
 License: GPL2
 
 Plugin to show or hide portions of a Page or Post based on specific date/time characteristics.
@@ -26,6 +26,19 @@ A TinyMCE dialog is included to help users build the shortcodes. See the Screens
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==
+
+= Projected dates/times seem to be fixed to a certain start date - why? =
+
+Since it makes no sense to get all values of the past, the projected dates/times will not display all available dates but will limit the start date to the current date minus a certain value depending on the interval.
+
+For hourly intervals: start at current date minus 1 day
+For daily intervals: start at current date minus 7 days
+For weekly intervals: start at current date minus 21 days
+For monthly intervals: start at current date minus 80 days
+For yearly intervals: start at current date minus 380 days
+
+Example: you set a rule to start on January 1, 2013 with daily repetetion. To get all the possible dates for that rule until today and a few weeks in the future this would mean to calculate more than ten(!) years or 3650 values until today. But most likely you don't want to see the dates from 10 years ago but the values how they will be now and some repetitions into the future.
+
 
 = Old rules after updating to version 2.50 =
 
@@ -49,7 +62,20 @@ If you want to use Timed Content with Gutenberg you have to add a "Classic" bloc
 
 == Changelog ==
 
+= 2.80 =
+
+* Updated compatibility information for WordPress.
+
+= 2.79 =
+
+* Fix backend code for admin dashboard "right now" output of timed content rule links.
+
+= 2.78 =
+
+* Fixed a JavaScript error message in the backend UI.
+
 = 2.77 =
+
 * Updated compatibility information for WordPress.
 
 = 2.76 =

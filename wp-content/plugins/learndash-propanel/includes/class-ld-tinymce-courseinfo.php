@@ -166,7 +166,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( !class_exists( 'Lea
 
 								if ( ( selected_widget == 'progress_chart' ) || ( selected_widget == 'reporting' ) ) {
 									if ( !jQuery( 'form#learndash_shortcodes_form_ld_propanel p#required-message').length ) {
-										jQuery( '<p id="required-message" style="color: red;"><?php _e('When using the "reporting" or "progress_chart" widget shortcodes. A selection from the Group, Course or User filters is required unless also using the "filtering" widget shortcode on the same page.', 'ld_propanel') ?></p>' ).insertBefore( 'form#learndash_shortcodes_form_ld_propanel .learndash_shortcodes_section' );
+										jQuery( '<p id="required-message" style="color: red;"><?php _e('When using the "reporting" or "progress_chart" widget shortcodes, a selection from the Group, Course or User filters is recommended unless also using the "filtering" widget shortcode on the same page.', 'ld_propanel') ?></p>' ).insertBefore( 'form#learndash_shortcodes_form_ld_propanel .learndash_shortcodes_section' );
 									}
 									jQuery( 'form#learndash_shortcodes_form_ld_propanel p#required-message').show();
 								} else {

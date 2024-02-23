@@ -15,8 +15,10 @@ class Gateway extends \EM\Payments\Gateway {
 	public static $status = 5;
 	public static $button_enabled = true;
 	public static $count_pending_spaces = true;
+	public static $reserve_pending_spaces = true;
 	public static $can_manually_approve = false;
 	public static $supports_multiple_bookings = true;
+	public static $supports_manual_bookings = true;
 
 	/**
 	 * Sets up gateway and registers actions/filters

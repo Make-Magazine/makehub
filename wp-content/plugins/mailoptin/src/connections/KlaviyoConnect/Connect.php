@@ -87,45 +87,43 @@ class Connect extends AbstractKlaviyoConnect implements ConnectionInterface
 
             if (self::is_http_code_success($response['status_code'])) {
 
-                $lists = $response['body'];
+                $lists = $response['body']->data;
 
                 if ( ! empty($lists)) {
                     foreach ($lists as $list) {
-                        $lists_array[$list->list_id] = $list->list_name;
+                        $lists_array[$list->id] = $list->attributes->name;
                     }
                 }
 
                 return $lists_array;
             }
 
-            self::save_optin_error_log($response['body']->status . ': ' . $response['body']->message, 'klaviyo');
+            self::save_optin_error_log(wp_json_encode($response), 'klaviyo');
 
         } catch (\Exception $e) {
             self::save_optin_error_log($e->getMessage(), 'klaviyo');
         }
+
+        return [];
     }
 
     public function get_optin_fields($list_id = '')
     {
-        try {
+        // https://developers.klaviyo.com/en/docs/track-api-reference#customer_properties
+        $merge_fields_array = [
+            '$phone_number' => __('Phone Number', 'mailoptin'),
+            '$title'        => __('Job Title', 'mailoptin'),
+            '$organization' => __('Organization Name', 'mailoptin'),
+            '$address1'     => __('Street address 1', 'mailoptin'),
+            '$address2'     => __('Street address 2', 'mailoptin'),
+            '$city'         => __('City', 'mailoptin'),
+            '$region'       => __('State / Province', 'mailoptin'),
+            '$country'      => __('Country', 'mailoptin'),
+            '$zip'          => __('ZIP or Postal Code', 'mailoptin'),
+            '$image'        => __('Profile Image URL', 'mailoptin')
+        ];
 
-            // https://developers.klaviyo.com/en/docs/track-api-reference#customer_properties
-            $merge_fields_array = [
-                '$phone_number' => __('Phone Number', 'mailoptin'),
-                '$title'        => __('Job Title', 'mailoptin'),
-                '$organization' => __('Organization Name', 'mailoptin'),
-                '$city'         => __('City', 'mailoptin'),
-                '$region'       => __('State', 'mailoptin'),
-                '$country'      => __('Country', 'mailoptin'),
-                '$zip'          => __('ZIP or Postal Code', 'mailoptin'),
-                '$image'        => __('Photo URL', 'mailoptin'),
-            ];
-
-            return apply_filters('mo_connections_klaviyo_custom_fields', $merge_fields_array);
-
-        } catch (\Exception $e) {
-            self::save_optin_error_log($e->getMessage(), 'klaviyo');
-        }
+        return apply_filters('mo_connections_klaviyo_custom_fields', $merge_fields_array);
     }
 
     public function custom_field_map_ui_description($val, $connection)

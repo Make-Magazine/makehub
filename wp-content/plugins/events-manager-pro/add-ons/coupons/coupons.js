@@ -2,6 +2,7 @@ document.addEventListener("em_booking_form_init", function( e ) {
 	let booking_form = e.target;
 	booking_form.addEventListener("em_booking_intent_updated", function( e ) {
 		let intent = e.detail.intent;
+		if ( booking_form.closest('.em-manual-booking') && 'amountOrig' in intent && intent.amountOrig > 0 ) return;
 		if ( intent.amount > 0 && intent.spaces > 0 ) {
 			booking_form.querySelectorAll('.em-booking-form-section-coupons').forEach( coupons => coupons.classList.remove('hidden') );
 		} else {

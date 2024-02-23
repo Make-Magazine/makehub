@@ -47,6 +47,7 @@ class API extends Base {
 				'site_url'    => site_url(),
 				'license_key' => $license_key,
 				'email'       => $email,
+				'stats'       => $this->build_site_stats(),
 			)
 		);
 
@@ -70,6 +71,63 @@ class API extends Base {
 
 		return ! is_wp_error( $response ) ? true : $response;
 	}
+
+
+	/**
+	 * Query the site stats.
+	 *
+	 * @since 1.3
+	 *
+	 * @return array
+	 *
+	 */
+	public function build_site_stats(): array {
+		global $wp_version;
+
+		return array(
+			'versions' => array(
+				'wp' => $wp_version,
+			),
+			'network'  => array(
+				'multisite'         => (int) is_multisite(),
+				'network_activated' => 0,
+				'active_sites'      => $this->get_multisite_active_sites(),
+			),
+		);
+	}
+
+	/**
+	 * Gets multi-site active site count.
+	 *
+	 * @since 1.3
+	 *
+	 * @return int
+	 *
+	 */
+	public function get_multisite_active_sites(): int {
+		global $wpdb;
+
+		if ( ! is_multisite() ) {
+			$active_sites = 1;
+		} else {
+			$active_sites = (int) $wpdb->get_var(
+				"
+					SELECT
+						COUNT( `blog_id` )
+					FROM
+						`{$wpdb->blogs}`
+					WHERE
+						`public` = '1'
+						AND `archived` = '0'
+						AND `spam` = '0'
+						AND `deleted` = '0'
+				"
+			);
+		}
+
+		return $active_sites;
+	}
+
 
 	/**
 	 * Return all the projects, and cache it.
@@ -111,7 +169,7 @@ class API extends Base {
 	 */
 	public function remove_domain() {
 		return $this->do_api_request(
-			'/site/domain',
+			'/site/auth',
 			'DELETE'
 		);
 	}

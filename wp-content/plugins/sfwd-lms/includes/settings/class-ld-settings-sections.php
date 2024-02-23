@@ -49,7 +49,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		/**
 		 * Holds the values for the fields. Read in from the wp_options item.
 		 *
-		 * @var array $setting_option_values Array of section values.
+		 * @var array<int|string,mixed> $setting_option_values Array of section values.
 		 */
 		protected $setting_option_values = array();
 
@@ -402,8 +402,16 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 			$this->settings_values_loaded = true;
 
 			if ( true === $this->load_options ) {
-				$this->setting_option_values = get_option( $this->setting_option_key );
-				if ( ( false === $this->setting_option_values ) || ( '' === $this->setting_option_values ) ) {
+				/**
+				 * Option values.
+				 *
+				 * @var array<mixed>|mixed $setting_option_values
+				 */
+				$setting_option_values = get_option( $this->setting_option_key );
+
+				$this->setting_option_values = is_array( $setting_option_values ) ? $setting_option_values : [];
+
+				if ( ( false === $setting_option_values ) || ( '' === $setting_option_values ) ) {
 					// Track that the option value is not set. See after_load_settings_values().
 					$this->settings_values_save_on_load = true;
 				} else {

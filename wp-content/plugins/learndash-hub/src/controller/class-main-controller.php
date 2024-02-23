@@ -24,6 +24,26 @@ class Main_Controller extends Controller {
 		);
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_scripts' ) );
+		add_action( 'wp_loaded', [ $this, 'maybe_update' ] );
+	}
+
+	/**
+	 * Check if we need to take action for new update.
+	 *
+	 * @since 1.3.0
+	 *
+	 * @return void
+	 */
+	public function maybe_update(): void {
+		$version_option_name = 'learndash_hub_version';
+		$version             = get_option( $version_option_name, '' );
+
+		if ( empty( $version ) || version_compare( $version, '1.3.0', '<' ) ) {
+			// updated to 1.3, try to flush the cache.
+			delete_option( 'learndash-hub-projects-api' );
+		}
+
+		update_option( $version_option_name, HUB_VERSION );
 	}
 
 	/**

@@ -62,10 +62,10 @@ add_action( 'admin_print_styles', 'grunion_admin_css' );
  */
 function grunion_admin_css() {
 	global $current_screen;
-	if ( $current_screen === null ) {
-		return;
-	}
-	if ( 'edit-feedback' !== $current_screen->id ) {
+	if (
+		$current_screen === null
+		|| 'edit-feedback' !== $current_screen->id
+	) {
 		return;
 	}
 
@@ -86,8 +86,10 @@ add_action( 'admin_print_scripts', 'grunion_admin_js' );
  */
 function grunion_admin_js() {
 	global $current_screen;
-
-	if ( 'edit-feedback' !== $current_screen->id ) {
+	if (
+		$current_screen === null
+		|| 'edit-feedback' !== $current_screen->id
+	) {
 		return;
 	}
 
@@ -218,8 +220,11 @@ add_filter( 'bulk_actions-edit-feedback', 'grunion_admin_bulk_actions' );
  */
 function grunion_admin_bulk_actions( $actions ) {
 	global $current_screen;
-	if ( 'edit-feedback' !== $current_screen->id ) {
-		return $actions;
+	if (
+		$current_screen === null
+		|| 'edit-feedback' !== $current_screen->id
+	) {
+		return;
 	}
 
 	unset( $actions['edit'] );
@@ -235,8 +240,11 @@ add_filter( 'views_edit-feedback', 'grunion_admin_view_tabs' );
  */
 function grunion_admin_view_tabs( $views ) {
 	global $current_screen;
-	if ( 'edit-feedback' !== $current_screen->id ) {
-		return $views;
+	if (
+		$current_screen === null
+		|| 'edit-feedback' !== $current_screen->id
+	) {
+		return;
 	}
 
 	unset( $views['publish'] );
@@ -284,12 +292,12 @@ function grunion_manage_post_column_date() {
 function grunion_manage_post_column_from( $post ) {
 	$content_fields = Grunion_Contact_Form_Plugin::parse_fields_from_content( $post->ID );
 
-	if ( isset( $content_fields['_feedback_author'] ) ) {
+	if ( ! empty( $content_fields['_feedback_author'] ) ) {
 		echo esc_html( $content_fields['_feedback_author'] );
 		return;
 	}
 
-	if ( isset( $content_fields['_feedback_author_email'] ) ) {
+	if ( ! empty( $content_fields['_feedback_author_email'] ) ) {
 		printf(
 			"<a href='%1\$s' target='_blank'>%2\$s</a><br />",
 			esc_url( 'mailto:' . $content_fields['_feedback_author_email'] ),
@@ -298,8 +306,8 @@ function grunion_manage_post_column_from( $post ) {
 		return;
 	}
 
-	if ( isset( $content_fields['_feedback_ip'] ) ) {
-		echo esc_html( $content_fields['feedback_ip'] );
+	if ( ! empty( $content_fields['_feedback_ip'] ) ) {
+		echo esc_html( $content_fields['_feedback_ip'] );
 		return;
 	}
 
@@ -313,6 +321,7 @@ function grunion_manage_post_column_from( $post ) {
  * @return void
  */
 function grunion_manage_post_column_response( $post ) {
+	$content_fields     = array();
 	$non_printable_keys = array(
 		'email_marketing_consent',
 		'entry_title',
@@ -510,9 +519,9 @@ function grunion_manage_post_row_actions( $actions ) {
 		);
 		$actions['trash'] = sprintf(
 			'<a class="submitdelete" title="%s" href="%s">%s</a>',
-			esc_attr__( 'Trash', 'jetpack' ),
+			esc_attr_x( 'Trash', 'verb', 'jetpack' ),
 			get_delete_post_link( $post->ID ),
-			esc_html__( 'Trash', 'jetpack' )
+			esc_html_x( 'Trash', 'verb', 'jetpack' )
 		);
 	} elseif ( $post->post_status === 'spam' ) {
 		$actions['unspam unapprove'] = sprintf(
@@ -557,7 +566,7 @@ function grunion_esc_attr( $attr ) {
  */
 function grunion_sort_objects( $a, $b ) {
 	if ( isset( $a['order'] ) && isset( $b['order'] ) ) {
-		return $a['order'] - $b['order'];
+		return $a['order'] <=> $b['order'];
 	}
 	return 0;
 }
@@ -567,6 +576,7 @@ function grunion_sort_objects( $a, $b ) {
  * returns both the shortcode form, and HTML markup representing a preview of the form
  */
 function grunion_ajax_shortcode() {
+	$field_shortcodes = array();
 	check_ajax_referer( 'grunion_shortcode' );
 
 	if ( ! current_user_can( 'edit_posts' ) ) {
@@ -819,7 +829,7 @@ function grunion_ajax_spam() {
 			$status_html .= ' class="current"';
 		}
 
-		$status_html .= '>' . __( 'Trash', 'jetpack' ) . ' <span class="count">';
+		$status_html .= '>' . _x( 'Trash', 'noun', 'jetpack' ) . ' <span class="count">';
 		$status_html .= '(' . number_format( $status['trash'] ) . ')';
 		$status_html .= '</span></a>';
 		if ( isset( $status['spam'] ) ) {
@@ -1061,7 +1071,7 @@ function grunion_recheck_queue() {
 
 	wp_send_json(
 		array(
-			'processed' => count( $approved_feedbacks ),
+			'processed' => is_countable( $approved_feedbacks ) ? count( $approved_feedbacks ) : 0,
 		)
 	);
 }
@@ -1299,7 +1309,7 @@ class Grunion_Admin {
 		$export_data = $grunion->get_feedback_entries_from_post();
 
 		$fields    = array_keys( $export_data );
-		$row_count = count( reset( $export_data ) );
+		$row_count = is_countable( $export_data ) ? count( reset( $export_data ) ) : 0;
 
 		$sheet_data = array( $fields );
 

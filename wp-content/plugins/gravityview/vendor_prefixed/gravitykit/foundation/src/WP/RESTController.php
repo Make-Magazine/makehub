@@ -2,8 +2,7 @@
 /**
  * @license GPL-2.0-or-later
  *
- * Modified by gravityview on 25-October-2023 using Strauss.
- * @see https://github.com/BrianHenryIE/strauss
+ * Modified by gravityview on 23-February-2024 using {@see https://github.com/BrianHenryIE/strauss}.
  */
 
 namespace GravityKit\GravityView\Foundation\WP;
@@ -160,19 +159,21 @@ class RESTController {
 	 * @return Closure Callback function that will be called by WP_REST_Server.
 	 */
 	public function process_route( array $route ): Closure {
-		return function () use ( $route ) {
+		return function ( $request ) use ( $route ) {
 			/**
 			 * Fires before the REST API route is processed.
 			 *
 			 * @action gk/foundation/rest/route/before
 			 *
 			 * @since  1.0.11
+			 * @since  1.2.6 Added $request parameter.
 			 *
-			 * @param array $route
+			 * @param WP_REST_Request $request
+			 * @param array           $route
 			 */
-			do_action( 'gk/foundation/rest/route/before', $route );
+			do_action( 'gk/foundation/rest/route/before', $request, $route );
 
-			$response = call_user_func( $route['callback'], $route );
+			$response = call_user_func( $route['callback'], $request, $route );
 
 			/**
 			 * Modifies the REST API route response.
@@ -180,11 +181,13 @@ class RESTController {
 			 * @action gk/foundation/rest/route/response
 			 *
 			 * @since  1.0.11
+			 * @since  1.2.6 Added $request parameter.
 			 *
-			 * @param mixed $response
-			 * @param array $route
+			 * @param mixed           $response
+			 * @param WP_REST_Request $request
+			 * @param array           $route
 			 */
-			$response = apply_filters( 'gk/foundation/rest/route/response', $response, $route );
+			$response = apply_filters( 'gk/foundation/rest/route/response', $response, $request, $route );
 
 			/**
 			 * Fires after the REST API route is processed.
@@ -192,10 +195,12 @@ class RESTController {
 			 * @action gk/foundation/rest/route/after
 			 *
 			 * @since  1.0.11
+			 * @since  1.2.6 Added $request parameter.
 			 *
-			 * @param array $route
+			 * @param WP_REST_Request $request
+			 * @param array           $route
 			 */
-			do_action( 'gk/foundation/rest/route/after', $route );
+			do_action( 'gk/foundation/rest/route/after', $request, $route );
 
 			return $response;
 		};

@@ -14,7 +14,7 @@ class MpdtAdminCtrl extends MpdtBaseCtrl {
       'memberpress',
       __('Developer', 'memberpress-developer-tools'),
       __('Developer', 'memberpress-developer-tools'),
-      'administrator',
+      apply_filters('mpdt_admin_capability', 'administrator'),
       MPDT_PLUGIN_NAME,
       array($this,'route')
     );

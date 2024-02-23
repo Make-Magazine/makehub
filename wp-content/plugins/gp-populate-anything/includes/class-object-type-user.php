@@ -19,13 +19,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	/**
 	 * Extract unique identifier for a given user.
 	 *
-	 * @param $object WP_User
-	 * @param  null  $primary_property_value
-	 *
-	 * @return string|number
+	 * @param WP_User|null $object
+	 * @param null|string $primary_property_value
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
-		if ( empty( $object ) || ! isset( $object->ID ) ) {
+		if ( empty( $object ) ) {
 			return -1;
 		}
 
@@ -39,12 +37,36 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	public function get_groups() {
 		return array(
 			'meta'        => array(
-				'label' => esc_html__( 'User Meta', 'gp-populate-anything' ),
+				'label'  => esc_html__( 'User Meta', 'gp-populate-anything' ),
+				'prefix' => 'meta_',
 			),
 			'bp_xprofile' => array(
-				'label' => esc_html__( 'BuddyPress Extended Profile', 'gp-populate-anything' ),
+				'label'  => esc_html__( 'BuddyPress Extended Profile', 'gp-populate-anything' ),
+				'prefix' => 'bp_xprofile_',
 			),
 		);
+	}
+
+	/**
+	 * @param $property_id string
+	 *
+	 * @return string|null
+	 */
+	public function get_group_from_property_id( $property_id ) {
+		if ( strpos( $property_id, 'meta_' ) === 0 ) {
+			return 'meta';
+		} elseif ( strpos( $property_id, 'bp_xprofile_' ) === 0 ) {
+			return 'bp_xprofile';
+		}
+
+		return null;
+	}
+
+	public function get_property_value_from_property_id( $property_id ) {
+		$property_id = preg_replace( '/^meta_/', '', $property_id );
+		$property_id = preg_replace( '/^bp_xprofile_/', '', $property_id );
+
+		return $property_id;
 	}
 
 	public function get_default_templates() {
@@ -55,10 +77,10 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	}
 
 	public function add_filter_hooks() {
-		add_filter( 'gppa_object_type_user_filter', array( $this, 'process_filter_default' ), 10, 4 );
-		add_filter( 'gppa_object_type_user_filter_roles', array( $this, 'process_filter_roles' ), 10, 4 );
-		add_filter( 'gppa_object_type_user_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 4 );
-		add_filter( 'gppa_object_type_user_filter_group_bp_xprofile', array( $this, 'process_filter_bp_xprofile' ), 10, 4 );
+		add_filter( 'gppa_object_type_user_filter', array( $this, 'process_filter_default' ), 10, 2 );
+		add_filter( 'gppa_object_type_user_filter_roles', array( $this, 'process_filter_roles' ), 10, 2 );
+		add_filter( 'gppa_object_type_user_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 2 );
+		add_filter( 'gppa_object_type_user_filter_group_bp_xprofile', array( $this, 'process_filter_bp_xprofile' ), 10, 2 );
 
 		add_filter( 'gppa_object_type_query_user', array( $this, 'maybe_add_primary_blog_where' ), 10, 2 );
 	}
@@ -67,16 +89,31 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
+
+		// When checking for user email, with Email Confirmation enabled on field (filter value will be array). We just use the first value.
+		if ( rgar( $property, 'value' ) === 'user_email' && is_array( $filter_value ) ) {
+			$filter_value = array_keys( $filter_value )[0];
+		}
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->users, rgar( $property, 'value' ), $filter['operator'], $filter_value );
 
@@ -88,14 +125,24 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -126,14 +173,24 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -156,14 +213,24 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $filter_value
-		 * @var $filter
-		 * @var $filter_group
-		 * @var $filter_group_index
-		 * @var $property
-		 * @var $property_id
-		 */
+		/** @var string|string[] */
+		$filter_value = null;
+
+		/** @var array */
+		$filter = null;
+
+		/** @var array */
+		$filter_group = null;
+
+		/** @var int */
+		$filter_group_index = null;
+
+		/** @var string */
+		$property = null;
+
+		/** @var string */
+		$property_id = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -171,6 +238,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		$data_specification = $this->get_value_specification( $filter_value, $filter['operator'], $data_operator );
 		$data_value         = $this->get_sql_value( $filter['operator'], $filter_value );
 
+		// @phpstan-ignore-next-line
 		$bp_prefix     = bp_core_get_table_prefix();
 		$bp_data_table = $bp_prefix . 'bp_xprofile_data';
 
@@ -261,7 +329,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 			$xprofile_field = preg_replace( '/^bp_xprofile_/', '', $prop );
 			$args           = array(
-				'user_id' => $object->id,
+				'user_id' => $object->ID,
 				'field'   => $xprofile_field,
 			);
 
@@ -406,13 +474,36 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 * @var $field array
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -481,12 +572,36 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	public function maybe_add_primary_blog_where( $query_builder_args, $args ) {
 
-		/**
-		 * @var $primary_property_value string
-		 * @var $field_values array
-		 * @var $filter_groups array
-		 * @var $ordering array
-		 */
+		/** @var string */
+		$populate = null;
+
+		/** @var array */
+		$filter_groups = null;
+
+		/** @var array */
+		$ordering = null;
+
+		/** @var array */
+		$templates = null;
+
+		/** @var string */
+		$primary_property_value = null;
+
+		/** @var array */
+		$field_values = null;
+
+		/** @var GF_Field */
+		$field = null;
+
+		/** @var boolean */
+		$unique = null;
+
+		/** @var int|null */
+		$page = null;
+
+		/** @var int */
+		$limit = null;
+
 		// phpcs:ignore WordPress.PHP.DontExtract.extract_extract
 		extract( $args );
 
@@ -513,7 +628,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	 * @return string   SHA1 representation of the requested query
 	 */
 	public function query_cache_hash( $args ) {
-		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
+		return sha1( serialize( $this->process_query_args( $args, $this->default_query_args( $args ) ) ) );
 	}
 
 	public function query( $args ) {
@@ -522,7 +637,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
+		$query_args = $this->process_query_args( $args, $this->default_query_args( $args ) );
 
 		$query = $this->build_mysql_query( $query_args, rgar( $args, 'field' ) );
 

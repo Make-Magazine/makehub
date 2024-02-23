@@ -1,6 +1,6 @@
 <?php
 /**
- * A base class for all views.
+ * A base class for all WP frontend views.
  *
  * @since 4.6.0
  *
@@ -17,36 +17,15 @@
 namespace LearnDash\Core\Template\Views;
 
 use LDLMS_Post_Types;
-use LearnDash\Core\Template\Template;
+use LearnDash\Core\Template\View as View_Base;
 use LearnDash_Custom_Label;
 
 /**
- * A base class for all views.
+ * A base class for all WP frontend views.
  *
  * @since 4.6.0
  */
-abstract class View {
-	/**
-	 * View slug.
-	 *
-	 * @var string
-	 */
-	protected $view_slug;
-
-	/**
-	 * Context.
-	 *
-	 * @var array<string, mixed>
-	 */
-	protected $context;
-
-	/**
-	 * Template.
-	 *
-	 * @var ?Template
-	 */
-	protected $template;
-
+abstract class View extends View_Base {
 	/**
 	 * Constructor.
 	 *
@@ -56,14 +35,7 @@ abstract class View {
 	 * @param array<mixed> $context   Context.
 	 */
 	public function __construct( string $view_slug, array $context = array() ) {
-		$this->view_slug = $view_slug;
-
-		$this->context = array_merge(
-			$context,
-			array(
-				'user' => wp_get_current_user(),
-			)
-		);
+		parent::__construct( $view_slug, $context );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'manage_assets' ) );
 	}
@@ -103,47 +75,6 @@ abstract class View {
 			$this->view_slug,
 			$this
 		);
-	}
-
-	/**
-	 * Gets the view HTML.
-	 *
-	 * @since 4.6.0
-	 *
-	 * @return string
-	 */
-	public function get_html(): string {
-		$template = new Template( $this->view_slug, $this->context, $this );
-
-		$this->set_template( $template );
-
-		return $template->get_content();
-	}
-
-	/**
-	 * Gets the template object.
-	 *
-	 * @since 4.6.0
-	 *
-	 * @return Template|null
-	 */
-	public function get_template(): ?Template {
-		return $this->template;
-	}
-
-	/**
-	 * Sets the template object.
-	 *
-	 * @since 4.6.0
-	 *
-	 * @param Template $template The template object.
-	 *
-	 * @return View
-	 */
-	public function set_template( Template $template ): View {
-		$this->template = $template;
-
-		return $this;
 	}
 
 	/**

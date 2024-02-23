@@ -78,7 +78,7 @@ class Jetpack_Google_Analytics_Legacy {
 			return;
 		}
 
-		if ( Jetpack_AMP_Support::is_amp_request() ) {
+		if ( class_exists( Jetpack_AMP_Support::class ) && Jetpack_AMP_Support::is_amp_request() ) {
 			// For Reader mode — legacy.
 			add_filter( 'amp_post_template_analytics', 'Jetpack_Google_Analytics::amp_analytics_entries', 1000 );
 			// For Standard and Transitional modes.
@@ -86,7 +86,7 @@ class Jetpack_Google_Analytics_Legacy {
 			return;
 		}
 
-		if ( 'G-' === substr( $tracking_id, 0, 2 ) ) {
+		if ( str_starts_with( $tracking_id, 'G-' ) ) {
 			$this->render_gtag_code( $tracking_id );
 		} else {
 			$this->render_ga_code( $tracking_id );

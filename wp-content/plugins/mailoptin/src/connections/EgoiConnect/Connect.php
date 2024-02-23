@@ -129,7 +129,7 @@ class Connect extends AbstractEgoiConnect implements ConnectionInterface
         } else {
 
             $content = sprintf(
-                __("%sMailOptin Premium%s allows you to apply tags to subscribers.", 'mailoptin'),
+                __("%sMailOptin Premium%s allows you to enable double-optin and apply tags to subscribers.", 'mailoptin'),
                 '<a target="_blank" href="https://mailoptin.io/pricing/?utm_source=wp_dashboard&utm_medium=upgrade&utm_campaign=egoi_connection">',
                 '</a>',
                 '<strong>',
@@ -138,7 +138,7 @@ class Connect extends AbstractEgoiConnect implements ConnectionInterface
 
             // always prefix with the name of the connect/connection service.
             $controls[] = [
-                'name'    => 'EgoiConnec_upgrade_notice',
+                'name'    => 'EgoiConnect_upgrade_notice',
                 'field'   => 'custom_content',
                 'content' => $content
             ];

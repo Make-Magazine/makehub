@@ -52,7 +52,7 @@ class Jetpack_Photon_Static_Assets_CDN {
 		 * is available and we know whether the response will be AMP or not. This is particularly important
 		 * for AMP-first (native AMP) pages where there are no AMP-specific URLs.
 		 */
-		if ( Jetpack_AMP_Support::is_amp_request() ) {
+		if ( class_exists( Jetpack_AMP_Support::class ) && Jetpack_AMP_Support::is_amp_request() ) {
 			return;
 		}
 
@@ -117,7 +117,7 @@ class Jetpack_Photon_Static_Assets_CDN {
 	public static function fix_script_relative_path( $relative, $src ) {
 
 		// Note relevant in AMP responses. See note above.
-		if ( Jetpack_AMP_Support::is_amp_request() ) {
+		if ( class_exists( Jetpack_AMP_Support::class ) && Jetpack_AMP_Support::is_amp_request() ) {
 			return $relative;
 		}
 
@@ -300,7 +300,7 @@ class Jetpack_Photon_Static_Assets_CDN {
 	 * @return Boolean whether the file is a JS or CSS.
 	 */
 	public static function is_js_or_css_file( $path ) {
-		return ( false === strpos( $path, '?' ) ) && in_array( substr( $path, -3 ), array( 'css', '.js' ), true );
+		return ( ! str_contains( $path, '?' ) ) && in_array( substr( $path, -3 ), array( 'css', '.js' ), true );
 	}
 
 	/**

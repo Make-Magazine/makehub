@@ -13,7 +13,7 @@ class Init
 
     public static function text_tag_connections()
     {
-        return ['AweberConnect', 'MailChimpConnect', 'ConvertFoxConnect', 'SendlaneConnect', 'DripConnect', 'ActiveCampaignConnect', 'ZohoCRMConnect', 'WeMailConnect', 'CleverReachConnect', 'OmnisendConnect'];
+        return ['AweberConnect', 'MailChimpConnect', 'ConvertFoxConnect', 'SendlaneConnect', 'DripConnect', 'ActiveCampaignConnect', 'ZohoCRMConnect', 'WeMailConnect', 'CleverReachConnect', 'OmnisendConnect', 'EmailOctopusConnect'];
     }
 
     public static function no_name_mapping_connections()
@@ -24,7 +24,7 @@ class Init
     public static function double_optin_support_connections($only_keys = false)
     {
         //True means double optin is enabled, and false means double optin is disabled by default
-        $double_optin_connections = ['DripConnect' => false, 'FluentCRMConnect' => true, 'MailChimpConnect' => true, 'MailjetConnect' => false, 'MailsterConnect' => true, 'SendinblueConnect' => false, 'EgoiConnect' => false];
+        $double_optin_connections = ['DripConnect' => false, 'FluentCRMConnect' => true, 'MailChimpConnect' => true, 'MailjetConnect' => false, 'MailsterConnect' => true, 'SendinblueConnect' => false, 'EgoiConnect' => false, 'FlodeskConnect' => false];
 
         if ($only_keys) {
             return array_keys($double_optin_connections);
@@ -187,6 +187,7 @@ class Init
         \MailOptin\ConvertFoxConnect\Connect::get_instance();
         \MailOptin\IContactConnect\Connect::get_instance();
         \MailOptin\EgoiConnect\Connect::get_instance();
+        \MailOptin\FlodeskConnect\Connect::get_instance();
         \MailOptin\ElementorConnect\Connect::get_instance();
         \MailOptin\WPFormsConnect\Connect::get_instance();
         \MailOptin\NinjaFormsConnect\Connect::get_instance();

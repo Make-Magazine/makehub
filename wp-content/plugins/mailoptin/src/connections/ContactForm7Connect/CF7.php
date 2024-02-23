@@ -114,6 +114,8 @@ class CF7
             $connections['leadbank'] = __('MailOptin Leads', 'mailoptin');
         }
 
+        unset($connections['WebHookConnect']);
+
         return $connections;
     }
 

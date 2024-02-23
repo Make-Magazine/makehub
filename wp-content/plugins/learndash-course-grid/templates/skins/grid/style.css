@@ -9,3 +9,9 @@
 .learndash-course-grid .items-wrapper.grid .item {
     visibility: hidden;
 }
+
+.learndash-course-grid .items-wrapper.grid .item .content .entry-content {
+    float: none;
+    margin: auto;
+    width: auto;
+}

@@ -297,7 +297,7 @@ if (
 		 *
 		 * @param string $file_path Import file path.
 		 *
-		 * @return bool|WP_Error True on success. WP_Error if an error occurred.
+		 * @return true|WP_Error True on success. WP_Error if an error occurred.
 		 */
 		public function enqueue_import_task( string $file_path ) {
 			$zip_archive = new ZipArchive();

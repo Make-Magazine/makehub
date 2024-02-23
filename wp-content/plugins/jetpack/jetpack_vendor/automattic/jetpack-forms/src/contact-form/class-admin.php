@@ -1,6 +1,6 @@
 <?php
 /**
- * Contact_Form_Admin class.
+ * Admin class.
  *
  * @package automattic/jetpack-forms
  */
@@ -14,7 +14,7 @@ use Automattic\Jetpack\Forms\Service\Google_Drive;
 use Automattic\Jetpack\Redirect;
 
 /**
- * Class Grunion_Admin
+ * Class Admin
  *
  * Singleton for Grunion admin area support.
  */
@@ -449,16 +449,16 @@ class Admin {
 	 */
 	public function grunion_admin_css() {
 		global $current_screen;
-		if ( $current_screen === null ) {
-			return;
-		}
-		if ( 'edit-feedback' !== $current_screen->id ) {
+		if (
+			$current_screen === null
+			|| 'edit-feedback' !== $current_screen->id
+		) {
 			return;
 		}
 
 		wp_enqueue_script( 'wp-lists' );
 
-		wp_register_style( 'grunion-admin.css', plugin_dir_url( __FILE__ ) . 'css/grunion-admin.css', array(), \JETPACK__VERSION );
+		wp_register_style( 'grunion-admin.css', plugin_dir_url( __FILE__ ) . '/../../../dist/contact-form/css/grunion-admin.css', array(), \JETPACK__VERSION );
 		wp_style_add_data( 'grunion-admin.css', 'rtl', 'replace' );
 
 		wp_enqueue_style( 'grunion-admin.css' );
@@ -471,8 +471,10 @@ class Admin {
 	 */
 	public function grunion_admin_js() {
 		global $current_screen;
-
-		if ( 'edit-feedback' !== $current_screen->id ) {
+		if (
+			$current_screen === null
+			|| 'edit-feedback' !== $current_screen->id
+		) {
 			return;
 		}
 
@@ -601,7 +603,10 @@ class Admin {
 	 */
 	public function grunion_admin_bulk_actions( $actions ) {
 		global $current_screen;
-		if ( 'edit-feedback' !== $current_screen->id ) {
+		if (
+			$current_screen === null
+			|| 'edit-feedback' !== $current_screen->id
+		) {
 			return $actions;
 		}
 
@@ -617,7 +622,10 @@ class Admin {
 	 */
 	public function grunion_admin_view_tabs( $views ) {
 		global $current_screen;
-		if ( 'edit-feedback' !== $current_screen->id ) {
+		if (
+			$current_screen === null
+			|| 'edit-feedback' !== $current_screen->id
+		) {
 			return $views;
 		}
 
@@ -665,12 +673,12 @@ class Admin {
 	public function grunion_manage_post_column_from( $post ) {
 		$content_fields = Contact_Form_Plugin::parse_fields_from_content( $post->ID );
 
-		if ( isset( $content_fields['_feedback_author'] ) ) {
+		if ( ! empty( $content_fields['_feedback_author'] ) ) {
 			echo esc_html( $content_fields['_feedback_author'] );
 			return;
 		}
 
-		if ( isset( $content_fields['_feedback_author_email'] ) ) {
+		if ( ! empty( $content_fields['_feedback_author_email'] ) ) {
 			printf(
 				"<a href='%1\$s' target='_blank'>%2\$s</a><br />",
 				esc_url( 'mailto:' . $content_fields['_feedback_author_email'] ),
@@ -679,8 +687,8 @@ class Admin {
 			return;
 		}
 
-		if ( isset( $content_fields['_feedback_ip'] ) ) {
-			echo esc_html( $content_fields['feedback_ip'] );
+		if ( ! empty( $content_fields['_feedback_ip'] ) ) {
+			echo esc_html( $content_fields['_feedback_ip'] );
 			return;
 		}
 
@@ -717,7 +725,7 @@ class Admin {
 
 		if ( empty( $response_fields ) ) {
 			$chunks = explode( "\nArray", $content );
-			if ( $chunks[1] ) {
+			if ( ! empty( $chunks[1] ) ) {
 				// re-construct the array string
 				$array = 'Array' . $chunks[1];
 				// re-construct the array
@@ -888,9 +896,9 @@ class Admin {
 			);
 			$actions['trash'] = sprintf(
 				'<a class="submitdelete" title="%s" href="%s">%s</a>',
-				esc_attr__( 'Trash', 'jetpack-forms' ),
+				esc_attr_x( 'Trash', 'verb', 'jetpack-forms' ),
 				get_delete_post_link( $post->ID ),
-				esc_html__( 'Trash', 'jetpack-forms' )
+				esc_html_x( 'Trash', 'verb', 'jetpack-forms' )
 			);
 		} elseif ( $post->post_status === 'spam' ) {
 			$actions['unspam unapprove'] = sprintf(
@@ -935,7 +943,7 @@ class Admin {
 	 */
 	public function grunion_sort_objects( $a, $b ) {
 		if ( isset( $a['order'] ) && isset( $b['order'] ) ) {
-			return $a['order'] - $b['order'];
+			return $a['order'] <=> $b['order'];
 		}
 		return 0;
 	}
@@ -961,7 +969,7 @@ class Admin {
 
 		if ( isset( $_POST['fields'] ) && is_array( $_POST['fields'] ) ) {
 			$fields = sanitize_text_field( stripslashes_deep( $_POST['fields'] ) );
-			usort( $fields, 'grunion_sort_objects' );
+			usort( $fields, array( $this, 'grunion_sort_objects' ) );
 
 			$field_shortcodes = array();
 
@@ -1193,7 +1201,7 @@ class Admin {
 				$status_html .= ' class="current"';
 			}
 
-			$status_html .= '>' . __( 'Trash', 'jetpack-forms' ) . ' <span class="count">';
+			$status_html .= '>' . _x( 'Trash', 'noun', 'jetpack-forms' ) . ' <span class="count">';
 			$status_html .= '(' . number_format( $status['trash'] ) . ')';
 			$status_html .= '</span></a>';
 			if ( isset( $status['spam'] ) ) {
@@ -1247,18 +1255,17 @@ class Admin {
 		}
 
 		// Add the scripts that handle the spam check event.
-		wp_register_script(
+		Assets::register_script(
 			'grunion-admin',
-			Assets::get_file_url_for_environment(
-				'_inc/build/contact-form/js/grunion-admin.min.js',
-				'modules/contact-form/js/grunion-admin.js'
-			),
-			array( 'jquery' ),
-			\JETPACK__VERSION,
-			true
+			'../../dist/contact-form/js/grunion-admin.js',
+			__FILE__,
+			array(
+				'enqueue'      => true,
+				'dependencies' => array( 'jquery' ),
+				'version'      => \JETPACK__VERSION,
+				'in_footer'    => true,
+			)
 		);
-
-		wp_enqueue_script( 'grunion-admin' );
 
 		wp_enqueue_style( 'grunion.css' );
 
@@ -1387,8 +1394,9 @@ class Admin {
 
 		$query = 'post_type=feedback&post_status=publish';
 
-		if ( isset( $_POST['limit'], $_POST['offset'] ) ) {
-			$query .= '&posts_per_page=' . (int) $_POST['limit'] . '&offset=' . (int) $_POST['offset'];
+		if ( isset( $_POST['limit'] ) && isset( $_POST['offset'] ) ) {
+			// phpcs:ignore Generic.Strings.UnnecessaryStringConcat.Found -- Avoiding https://github.com/WordPress/WordPress-Coding-Standards/issues/2390
+			$query .= '&posts_per' . '_page=' . (int) $_POST['limit'] . '&offset=' . (int) $_POST['offset'];
 		}
 
 		$approved_feedbacks = get_posts( $query );

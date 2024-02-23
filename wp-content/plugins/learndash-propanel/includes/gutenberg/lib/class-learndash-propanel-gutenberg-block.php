@@ -26,7 +26,7 @@ if ( ! class_exists( 'LearnDash_ProPanel_Gutenberg_Block' ) ) {
 
 		/**
 		 * Initialize the hooks.
-		 * 
+		 *
 		 * @since 2.1.4
 		 */
 		public function init() {
@@ -46,6 +46,10 @@ if ( ! class_exists( 'LearnDash_ProPanel_Gutenberg_Block' ) ) {
 				array(
 					'render_callback' => array( $this, 'render_block' ),
 					'attributes'      => $this->block_attributes,
+					'editor_style_handles' => array(
+						'ld-propanel-style',
+						'dashicons'
+					)
 				)
 			);
 		}
@@ -69,33 +73,122 @@ if ( ! class_exists( 'LearnDash_ProPanel_Gutenberg_Block' ) ) {
 		 */
 		public function render_block( $block_attributes = array(), $block_content = '', $block = null ) {
 			if ( is_user_logged_in() ) {
-				$shortcode_str = '[' . $this->shortcode_slug;
-				if ( ! empty( $this->shortcode_widget ) ) {
-					$shortcode_str .= ' widget="' . $this->shortcode_widget . '"';
-				}
-				$shortcode_params_str = $this->block_attributes_to_string( $block_attributes );
-				if ( ! empty( $shortcode_params_str ) ) {
-					$shortcode_str .= $shortcode_params_str;
-				}
-				$shortcode_str .= ']';
 
-				$shortcode_out = do_shortcode( $shortcode_str );
+				$shortcode_out = '';
+				if ( defined( 'REST_REQUEST' ) ) {
+
+					// is_admin() fails when Gutenberg Blocks render via ServerSideRender, but this is used within these templates.
+					// These templates load via admin-ajax.php normally, which allows is_admin() to return true.
+					if ( ! defined( 'WP_ADMIN' ) ) {
+						define( 'WP_ADMIN', true );
+					}
+
+					$template = $this->shortcode_widget;
+
+					$get_data    = wp_unslash( $_GET );
+					$server_data = wp_unslash( $_SERVER );
+
+					$nonce = '';
+					if ( isset( $server_data['HTTP_X_WP_NONCE'] ) && ! empty( $server_data['HTTP_X_WP_NONCE'] ) ) {
+						$nonce = $server_data['HTTP_X_WP_NONCE'];
+					}
+
+					if ( wp_verify_nonce( $nonce, 'wp_rest' ) ) {
+
+						if ( isset( $get_data['template'] ) && ! empty( $get_data['template' ] ) ) {
+							$template = $get_data['template'];
+						}
+
+					}
+
+					// If this rendered via ServerSideRender within the Block Editor, return the template itself rather than an empty wrapper.
+					$shortcode_out = apply_filters( 'learndash_propanel_template_ajax', '', $template );
+
+					// If this is the Reporting Widget, we need to generate and inject the HTML within the above template.
+					if ( in_array( $template, array(
+						'reporting',
+						'group-reporting',
+						'course-reporting',
+						'user-reporting',
+					) ) ) {
+
+						// Make our request. Reuse the current Auth Token (LOGGED_IN_COOKIE) to preserve the session and ensure the nonce check succeeds.
+						$request = wp_remote_get(
+							add_query_arg(
+								array_merge(
+									$get_data,
+									array(
+										'action' => 'learndash_propanel_reporting_get_result_rows',
+										'nonce' => wp_create_nonce( 'ld-propanel' ),
+									)
+								),
+								admin_url( 'admin-ajax.php' ),
+							),
+							array(
+								'cookies' => array(
+									LOGGED_IN_COOKIE => $_COOKIE[ LOGGED_IN_COOKIE ],
+								)
+							)
+						);
+
+						// Inject the data into the template.
+						if ( wp_remote_retrieve_response_code( $request ) === 200 ) {
+
+							$result_rows = json_decode( wp_remote_retrieve_body( $request ) );
+
+							$shortcode_out['rows_html'] = str_replace( '<span class="current_page">', '<span class="current_page">' . $result_rows->pager->current_page, $shortcode_out['rows_html'] );
+
+							$shortcode_out['rows_html'] = str_replace( '<span class="total_pages">', '<span class="total_pages">' . $result_rows->pager->total_pages, $shortcode_out['rows_html'] );
+
+							$shortcode_out['rows_html'] = str_replace( '<span class="total_items">', '<span class="total_items">' . $result_rows->pager->total_items, $shortcode_out['rows_html'] );
+
+							$shortcode_out['rows_html'] = str_replace( '<tbody>', '<tbody>' . $result_rows->rows_html, $shortcode_out['rows_html'] );
+
+						}
+
+					}
+
+				} else {
+
+					$shortcode_str = '[' . $this->shortcode_slug;
+					if ( ! empty( $this->shortcode_widget ) ) {
+						$shortcode_str .= ' widget="' . $this->shortcode_widget . '"';
+					}
+					$shortcode_params_str = $this->block_attributes_to_string( $block_attributes );
+					if ( ! empty( $shortcode_params_str ) ) {
+						$shortcode_str .= $shortcode_params_str;
+					}
+					$shortcode_str .= ']';
+
+					if ( ! $this->self_closing ) {
+						$shortcode_str .= $block_content;
+						$shortcode_str .= "[/{$this->shortcode_slug}]";
+					}
+
+					$shortcode_out = do_shortcode( $shortcode_str );
+
+				}
+
 				if ( empty( $shortcode_out ) ) {
 					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+				} else if ( defined( 'REST_REQUEST' ) ) {
+
+					if ( isset( $shortcode_out['rows_html'] ) && ! empty( $shortcode_out['rows_html'] ) ) {
+						$shortcode_out = $shortcode_out['rows_html'];
+					}
+
 				}
 
-				$block_content .= $this->render_block_wrap( $shortcode_out, (empty( $block_content ) ? true : false ) );
-				return $block_content;
-			} else {
-				return '';
+				return $this->render_block_wrap( $shortcode_out, (empty( $block_content ) && ! defined( 'REST_REQUEST' ) ? true : false ) );
 			}
-			//wp_die();
+
+			return '';
 		}
 
 		/**
 		 * Convert Block Attributes array to string for shortcode processing.
 		 *
-		 * @since 2.1.4 
+		 * @since 2.1.4
 		 *
 		 * @param array $block_attributes Array of block attributes.
 		 *

@@ -537,11 +537,7 @@ if ( ! function_exists( 'learndash_purchase_invoice_pdf' ) ) {
 			wp_die( esc_html__( 'Transaction now found.', 'learndash' ) );
 		}
 
-		try {
-			$transaction_pricing = $transaction->get_pricing();
-		} catch ( Learndash_DTO_Validation_Exception $e ) {
-			wp_die( esc_html__( 'Something went wrong.', 'learndash' ) );
-		}
+		$transaction_pricing = $transaction->get_pricing();
 
 		$pricing = '';
 
@@ -555,8 +551,8 @@ if ( ! function_exists( 'learndash_purchase_invoice_pdf' ) ) {
 
 			$pricing .= __( 'Original Price: ', 'learndash' ) . learndash_get_price_formatted( $transaction_pricing->price, $transaction_pricing->currency ) . '<br />';
 			$pricing .= __( 'Coupon: ', 'learndash' ) . $coupon_data->code . '<br />';
-			$pricing .= __( 'Discount: ', 'learndash' ) . $transaction_pricing->discount . '<br />';
-			$pricing .= __( 'Discounted Price: ', 'learndash' ) . $transaction_pricing->discounted_price . '<br />';
+			$pricing .= __( 'Discount: ', 'learndash' ) . learndash_get_price_formatted( $transaction_pricing->discount * -1, $transaction_pricing->currency ) . '<br />';
+			$pricing .= __( 'Discounted Price: ', 'learndash' ) . learndash_get_price_formatted( $transaction_pricing->discounted_price, $transaction_pricing->currency ) . '<br />';
 		} elseif ( $transaction->is_subscription() && $transaction->has_trial() ) {
 			// Transaction with trial.
 			$pricing .= sprintf(

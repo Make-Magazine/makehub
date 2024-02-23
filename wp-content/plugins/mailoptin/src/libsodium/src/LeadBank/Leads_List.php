@@ -209,8 +209,9 @@ class Leads_List extends \WP_List_Table
     public function get_bulk_actions()
     {
         $actions = array(
-            'bulk-delete'       => __('Delete', 'mailoptin'),
             'conversion-export' => __('Export', 'mailoptin'),
+            'bulk-delete'       => __('Delete', 'mailoptin'),
+            'bulk-delete-all'   => __('Delete All', 'mailoptin'),
         );
 
         return $actions;
@@ -290,6 +291,13 @@ class Leads_List extends \WP_List_Table
             exit;
         }
 
+        if ('bulk-delete-all' === $this->current_action()) {
+
+            check_admin_referer('bulk-' . $this->_args['plural']);
+            ConversionsRepository::deleteAll();
+            wp_safe_redirect(esc_url_raw(add_query_arg()));
+            exit;
+        }
 
         // export all optin conversions
         if ( ! empty($_POST['export_all_leads']) && $_POST['export_all_leads'] == __('Export All Leads', 'mailoptin')) {

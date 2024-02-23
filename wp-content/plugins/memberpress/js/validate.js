@@ -21,7 +21,8 @@ var mpValidateUrl = function(url) {
 };
 
 var mpValidateNotBlank = function(val) {
-  return (val && val.length > 0);
+  var str = val.trim();
+  return (str && str.length > 0);
 };
 
 var mpValidateFieldNotBlank = function($field) {
@@ -30,20 +31,21 @@ var mpValidateFieldNotBlank = function($field) {
   if(!$field.is(':visible')) {
     // Pass validation on fields that are not visible
   }
-  else if ($field.is('input') || $field.is('select') || $field.is('textarea')) {
+  else if ($field.is('input') || $field.is('select') && !$field.hasClass('mepr-multi-select-field') || $field.is('textarea')) {
     notBlank = mpValidateNotBlank($field.val());
   }
   else if ($field.hasClass('mepr-checkbox-field')) {
     notBlank = $field.find('input').is(':checked');
   }
-  else if ($field.hasClass('mepr-radios-field') || $field.hasClass('mepr-checkboxes-field')) {
+  else if ($field.hasClass('mepr-radios-field') || $field.hasClass('mepr-checkboxes-field') || $field.hasClass('mepr-multi-select-field')) {
     var input_vals = [];
+    var selector = $field.hasClass('mepr-multi-select-field') ? 'option:selected' : 'input:checked';
 
-    $field.find('input:checked').each(function (i, obj) {
+    $field.find(selector).each(function (i, obj) {
       input_vals.push(true);
     });
 
-    notBlank = mpValidateNotBlank(input_vals);
+    notBlank = input_vals.length > 0;
   }
 
   return notBlank;
@@ -57,6 +59,14 @@ var mpToggleFieldValidation = function(field, valid) {
     field.parent().prev('.mp-form-label').find('.cc-error').toggle(!valid);
   } else {
     field.prev('.mp-form-label').find('.cc-error').toggle(!valid);
+  }
+
+  if(field.hasClass('mepr-coupon-code') && valid) {
+    field.prev('.mp-form-label').find('.cc-success').toggle(valid);
+    setTimeout(function() {
+      field.prev('.mp-form-label').find('.cc-success').toggle(!valid);
+      field.removeClass('valid');
+    }, 2000);
   }
 
   if(field.hasClass('mepr-countries-dropdown')) {

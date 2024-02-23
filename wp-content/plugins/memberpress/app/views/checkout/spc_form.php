@@ -140,6 +140,7 @@
               <img src="<?php echo includes_url('js/thickbox/loadingAnimation.gif'); ?>" alt="<?php _e('Loading...', 'memberpress'); ?>" title="<?php _ex('Loading icon', 'ui', 'memberpress'); ?>" width="100" height="10" />
             </span>
             <span class="cc-error"><?php _ex('Invalid Coupon', 'ui', 'memberpress'); ?></span>
+            <span class="cc-success"><?php _ex( 'Coupon applied successfully', 'ui', 'memberpress' ); ?></span>
           </div>
           <input type="text" id="mepr_coupon_code<?php echo $unique_suffix; ?>" class="mepr-form-input mepr-coupon-code" name="mepr_coupon_code" value="<?php echo (isset($mepr_coupon_code))?esc_attr(stripslashes($mepr_coupon_code)):''; ?>" data-prdid="<?php echo $product->ID; ?>" />
         </div>
@@ -192,7 +193,7 @@
       <div class="mp-form-row mepr_tos">
         <label for="mepr_agree_to_tos<?php echo $unique_suffix; ?>" class="mepr-checkbox-field mepr-form-input" required>
           <input type="checkbox" name="mepr_agree_to_tos" id="mepr_agree_to_tos<?php echo $unique_suffix; ?>" <?php checked(isset($mepr_agree_to_tos)); ?> />
-          <a href="<?php echo stripslashes($mepr_options->tos_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo stripslashes($mepr_options->tos_title); ?></a>*
+          <a href="<?php echo stripslashes($mepr_options->tos_url); ?>" target="_blank" rel="noopener noreferrer"><?php echo wp_kses_post(stripslashes($mepr_options->tos_title)); ?></a>*
         </label>
       </div>
     <?php endif; ?>
@@ -201,7 +202,7 @@
       <div class="mp-form-row">
         <label for="mepr_agree_to_privacy_policy<?php echo $unique_suffix; ?>" class="mepr-checkbox-field mepr-form-input" required>
           <input type="checkbox" name="mepr_agree_to_privacy_policy" id="mepr_agree_to_privacy_policy<?php echo $unique_suffix; ?>" />
-          <?php echo preg_replace('/%(.*)%/', '<a href="' . $privacy_page_link . '" target="_blank">$1</a>', __($mepr_options->privacy_policy_title, 'memberpress')); ?>
+          <?php echo preg_replace('/%(.*)%/', '<a href="' . $privacy_page_link . '" target="_blank">$1</a>', wp_kses_post(__($mepr_options->privacy_policy_title, 'memberpress'))); ?>
         </label>
       </div>
     <?php endif; ?>

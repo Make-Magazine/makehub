@@ -19,9 +19,11 @@ module.exports = [
 
 			// Block editor extensions
 			'block-editor/index': './src/client/block-editor/index.ts',
+			// Divi editor extensions
+			'divi-editor/index': './src/client/divi-editor/index.js',
 		},
 		mode: jetpackWebpackConfig.mode,
-		devtool: jetpackWebpackConfig.isDevelopment ? 'source-map' : false,
+		devtool: jetpackWebpackConfig.devtool,
 		output: {
 			...jetpackWebpackConfig.output,
 			path: path.resolve( './build' ),

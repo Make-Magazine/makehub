@@ -5,13 +5,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit();
 }
 
-use LearnDash;
 use LearnDash\Course_Grid\Lib\LearnDash_Gutenberg_Block;
-use LearnDash\Course_Grid\Utilities;
+use LearnDash_Gutenberg_Block as Core_LearnDash_Gutenberg_Block;
+use WP_Block;
 
-class LearnDash_Course_Grid_Filter extends LearnDash_Gutenberg_Block
+/**
+ * Course grid filter block trait
+ */
+trait LearnDash_Course_Grid_Filter_Block_Trait
 {
-    
     /**
      * Object constructor
      */
@@ -53,43 +55,41 @@ class LearnDash_Course_Grid_Filter extends LearnDash_Gutenberg_Block
      * This function is called per the register_block_type() function above. This function will output
      * the block rendered content.
      *
-     * @param array $attributes Shortcode attrbutes.
-     * @return none The output is echoed.
+     * @param array         $attributes     Shortcode attrbutes.
+     * @param string        $block_content
+     * @param WP_Block|null $block          Block object.
+     * @return void The output is echoed.
      */
-    public function render_block( $attributes = array() ) {
-        if ( isset( $attributes['taxonomies'] ) ) {
-            $attributes['taxonomies'] = implode( ',', $attributes['taxonomies'] );
-        } 
-
+    public function render_block( $attributes = array(), $block_content = '', WP_Block $block = null ) {
         $attributes = $this->preprocess_block_attributes( $attributes );
 
-        if ( is_user_logged_in() ) {
-            $attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $attributes, $this->shortcode_slug, $this->block_slug, '' );
-    
-            $shortcode_params_str = '';
-            foreach ( $attributes as $key => $val ) {
-                if ( is_null( $val ) ) {
-                    continue;
-                }
-    
-                if ( ! empty( $shortcode_params_str ) ) {
-                    $shortcode_params_str .= ' ';
-                }
-                $shortcode_params_str .= $key . '="' . esc_attr( $val ) . '"';
+        $attributes = apply_filters( 'learndash_block_markers_shortcode_atts', $attributes, $this->shortcode_slug, $this->block_slug, '' );
+        
+        $shortcode_params_str = '';
+        foreach ( $attributes as $key => $val ) {
+            if ( is_null( $val ) ) {
+                continue;
             }
 
-            $shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-
-            $shortcode_out = do_shortcode( $shortcode_params_str );
-            
-            if ( ( empty( $shortcode_out ) ) ) {
-                $shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
+            if ( is_array( $val ) ) {
+                $val = implode( ',', $val );
             }
-    
-            return $this->render_block_wrap( $shortcode_out, true );
+
+            if ( ! empty( $shortcode_params_str ) ) {
+                $shortcode_params_str .= ' ';
+            }
+            $shortcode_params_str .= $key . '="' . esc_attr( $val ) . '"';
         }
 
-        wp_die();
+        $shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
+
+        $shortcode_out = do_shortcode( $shortcode_params_str );
+        
+        if ( ( empty( $shortcode_out ) ) ) {
+            $shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
+        }
+
+        return $this->render_block_wrap( $shortcode_out, true );
     }
 
     /**
@@ -104,43 +104,35 @@ class LearnDash_Course_Grid_Filter extends LearnDash_Gutenberg_Block
      *
      * @return array $attributes.
      */
-    public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) { 
+    public function learndash_block_markers_shortcode_atts_filter( $attributes = array(), $shortcode_slug = '', $block_slug = '', $content = '' ) {
         if ( $shortcode_slug === $this->shortcode_slug ) {
-            if ( isset( $attributes['preview_show'] ) ) {
+            if ( isset( $shortcode_slug['preview_show'] ) ) {
                 unset( $attributes['preview_show'] );
             }
 
-            if ( ! isset( $attributes['taxonomies'] ) ) {
-                $attributes['taxonomies'] = '';
+            foreach ( $attributes as $key => $value ) {
+                if ( is_array( $value ) ) {
+                    $attributes[ $key ] = implode( ', ', $value );
+                } elseif ( is_string( $value ) ) {
+                    // Remove quotes to prevent the attributes from being stripped out.
+                    $attributes[ $key ] = str_replace( [ '"', '\'' ] , '', $attributes[ $key ] );
+                }
             }
         }
 
         return $attributes;
     }
+}
 
-    /**
-     * Called from the LD function convert_block_markers_to_shortcode() when parsing the block content.
-     * This function allows hooking into the converted content.
-     *
-     * @since 2.0
-     *
-     * @param string $content This is the orignal full content being parsed.
-     * @param array  $attributes The array of attributes parse from the block content.
-     * @param string $shortcode_slug This will match the related LD shortcode ld_profile, ld_course_list, etc.
-     * @param string $block_slug This is the block token being processed. Normally same as the shortcode but underscore replaced with dash.
-     *
-     * @return string $content.
-     */
-    public function convert_block_markers_to_shortcode_content_filter( $content = '', $attributes = array(), $shortcode_slug = '', $block_slug = '' ) {
-        if ( $shortcode_slug == $this->shortcode_slug ) {
-            foreach ( $attributes as $key => $value ) {
-                if ( strpos( $content, $key . '=' ) === false ) {
-                    $content = str_replace( ']', " {$key}=\"\"]", $content );
-                }
-            }
 
-        }
-
-        return $content;
+if ( class_exists( 'Core_LearnDash_Gutenberg_Block' ) ) {
+    class LearnDash_Course_Grid_Filter extends Core_LearnDash_Gutenberg_Block
+    {
+        use LearnDash_Course_Grid_Filter_Block_Trait;
+    }
+} else {
+    class LearnDash_Course_Grid_Filter extends LearnDash_Gutenberg_Block
+    {
+        use LearnDash_Course_Grid_Filter_Block_Trait;
     }
 }

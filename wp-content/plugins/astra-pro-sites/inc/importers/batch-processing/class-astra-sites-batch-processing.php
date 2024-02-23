@@ -145,6 +145,12 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 			// Prepare Misc.
 			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-misc.php';
 
+			// Prepare Images.
+			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-images.php';
+
+			// Prepare Cleanup.
+			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-cleanup.php';
+
 			// Prepare Customizer.
 			require_once ASTRA_SITES_DIR . 'inc/importers/batch-processing/class-astra-sites-batch-processing-customizer.php';
 
@@ -863,11 +869,20 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 					return true;
 				}
 
+				$ai_site_url = get_option( 'ast_ai_import_current_url', '' );
+				$ai_host_url = '';
+
+				if ( ! empty( $ai_site_url ) ) {
+					$url = wp_parse_url( $ai_site_url );
+					$ai_host_url = ! empty( $url['host'] ) ? $url['host'] : '';
+				}
+
 				if (
 					strpos( $attachment['url'], 'brainstormforce.com' ) !== false ||
 					strpos( $attachment['url'], 'wpastra.com' ) !== false ||
 					strpos( $attachment['url'], 'sharkz.in' ) !== false ||
-					strpos( $attachment['url'], 'websitedemos.net' ) !== false
+					strpos( $attachment['url'], 'websitedemos.net' ) !== false ||
+					( ! empty( $ai_host_url ) && strpos( $attachment['url'], $ai_host_url ) !== false )
 				) {
 					return false;
 				}
@@ -939,6 +954,20 @@ if ( ! class_exists( 'Astra_Sites_Batch_Processing' ) ) :
 
 			// Add "customizer" in import [queue].
 			$classes[] = Astra_Sites_Batch_Processing_Customizer::get_instance();
+
+			$all_attachments = get_option( 'st_attachments', array() );
+			$count = count( $all_attachments );
+
+			if ( ! empty( $count ) ) {
+				$no_of_times = (int) ceil( $count / 10 ); // Divide in chunks of 10.
+
+				for ( $i = 1; $i <= $no_of_times; $i++ ) {
+					// Add Image Processing in chunks of 10.
+					$classes[] = new Astra_Sites_Batch_Processing_Images();
+				}
+
+				$classes[] = new Astra_Sites_Batch_Processing_Cleanup();
+			}
 
 			if ( defined( 'WP_CLI' ) ) {
 				WP_CLI::line( 'Batch Process Started..' );

@@ -2,7 +2,7 @@
 /**
  * @license MIT
  *
- * Modified by GravityKit on 07-September-2023 using Strauss.
+ * Modified by GravityKit on 12-December-2023 using Strauss.
  * @see https://github.com/BrianHenryIE/strauss
  */
 
@@ -94,6 +94,11 @@ class PhpFunctionsScanner extends FunctionsScanner
                     }
                 }
                 continue;
+            }
+
+            if (defined('T_NAME_FULLY_QUALIFIED') && T_NAME_FULLY_QUALIFIED === $value[0]) {
+                $value[0] = T_STRING;
+                $value[1] = ltrim($value[1], '\\');
             }
 
             switch ($value[0]) {

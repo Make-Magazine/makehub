@@ -16,7 +16,7 @@
 
 namespace LearnDash\Core\Template\Breadcrumbs;
 
-use LearnDash\Core\Collection;
+use LearnDash\Core\Collections\Collection;
 
 /**
  * The Breadcrumbs collection.

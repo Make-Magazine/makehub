@@ -1,17 +1,17 @@
-# Copyright (C) 2023 Caseproof, LLC
+# Copyright (C) 2024 Caseproof, LLC
 # This file is distributed under the same license as the MemberPress Developer Tools plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: MemberPress Developer Tools 1.2.17\n"
+"Project-Id-Version: MemberPress Developer Tools 1.2.18\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/memberpress-developer-tools\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-04-25T14:48:04+00:00\n"
+"POT-Creation-Date: 2024-01-16T13:35:04-07:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.7.1\n"
+"X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: memberpress-developer-tools\n"
 
 #. Plugin Name of the plugin
@@ -106,28 +106,32 @@ msgid "Select which events should be pushed to this Webhook"
 msgstr ""
 
 #: app/controllers/MpdtApiCtrl.php:113
-#: app/controllers/MpdtWebhooksCtrl.php:167
-#: app/controllers/MpdtWebhooksCtrl.php:231
+#: app/controllers/MpdtWebhooksCtrl.php:176
+#: app/controllers/MpdtWebhooksCtrl.php:250
 msgid "Error: You are unauthorized."
 msgstr ""
 
 #: app/controllers/MpdtApiCtrl.php:118
-#: app/controllers/MpdtWebhooksCtrl.php:172
-#: app/controllers/MpdtWebhooksCtrl.php:236
+#: app/controllers/MpdtWebhooksCtrl.php:181
+#: app/controllers/MpdtWebhooksCtrl.php:255
 msgid "Error: No event was specified."
 msgstr ""
 
 #: app/controllers/MpdtApiCtrl.php:126
-#: app/controllers/MpdtWebhooksCtrl.php:180
-#: app/controllers/MpdtWebhooksCtrl.php:244
+#: app/controllers/MpdtWebhooksCtrl.php:189
+#: app/controllers/MpdtWebhooksCtrl.php:263
 msgid "Error: Invalid event."
 msgstr ""
 
-#: app/controllers/MpdtWebhooksCtrl.php:211
+#: app/controllers/MpdtWebhooksCtrl.php:221
+msgid "Event %s failed to send: %s"
+msgstr ""
+
+#: app/controllers/MpdtWebhooksCtrl.php:230
 msgid "Event %s was successfully sent to webhooks"
 msgstr ""
 
-#: app/controllers/MpdtWebhooksCtrl.php:224
+#: app/controllers/MpdtWebhooksCtrl.php:243
 msgid "Unknown event type"
 msgstr ""
 

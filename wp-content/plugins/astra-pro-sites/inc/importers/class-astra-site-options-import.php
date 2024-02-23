@@ -53,6 +53,7 @@ class Astra_Site_Options_Import {
 			'show_on_front',
 			'page_on_front',
 			'page_for_posts',
+			'site_title',
 
 			// Plugin: Elementor.
 			'elementor_container_width',
@@ -72,6 +73,7 @@ class Astra_Site_Options_Import {
 			'elementor_stretched_section_container',
 			'elementor_load_fa4_shim',
 			'elementor_active_kit',
+			'elementor_experiment-container',
 
 			// Plugin: Beaver Builder.
 			'_fl_builder_enabled_icons',
@@ -130,65 +132,73 @@ class Astra_Site_Options_Import {
 	 * @param  (Array) $options Array of site options to be imported from the demo.
 	 */
 	public function import_options( $options = array() ) {
-
 		if ( ! isset( $options ) ) {
 			return;
 		}
 
-		foreach ( $options as $option_name => $option_value ) {
-
-			// Is option exist in defined array site_options()?
-			if ( null !== $option_value ) {
+		try {
+			foreach ( $options as $option_name => $option_value ) {
 
 				// Is option exist in defined array site_options()?
-				if ( in_array( $option_name, self::site_options(), true ) ) {
+				if ( null !== $option_value ) {
 
-					switch ( $option_name ) {
+					// Is option exist in defined array site_options()?
+					if ( in_array( $option_name, self::site_options(), true ) ) {
 
-						// Set WooCommerce page ID by page Title.
-						case 'woocommerce_shop_page_title':
-						case 'woocommerce_cart_page_title':
-						case 'woocommerce_checkout_page_title':
-						case 'woocommerce_myaccount_page_title':
-						case 'woocommerce_edit_address_page_title':
-						case 'woocommerce_view_order_page_title':
-						case 'woocommerce_change_password_page_title':
-						case 'woocommerce_logout_page_title':
-								$this->update_woocommerce_page_id_by_option_value( $option_name, $option_value );
-							break;
+						switch ( $option_name ) {
 
-						case 'page_for_posts':
-						case 'page_on_front':
-								$this->update_page_id_by_option_value( $option_name, $option_value );
-							break;
+							// Set WooCommerce page ID by page Title.
+							case 'woocommerce_shop_page_title':
+							case 'woocommerce_cart_page_title':
+							case 'woocommerce_checkout_page_title':
+							case 'woocommerce_myaccount_page_title':
+							case 'woocommerce_edit_address_page_title':
+							case 'woocommerce_view_order_page_title':
+							case 'woocommerce_change_password_page_title':
+							case 'woocommerce_logout_page_title':
+									$this->update_woocommerce_page_id_by_option_value( $option_name, $option_value );
+								break;
 
-						// nav menu locations.
-						case 'nav_menu_locations':
-								$this->set_nav_menu_locations( $option_value );
-							break;
+							case 'page_for_posts':
+							case 'page_on_front':
+									$this->update_page_id_by_option_value( $option_name, $option_value );
+								break;
 
-						// import WooCommerce category images.
-						case 'woocommerce_product_cat':
-								$this->set_woocommerce_product_cat( $option_value );
-							break;
+							// nav menu locations.
+							case 'nav_menu_locations':
+									$this->set_nav_menu_locations( $option_value );
+								break;
 
-						// insert logo.
-						case 'custom_logo':
-								$this->insert_logo( $option_value );
-							break;
+							// import WooCommerce category images.
+							case 'woocommerce_product_cat':
+									$this->set_woocommerce_product_cat( $option_value );
+								break;
 
-						case 'elementor_active_kit':
-							if ( '' !== $option_value ) {
-								$this->set_elementor_kit();
-							}
-							break;
+							// insert logo.
+							case 'custom_logo':
+									$this->insert_logo( $option_value );
+								break;
 
-						default:
-							update_option( $option_name, $option_value );
-							break;
+							case 'elementor_active_kit':
+								if ( '' !== $option_value ) {
+									$this->set_elementor_kit();
+								}
+								break;
+
+							case 'site_title':
+								update_option( 'blogname', $option_value );
+								break;
+
+							default:
+								update_option( $option_name, $option_value );
+								break;
+						}
 					}
 				}
 			}
+		} catch ( Exception $e ) {
+			// Do nothing.
+			astra_sites_error_log( 'Error while importing site options: ' . $e->getMessage() );
 		}
 	}
 
@@ -224,6 +234,37 @@ class Astra_Site_Options_Import {
 		}
 	}
 
+
+	/**
+	 * Get post from post title and post type.
+	 *
+	 * @since 4.0.6
+	 *
+	 * @param  mixed  $post_title  post title.
+	 * @param  string $post_type post type.
+	 * @return mixed
+	 */
+	public function get_page_by_title( $post_title, $post_type ) {
+		$page = array();
+		$query = new WP_Query(
+			array(
+				'post_type'              => $post_type,
+				'title'                  => $post_title,
+				'posts_per_page'         => 1,
+				'no_found_rows'          => true,
+				'ignore_sticky_posts'    => true,
+				'update_post_term_cache' => false,
+				'update_post_meta_cache' => false,
+				'orderby'                => 'ID',
+				'order'                  => 'DESC',
+			)
+		);
+		if ( $query->have_posts() ) {
+			$page = $query->posts[0];
+		}
+		return $page;
+	}
+
 	/**
 	 * Update post option
 	 *
@@ -238,7 +279,8 @@ class Astra_Site_Options_Import {
 			return;
 		}
 
-		$page = get_page_by_title( $option_value );
+		$page = $this->get_page_by_title( $option_value, 'page' );
+		
 		if ( is_object( $page ) ) {
 			update_option( $option_name, $page->ID );
 		}

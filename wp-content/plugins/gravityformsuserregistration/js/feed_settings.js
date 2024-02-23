@@ -13,8 +13,8 @@
 			$( '.gfur-cs-checkbox' ).on( 'change', function() {
 
 				var name    = $( this ).attr( 'name' ),
-					$select = $( '#{0}ValueSpan, #{1}ValueSpan'.format( name, name.replace( 'Enable', '' ) ) ),
-					$label  = $( 'label[for="{0}"]'.format( $( this ).attr( 'id' ) ) );
+					$select = $( '#{0}ValueSpan, #{1}ValueSpan'.gformFormat( name, name.replace( 'Enable', '' ) ) ),
+					$label  = $( 'label[for="{0}"]'.gformFormat( $( this ).attr( 'id' ) ) );
 
 				// Set hidden input value for Checkbox.
 				$( this ).siblings( 'input[type=hidden]' ).val( $( this ).prop( 'checked' ) ? 1 : 0 );

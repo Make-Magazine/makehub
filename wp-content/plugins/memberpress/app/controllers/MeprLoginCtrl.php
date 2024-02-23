@@ -160,7 +160,7 @@ class MeprLoginCtrl extends MeprBaseCtrl {
       }
     }
 
-    if(MeprReadyLaunchCtrl::template_enabled( 'login' ) || MeprReadyLaunchCtrl::template_enabled( 'account' ) || has_block('memberpress/pro-login-form' )){
+    if(MeprReadyLaunchCtrl::template_enabled( 'login' ) || MeprReadyLaunchCtrl::template_enabled( 'account' ) || MeprAppHelper::has_block('memberpress/pro-login-form' )){
       MeprView::render('/readylaunch/login/form', get_defined_vars());
     } else {
       MeprView::render('/login/form', get_defined_vars());
@@ -287,9 +287,22 @@ class MeprLoginCtrl extends MeprBaseCtrl {
 
     extract($_POST, EXTR_SKIP);
 
+    $mepr_user_or_email = wp_unslash($mepr_user_or_email);
+
     if(empty($errors)) {
       $is_email = (is_email($mepr_user_or_email) and email_exists($mepr_user_or_email));
       $is_username = username_exists($mepr_user_or_email);
+
+      // If the username & email are not found then let's display a generic message.
+      if(!$is_email && !$is_username) {
+        if(MeprReadyLaunchCtrl::template_enabled( 'login' )){
+          MeprView::render('/readylaunch/login/forgot_password_requested', get_defined_vars());
+        } else {
+          MeprView::render('/login/forgot_password_requested', get_defined_vars());
+        }
+        return;
+      }
+
       $user = new MeprUser();
 
       // If the username & email are identical then let's rely on it as a username first and foremost

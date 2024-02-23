@@ -95,6 +95,15 @@ function learndash_quiz_shortcode_function( $atts = array(), $content = '', $sho
 		$atts['show_materials'] = false;
 	}
 
+	// Protect post data.
+
+	if (
+		! learndash_shortcode_can_current_user_access_post( $course_id )
+		|| ! learndash_shortcode_can_current_user_access_post( $quiz_id )
+	) {
+		return '';
+	}
+
 	if ( empty( $atts['quiz_id'] ) ) {
 		return $content;
 	}

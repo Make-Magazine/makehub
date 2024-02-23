@@ -38,9 +38,9 @@ class Connect extends \MailOptin\RegisteredUsersConnect\Connect
         });
     }
 
-    public static function declare_hpos_compat()
+    public function declare_hpos_compat()
     {
-        if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        if (class_exists('\Automattic\WooCommerce\Utilities\FeaturesUtil')) {
             \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', MAILOPTIN_SYSTEM_FILE_PATH, true);
         }
     }

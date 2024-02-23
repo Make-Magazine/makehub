@@ -77,9 +77,10 @@ class Hubspot extends OAuth2
             $url = $this->apiBaseUrl . $url;
         }
 
-        if ($this->getStoredData('access_token')) {
+        //When sending campaigns, Hubspot can throw an error if the payload contains an access_token param
+        /*if($this->getStoredData('access_token')) {
             $this->apiRequestParameters[$this->accessTokenName] = $this->getStoredData('access_token');
-        }
+        }*/
 
         $parameters = array_replace($this->apiRequestParameters, (array)$parameters);
         $headers    = array_replace($this->apiRequestHeaders, (array)$headers);

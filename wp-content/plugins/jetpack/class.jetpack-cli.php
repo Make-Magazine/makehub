@@ -224,6 +224,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 * @param array $assoc_args Named args.
 	 */
 	public function disconnect( $args, $assoc_args ) {
+		$user = null;
 		if ( ! Jetpack::is_connection_ready() ) {
 			WP_CLI::success( __( 'The site is not currently connected, so nothing to do!', 'jetpack' ) );
 			return;
@@ -543,7 +544,8 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 * @param array $assoc_args Named args.
 	 */
 	public function module( $args, $assoc_args ) {
-		$action = isset( $args[0] ) ? $args[0] : 'list';
+		$module_slug = null;
+		$action      = isset( $args[0] ) ? $args[0] : 'list';
 
 		if ( isset( $args[1] ) ) {
 			$module_slug = $args[1];
@@ -1021,7 +1023,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 						$modules['users'] = 'initial';
 					} elseif ( isset( $assoc_args[ $module_name ] ) ) {
 						$ids = explode( ',', $assoc_args[ $module_name ] );
-						if ( count( $ids ) > 0 ) {
+						if ( $ids !== array() ) {
 							$modules[ $module_name ] = $ids;
 						}
 					}
@@ -1035,7 +1037,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 				if ( Actions::do_full_sync( $modules ) ) {
 					if ( $modules ) {
 						/* translators: %s is a comma separated list of Jetpack modules */
-						WP_CLI::log( sprintf( __( 'Initialized a new full sync with modules: %s', 'jetpack' ), join( ', ', array_keys( $modules ) ) ) );
+						WP_CLI::log( sprintf( __( 'Initialized a new full sync with modules: %s', 'jetpack' ), implode( ', ', array_keys( $modules ) ) ) );
 					} else {
 						WP_CLI::log( __( 'Initialized a new full sync', 'jetpack' ) );
 					}
@@ -1046,7 +1048,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 
 					if ( $modules ) {
 						/* translators: %s is a comma separated list of Jetpack modules */
-						WP_CLI::error( sprintf( __( 'Could not start a new full sync with modules: %s', 'jetpack' ), join( ', ', $modules ) ) );
+						WP_CLI::error( sprintf( __( 'Could not start a new full sync with modules: %s', 'jetpack' ), implode( ', ', $modules ) ) );
 					} else {
 						WP_CLI::error( __( 'Could not start a new full sync', 'jetpack' ) );
 					}
@@ -1070,7 +1072,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 						}
 
 						// Immediate Full Sync does not wait for WP.com to process data so we need to enforce a wait.
-						if ( false !== strpos( get_class( Modules::get_module( 'full-sync' ) ), 'Full_Sync_Immediately' ) ) {
+						if ( str_contains( get_class( Modules::get_module( 'full-sync' ) ), 'Full_Sync_Immediately' ) ) {
 							sleep( 15 );
 						}
 					}
@@ -1443,7 +1445,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 			? json_decode( $named_args['body'], true )
 			: false;
 
-		$resource_url = ( false === strpos( $named_args['resource'], '%d' ) )
+		$resource_url = ( ! str_contains( $named_args['resource'], '%d' ) )
 			? $named_args['resource']
 			: sprintf( $named_args['resource'], Jetpack_Options::get_option( 'id' ) );
 
@@ -1688,13 +1690,13 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 *     $ wp jetpack publicize list
 	 *
 	 *     # List publicize connections for a given service.
-	 *     $ wp jetpack publicize list twitter
+	 *     $ wp jetpack publicize list linkedin
 	 *
 	 *     # List all publicize connections for a given user.
 	 *     $ wp --user=1 jetpack publicize list
 	 *
 	 *     # List all publicize connections for a given user and service.
-	 *     $ wp --user=1 jetpack publicize list twitter
+	 *     $ wp --user=1 jetpack publicize list linkedin
 	 *
 	 *     # Display details for a given connection.
 	 *     $ wp jetpack publicize list 123456
@@ -1706,7 +1708,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 	 *     $ wp jetpack publicize disconnect all
 	 *
 	 *     # Disconnect all connections for a given service.
-	 *     $ wp jetpack publicize disconnect twitter
+	 *     $ wp jetpack publicize disconnect linkedin
 	 *
 	 * @param array $args Positional args.
 	 * @param array $named_args Named args.
@@ -1725,7 +1727,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 				! defined( 'JETPACK_DEV_DEBUG' ) &&
 				! has_filter( 'jetpack_development_mode' ) &&
 				! has_filter( 'jetpack_offline_mode' ) &&
-				false === strpos( site_url(), '.' )
+				! str_contains( site_url(), '.' )
 			) {
 				WP_CLI::error( __( "Jetpack is current in offline mode because the site url does not contain a '.', which often occurs when dynamically setting the WP_SITEURL constant. While in offline mode, the Jetpack Social module will not load.", 'jetpack' ) );
 			}
@@ -1845,7 +1847,7 @@ class Jetpack_CLI extends WP_CLI_Command {
 					}
 
 					if ( ! empty( $connections ) ) {
-						$count    = count( $connections );
+						$count    = is_countable( $connections ) ? count( $connections ) : 0;
 						$progress = \WP_CLI\Utils\make_progress_bar(
 							/* translators: %s is a lowercase string for a social network. */
 							sprintf( __( 'Disconnecting all connections to %s.', 'jetpack' ), $service ),
@@ -1974,6 +1976,8 @@ class Jetpack_CLI extends WP_CLI_Command {
 			? $assoc_args['slug']
 			: sanitize_title( $title );
 
+		$next_version = "\x24\x24next-version$$"; // Escapes to hide the string from tools/replace-next-version-tag.sh
+
 		$variation_options = array( 'production', 'experimental', 'beta' );
 		$variation         = ( isset( $assoc_args['variation'] ) && in_array( $assoc_args['variation'], $variation_options, true ) )
 			? $assoc_args['variation']
@@ -2002,55 +2006,51 @@ class Jetpack_CLI extends WP_CLI_Command {
 
 		$wp_filesystem->mkdir( $path );
 
-		$has_keywords = isset( $assoc_args['keywords'] );
+		$keywords = isset( $assoc_args['keywords'] )
+			? array_map(
+				function ( $keyword ) {
+					return trim( $keyword );
+				},
+				array_slice( explode( ',', $assoc_args['keywords'] ), 0, 3 )
+			)
+			: array();
 
 		$files = array(
-			"$path/$slug.php"     => $this->render_block_file(
+			"$path/block.json"  => self::render_block_file(
+				'block-block-json',
+				array(
+					'slug'        => $slug,
+					'title'       => wp_json_encode( $title, JSON_UNESCAPED_UNICODE ),
+					'description' => isset( $assoc_args['description'] )
+						? wp_json_encode( $assoc_args['description'], JSON_UNESCAPED_UNICODE )
+						: wp_json_encode( $title, JSON_UNESCAPED_UNICODE ),
+					'nextVersion' => $next_version,
+					'keywords'    => wp_json_encode( $keywords, JSON_UNESCAPED_UNICODE ),
+				)
+			),
+			"$path/$slug.php"   => self::render_block_file(
 				'block-register-php',
 				array(
-					'slug'             => $slug,
+					'nextVersion'      => $next_version,
 					'title'            => $title,
-					'underscoredSlug'  => str_replace( '-', '_', $slug ),
 					'underscoredTitle' => str_replace( ' ', '_', $title ),
 				)
 			),
-			"$path/index.js"      => $this->render_block_file(
-				'block-index-js',
-				array(
-					'slug'        => $slug,
-					'title'       => $title,
-					'description' => isset( $assoc_args['description'] )
-						? $assoc_args['description']
-						: $title,
-					'keywords'    => $has_keywords
-					? array_map(
-						function ( $keyword ) {
-								// Construction necessary for Mustache lists.
-								return array( 'keyword' => trim( $keyword ) );
-						},
-						explode( ',', $assoc_args['keywords'], 3 )
-					)
-					: '',
-					'hasKeywords' => $has_keywords,
-				)
-			),
-			"$path/editor.js"     => $this->render_block_file( 'block-editor-js' ),
-			"$path/editor.scss"   => $this->render_block_file(
+			"$path/editor.js"   => self::render_block_file( 'block-editor-js' ),
+			"$path/editor.scss" => self::render_block_file(
 				'block-editor-scss',
 				array(
 					'slug'  => $slug,
 					'title' => $title,
 				)
 			),
-			"$path/edit.js"       => $this->render_block_file(
+			"$path/edit.js"     => self::render_block_file(
 				'block-edit-js',
 				array(
 					'title'     => $title,
 					'className' => str_replace( ' ', '', ucwords( str_replace( '-', ' ', $slug ) ) ),
 				)
 			),
-			"$path/icon.js"       => $this->render_block_file( 'block-icon-js' ),
-			"$path/attributes.js" => $this->render_block_file( 'block-attributes-js' ),
 		);
 
 		$files_written = array();

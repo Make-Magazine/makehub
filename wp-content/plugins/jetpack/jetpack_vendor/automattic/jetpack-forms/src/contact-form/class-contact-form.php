@@ -82,9 +82,6 @@ class Contact_Form extends Contact_Form_Shortcode {
 	public function __construct( $attributes, $content = null ) {
 		global $post;
 
-		$this->hash                 = sha1( wp_json_encode( $attributes ) . $content );
-		self::$forms[ $this->hash ] = $this;
-
 		// Set up the default subject and recipient for this form.
 		$default_to      = '';
 		$default_subject = '[' . get_option( 'blogname' ) . ']';
@@ -119,6 +116,9 @@ class Contact_Form extends Contact_Form_Shortcode {
 			$default_to      .= $post_author->user_email;
 		}
 
+		$this->hash                 = sha1( wp_json_encode( $attributes ) );
+		self::$forms[ $this->hash ] = $this;
+
 		// Keep reference to $this for parsing form fields.
 		self::$current_form = $this;
 
@@ -138,6 +138,9 @@ class Contact_Form extends Contact_Form_Shortcode {
 			'customThankyouRedirect' => '', // The URL to redirect to when customThankyou is set to 'redirect'.
 			'jetpackCRM'             => true, // Whether Jetpack CRM should store the form submission.
 			'className'              => null,
+			'postToUrl'              => null,
+			'salesforceData'         => null,
+			'hiddenFields'           => null,
 		);
 
 		$attributes = shortcode_atts( $this->defaults, $attributes, 'contact-form' );
@@ -237,6 +240,8 @@ class Contact_Form extends Contact_Form_Shortcode {
 	 * @return string HTML for the concat form.
 	 */
 	public static function parse( $attributes, $content ) {
+		global $post;
+
 		if ( Settings::is_syncing() ) {
 			return '';
 		}
@@ -267,6 +272,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 			// (like VideoPress does), the style tag gets "printed" the first time and discarded, leaving the contact form unstyled.
 			// when WordPress does the real loop.
 			wp_enqueue_style( 'grunion.css' );
+			wp_enqueue_script( 'accessible-form' );
 		}
 
 		$container_classes        = array( 'wp-block-jetpack-contact-form-container' );
@@ -287,7 +293,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 
 		if ( isset( $_GET['contact-form-id'] )
 			&& (int) $_GET['contact-form-id'] === (int) self::$last->get_attribute( 'id' )
-			&& isset( $_GET['contact-form-sent'], $_GET['contact-form-hash'] )
+			&& isset( $_GET['contact-form-sent'] ) && isset( $_GET['contact-form-hash'] )
 			&& is_string( $_GET['contact-form-hash'] )
 			&& hash_equals( $form->hash, wp_unslash( $_GET['contact-form-hash'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			// The contact form was submitted.  Show the success message/results.
@@ -346,16 +352,17 @@ class Contact_Form extends Contact_Form_Shortcode {
 			 * @param int $id Contact Form ID.
 			 */
 			$url                     = apply_filters( 'grunion_contact_form_form_action', "{$url}#contact-form-{$id}", $GLOBALS['post'], $id );
-			$has_submit_button_block = ! ( false === strpos( $content, 'wp-block-jetpack-button' ) );
+			$has_submit_button_block = str_contains( $content, 'wp-block-jetpack-button' );
 			$form_classes            = 'contact-form commentsblock';
+			$post_title              = $post->post_title ?? '';
+			$form_accessible_name    = ! empty( $attributes['formTitle'] ) ? $attributes['formTitle'] : $post_title;
+			$form_aria_label         = isset( $form_accessible_name ) && ! empty( $form_accessible_name ) ? 'aria-label="' . esc_attr( $form_accessible_name ) . '"' : '';
 
 			if ( $has_submit_button_block ) {
 				$form_classes .= ' wp-block-jetpack-contact-form';
 			}
 
-			$r .= "<form action='" . esc_url( $url ) . "' method='post' class='" . esc_attr( $form_classes ) . "'>\n";
-			$r .= self::get_script_for_form();
-
+			$r .= "<form action='" . esc_url( $url ) . "' method='post' class='" . esc_attr( $form_classes ) . "' $form_aria_label novalidate>\n";
 			$r .= $form->body;
 
 			// In new versions of the contact form block the button is an inner block
@@ -447,7 +454,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 		if ( 'message' === $form->get_attribute( 'customThankyou' ) ) {
 			$message = wpautop( $form->get_attribute( 'customThankyouMessage' ) );
 		} else {
-			$message = '<p>' . join( '</p><p>', self::get_compiled_form( $feedback_id, $form ) ) . '</p>';
+			$message = '<p>' . implode( '</p><p>', self::get_compiled_form( $feedback_id, $form ) ) . '</p>';
 		}
 
 		return wp_kses(
@@ -462,29 +469,6 @@ class Contact_Form extends Contact_Form_Shortcode {
 				),
 			)
 		);
-	}
-
-	/**
-	 * Returns a script that disables the contact form button after a form submission.
-	 *
-	 * @return string The script.
-	 */
-	private static function get_script_for_form() {
-		return "<script>
-			( function () {
-				const contact_forms = document.getElementsByClassName('contact-form');
-
-				for ( const form of contact_forms ) {
-					form.onsubmit = function() {
-						const buttons = form.getElementsByTagName('button');
-
-						for( const button of buttons ) {
-							button.setAttribute('disabled', true);
-						}
-					}
-				}
-			} )();
-		</script>";
 	}
 
 	/**
@@ -523,7 +507,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 					}
 				} else {
 					// The feedback content is stored as the first "half" of post_content
-					$value         = $feedback->post_content;
+					$value         = is_a( $feedback, '\WP_Post' ) ? $feedback->post_content : '';
 					list( $value ) = explode( '<!--more-->', $value );
 					$value         = trim( $value );
 				}
@@ -616,7 +600,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 					}
 				} else {
 					// The feedback content is stored as the first "half" of post_content
-					$value         = $feedback->post_content;
+					$value         = is_a( $feedback, '\WP_Post' ) ? $feedback->post_content : '';
 					list( $value ) = explode( '<!--more-->', $value );
 					$value         = trim( $value );
 				}
@@ -629,10 +613,9 @@ class Contact_Form extends Contact_Form_Shortcode {
 				$field_index = array_search( $field_ids[ $type ], $field_ids['all'], true );
 				$field_label = $field->get_attribute( 'label' ) ? $field->get_attribute( 'label' ) . ':' : '';
 
-				$compiled_form[ $field_index ] = sprintf(
-					'<p><strong>%1$s</strong><br /><span>%2$s</span></p>',
+				$compiled_form[ $field_index ] = array(
 					wp_kses( $field_label, array() ),
-					self::escape_and_sanitize_field_value( $value )
+					self::escape_and_sanitize_field_value( $value ),
 				);
 			}
 		}
@@ -656,14 +639,38 @@ class Contact_Form extends Contact_Form_Shortcode {
 
 					$field_label = $field->get_attribute( 'label' ) ? $field->get_attribute( 'label' ) . ':' : '';
 
-					$compiled_form[ $field_index ] = sprintf(
-						'<p><strong>%1$s</strong><br /><span>%2$s</span></p>',
+					$compiled_form[ $field_index ] = array(
 						wp_kses( $field_label, array() ),
-						self::escape_and_sanitize_field_value( $extra_fields[ $extra_field_keys[ $i ] ] )
+						self::escape_and_sanitize_field_value( $extra_fields[ $extra_field_keys[ $i ] ] ),
 					);
 
 					++$i;
 				}
+			}
+		}
+
+		/**
+		 * This filter allows a site owner to customize the response to be emailed, by adding their own HTML around it for example.
+		 *
+		 * @module contact-form
+		 *
+		 * @since 0.18.0
+		 *
+		 * @param array $compiled_form the form response to be filtered
+		 * @param int $feedback_id the ID of the feedback form
+		 * @param Contact_Form $form a copy of this object
+		 */
+		$updated_compiled_form = apply_filters( 'jetpack_forms_response_email', $compiled_form, $feedback_id, $form );
+		if ( $updated_compiled_form !== $compiled_form ) {
+			$compiled_form = $updated_compiled_form;
+		} else {
+			// add styling to the array
+			foreach ( $compiled_form as $key => $value ) {
+				$compiled_form[ $key ] = sprintf(
+					'<p><strong>%1$s</strong><br /><span>%2$s</span></p>',
+					$value[0],
+					$value[1]
+				);
 			}
 		}
 
@@ -1274,7 +1281,15 @@ class Contact_Form extends Contact_Form_Shortcode {
 
 		/** This filter is already documented in modules/contact-form/admin.php */
 		$subject = apply_filters( 'contact_form_subject', $contact_form_subject, $all_values );
-		$url     = $block_template || $block_template_part || $widget ? home_url( '/' ) : get_permalink( $post->ID );
+
+		/*
+		 * Links to the feedback and the post.
+		 */
+		if ( $block_template || $block_template_part || $widget ) {
+			$url = home_url( '/' );
+		} else {
+			$url = get_permalink( $post->ID );
+		}
 
 		// translators: the time of the form submission.
 		$date_time_format = _x( '%1$s \a\t %2$s', '{$date_format} \a\t {$time_format}', 'jetpack-forms' );
@@ -1356,32 +1371,70 @@ class Contact_Form extends Contact_Form_Shortcode {
 		 */
 		do_action( 'grunion_after_feedback_post_inserted', $post_id, $this->fields, $is_spam, $entry_values );
 
+		/**
+		 * Filter the title used in the response email.
+		 *
+		 * @module contact-form
+		 *
+		 * @since 0.18.0
+		 *
+		 * @param string the title of the email
+		 */
+		$title   = (string) apply_filters( 'jetpack_forms_response_email_title', '' );
 		$message = self::get_compiled_form_for_email( $post_id, $this );
 
-		array_push(
-			$message,
-			'<br />',
-			'<hr />',
-			__( 'Time:', 'jetpack-forms' ) . ' ' . $time . '<br />',
-			__( 'IP Address:', 'jetpack-forms' ) . ' ' . $comment_author_IP . '<br />', // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
-			__( 'Contact Form URL:', 'jetpack-forms' ) . ' ' . $url . '<br />'
-		);
-
 		if ( is_user_logged_in() ) {
-			array_push(
-				$message,
-				sprintf(
-					// translators: the the name of the site.
-					'<p>' . __( 'Sent by a verified %s user.', 'jetpack-forms' ) . '</p>',
-					isset( $GLOBALS['current_site']->site_name ) && $GLOBALS['current_site']->site_name ?
-						$GLOBALS['current_site']->site_name : '"' . get_option( 'blogname' ) . '"'
-				)
+			$sent_by_text = sprintf(
+				// translators: the name of the site.
+				'<br />' . esc_html__( 'Sent by a verified %s user.', 'jetpack-forms' ) . '<br />',
+				isset( $GLOBALS['current_site']->site_name ) && $GLOBALS['current_site']->site_name ? $GLOBALS['current_site']->site_name : '"' . get_option( 'blogname' ) . '"'
 			);
 		} else {
-			array_push( $message, '<p>' . __( 'Sent by an unverified visitor to your site.', 'jetpack-forms' ) . '</p>' );
+			$sent_by_text = '<br />' . esc_html__( 'Sent by an unverified visitor to your site.', 'jetpack-forms' ) . '<br />';
 		}
 
-		$message = join( '', $message );
+		$footer_time = sprintf(
+			/* translators: Placeholder is the date and time when a form was submitted. */
+			esc_html__( 'Time: %1$s', 'jetpack-forms' ),
+			$time
+		);
+		$footer_ip = sprintf(
+			/* translators: Placeholder is the IP address of the person who submitted a form. */
+			esc_html__( 'IP Address: %1$s', 'jetpack-forms' ),
+			$comment_author_IP // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+		);
+		$footer_url = sprintf(
+			/* translators: Placeholder is the URL of the page where a form was submitted. */
+			__( 'Source URL: %1$s', 'jetpack-forms' ),
+			esc_url( $url )
+		);
+
+		$footer = implode(
+			'',
+			/**
+			 * Filter the footer used in the response email.
+			 *
+			 * @module contact-form
+			 *
+			 * @since 0.18.0
+			 *
+			 * @param array the lines of the footer, one line per array element.
+			 */
+			apply_filters(
+				'jetpack_forms_response_email_footer',
+				array(
+					'<br />',
+					'<hr />',
+					'<span style="font-size: 12px">',
+					$footer_time . '<br />',
+					$footer_ip . '<br />',
+					$footer_url . '<br />',
+					$sent_by_text,
+					'</span>',
+					'<hr />',
+				)
+			)
+		);
 
 		/**
 		 * Filters the message sent via email after a successful form submission.
@@ -1391,11 +1444,12 @@ class Contact_Form extends Contact_Form_Shortcode {
 		 * @since 1.3.1
 		 *
 		 * @param string $message Feedback email message.
+		 * @param string $message Feedback email message as an array
 		 */
-		$message = apply_filters( 'contact_form_message', $message );
+		$message = apply_filters( 'contact_form_message', implode( '', $message ), $message );
 
 		// This is called after `contact_form_message`, in order to preserve back-compat
-		$message = self::wrap_message_in_html_tags( $message );
+		$message = self::wrap_message_in_html_tags( $title, $message, $footer );
 
 		update_post_meta( $post_id, '_feedback_email', $this->addslashes_deep( compact( 'to', 'message' ) ) );
 
@@ -1583,33 +1637,44 @@ class Contact_Form extends Contact_Form_Shortcode {
 	 *
 	 * This helps to ensure correct parsing by clients, and also helps avoid triggering spam filtering rules
 	 *
+	 * @param string $title - title of the email.
 	 * @param string $body - the message body.
+	 * @param string $footer - the footer containing meta information.
 	 *
 	 * @return string
 	 */
-	public static function wrap_message_in_html_tags( $body ) {
+	public static function wrap_message_in_html_tags( $title, $body, $footer ) {
 		// Don't do anything if the message was already wrapped in HTML tags
 		// That could have be done by a plugin via filters
-		if ( false !== strpos( $body, '<html' ) ) {
+		if ( str_contains( $body, '<html' ) ) {
 			return $body;
 		}
 
+		$template = '';
+
+		/**
+		 * Filter the filename of the template HTML surrounding the response email. The PHP file will return the template in a variable called $template.
+		 *
+		 * @module contact-form
+		 *
+		 * @since 0.18.0
+		 *
+		 * @param string the filename of the HTML template used for response emails to the form owner.
+		 */
+		require apply_filters( 'jetpack_forms_response_email_template', __DIR__ . '/templates/email-response.php' );
 		$html_message = sprintf(
 			// The tabs are just here so that the raw code is correctly formatted for developers
 			// They're removed so that they don't affect the final message sent to users
 			str_replace(
 				"\t",
 				'',
-				'<!doctype html>
-				<html xmlns="http://www.w3.org/1999/xhtml">
-				<body>
-
-				%s
-
-				</body>
-				</html>'
+				$template
 			),
-			$body
+			( $title !== '' ? '<h1>' . $title . '</h1>' : '' ),
+			$body,
+			'',
+			'',
+			$footer
 		);
 
 		return $html_message;
@@ -1657,7 +1722,7 @@ class Contact_Form extends Contact_Form_Shortcode {
 			foreach ( $vars as $key => $data ) {
 				$value->{$key} = $this->addslashes_deep( $data );
 			}
-			return $value;
+			return (array) $value;
 		}
 
 		return addslashes( $value );

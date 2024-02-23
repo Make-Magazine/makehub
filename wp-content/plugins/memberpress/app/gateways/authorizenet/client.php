@@ -14,7 +14,6 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
   public function __construct( $is_test, $endpoint, $gatewayID, $login_name, $transaction_key ) {
     $this->is_test         = $is_test;
     $this->endpoint        = $endpoint;
-    $this->endpoint        = $endpoint;
     $this->gatewayID       = $gatewayID;
     $this->login_name      = $login_name;
     $this->transaction_key = $transaction_key;
@@ -68,7 +67,9 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
     $response = $this->parseAuthnetResponse( $response );
     $this->log( $response );
 
-    if ( isset( $response['messages']['resultCode'] ) && $response['messages']['resultCode'] == 'Ok' ) {
+    if ( isset( $response['messages']['resultCode'] )
+         && $response['messages']['resultCode'] == 'Ok'
+    ) {
       $trans_num = $response['transactionResponse']['transId'];
 
       return $trans_num;
@@ -78,13 +79,60 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
   }
 
   /**
+   * @param  MeprTransaction  $txn
+   */
+  public function voidTransaction( $txn )
+  {
+    $xml = '<createTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+  <merchantAuthentication>
+     <name>' . $this->login_name . '</name>
+     <transactionKey>' . $this->transaction_key . '</transactionKey>
+    </merchantAuthentication>
+    <refId>v' . $txn->id . '</refId>
+  <transactionRequest>
+    <transactionType>voidTransaction</transactionType>
+    <refTransId>' . $txn->trans_num . '</refTransId>
+   </transactionRequest>
+</createTransactionRequest>';
+    $this->log( $xml );
+    $response = wp_remote_post( $this->endpoint, $this->prepareOptions( $xml ) );
+    $response = wp_remote_retrieve_body( $response );
+    $response = $this->parseAuthnetResponse( $response );
+    $this->log( $response );
+
+    if ( isset( $response['messages']['resultCode'] )
+         && $response['messages']['resultCode'] == 'Ok'
+         && $response['transactionResponse']['responseCode'] == 1
+         && isset( $response['transactionResponse']['transId'] )
+         && ! isset( $response['transactionResponse']['errors'] )
+    ) {
+      return $response['transactionResponse']['transId'];
+    }
+
+    $this->log( 'Could not complete the void transaction request' );
+  }
+
+  /**
    * @param $authorize_net_customer
    * @param MeprTransaction $txn
+   * @param bool $capture
    *
    * @throws Exception
    */
-  public function chargeCustomer( $authorize_net_customer, $txn ) {
+  public function chargeCustomer( $authorize_net_customer, $txn, $capture = true ) {
     $this->log( $authorize_net_customer );
+    $paymentProfile = '';
+    $captureMode = $capture ? 'final' : 'pre';
+
+//    $captureMode = 'final';
+    if (isset($authorize_net_customer["paymentProfiles"]["customerPaymentProfileId"])) {
+      $paymentProfile = $authorize_net_customer["paymentProfiles"]["customerPaymentProfileId"];
+    }
+
+    if (empty($paymentProfile)) {
+      throw new MeprException(__('Profile does not have a payment source', 'memberpress'));
+    }
+
     $xml = '<createTransactionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
     <merchantAuthentication>
      <name>' . $this->login_name . '</name>
@@ -97,7 +145,7 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
         <profile>
            <customerProfileId>' . $authorize_net_customer['customerProfileId'] . '</customerProfileId>
           <paymentProfile>
-            <paymentProfileId>' . $authorize_net_customer["paymentProfiles"]["customerPaymentProfileId"] . '</paymentProfileId>
+            <paymentProfileId>' . $paymentProfile . '</paymentProfileId>
           </paymentProfile>
         </profile>
         <poNumber>' . $txn->id . '</poNumber>
@@ -106,7 +154,7 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
         </customer>
         <customerIP>' . $_SERVER['REMOTE_ADDR'] . '</customerIP>
         <authorizationIndicatorType>
-            <authorizationIndicator>final</authorizationIndicator>
+            <authorizationIndicator>' . $captureMode . '</authorizationIndicator>
         </authorizationIndicatorType>
     </transactionRequest>
 </createTransactionRequest>';
@@ -116,20 +164,25 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
     $response = $this->parseAuthnetResponse( $response );
     $this->log( $response );
 
-    if ( isset( $response['messages']['resultCode'] ) && $response['messages']['resultCode'] == 'Ok' ) {
+    if ( isset( $response['messages']['resultCode'] )
+         && $response['messages']['resultCode'] == 'Ok'
+         && $response['transactionResponse']['responseCode'] == 1
+         && ! isset($response['transactionResponse']['errors'])
+    ) {
       $trans_num = $response['transactionResponse']['transId'];
       $last4     = substr( $response['transactionResponse']['accountNumber'], - 4 );
       $txn->update_meta( 'cc_last4', $last4 );
 
       return $trans_num;
     } else {
+      if (isset($response['transactionResponse']['errors']['error']['errorText'])) {
+        throw new MeprException(__($response['transactionResponse']['errors']['error']['errorText'], 'memberpress'));
+      }
       throw new MeprException( __( 'Can not complete the payment.', 'memberpress' ) );
     }
   }
 
   public function createCustomerPaymentProfile( $user, $authorizenet_customer, $dataValue, $dataDesc ) {
-    $mode = $this->is_test ? "testMode" : 'liveMode';
-
     if (empty($dataValue) || empty($dataDesc)) {
       return null;
     }
@@ -167,7 +220,6 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
          </payment>
         <defaultPaymentProfile>true</defaultPaymentProfile>
     </paymentProfile>
-    <validationMode>' . $mode . '</validationMode>
 </createCustomerPaymentProfileRequest>';
 
     $cacheKey = md5(serialize($xml));
@@ -212,6 +264,47 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
       return $subscription_id;
     } else {
       throw new MeprException( __( 'Can not cancel subscription', 'memberpress' ) );
+    }
+  }
+
+  /**
+   * @param SimpleXMLElement $simpleXml
+   * @param $array
+   */
+  public function array2Xml($simpleXml, $array) {
+    foreach ($array as $key => $item) {
+      if (!is_array($item)) {
+        $simpleXml->addChild($key, $item);
+      } else {
+        $child = $simpleXml->addChild($key);
+        $this->array2Xml($child, $item);
+      }
+    }
+    return $simpleXml;
+  }
+
+  public function updateSubscription($args)
+  {
+    $xmlStr = <<<XML
+<ARBUpdateSubscriptionRequest xmlns="AnetApi/xml/v1/schema/AnetApiSchema.xsd">
+</ARBUpdateSubscriptionRequest>
+XML;
+    $simpleXml = @new SimpleXMLElement($xmlStr);
+    $auth = $simpleXml->addChild('merchantAuthentication');
+    $auth->addChild('name', $this->login_name);
+    $auth->addChild('transactionKey', $this->transaction_key);
+    $this->array2Xml($simpleXml, $args);
+    $xml = $simpleXml->asXML();
+    $response = wp_remote_post( $this->endpoint, $this->prepareOptions( $xml ) );
+    $response = wp_remote_retrieve_body( $response );
+    $response = $this->parseAuthnetResponse( $response );
+    $this->log( $xml );
+    $this->log( $response );
+
+    if ( isset( $response['messages']['resultCode'] ) && $response['messages']['resultCode'] == 'Ok' ) {
+      return $response;
+    } else {
+      throw new MeprException( __( 'Can not update subscription', 'memberpress' ) );
     }
   }
 
@@ -380,20 +473,25 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
     $response = wp_remote_retrieve_body( $response );
     $response = $this->parseAuthnetResponse( $response );
 
-    if ( isset( $response['messages']['resultCode'] ) && $response['messages']['resultCode'] == 'Ok' ) {
+    if ( isset( $response['messages']['resultCode'] )
+         && $response['messages']['resultCode'] == 'Ok'
+         && $response['transactionResponse']['responseCode'] == 1
+         && ! isset($response['transactionResponse']['errors'])
+    ) {
       $trans_num = $response['transactionResponse']['transId'];
       $last4     = substr( $response['transactionResponse']['accountNumber'], - 4 );
       $txn->update_meta( 'cc_last4', $last4 );
 
       return $trans_num;
     } else {
+      if (isset($response['transactionResponse']['errors']['error']['errorText'])) {
+        throw new MeprException(__($response['transactionResponse']['errors']['error']['errorText'], 'memberpress'));
+      }
       throw new MeprException( __( 'Can not complete the payment', 'memberpress' ) );
     }
   }
 
   public function createCustomerProfile( $user, $dataValue, $dataDesc ) {
-    $mode = $this->is_test ? "testMode" : 'liveMode';
-
     $address = [
       'line1'       => get_user_meta( $user->ID, 'mepr-address-one', true ),
       'line2'       => get_user_meta( $user->ID, 'mepr-address-two', true ),
@@ -436,7 +534,6 @@ class MeprArtificialAuthorizeNetProfileHttpClient {
          </payment>
       </paymentProfiles>
     </profile>
-  <validationMode>' . $mode . '</validationMode>
   </createCustomerProfileRequest>';
 
     $response = wp_remote_post( $this->endpoint, $this->prepareOptions( $xml ) );

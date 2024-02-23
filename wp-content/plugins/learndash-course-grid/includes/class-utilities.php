@@ -1,16 +1,36 @@
 <?php
+/**
+ * Utilities class.
+ *
+ * @since 2.0.0
+ *
+ * @package LearnDash\Course_Grid
+ */
+
 namespace LearnDash\Course_Grid;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit();
 }
 
+/**
+ * Class Utilities.
+ */
 class Utilities
 {
+	/**
+	 * Gets a template path based on the provided file name.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $template Template file name, without extension.
+	 *
+	 * @return string|false Template path if found, false if not.
+	 */
     public static function get_template( $template )
     {
         $template_file = $template . '.php';
-        
+
         $template = locate_template( 'learndash/course-grid/' .  $template_file );
 
         $template_in_allowed_directory = (
@@ -97,6 +117,213 @@ class Utilities
         return self::get_template_url( 'cards/' . $card . '/script.js' );
     }
 
+	/**
+	 * Parses a textual representation of taxonomies and their terms. Used by Shortcode Attributes.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param string $taxonomies Taxonomy data separated by semicolons, with the taxonomy name followed by a colon and terms separated by commas. Example: taxonomy1:term1,term2;taxonomy2:term3,term4.
+	 *
+	 * @return array<string,array{terms: array<string>} Parsed taxonomy data.
+	 */
+    public static function parse_taxonomies( $taxonomies )
+    {
+        $taxonomies = ! empty( $taxonomies ) ? array_filter( explode( ';', sanitize_text_field( $taxonomies ) ) ) : [];
+
+        $results = [];
+        foreach ( $taxonomies as $taxonomy_entry ) {
+            $taxonomy_parts = explode( ':', $taxonomy_entry );
+
+            if ( empty( $taxonomy_parts[0] ) || empty( $taxonomy_parts[1] ) ) {
+                continue;
+            }
+
+            $taxonomy = trim( $taxonomy_parts[0] );
+            $terms = array_map( 'trim', explode( ',', $taxonomy_parts[1] ) );
+
+            if ( ! empty( $taxonomy ) && ! empty( $terms ) ) {
+                $results[ $taxonomy ] = [
+                    'terms' => $terms,
+                ];
+            }
+        }
+
+        return $results;
+    }
+
+	/**
+	 * Build Post Query Args to use based on the provided Args.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param  array<string,mixed> $atts Post Query Args to start with.
+	 *
+	 * @return array<string,mixed> Modified Post Query Args.
+	 */
+    public static function build_posts_query_args( $atts = [] )
+    {
+        if ( empty( $atts['per_page'] ) ) {
+            $atts['per_page'] = -1;
+        }
+
+        $tax_query = [];
+
+        $taxonomies = ! empty( $atts['taxonomies'] ) ? array_filter( explode( ';', sanitize_text_field( str_replace( '"', '', wp_unslash( $atts['taxonomies'] ) ) ) ) ) : [];
+
+        foreach ( $taxonomies as $taxonomy_entry ) {
+            $taxonomy_parts = explode( ':', $taxonomy_entry );
+
+            if ( empty( $taxonomy_parts[0] ) || empty( $taxonomy_parts[1] ) ) {
+                continue;
+            }
+
+            $taxonomy = trim( $taxonomy_parts[0] );
+            $terms = array_map( 'trim', explode( ',', $taxonomy_parts[1] ) );
+
+            if ( ! empty( $taxonomy ) && ! empty( $terms ) ) {
+                $tax_query[] = [
+                    'taxonomy' => $taxonomy,
+                    'field' => 'slug',
+                    'terms' => $terms,
+                ];
+            }
+        }
+
+        $tax_query['relation'] = 'OR';
+
+        $post__in = null;
+        if ( in_array( $atts['post_type'], [ 'sfwd-courses', 'groups' ] ) ) {
+            $user_id = get_current_user_id();
+
+            if ( isset( $atts['enrollment_status'] ) && $atts['enrollment_status'] == 'enrolled' ) {
+
+                $courses = learndash_user_get_enrolled_courses( $user_id );
+
+                $group_ids = learndash_get_users_group_ids( $user_id );
+                $groups_courses = learndash_get_groups_courses_ids( $user_id, $group_ids );
+
+                $course_ids = array_merge( $courses, $groups_courses );
+
+                if ( $atts['post_type'] == 'sfwd-courses' ) {
+                    $post_ids = $course_ids;
+
+                    if ( isset( $atts['progress_status'] ) && ! empty( $atts['progress_status'] ) ) {
+                        $progress_status = [ strtoupper( $atts['progress_status'] ) ];
+
+                        $activity_query_args = [
+                            'post_types'      => 'sfwd-courses',
+                            'activity_types'  => 'course',
+                            'activity_status' => $progress_status,
+                            'orderby_order'   => 'users.ID, posts.post_title',
+                            'date_format'     => 'F j, Y H:i:s',
+                            'per_page'        => '',
+                        ];
+                        $activity_query_args['user_ids'] = [ $user_id ];
+                        $activity_query_args['post_ids'] = $post_ids;
+
+                        $user_courses_reports = learndash_reports_get_activity( $activity_query_args );
+
+                        $user_courses_ids = [];
+                        if ( ! empty( $user_courses_reports['results'] ) ) {
+                            foreach ( $user_courses_reports['results'] as $result ) {
+                                if ( in_array( 'COMPLETED', $progress_status, true ) ) {
+                                    if ( ! empty( $result->activity_completed ) ) {
+                                        $user_courses_ids[] = absint( $result->post_id );
+                                    }
+                                }
+                                if ( in_array( 'IN_PROGRESS', $progress_status, true ) ) {
+                                    if ( ( ! empty( $result->activity_started ) ) && ( empty( $result->activity_completed ) ) ) {
+                                        $user_courses_ids[] = absint( $result->post_id );
+                                    }
+                                }
+
+                                if ( in_array( 'NOT_STARTED', $progress_status, true ) ) {
+                                    if ( empty( $result->activity_started ) ) {
+                                        $user_courses_ids[] = absint( $result->post_id );
+                                    }
+                                }
+                            }
+
+                            $post_ids = $user_courses_ids;
+                        } else {
+							// It means course with such progress status doesn't exist,
+                            // we return empty array
+                            $post_ids = [];
+                        }
+                    }
+                } elseif ( $atts['post_type'] == 'groups' ) {
+                    $post_ids = $group_ids;
+                }
+
+                if ( empty( $post_ids ) ) {
+					// Add literal 0 in an array because post__in param
+                    // ignores empty array
+                    $post_ids = [ 0 ];
+                }
+
+            } elseif ( isset( $atts['enrollment_status'] ) && $atts['enrollment_status'] == 'not-enrolled' ) {
+
+                $price_types = [ 'open', 'free', 'paynow', 'subscribe', 'closed' ];
+
+                $all_posts = [];
+                foreach ( $price_types as $price_type ) {
+                    $post_ids_by_price_type = learndash_get_posts_by_price_type( $atts['post_type'], $price_type );
+                    $all_posts = array_merge( $all_posts, $post_ids_by_price_type );
+                }
+
+                $courses = learndash_user_get_enrolled_courses( $user_id );
+
+                $group_ids = learndash_get_users_group_ids( $user_id );
+                $groups_courses = learndash_get_groups_courses_ids( $user_id, $group_ids );
+
+                $course_ids = array_merge( $courses, $groups_courses );
+
+                if ( $atts['post_type'] == 'sfwd-courses' ) {
+                    $post_ids = array_diff( $all_posts, $course_ids );
+                } elseif ( $atts['post_type'] == 'groups' ) {
+                    $post_ids = array_diff( $all_posts, $group_ids );
+                }
+			} elseif ( empty( $atts['enrollment_status'] ) ) {
+				$price_types = [
+					LEARNDASH_PRICE_TYPE_OPEN,
+					LEARNDASH_PRICE_TYPE_FREE,
+					LEARNDASH_PRICE_TYPE_PAYNOW,
+					LEARNDASH_PRICE_TYPE_SUBSCRIBE,
+					LEARNDASH_PRICE_TYPE_CLOSED,
+				];
+
+				$all_posts = [];
+				foreach ( $price_types as $price_type ) {
+					$all_posts = array_merge(
+						$all_posts,
+						learndash_get_posts_by_price_type(
+							$atts['post_type'],
+							$price_type
+						)
+					);
+				}
+
+				$post_ids = $all_posts;
+			}
+
+			// Add literal 0 in an array because post__in param ignores empty array.
+			// TODO: Write test to check if it works with all enrollment statuses argument and without it.
+			$post__in = ! empty( $post_ids ) ? $post_ids : [ 0 ];
+        }
+
+        $query_args = apply_filters( 'learndash_course_grid_query_args', [
+            'post_type' => sanitize_text_field( $atts['post_type'] ),
+            'posts_per_page' => intval( $atts['per_page'] ),
+            'post_status' => 'publish',
+            'orderby' => sanitize_text_field( $atts['orderby'] ),
+            'order' => sanitize_text_field( $atts['order'] ),
+            'tax_query' => $tax_query,
+            'post__in' => $post__in,
+        ], $atts, $filter = null );
+
+        return $query_args;
+    }
+
     public static function get_post_types()
     {
         $post_types = get_post_types( [
@@ -144,16 +371,32 @@ class Utilities
         return apply_filters( 'learndash_course_grid_block_editor_post_types',  $returned_post_types );
     }
 
+	/**
+	 * Get a list of excluded Post Types for queries.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return array<string>
+	 */
     public static function get_excluded_post_types()
     {
-        return apply_filters( 'learndash_course_grid_excluded_post_types', 
-            [
-                'sfwd-transactions', 
-                'sfwd-essays', 
-                'sfwd-assignment',
-                'sfwd-certificates',
-                'attachment',
-            ] );
+		/**
+		 * Filters the list of excluded Post Types for queries.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param array<string>
+		 */
+		return apply_filters(
+			'learndash_course_grid_excluded_post_types',
+			[
+				'sfwd-transactions',
+				'sfwd-essays',
+				'sfwd-assignment',
+				'sfwd-certificates',
+				'attachment',
+			]
+		);
     }
 
     public static function get_image_sizes_for_block_editor()
@@ -241,6 +484,16 @@ class Utilities
         return substr( uniqid( 'ld-cg-' ) , 0, 16 );
     }
 
+	/**
+	 * Retrieves the amount of time it takes for the course to be completed.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param int    $post_id   Post ID that the Course Grid saved on.
+	 * @param string $format Format to display the time in. Defaults to "plain", which just outputs the saved value. "output" will format it as something like "1 hour 30 minutes".
+	 *
+	 * @return string Formatted duration.
+	 */
     public static function get_duration( $post_id, $format = 'plain' )
     {
         $duration = get_post_meta( $post_id, '_learndash_course_grid_duration', true );
@@ -256,7 +509,7 @@ class Utilities
                     $duration_m = is_numeric( $duration ) ? floor( ( $duration % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS ) : null;
                     $duration = sprintf( _x( '%d h %d min', 'Duration, e.g. 1 hour 30 minutes', 'learndash-course-grid' ), $duration_h, $duration_m );
                     break;
-                
+
                 default:
                     $duration = false;
                     break;
@@ -264,5 +517,106 @@ class Utilities
         }
 
         return $duration;
+    }
+
+	/**
+	 * Formats the displayed price for a Course.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param  string $price  Input price.
+	 * @param  string $format How to format the price. Defaults to "plain", which does nothing. "output" will format it as currency.
+	 *
+	 * @return string Formatted price.
+	 */
+    public static function format_price( $price, $format = 'plain' )
+    {
+        if ( $format == 'output' ) {
+            preg_match( '/(((\d+)[,\.]?)*(\d+)([\.,]?\d+)?)/', $price, $matches );
+
+            $price = $matches[1];
+
+            if ( ! empty( $price ) ) {
+                $match_comma_decimal = preg_match( '/(?:\d+\.?)*\d+(,\d{1,2})$/', $price, $comma_matches );
+
+                $match_dot_decimal = preg_match( '/(?:\d+,?)*\d+(\.\d{1,2})$/', $price, $dot_matches );
+
+                if ( $match_comma_decimal ) {
+                    $has_decimal = ! empty( $comma_matches[1] ) ? true : false;
+                    $thousands_separator = '.';
+                    $decimal_separator = ',';
+                    $price = str_replace( '.', '', $price );
+                    $price = str_replace( ',', '.', $price );
+                } else {
+                    $has_decimal = ! empty( $dot_matches[1] ) ? true : false;
+                    $thousands_separator = ',';
+                    $decimal_separator = '.';
+                    $price = str_replace( ',', '', $price );
+                }
+
+                $price = floatval( $price );
+
+                if ( $has_decimal ) {
+                    $price = number_format( $price, 2, $decimal_separator, $thousands_separator );
+                } else {
+                    $price = number_format( $price, 0, $decimal_separator, $thousands_separator );
+                }
+            }
+
+            return $price;
+        }
+
+        return $price;
+    }
+
+	/**
+	 * Helper method similar to checked() that also has the ability to set the given input element as disabled.
+	 *
+	 * @since 2.0.5
+	 *
+	 * @param mixed        $checked  Value being searched for.
+	 * @param array<mixed> $data     Value to search within.
+	 * @param bool         $disabled Whether to mark the found value as disabled after marking it as checked.
+	 *
+	 * @return void
+	 */
+    public static function checked_array( $checked, $data, $disabled = false )
+    {
+        $output = '';
+
+        if ( is_array( $data ) && in_array( $checked, $data ) )  {
+            $output .= 'checked="checked"';
+
+            if ( $disabled ) {
+                $output .= ' disabled="disabled"';
+            }
+        }
+
+        echo $output;
+    }
+
+    public static function associative_list_pluck( $list, $find_key, &$returned_list = [] )
+    {
+        foreach ( $list as $key => $value ) {
+            if ( $key === $find_key ) {
+                if ( is_array( $value ) ) {
+                    foreach ( $value as $sub_key => $sub_value ) {
+                        if ( isset( $sub_value[ $key ] ) ) {
+                            unset( $sub_value[ $key ] );
+                        }
+
+                        array_push( $returned_list, $sub_value );
+                    }
+                } else {
+                    array_push( $returned_list, $value );
+                }
+            }
+
+            if ( is_array( $value ) ) {
+                $returned_list = self::associative_list_pluck( $value, $find_key, $returned_list );
+            }
+        }
+
+        return $returned_list;
     }
 }

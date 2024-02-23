@@ -46,7 +46,7 @@ if ( ! empty( $learndash_available_date ) ) {
 		if ( ! empty( $attributes ) ) :
 			foreach ( $attributes as $attribute ) :
 				?>
-			<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span></span>
+			<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ?? '' ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span></span>
 				<?php
 			endforeach;
 		endif;

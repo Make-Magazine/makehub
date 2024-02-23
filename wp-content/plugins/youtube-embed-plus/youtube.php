@@ -1,9 +1,9 @@
 <?php
 /*
-  Plugin Name: Embed Plus YouTube WordPress Plugin
+  Plugin Name: YouTube WordPress Plugin by Embed Plus
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed Plugin. Embed a YouTube channel gallery, playlist gallery, YouTube live stream. Lite embeds with defer JavaScript and facade options
-  Version: 14.2
+  Version: 14.2.1
   Author: Embed Plus YouTube Plugin Team
   Author URI: https://www.embedplus.com
   Requires at least: 4.5
@@ -35,7 +35,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '14.2';
+    public static $version = '14.2.1';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -2884,7 +2884,7 @@ class YouTubePrefs
             $code_iframe1 = '<iframe ' . $centercode . ' id="_ytid_' . $iframe_id . '" ' . $dim_attrs . ' data-origwidth="' . self::$defaultwidth . '" data-origheight="' . self::$defaultheight . '" ' . $relstop .
                     'src="https://www.' . $youtubebaseurl . '.com/embed/' . $videoidoutput . '?';
             $code_iframe2 = '" class="__youtube_prefs__ ' . (!empty($finalparams['live_stream']) ? ' epyt-live-channel ' : '') . ($iscontent ? '' : ' __youtube_prefs_widget__ ') . ($isoverride ? ' epyt-is-override ' : '') . ' no-lazyload"' .
-                    $voloutput . $acctitle . $galleryid_ifm_data . ' allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-no-lazy="1" data-skipgform_ajax_framebjll=""></iframe>';
+                    $voloutput . $acctitle . $galleryid_ifm_data . ' allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen data-no-lazy="1" data-skipgform_ajax_framebjll=""></iframe>';
         }
 
         $code2 = $end_responsive . $end_gb_wrapper;
@@ -3259,7 +3259,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update gives guidance to YouTube\'s recent API limitations on the <a target=_blank href=\"" . self::$epbase . '/how-to-embed-a-youtube-livestream-in-wordpress.aspx">channel-based automatic live stream detection feature</a>, with a solution available to <a target=_blank href="' . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer">Pro users</a>.';
+        $new_pointer_content .= "This update fixes issues with the <a target=_blank href=\"" . self::$epbase . '/how-to-embed-a-youtube-livestream-in-wordpress.aspx">channel-based automatic live stream detection feature</a> for the <a target=_blank href="' . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer">Pro version</a>, and better responsive sizing HTML validation for both Free and Pro versions.';
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";

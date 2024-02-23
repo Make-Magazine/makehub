@@ -61,6 +61,18 @@ class EM_Booking extends EM_Object{
 		'booking_taxes' => array('name'=>'taxes','type'=>'%f','null'=>1),
 		'booking_meta' => array('name'=>'meta','type'=>'%s')
 	);
+	public static $field_shortcuts = array(
+		'id' => 'booking_id',
+		'uuid' => 'booking_uuid',
+		'price' => 'booking_price',
+		'spaces' => 'booking_spaces',
+		'comment' => 'booking_comment',
+		'status' => 'booking_status',
+		'rsvp_status' => 'booking_rsvp_status',
+		'tax_rate' => 'booking_tax_rate',
+		'taxes' => 'booking_taxes',
+		'meta' => 'booking_meta'
+	);
 	//Other Vars
 	/**
 	 * array of notes by admins on this booking. loaded from em_meta table in construct
@@ -221,9 +233,16 @@ class EM_Booking extends EM_Object{
 			if( $this->date() !== false ) $this->date()->setTimestamp($val);
 		}elseif( $prop == 'language' ){
 			$this->booking_meta['lang'] = $val;
-		}else{
-			$this->$prop = $val;
+		}elseif( $prop == 'person' ){
+			// prevent non EM_Person objects from being set
+			if( $val instanceof EM_Person ) {
+				$this->person_id = $val->ID;
+				$this->person = $val;
+			} else {
+				$this->person = null;
+			}
 		}
+		parent::__set( $prop, $val );
 	}
 	
 	public function __isset( $prop ){
@@ -318,10 +337,15 @@ class EM_Booking extends EM_Object{
 				$meta_insert = array();
 				foreach( $this->booking_meta as $meta_key => $meta_value ){
 					if( is_array($meta_value) ){
+						$associative = array_keys($meta_value) !== range(0, count($meta_value) - 1);
 						// we go down one level of array
 						foreach( $meta_value as $kk => $vv ){
 							if( is_array($vv) ) $vv = serialize($vv);
-							$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'_'.$kk, $vv);
+							if( $associative ) {
+								$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'|'.$kk, $vv);
+							}else{
+								$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'|', $vv);
+							}
 						}
 					}else{
 						$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, $meta_key, $meta_value);
@@ -388,9 +412,13 @@ class EM_Booking extends EM_Object{
 		if( is_array($meta_value) ){
 			// delete split array values by getting the generated keys as we would further down and deleting them first
 			$meta_delete_keys = array();
-			foreach( $meta_value as $kk => $vv ){
-				$meta_delete_keys[] = "'". $wpdb->_real_escape('_'.$meta_key.'_'.$kk) . "'";
+			// associative arrays are deleted by key
+			foreach( $meta_value as $kk => $vv ) {
+				$meta_delete_keys[] = "'" . $wpdb->_real_escape( '_' . $meta_key . '|' . $kk ) . "'";
+				$meta_delete_keys[] = "'" . $wpdb->_real_escape( '_' . $meta_key . '_' . $kk ) . "'"; // legacy delete, probably can never delete this
 			}
+			// sequential arrays are stored with same key value so only one delete key needed - we can't do an if( array_keys($meta_value) !== range(0, count($meta_value) - 1) ) { check because legacy strings with sequentials store the number in the key
+			$meta_delete_keys[] = "'". $wpdb->_real_escape('_'.$meta_key.'|') . "'";
 			// delete previous values so we insert new ones
 			$result = $wpdb->query( $wpdb->prepare('DELETE FROM '. EM_BOOKINGS_META_TABLE .' WHERE booking_id=%d AND meta_key IN ('. implode(',', $meta_delete_keys) .')', $this->booking_id) );
 		}else{
@@ -399,13 +427,16 @@ class EM_Booking extends EM_Object{
 		// if null, then we already deleted it and skip this
 		if( $meta_value !== null ) {
 			if( is_array($meta_value) ){
+				$associative = array_keys($meta_value) !== range(0, count($meta_value) - 1);
 				// we go down one level of array
-				$meta_insert = array();
 				foreach( $meta_value as $kk => $vv ){
 					if( is_array($vv) ) $vv = serialize($vv);
-					$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'_'.$kk, $vv);
+					if( $associative ) {
+						$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'|'.$kk, $vv);
+					}else{
+						$meta_insert[] = $wpdb->prepare('(%d, %s, %s)', $this->booking_id, '_'.$meta_key.'|', $vv);
+					}
 				}
-				// delete previous values so we insert new ones
 				$result = $wpdb->query('INSERT INTO '. EM_BOOKINGS_META_TABLE .' (booking_id, meta_key, meta_value) VALUES '. implode(',', $meta_insert));
 			}else{
 				$result = $wpdb->insert( EM_BOOKINGS_META_TABLE, array('booking_id' => $this->booking_id, 'meta_key' => $meta_key, 'meta_value' => $meta_value));
@@ -1037,6 +1068,8 @@ class EM_Booking extends EM_Object{
 		global $wpdb;
 		$result = false;
 		if( $this->can_manage('manage_bookings','manage_others_bookings') ){
+			$this->tickets_bookings = null; // reload tickets
+			$this->get_tickets_bookings(); // get this before bookings deleted from DB
 			$sql = $wpdb->prepare("DELETE FROM ". EM_BOOKINGS_TABLE . " WHERE booking_id=%d", $this->booking_id);
 			$result = $wpdb->query( $sql );
 			if( $result !== false ){
@@ -1136,9 +1169,6 @@ class EM_Booking extends EM_Object{
 	 */
 	function set_status($status, $email = true, $ignore_spaces = false ){
 		global $wpdb;
-		$func_args = func_get_args();
-		$email_args = !empty($func_args[3]) ? $func_args[3] : array();
-		$email_args = array_merge( array('email_admin'=> true, 'force_resend' => false, 'email_attendee' => true), $email_args );
 		$action_string = strtolower($this->status_array[$status]);
 		//if we're approving we can't approve a booking if spaces are full, so check before it's approved.
 		if(!$ignore_spaces && $status == 1){
@@ -1158,6 +1188,9 @@ class EM_Booking extends EM_Object{
 			if( $result && $this->previous_status != $this->booking_status ){ //email if status has changed
 				do_action('em_booking_status_changed', $this, array('status' => $status, 'email' => $email, 'ignore_spaces' => $ignore_spaces)); // method params passed as array
 				if( $email ){
+					$func_args = func_get_args();
+					$email_args = !empty($func_args[3]) ? $func_args[3] : array();
+					$email_args = array_merge( array('email_admin'=> true, 'force_resend' => false, 'email_attendee' => true), $email_args );
 					if( $this->email( !empty($email_args['email_admin']), !empty($email_args['force_resend']), !empty($email_args['email_attendee'])) ){
 					    if( $this->mails_sent > 0 ){
 					        $this->feedback_message .= " ".__('Email Sent.','events-manager');
@@ -1864,6 +1897,41 @@ class EM_Booking extends EM_Object{
 			$booking['person']['phone'] = $this->get_person()->phone;
 		}
 		return apply_filters('em_booking_to_api', $booking, array(), $this);
+	}
+	
+	/**
+	 * Used to process values from meta table bookings_meta. Other meta table values are processed in EM_Object.
+	 *
+	 * Processing the meta for bookings is slightly different for backwards compatibility reasons. This is because of how we split subkeys version 6.4.5.1 and below, which was with an underscore. The problem with underscores is that keys can contain underscores and we don't know where to make the split.
+	 * For bookings, we consider the first word until an underscore as a key, and the rest would be considered subkeys of an array.
+	 * Future versions of EM will split keys with a pipe so there's no confusion, and compatibility is taken into account here.
+	 *
+	 * @param array $raw_meta
+	 * @return array
+	 */
+	function process_meta( $raw_meta ){
+		$processed_meta = array();
+		foreach( $raw_meta as $meta ){
+			$meta_value = maybe_unserialize($meta['meta_value']);
+			$meta_key = $meta['meta_key'];
+			if( preg_match('/^_([a-zA-Z\-0-9 _]+)\|([a-zA-Z\-0-9 _]+)?$/', $meta_key, $match) || preg_match('/^_([a-zA-Z\-0-9]+)_([a-zA-Z\-0-9 _]+)$/', $meta_key, $match) ){
+				$key = $match[1];
+				if( empty($processed_meta[$key]) ) $processed_meta[$key] = array();
+				$subkey = isset($match[2]) ? $match[2] : count($processed_meta[$key]); // allows for storing arrays without a key, such as _beverage_choice| can be stored multiple times in a row if key is not relevant
+				if( !empty($processed_meta[$key][$subkey]) && preg_match('/\|$/', $meta_key) ){
+					// we create an array unsequenced array without pre-deined keys, provided the key name ends with a pipe
+					if( !is_array($processed_meta[$key][$subkey]) ) {
+						$processed_meta[$key][$subkey] = array($processed_meta[$key][$subkey]);
+					}
+					$processed_meta[$key][$subkey][] = $meta_value;
+				}else{
+					$processed_meta[$key][$subkey] = $meta_value;
+				}
+			}else{
+				$processed_meta[$meta_key] = $meta_value;
+			}
+		}
+		return $processed_meta;
 	}
 }
 ?>

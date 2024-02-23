@@ -427,11 +427,7 @@ if ( class_exists( 'Learndash_Admin_Posts_Listing' ) && ! class_exists( 'Learnda
 				return;
 			}
 
-			try {
-				$pricing = $transaction->get_pricing();
-			} catch ( Learndash_DTO_Validation_Exception $e ) {
-				return;
-			}
+			$pricing = $transaction->get_pricing();
 
 			echo sprintf(
 				// Translators: placeholder: Transaction price.
@@ -534,11 +530,7 @@ if ( class_exists( 'Learndash_Admin_Posts_Listing' ) && ! class_exists( 'Learnda
 			}
 
 			if ( ! empty( $coupon_data->code ) ) {
-				try {
-					$pricing = $transaction->get_pricing();
-				} catch ( Learndash_DTO_Validation_Exception $e ) {
-					return;
-				}
+				$pricing = $transaction->get_pricing();
 
 				$formatted_amount = $coupon_data->type === LEARNDASH_COUPON_TYPE_FLAT
 					? learndash_get_price_formatted( $coupon_data->amount, $pricing->currency )

@@ -64,6 +64,10 @@ class Trigger {
 	 */
 	public $network_global = false;
 	/**
+	 * @var array Log data that would be added to the automation logging table under the 'data' serialized array. Extending classes can add extra runtime data to this via the run() method, which is executed before a record is added ot the DB
+	 */
+	public $run_data = array();
+	/**
 	 * @var Trigger[]   Array of triggers currently active
 	 */
 	public static $triggers = array();
@@ -92,20 +96,53 @@ class Trigger {
 	 * @return mixed|void
 	 */
 	public function handle( ...$runtime_data ){
+		// catch for logging
+		add_filter( 'wp_php_error_message', array( &$this, 'log_error' ), 10, 2 );
+		$this->run_data = array('runtime_data' => $runtime_data);
+		// run it
 		if( static::$is_cron ) {
 			if( !$this->doing_cron ){
 				$this->cron_underway();
-				$this->run( $runtime_data );
+				$result = $this->run( $runtime_data );
 				$this->cron_complete();
 			}
 		}else{
-			$this->run( $runtime_data );
+			$result = $this->run( $runtime_data );
 		}
+		// log it (currently experimental)
+		if( isset($result) && defined('EM_AUTOMATION_LOGS') ) {
+			if( ( constant('EM_AUTOMATION_LOGS') === 1 && count($result) > 0 ) || constant('EM_AUTOMATION_LOGS') === 2 ) {
+				$this->log_error( $result );
+			}
+		}
+		$this->run_data = array();
 		// for now, we're just returning first arg if it exists, so that filters always pass. We won't modify filters at this time, maybe later for more advanced trigger types
 		// we're currently focusing on automation rather than hook manipulation
 		if( isset($runtime_data[0]) ){
 			return $runtime_data[0];
 		}
+	}
+	
+	public function log_error ( ...$args ) {
+		global $wpdb;
+		if( count($args) > 1 ) {
+			// this was a WP Error, log if set to verbose since user will likely have gotten an admin email about the fatal error
+			if( constant('EM_AUTOMATION_LOGS') === 2 ) {
+				$this->run_data['error'] = $args[1];
+				$result = null;
+			} else {
+				return;
+			}
+		} else {
+			$this->run_data['results'] = $args[0];
+			$result = count($args[0]);
+		}
+		$insert_data = array(
+			'automation_id' => $this->id,
+			'affected' => $result,
+			'data' => serialize($this->run_data),
+		);
+		$wpdb->insert( EM_AUTOMATION_LOGS_TABLE, $insert_data );
 	}
 	
 	/**
@@ -151,12 +188,14 @@ class Trigger {
 						$sql .= 'AND booking_id '. $exclude .' IN ( SELECT booking_id FROM '. EM_BOOKINGS_META_TABLE . ' WHERE meta_key=\'gateway\' AND meta_value IN ('. $wpdb->prepare(implode(',', $gateways), array_keys($gateways)).'))';
 					}
 				}
-				$bookings = $wpdb->get_results($sql, ARRAY_A);
-				if( empty($bookings) ) return false;
+				$the_bookings = $wpdb->get_results($sql, ARRAY_A);
+				if( empty($the_bookings) ) return false;
 				$EM_Bookings = new \EM_Bookings( $EM_Event );
-				foreach( $bookings as $booking ){
-					$EM_Bookings->bookings[$booking['booking_id']] = new \EM_Booking($booking);
+				$bookings = array();
+				foreach( $the_bookings as $booking ){
+					$bookings[$booking['booking_id']] = new \EM_Booking($booking);
 				}
+				$EM_Bookings->bookings = $bookings;
 				return $EM_Bookings; // return the array
 			}else{
 				// check if the event matches filters, if not return

@@ -12,7 +12,7 @@ const ExitToDashboard = () => {
 	return (
 		<a className="st-exit-to-dashboard" href={ adminUrl }>
 			<Tooltip content={ __( 'Exit to Dashboard', 'astra-sites' ) }>
-				{ ICONS.dashboard }
+				{ ICONS.remove }
 			</Tooltip>
 		</a>
 	);

@@ -16,7 +16,7 @@ class MPCA_Member_Controller {
       $user = get_user_by('login', $rec->username);
       $caid = get_user_meta($user->ID, 'mpca_corporate_account_id');
       $ca_type = __('None', 'memberpress-corporate');
-      $user_corporate_accounts = MPCA_Corporate_Account::get_all_by_user_id($user->ID);
+      $user_corporate_accounts = MPCA_Corporate_Account::has_active_corporate_account($user->ID);
       if(!empty($caid)) {
         $ca_type = __('Sub Account', 'memberpress-corporate');
       }
