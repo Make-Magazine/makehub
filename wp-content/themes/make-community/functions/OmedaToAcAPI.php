@@ -49,7 +49,7 @@ function process_omeda_file() {
 
   //Active Campaign API can only handle 250 contacts at a time.
   $contactOut = array_chunk($contacts,250);
-
+  $message = '';
   foreach($contactOut as $contact_out){
     //each call to AC should call makehub when done to report results
     $body = array('contacts'=>$contact_out,
@@ -67,14 +67,20 @@ function process_omeda_file() {
     //results output here
     if($response->success==1){
       omeda_log('File sent to Active Campaign Successfully. BatchID = '.$response->batchId);
+      $message .='File sent to Active Campaign Successfully. BatchID = '.$response->batchId;
     }else{
       omeda_log('Failure on send to Active Campaign. '.$response->message);
+      $message .= 'Failure on send to Active Campaign. '.$response->message;
 
       foreach($response->failureReasons as $failureReason){
         omeda_log(print_r($failureReason,TRUE));
+        $message .= print_r($failureReason,TRUE);
       }
     }
   }
+
+  //when done, send an email to webmaster letting us know it completed 
+  wp_mail("webmaster@make.co", "Daily Cron for Omeda to AC has ran", $message);
 }
 
 //This will process the response from AC after they have processed our daily upload file
