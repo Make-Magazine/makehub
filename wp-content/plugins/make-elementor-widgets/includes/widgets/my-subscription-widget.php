@@ -385,8 +385,6 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				<div id="tabs-1">
 					<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
 						<h4 class="open"><?php echo ($settings['title'] != '' ? $settings['title'] : 'My Make: Magazine Subscriptions'); ?></h4>
-
-
 						<ul class="open">
 							<li>
 								<?php
@@ -673,8 +671,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		}
 
 		//Begin additional information section
-		$return .= 	   '<div class="sub-additional-info">
-							<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>' . $address . '</div>';
+		$return .= 	   '<div class="sub-additional-info">';
+
+		//only show mailing address if this is a print or print and digital subscription
+		if ($subscription['ActualVersionCode'] == 'B' || $subscription['ActualVersionCode'] == 'P'){
+			$return .= 	'<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>' . $address . '</div>';
+		}			
+
 		if ($exp_date != '') {
 			$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expire Date:</b> ' . $exp_date . '</div>';
 		}
