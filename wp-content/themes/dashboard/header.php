@@ -32,6 +32,7 @@
         ?>
         <div id="universal-subnav" class="nav-level-2">
             <?php
+            /*
             wp_nav_menu(
                 array(
                     'menu'              => 'secondary_universal_menu',
@@ -44,6 +45,6 @@
                     'fallback_cb'       => 'wp_bootstrap_navwalker::fallback',
                     'walker'            => new wp_bootstrap_navwalker()
                 )
-            );
+            );*/
             ?>
         </div>
