@@ -368,7 +368,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			2) if the customer array is not empty and
 				there are no subscriptions (gift giver with no subscription)
 		*/
-
+		$this->digitalAccess = FALSE;		
 		if (empty($customer_array) || isset($customer_array['subscriptions'])) {
 ?>
 			<script>
@@ -384,7 +384,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				</ul>
 				<div id="tabs-1">
 					<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
-						<!--	<h4 class="open"><?php echo ($settings['title'] != '' ? $settings['title'] : 'My Make: Magazine Subscriptions'); ?></h4>-->
+						<h4 class="open"><?php echo ($settings['title'] != '' ? $settings['title'] : 'My Make: Magazine Subscriptions'); ?></h4>
 						<ul class="open">
 							<li>
 								<?php
@@ -425,7 +425,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 							</li>
 						</ul>
 					</div>
-					
+
 					<?php
 					//Check if customer has given any gifts
 					if (isset($customer_array['gifts']) && !empty($customer_array['gifts'])) {
@@ -449,20 +449,21 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					} // end gift check
 					?>
 				</div>
-				<div id="tabs-2">
-					<?php
-					global $digitalAccess;
-					//if($digitalAccess){
-					//echo 'true';
-					?>
+				<div id="tabs-2">				
+				<?php					
+					if($this->digitalAccess){							
+						?>
+					
 					<article style="height:100vh">
 						<iframe id="bluetoad-iframe" src="/wp-content/themes/make-community/blue-toad-login.php" height="700"></iframe>
-					</article>
-
-					<?php //}
+					</article>					
+				
+				<?php 
+					}else{
+						echo "I'm sorry, this account does not have access to the digital magazine";
+					}
 					?>
 				</div>
-
 			</div>
 
 		<?php
@@ -537,7 +538,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		return $subscriptions;
 	}
 
-	protected function buildSubOutput($subscription) {
+	function buildSubOutput($subscription) {
 		$return = '';
 
 		//Build the output
@@ -661,14 +662,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		if ($subscription['PaymentStatus'] == 3 && $subscription['custEncryptID'] != 0) {
 			$return .= '<div class="sub-issuesRemaining" title="Pay bill now"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r=' . $subscription['custEncryptID'] . '" target="_blank">Pay Now</a></div>';
 		}
-
-		$digitalAccess = false;
+		
 		//if they have access to a digital sub, add this link
 		if (
 			($subscription['ActualVersionCode'] == 'B' || $subscription['ActualVersionCode'] == 'D')
 			&& $subscription['Status'] == '1'
 		) {
-			$digitalAccess = true;
+			$this->digitalAccess = TRUE;		
 			$return .= 	   '<div class="sub-digital" title="Digital Access"><a href="https://make-digital.com" target="_blank">View Digital</a></div>';
 		}
 
