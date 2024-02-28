@@ -217,6 +217,8 @@ final class Plugin {
 		//widget styles		
 		wp_register_style("make-elementor-style", plugins_url('/css/style.css', __FILE__), array(), self::VERSION );
 		wp_enqueue_style('make-elementor-style');
+		wp_register_style("jquery-ui-tabs","//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css", array(), self::VERSION );
+		wp_enqueue_style('jquery-ui-tabs');
     }
 
 
@@ -224,12 +226,12 @@ final class Plugin {
     * we will register javascript files here.
     * for the form within 'my supscription' widget, we will use ajax.
     */
-    public function frontend_scripts() {
+    public function frontend_scripts() {		
 		//widget scripts
-		wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array(), self::VERSION  );
+		wp_enqueue_script('make-elementor-script', plugins_url( '/js/scripts.js', __FILE__ ), array('jquery'), self::VERSION  );
 
 		//ajax for form submission
-		wp_enqueue_script('make-omeda-script', plugin_dir_url(__FILE__) . '/js/omeda.js', array('jquery'), self::VERSION , true);
+		wp_enqueue_script('make-omeda-script', plugin_dir_url(__FILE__) . 'js/omeda.js', array('jquery','jquery-ui-tabs'), self::VERSION , true);
 		wp_localize_script('make-omeda-script', 'make_ajax_object', array(
 			'ajaxurl' => admin_url('admin-ajax.php'),
 			'ajaxnonce' => wp_create_nonce('omeda_ajax')
