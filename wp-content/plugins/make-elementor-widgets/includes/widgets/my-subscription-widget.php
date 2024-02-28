@@ -384,7 +384,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				</ul>
 				<div id="tabs-1">
 					<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
-						<h4 class="open"><?php echo ($settings['title'] != '' ? $settings['title'] : 'My Make: Magazine Subscriptions'); ?></h4>
+						<!--	<h4 class="open"><?php echo ($settings['title'] != '' ? $settings['title'] : 'My Make: Magazine Subscriptions'); ?></h4>-->
 						<ul class="open">
 							<li>
 								<?php
@@ -425,17 +425,40 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 							</li>
 						</ul>
 					</div>
+					
+					<?php
+					//Check if customer has given any gifts
+					if (isset($customer_array['gifts']) && !empty($customer_array['gifts'])) {
+						$return = '';
+					?>
+						<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
+							<h4 class="open"><?php echo 'My Magazine Gift(s)'; ?></h4>
+							<ul class="open">
+								<li>
+									<?php
+									$gift_subs = $this->cleanSubs($customer_array['gifts']);
+									foreach ($gift_subs as $gift) {
+										$return .= $this->buildSubOutput($gift);
+									}
+									echo $return;
+									?>
+								</li>
+							</ul>
+						</div>
+					<?php
+					} // end gift check
+					?>
 				</div>
 				<div id="tabs-2">
 					<?php
 					global $digitalAccess;
 					//if($digitalAccess){
 					//echo 'true';
-					?>	
+					?>
 					<article style="height:100vh">
 						<iframe id="bluetoad-iframe" src="/wp-content/themes/make-community/blue-toad-login.php" height="700"></iframe>
 					</article>
-					
+
 					<?php //}
 					?>
 				</div>
@@ -444,27 +467,6 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		<?php
 		}
-
-		//Check if customer has given any gifts
-		if (isset($customer_array['gifts']) && !empty($customer_array['gifts'])) {
-			$return = '';
-		?>
-			<div class="dashboard-box make-elementor-expando-box subscriptions-wrapper">
-				<h4 class="open"><?php echo 'My Magazine Gift(s)'; ?></h4>
-				<ul class="open">
-					<li>
-						<?php
-						$gift_subs = $this->cleanSubs($customer_array['gifts']);
-						foreach ($gift_subs as $gift) {
-							$return .= $this->buildSubOutput($gift);
-						}
-						echo $return;
-						?>
-					</li>
-				</ul>
-			</div>
-		<?php
-		} // end gift check
 
 		if (empty($customer_array) || empty($customer_array['subscriptions']) || $this->noActive) {
 		?>
@@ -674,9 +676,9 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		$return .= 	   '<div class="sub-additional-info">';
 
 		//only show mailing address if this is a print or print and digital subscription
-		if ($subscription['ActualVersionCode'] == 'B' || $subscription['ActualVersionCode'] == 'P'){
+		if ($subscription['ActualVersionCode'] == 'B' || $subscription['ActualVersionCode'] == 'P') {
 			$return .= 	'<div class="sub-address" title="Shipping Address"><b>Mailing Address:</b>' . $address . '</div>';
-		}			
+		}
 
 		if ($exp_date != '') {
 			$return .= '<div class="sub-expiration" title="Expiration Date"><b>Expire Date:</b> ' . $exp_date . '</div>';
