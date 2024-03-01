@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyPress User Profile Tabs Creator Pro\n"
-"POT-Creation-Date: 2020-11-05 13:46+0530\n"
-"PO-Revision-Date: 2020-11-05 13:46+0530\n"
+"POT-Creation-Date: 2023-06-03 15:09+0530\n"
+"PO-Revision-Date: 2023-06-03 15:09+0530\n"
 "Last-Translator: \n"
 "Language-Team: BuddyDev\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
-"X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.0.1\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c\n"
 "X-Poedit-SearchPath-0: .\n"
 
@@ -23,130 +23,154 @@ msgstr ""
 msgid "Documentation"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:47
+#: admin/bpptc-profile-tabs-edit-helper.php:49
 msgid "All Members"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:48
-#: admin/bpptc-profile-tabs-edit-helper.php:61
+#: admin/bpptc-profile-tabs-edit-helper.php:50
+#: admin/bpptc-profile-tabs-edit-helper.php:63
 msgid "None(Will remove it for everyone. Only applies for existing tabs)"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:59
+#: admin/bpptc-profile-tabs-edit-helper.php:61
 msgid "Do Not Modify(only applies when modifying existing tab or subnav)"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:60
+#: admin/bpptc-profile-tabs-edit-helper.php:62
 msgid "Anyone"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:62
+#: admin/bpptc-profile-tabs-edit-helper.php:64
 msgid "Logged In Members"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:63
+#: admin/bpptc-profile-tabs-edit-helper.php:65
 msgid "Profile Owner"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:67
+#: admin/bpptc-profile-tabs-edit-helper.php:69
 msgid "Friends"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:71
+#: admin/bpptc-profile-tabs-edit-helper.php:73
 msgid "Followers"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:72
+#: admin/bpptc-profile-tabs-edit-helper.php:74
 msgid "Leaders(whom the user is following)"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:82
+#: admin/bpptc-profile-tabs-edit-helper.php:78
+msgid "Not Profile Owner"
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:85
 msgid "Tab Settings"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:90
-#: admin/bpptc-profile-tabs-edit-helper.php:215
+#: admin/bpptc-profile-tabs-edit-helper.php:93
+#: admin/bpptc-profile-tabs-edit-helper.php:238
 msgid "Need help?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:91
+#: admin/bpptc-profile-tabs-edit-helper.php:94
 #, php-format
 msgid "Get started with the <a href=\"%s\">new tab options</a>"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:97
-#: admin/bpptc-profile-tabs-edit-helper.php:233
+#: admin/bpptc-profile-tabs-edit-helper.php:100
+#: admin/bpptc-profile-tabs-edit-helper.php:256
 msgid "Is enabled?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:101
+#: admin/bpptc-profile-tabs-edit-helper.php:104
 msgid "Only enabled tabs will be visible."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:105
-#: admin/bpptc-profile-tabs-edit-helper.php:108
+#: admin/bpptc-profile-tabs-edit-helper.php:109
+msgid "Tab Label"
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:113
+msgid ""
+"Tab label. If Tab label is not provided, the entry title will be used as "
+"label."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:119
+msgid "Tab Slug"
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:123
+msgid ""
+"Preferably unique tab slug. If tab slug is not provided, the entry slug will "
+"be used as label."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:128
+#: admin/bpptc-profile-tabs-edit-helper.php:131
 msgid "Set it as default component?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:112
+#: admin/bpptc-profile-tabs-edit-helper.php:135
 msgid "Are we modifying predefined tab?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:115
+#: admin/bpptc-profile-tabs-edit-helper.php:138
 msgid "Are we modifying a tab added by BuddyPress or some other plugin?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:120
+#: admin/bpptc-profile-tabs-edit-helper.php:143
 msgid "Update label?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:126
+#: admin/bpptc-profile-tabs-edit-helper.php:149
 msgid "Should we update the tab label with new label?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:131
+#: admin/bpptc-profile-tabs-edit-helper.php:154
 msgid "Site admin only?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:135
+#: admin/bpptc-profile-tabs-edit-helper.php:158
 msgid "Is this tab visible to site admin only?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:140
-#: admin/bpptc-profile-tabs-edit-helper.php:282
+#: admin/bpptc-profile-tabs-edit-helper.php:163
+#: admin/bpptc-profile-tabs-edit-helper.php:305
 msgid "Add this tab for?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:145
-#: admin/bpptc-profile-tabs-edit-helper.php:288
+#: admin/bpptc-profile-tabs-edit-helper.php:168
+#: admin/bpptc-profile-tabs-edit-helper.php:311
 msgid "Tab will be available to these users on their profile"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:149
+#: admin/bpptc-profile-tabs-edit-helper.php:172
 msgid "Tab Visibility"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:154
+#: admin/bpptc-profile-tabs-edit-helper.php:177
 msgid ""
 "Tab will be visible to these users when they visit the profile of other "
 "user(tab enabled user)"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:159
-#: admin/bpptc-profile-tabs-edit-helper.php:264
+#: admin/bpptc-profile-tabs-edit-helper.php:182
+#: admin/bpptc-profile-tabs-edit-helper.php:287
 #: admin/bpptc-profile-tabs-list-helper.php:57
 msgid "Position"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:162
+#: admin/bpptc-profile-tabs-edit-helper.php:185
 msgid "Number, Required. Determines position of tab."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:166
+#: admin/bpptc-profile-tabs-edit-helper.php:189
 msgid "Tab Link"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:169
+#: admin/bpptc-profile-tabs-edit-helper.php:192
 msgid ""
 "Optional. Only use if you need dynamic url or link to absolute urls. See our "
 "<a href=\"https://buddydev.com/docs/guides/plugins/buddypress-plugins/"
@@ -154,150 +178,177 @@ msgid ""
 "configuration/\">documentation</a> about this."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:173
+#: admin/bpptc-profile-tabs-edit-helper.php:196
 msgid "Default Subnav Slug"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:177
+#: admin/bpptc-profile-tabs-edit-helper.php:200
 msgid ""
 "Optional. Specify the slug of the subnav to be used. If not specified, first "
 "sub nav will be default."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:181
+#: admin/bpptc-profile-tabs-edit-helper.php:204
 msgid "Item CSS ID"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:184
+#: admin/bpptc-profile-tabs-edit-helper.php:207
 msgid "Optional. CSS id for the nav item."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:188
-#: admin/bpptc-profile-tabs-edit-helper.php:316
+#: admin/bpptc-profile-tabs-edit-helper.php:211
+#: admin/bpptc-profile-tabs-edit-helper.php:339
 msgid "Add to admin bar?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:193
+#: admin/bpptc-profile-tabs-edit-helper.php:216
 msgid "Optional. Add this tab to adminbar account menu for user."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:197
-#: admin/bpptc-profile-tabs-edit-helper.php:325
+#: admin/bpptc-profile-tabs-edit-helper.php:220
+#: admin/bpptc-profile-tabs-edit-helper.php:348
 msgid "Adminbar Item ID"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:201
+#: admin/bpptc-profile-tabs-edit-helper.php:224
 msgid ""
 "Optional. Admin bar nav item id. Required if you want to remove item from "
 "adminbar account menu(or add sub menu)."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:207
+#: admin/bpptc-profile-tabs-edit-helper.php:230
 msgid "Subnav"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:216
+#: admin/bpptc-profile-tabs-edit-helper.php:239
 #, php-format
 msgid "Get started with the <a href=\"%s\">sub nav options</a>"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:225
+#: admin/bpptc-profile-tabs-edit-helper.php:248
 msgid "Subnav {#}"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:226
+#: admin/bpptc-profile-tabs-edit-helper.php:249
 msgid "New"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:227
+#: admin/bpptc-profile-tabs-edit-helper.php:250
 msgid "Remove"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:237
+#: admin/bpptc-profile-tabs-edit-helper.php:260
 msgid "Only enabled sub navs are visible."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:241
+#: admin/bpptc-profile-tabs-edit-helper.php:264
 msgid "Is Existing?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:245
+#: admin/bpptc-profile-tabs-edit-helper.php:268
 msgid "Are we modifying an existing sub nav?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:250
+#: admin/bpptc-profile-tabs-edit-helper.php:273
 #: admin/bpptc-profile-tabs-list-helper.php:51
 msgid "Label"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:253
+#: admin/bpptc-profile-tabs-edit-helper.php:276
 msgid "Required. Label for the sub nav item."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:257
+#: admin/bpptc-profile-tabs-edit-helper.php:280
 #: admin/bpptc-profile-tabs-list-helper.php:56
 msgid "Slug"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:260
+#: admin/bpptc-profile-tabs-edit-helper.php:283
 msgid "Required. Unique slug for this sub nav."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:268
+#: admin/bpptc-profile-tabs-edit-helper.php:291
 msgid "Required. Please specify a position for the sub nav."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:273
+#: admin/bpptc-profile-tabs-edit-helper.php:296
 msgid "Site Admin Only"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:278
+#: admin/bpptc-profile-tabs-edit-helper.php:301
 msgid "Is this sub nav visible to site admin only?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:292
+#: admin/bpptc-profile-tabs-edit-helper.php:315
 msgid "Visible for?"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:298
+#: admin/bpptc-profile-tabs-edit-helper.php:321
 msgid "Tab will be available to these users on their profile."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:302
+#: admin/bpptc-profile-tabs-edit-helper.php:325
 msgid "Url"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:305
+#: admin/bpptc-profile-tabs-edit-helper.php:328
 msgid "(Optional), if you want to link to some other page."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:309
+#: admin/bpptc-profile-tabs-edit-helper.php:332
 msgid "CSS ID"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:312
+#: admin/bpptc-profile-tabs-edit-helper.php:335
 msgid "Optional, CSS id for the sub nav item."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:321
+#: admin/bpptc-profile-tabs-edit-helper.php:344
 msgid "Optional, Add this tab to adminbar account menu for user."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:328
+#: admin/bpptc-profile-tabs-edit-helper.php:351
 msgid ""
 "Optional. Admin bar nav item id. Required if you want to remove item from "
 "adminbar account menu."
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:332
+#: admin/bpptc-profile-tabs-edit-helper.php:355
 msgid "Content"
 msgstr ""
 
-#: admin/bpptc-profile-tabs-edit-helper.php:336
+#: admin/bpptc-profile-tabs-edit-helper.php:359
 #, php-format
 msgid ""
-"Any type of content( shortcodes too ) will work. Please see <a href=\"%s"
-"\">documentation</a> for more details."
+"Any type of content( shortcodes too ) will work. Please see <a "
+"href=\"%s\">documentation</a> for more details."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:371
+msgid "Tab Scope"
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:401
+msgid ""
+"You can limit the scope of this tab/modification to selected users only."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:404
+msgid ""
+"If you select some users, the tab settings will only apply to the users "
+"satisfying these criteria."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:407
+msgid "Associated Users:"
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:418
+msgid "Type user name."
+msgstr ""
+
+#: admin/bpptc-profile-tabs-edit-helper.php:421
+msgid "You can select one or more user by typing the user name."
 msgstr ""
 
 #: admin/bpptc-profile-tabs-list-helper.php:58
@@ -332,37 +383,37 @@ msgstr ""
 msgid "Random"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:460
+#: core/class-bpptc-profile-tabs-actions.php:464
 msgid "BuddyPress Profile Tabs"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:462
-#: core/class-bpptc-profile-tabs-actions.php:464
+#: core/class-bpptc-profile-tabs-actions.php:466
+#: core/class-bpptc-profile-tabs-actions.php:468
 msgid "Profile Tabs"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:463
+#: core/class-bpptc-profile-tabs-actions.php:467
 msgid "Profile Tab"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:465
-#: core/class-bpptc-profile-tabs-actions.php:466
+#: core/class-bpptc-profile-tabs-actions.php:469
+#: core/class-bpptc-profile-tabs-actions.php:470
 msgid "New Profile Tab"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:467
+#: core/class-bpptc-profile-tabs-actions.php:471
 msgid "Edit Profile Tab"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:468
+#: core/class-bpptc-profile-tabs-actions.php:472
 msgid "Search profile Tabs"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:469
+#: core/class-bpptc-profile-tabs-actions.php:473
 msgid "No profile tab found in trash"
 msgstr ""
 
-#: core/class-bpptc-profile-tabs-actions.php:470
+#: core/class-bpptc-profile-tabs-actions.php:474
 msgid "No profile found"
 msgstr ""
 
@@ -433,8 +484,8 @@ msgstr ""
 
 #: vendors/cmb2/includes/rest-api/CMB2_REST_Controller.php:300
 msgid ""
-"No box found by that id. A box needs to be registered with the \"show_in_rest"
-"\" parameter configured."
+"No box found by that id. A box needs to be registered with the "
+"\"show_in_rest\" parameter configured."
 msgstr ""
 
 #: vendors/cmb2/includes/rest-api/CMB2_REST_Controller.php:378

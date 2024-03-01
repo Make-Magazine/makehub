@@ -95,6 +95,8 @@ div.pagination,
 	}
 }
 .buddypress nav#subnav {
+	display: inherit;
+	height: auto;
 	@media screen and (max-width: 768px) {
 		#change-avatar-personal-li, #change-cover-image-personal-li  {
 			display: none;

@@ -1,8 +1,8 @@
 <?php
-// Do not show directly over web.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 0 );
-}
+
+// Do not allow direct access over web.
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Our entry object for the profile tab.
  */
@@ -79,6 +79,13 @@ class BPPTC_Profile_Tabs_Tab_Entry {
 	public $post_id = 0;
 
 	/**
+	 * Post slug.
+	 *
+	 * @var string
+	 */
+	public $post_slug;
+
+	/**
 	 * Is this tab active/enabled?
 	 *
 	 * @var bool|int
@@ -114,6 +121,13 @@ class BPPTC_Profile_Tabs_Tab_Entry {
 	public $is_existing = false;
 
 	/**
+	 * For Tab scope.
+	 *
+	 * @var array
+	 */
+	public $associated_user_ids = array();
+
+	/**
 	 * Is this tab set as default component?
 	 *
 	 * @var bool
@@ -143,11 +157,17 @@ class BPPTC_Profile_Tabs_Tab_Entry {
 	 * @param int   $post_id numeric post id.
 	 */
 	public function __construct( $meta, $post_id = 0 ) {
-		$post          = get_post( $post_id );
-		$this->post_id = $post_id;
+		$post = get_post( $post_id );
 
-		$this->label = $post->post_title;
-		$this->slug  = $post->post_name;
+		$this->post_id   = $post_id;
+		$this->post_slug = $post->post_name;
+
+		$slug       = isset( $meta['_bpptc_tab_slug'] ) ? trim( $meta['_bpptc_tab_slug'][0] ) : '';
+		$this->slug = empty( $slug ) ? $post->post_name : $slug;
+
+		$label       = isset( $meta['_bpptc_tab_label'] ) ? trim( $meta['_bpptc_tab_label'][0] ) : '';
+		$this->label = empty( $label ) ? $post->post_title : $label;
+
 
 		$this->default_subnav_slug = isset( $meta['_bpptc_tab_default_subnav_slug'] ) ? $meta['_bpptc_tab_default_subnav_slug'][0] : '';
 
@@ -186,6 +206,9 @@ class BPPTC_Profile_Tabs_Tab_Entry {
 		$is_existing = isset( $meta['_bpptc_tab_is_existing'] ) ? $meta['_bpptc_tab_is_existing'][0] : false;
 
 		$this->is_existing = 'on' === $is_existing ? true : false;
+
+		$this->associated_user_ids = isset( $meta['_bpptc_tab_users'] ) ? $meta['_bpptc_tab_users'][0] : array();
+		$this->associated_user_ids = array_filter( (array) maybe_unserialize( $this->associated_user_ids ) );
 
 		$this->item_adminbar_slug = isset( $meta['_bpptc_item_adminbar_slug'] ) ? trim( $meta['_bpptc_item_adminbar_slug'][0] ) : '';
 

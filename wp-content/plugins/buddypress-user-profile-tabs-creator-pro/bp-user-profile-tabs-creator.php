@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: BuddyPress User Profile Tabs Creator Pro
- * Version: 1.2.6
+ * Version: 1.4.0
  * Plugin URI: https://buddydev.com/plugins/buddypress-user-profile-tabs-creator-pro/
  * Author: BuddyDev
  * Author URI: https://BuddyDev.com
@@ -10,9 +10,8 @@
  * License: GPL2 or above
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 0 );
-}
+// Do not allow direct access over web.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * The name BuddyPress User profile Tabs Creator is for search engine,
@@ -77,7 +76,6 @@ class BPPTC_Profile_Tabs_Pro {
 		return self::$instance;
 	}
 
-
 	/**
 	 * Setup hooks.
 	 */
@@ -107,6 +105,11 @@ class BPPTC_Profile_Tabs_Pro {
 			$files[] = 'vendors/cmb2/init.php';
 			$files[] = 'admin/bpptc-profile-tabs-edit-helper.php'; // edit screen helper.
 			$files[] = 'admin/bpptc-profile-tabs-list-helper.php';// Edit list helper.
+		}
+
+		// Handle admin ajax requests.
+		if ( is_admin() ) {
+			$files[] = 'admin/bpptc-profile-tabs-ajax-handler.php';// Admin ajax handler.
 		}
 
 		foreach ( $files as $file ) {

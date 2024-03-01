@@ -1,8 +1,7 @@
 <?php
-// Do not show directly over web.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 0 );
-}
+
+// Do not allow direct access over web.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Sub nav entry object.
@@ -94,6 +93,13 @@ class BPPTC_Profile_Tabs_Subnav_Entry {
 	 * @var bool
 	 */
 	public $is_existing = false;
+
+	/**
+	 * For Tab scope(not applied to sub tabs).
+	 *
+	 * @var array
+	 */
+	public $associated_user_ids = array();
 
 	/**
 	 * Sub nav position.
