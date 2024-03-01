@@ -64,8 +64,13 @@ $terms = array_merge( (array)$categories, (array)$ages, (array)$materials_tax );
 $referrer_url = (isset($_SERVER['HTTP_REFERER'])? parse_url($_SERVER['HTTP_REFERER']) : array());
 if(isset($referrer_url['query'])) {
 	parse_str($referrer_url['query'], $referrer_params);
-	$referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
-	sort($referrer_params);
+    unset($referrer_params["_sf_s"]); 
+    if(!empty($referrer_params)) {
+        $referrer_params = explode(" ", $referrer_params['_sft_content_categories']);
+        sort($referrer_params);
+    } else {
+        unset($referrer_params);
+    }
 }
 
 ?>

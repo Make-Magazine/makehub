@@ -25,6 +25,7 @@ class BPPTC_Profile_Tabs_Admin {
 		// GD fixes.
 		add_action( 'media_buttons', array( $this, 'fix_media_buttons_for_ayecode' ), 1 );
 		add_action( 'bpptc_post_type_admin_enqueue_scripts', array( $this, 'media_button_fixes' ) );
+		add_action( 'admin_footer', array( $this, 'fix_uploader_for_wp6_3' ), 20 );
 	}
 
 	/**
@@ -32,6 +33,8 @@ class BPPTC_Profile_Tabs_Admin {
 	 */
 	public function add_meta_box() {
 		add_action( 'cmb2_admin_init', array( $this, 'render_meta_box' ) );
+		add_action( 'add_meta_boxes', array( $this, 'register_metabox' ) );
+		add_action( 'save_post', array( $this, 'save_details' ) );
 	}
 
 	/**
@@ -72,7 +75,8 @@ class BPPTC_Profile_Tabs_Admin {
 			$extra_visible_options['following'] = __( 'Leaders(whom the user is following)', 'buddypress-user-profile-tabs-creator-pro' );
 		}
 
-		$who_can_view_roles = array_merge( $extra_visible_options, $who_can_view_roles );
+		$who_can_view_roles             = array_merge( $extra_visible_options, $who_can_view_roles );
+		$who_can_view_roles['not_self'] = __( 'Not Profile Owner', 'buddypress-user-profile-tabs-creator-pro' );
 
 		$subnav_access_roles = array_merge( $extra_visible_options, $who_can_view_roles );
 
@@ -100,6 +104,26 @@ class BPPTC_Profile_Tabs_Admin {
 			'default' => 0,
 			'desc'    => __( 'Only enabled tabs will be visible.', 'buddypress-user-profile-tabs-creator-pro' ),
 		) );
+
+		$cmb_tabs->add_field(
+			array(
+				'name'    => __( 'Tab Label', 'buddypress-user-profile-tabs-creator-pro' ),
+				'id'      => $prefix . 'tab_label',
+				'type'    => 'text',
+				'default' => '',
+				'desc'    => __( 'Tab label. If Tab label is not provided, the entry title will be used as label.', 'buddypress-user-profile-tabs-creator-pro' ),
+			)
+		);
+
+		$cmb_tabs->add_field(
+			array(
+				'name'    => __( 'Tab Slug', 'buddypress-user-profile-tabs-creator-pro' ),
+				'id'      => $prefix . 'tab_slug',
+				'type'    => 'text',
+				'default' => '',
+				'desc'    => __( 'Preferably unique tab slug. If tab slug is not provided, the entry slug will be used as label.', 'buddypress-user-profile-tabs-creator-pro' ),
+			)
+		);
 
 		$cmb_tabs->add_field( array(
 			'name'    => __( 'Set it as default component?', 'buddypress-user-profile-tabs-creator-pro' ),
@@ -342,13 +366,117 @@ class BPPTC_Profile_Tabs_Admin {
 	}
 
 	/**
+	 * Register the metabox for tab scope by users.
+	 */
+	public function register_metabox() {
+		add_meta_box( '_bpptc_associate_users', __( 'Tab Scope', 'buddypress-user-profile-tabs-creator-pro' ), array(
+			$this,
+			'render_metabox',
+		), bpptc_get_post_type(), 'side' );
+	}
+
+	/**
+	 * Render metabox.
+	 *
+	 * @param WP_Post $post currently editing tab.
+	 */
+	public function render_metabox( $post ) {
+		$meta           = get_post_custom( $post->ID );
+		$selected_users = isset( $meta['_bpptc_tab_users'] ) ? $meta['_bpptc_tab_users'][0] : array();
+		$selected_users = maybe_unserialize( $selected_users );
+
+		if ( ! empty( $selected_users ) ) {
+			$users = get_users(
+				array(
+					'include' => $selected_users,
+					'fields'  => array( 'ID', 'display_name' ),
+					'number'  => - 1,
+				)
+			);
+		} else {
+			$users = array();
+		}
+
+		?>
+		<p class="bpptc-notice">
+			<?php _e( 'You can limit the scope of this tab/modification to selected users only.', 'buddypress-user-profile-tabs-creator-pro' ); ?>
+		</p>
+		<p>
+			<?php _e( 'If you select some users, the tab settings will only apply to the users satisfying these criteria.', 'buddypress-user-profile-tabs-creator-pro' ); ?>
+		</p>
+
+		<h4><?php _e( 'Associated Users:', 'buddypress-user-profile-tabs-creator-pro' );?></h4>
+		<ul id="bpptc-selected-users-list">
+			<?php foreach ( $users as $user ): ?>
+				<li class="bpptc-user-entry" id="bpptc-user-<?php echo esc_attr( $user->ID );?>">
+					<input type="hidden" value="<?php echo esc_attr( $user->ID );?>" name="_bpptc_tab_users[]" />
+					<a class="bpptc-remove-user" href="#">X</a>
+					<a href="<?php echo esc_url( bpptc_get_user_url( $user->ID ) ); ?>"><?php echo esc_html( $user->display_name );?> </a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+		<p>
+			<input type="text" placeholder="<?php _e( 'Type user name.', 'buddypress-user-profile-tabs-creator-pro' );?>" id="bpptc-user-selector" />
+		</p>
+		<p>
+			<?php _e( 'You can select one or more user by typing the user name.', 'buddypress-user-profile-tabs-creator-pro' ); ?>
+		</p>
+		<style type="text/css">
+            .bpptc-remove-user {
+                padding-right: 5px;
+                color: red;
+            }
+            #bpptc-user-selector {
+                width: 100%;
+            }
+            #bpptc-selected-users-list a {
+                text-decoration: none;
+            }
+		</style>
+
+		<?php
+	}
+
+	/**
+	 * Save the associated users
+	 *
+	 * @param int $post_id numeric post id of the post containing tab details.
+	 */
+	public function save_details( $post_id ) {
+
+		if ( bpptc_get_post_type() != get_post_type( $post_id ) ) {
+			return;
+		}
+
+		//$post = wp_unslash( $_POST );
+
+		$associated_users = isset( $_POST['_bpptc_tab_users'] ) ? array_map( 'absint', (array) $_POST['_bpptc_tab_users'] ) : array();
+
+		if ( $associated_users ) {
+			$associated_users = array_unique( $associated_users );
+			// should we validate the groups?
+			// Let us trust site admins.
+			update_post_meta( $post_id, '_bpptc_tab_users', $associated_users );
+		} else {
+			delete_post_meta( $post_id, '_bpptc_tab_users' );
+		}
+	}
+
+	/**
 	 * Load assets on the add/edit tab page.
 	 */
 	public function load_assets() {
 		wp_enqueue_media(); // we put it here to fix a bug with CMB2 where add media won't work for repeatable fields.
 		wp_enqueue_script( 'bpptc-edit-js', bpptc_profile_tabs_pro()->get_url() . 'admin/assets/bpptc-edit.js', array( 'jquery' ) );
 		wp_enqueue_style( 'bpptc-admin-style',bpptc_profile_tabs_pro()->get_url() . 'admin/assets/bpptc-admin-style.css' );
+
+		wp_enqueue_script(
+			'bpptc_admin_users_helper_js',
+			bpptc_profile_tabs_pro()->get_url() . 'admin/assets/bpptc-admin-users-helper.js',
+			array( 'jquery', 'jquery-ui-autocomplete' )
+		);
 	}
+
 	/**
 	 * Callback for showing the metabox for existing tabs only.
 	 *
@@ -394,6 +522,32 @@ class BPPTC_Profile_Tabs_Admin {
 
 		if ( ! empty( $post ) && ! empty( $post->post_type ) && $post->post_type == bpptc_get_post_type() ) {
 			$shortcode_insert_button_once = true;
+		}
+	}
+
+	/**
+	 * Fixes media uploader for wp 6.3+
+	 */
+	public function fix_uploader_for_wp6_3() {
+
+		// no need to worry if already loaded.
+		if ( did_action( 'print_media_templates' ) ) {
+			return;
+		}
+
+		if (
+			! function_exists( 'get_current_screen' )
+			|| 'bpptc_profile_tab' !== get_current_screen()->id
+		) {
+			return;
+		}
+
+		if ( ! function_exists( 'wp_print_media_templates' ) ) {
+			return;
+		}
+		// we only have issue if it is less than or equal to 10.
+		if ( has_action( 'admin_footer', 'wp_print_media_templates' ) <= 10 ) {
+			add_action( 'admin_footer', 'wp_print_media_templates', 30 );
 		}
 	}
 

@@ -47,7 +47,7 @@ if ( ( class_exists( 'LearnDash_Elementor_Document_Base' ) ) && ( ! class_exists
 		}
 
 		/** Documented in core/base/document.php */
-		protected function register_controls() {
+		protected function _register_controls() {
 			$this->start_controls_section(
 				'sfwd_quiz_settings',
 				array(
@@ -78,7 +78,7 @@ if ( ( class_exists( 'LearnDash_Elementor_Document_Base' ) ) && ( ! class_exists
 			$this->end_controls_section();
 
 			// Make sure to include the rest of the controls.
-			parent::register_controls();
+			parent::_register_controls();
 		}
 
 		/** Documented in core/base/document.php */

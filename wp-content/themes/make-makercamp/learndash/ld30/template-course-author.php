@@ -21,7 +21,7 @@
                     if (!empty($avatar)) :
                         if (class_exists('BuddyPress')) {
                             ?>
-                            <a href="<?php echo bp_core_get_user_domain($user_id); ?>">
+                            <a href="<?php echo bp_members_get_user_url($user_id); ?>">
                                 <?php
                             } else {
                                 ?>
@@ -39,7 +39,7 @@
                         <?php
                             if (class_exists('BuddyPress')) {
                                 ?>
-                                <a href="<?php echo bp_core_get_user_domain($user_id); ?>">
+                                <a href="<?php echo bp_members_get_user_url($user_id); ?>">
                                     <?php
                                 } else {
                                     ?>

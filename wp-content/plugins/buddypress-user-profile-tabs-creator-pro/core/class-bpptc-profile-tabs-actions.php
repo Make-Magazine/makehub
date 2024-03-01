@@ -28,7 +28,12 @@ class BPPTC_Profile_Tabs_Actions {
 
 		// Register new tabs.
 		//add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 110 );
-		add_action( 'bp_init', array( $this, 'setup_nav' ), 110 );
+
+		if ( function_exists( 'bp_core_get_query_parser' ) && 'rewrites' == bp_core_get_query_parser() ) {
+			add_action( 'bp_parse_query', array( $this, 'setup_nav' ), 15 );
+		} else {
+			add_action( 'bp_init', array( $this, 'setup_nav' ), 110 );
+		}
 
 		// remove from admin bar if the existing tab is not available for logged in user.
 		add_action( 'bp_setup_admin_bar', array( $this, 'add_adminbar_menus' ), 98 );
@@ -96,34 +101,41 @@ class BPPTC_Profile_Tabs_Actions {
 
 		$tabs = bpptc_get_active_profile_tab_entries();
 
-		$default = '';
-		$tab     = null;
+		$default           = '';
+		$tab               = null;
+		$displayed_user_id = bp_displayed_user_id();
+		$logged_id         = bp_loggedin_user_id();
 
 		foreach ( $tabs as $tab ) {
-			if ( $tab->is_default_component ) {
-				$default = $tab->slug;
-				break;
+
+			// we are only interested in a tab which has been set as default component
+			// and has its slug specified.
+			if ( ! $tab->is_default_component || ! $tab->slug ) {
+				continue;
 			}
-		}
 
-		// check if the tab is enabled for  the user
-		// if not, return.
-		if ( $default && $tab && ! bpptc_is_tab_enabled_for( bp_displayed_user_id(), $tab ) ) {
-			return;
-		}
+			// assume that this is our default component.
+			$default = $tab->slug;
+			// check if the tab is enabled for  the user
+			// if not, keep searching.
+			if ( ! bpptc_is_tab_enabled_for( $displayed_user_id, $tab ) ) {
+				continue;
+			}
+			// if we are here, we should check if the tab is visible to current user.
+			if ( ! bpptc_is_tab_visible_for( $logged_id, $tab ) ) {
+				continue;
+			}
 
-		// if we are here, we should check if the tab is visible to current user.
-		if ( $default && ! bpptc_is_tab_visible_for( bp_loggedin_user_id(), $tab ) ) {
-			return;
-		}
-
-		if ( $default && defined( 'BP_PLATFORM_VERSION' ) ) {
-			add_filter( 'bp_member_default_component', function () use ( $default ) {
-				return $default;
-			} );
-		} elseif ( $default && ! defined( 'BP_DEFAULT_COMPONENT' ) ) {
-			define( 'BP_DEFAULT_COMPONENT', $default );
-			buddypress()->active_components[ $default ] = 1;
+			if ( defined( 'BP_PLATFORM_VERSION' ) ) {
+				add_filter( 'bp_member_default_component', function () use ( $default ) {
+					return $default;
+				} );
+			} else {
+				define( 'BP_DEFAULT_COMPONENT', $default );
+				buddypress()->active_components[ $default ] = 1;
+			}
+			// reached here, break.
+			break;
 		}
 	}
 

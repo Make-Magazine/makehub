@@ -110,11 +110,11 @@ function _bpptc_get_active_profile_tab_entries() {
 		$meta = get_post_custom( $active_id );
 		$obj  = new BPPTC_Profile_Tabs_Tab_Entry( $meta, $active_id );
 
-		if ( ! $obj->slug ) {
+		if ( ! $obj->slug || ! $obj->post_slug ) {
 			continue;
 		}
 
-		$active_tabs[ $obj->slug ] = $obj;
+		$active_tabs[ $obj->post_slug ] = $obj;
 	}
 
 	return $active_tabs;
@@ -193,41 +193,52 @@ function bpptc_screen_handler() {
  */
 function bpptc_content_generator() {
 
-	$tab         = bp_current_component();
-	$subtab      = bp_current_action();
-	$active_tabs = bpptc_get_active_profile_tab_entries();
+	$tab         = bpptc_get_current_tab();
+	$subtab      = bpptc_get_current_sub_tab();
+	//$active_tabs = ();
 
-	if ( ! isset( $active_tabs[ $tab ] ) ) {
+	if ( ! $tab || ! $subtab ) {
 		return;
 	}
 
-	$tab_object = $active_tabs[ $tab ];
-	$subtab_obj     = isset( $tab_object->sub_navs[ $subtab ] ) ? $tab_object->sub_navs[ $subtab ] : null;
+	//$tab_object = $active_tabs[ $tab ];
+	//$subtab_obj     = isset( $tab_object->sub_navs[ $subtab ] ) ? $tab_object->sub_navs[ $subtab ] : null;
 	// upto BuddyPress 2.9.2, BuddyPress does not support a tab without a default sub tab,
 	// See ticket https://buddypress.trac.wordpress.org/ticket/7628
 	// for the details.
-	if ( ! $subtab_obj ) {
+	if ( ! $subtab ) {
 		return;
 	}
 
-	$content = $subtab_obj->content;
+	$content = $subtab->content;
 
 	// allow admins to use displayed_user_id and logged_user_id in their shortcodes.
-	$content = str_replace( array(
-		'#site_url#',
-		'#displayed_user_url#',
-		'#displayed_user_id#',
-		'#logged_user_id#'
-	), array(
-		untrailingslashit( site_url( '/' ) ),
-		untrailingslashit( bp_displayed_user_domain() ),
-		bp_displayed_user_id(),
-		bp_loggedin_user_id(),
-	), $content );
+	$content = str_replace(
+		array(
+			'#site_url#',
+			'#displayed_user_link#',
+			'#displayed_user_url#',
+			'#displayed_user_id#',
+			'#logged_user_link#',
+			'#logged_user_url#',
+			'#logged_user_id#',
+		),
+		array(
+			untrailingslashit( site_url( '/' ) ),
+			bp_core_get_userlink( bp_displayed_user_id() ),
+			untrailingslashit( bp_displayed_user_domain() ),
+			bp_displayed_user_id(),
+			bp_core_get_userlink( bp_loggedin_user_id() ),
+			bp_loggedin_user_domain(),
+			bp_loggedin_user_id(),
+		),
+		$content
+	);
 
-	setup_postdata( get_post( $tab_object->post_id ) );
-	$class = 'bpptc-content-tab-' . esc_attr( $tab ) . ' bpptc-content-sub-tab-' . esc_attr( $subtab );
-	$class .= ' bpptc-content-view-' . esc_attr( $tab ) . '-' . esc_attr( $subtab );
+
+	setup_postdata( get_post( $tab->post_id ) );
+	$class = 'bpptc-content-tab-' . esc_attr( $tab->slug ) . ' bpptc-content-sub-tab-' . esc_attr( $subtab->slug );
+	$class .= ' bpptc-content-view-' . esc_attr( $tab->slug ) . '-' . esc_attr( $subtab->slug );
 
 	echo "<div class='bpptc-item-content bpptc-member-content $class' >";
 	// applying the_content gives us all the benefits of the default the_content hooks.
@@ -250,6 +261,8 @@ function bpptc_parse_profile_tab_url( $url ) {
 		'[logged-user-profile]',
 		'[site-url]',
 		'[blog-url]',
+		'[displayed-username]',
+		'[displayed-user-id]',
 	);
 
 	$replace = array(
@@ -257,10 +270,13 @@ function bpptc_parse_profile_tab_url( $url ) {
 		bp_loggedin_user_domain(),
 		network_home_url( '/' ),
 		site_url( '/' ),
+		bp_get_displayed_user_username(),
+		bp_displayed_user_id(),
 	);
 
-	return str_replace( $search, $replace, $url );
+	return apply_filters( 'bpptc_parsed_profile_url', str_replace( $search, $replace, $url ), $url );
 }
+
 /**
  * Is the tab for the displayed user is visible to the given user.
  *
@@ -270,17 +286,23 @@ function bpptc_parse_profile_tab_url( $url ) {
  * @return bool
  */
 function bpptc_is_tab_visible_for( $user_id, $tab ) {
-	$roles_visible = $tab->visible_roles;
 
-	if ( ! $roles_visible ) {
+	if ( empty( $tab->visible_roles ) ) {
 		return false;
 	}
 
-	if ( in_array( 'none', $roles_visible ) ) {
+	$roles_visible = (array) $tab->visible_roles;
+
+	// check for not self before anything else.
+	if ( in_array( 'not_self', $roles_visible, true ) && bp_is_my_profile() ) {
 		return false;
-	} elseif ( in_array( 'all', $roles_visible ) ) {
+	}
+
+	if ( in_array( 'none', $roles_visible, true ) ) {
+		return false;
+	} elseif ( in_array( 'all', $roles_visible, true ) ) {
 		return true;
-	} elseif ( in_array( 'do_not_modify', $roles_visible ) ) {
+	} elseif ( in_array( 'do_not_modify', $roles_visible, true ) ) {
 		return true;// do not modify the visibility for existing tabs.
 	} elseif ( ! is_user_logged_in() ) {
 		return false; // in all other cases, user must be logged in.
@@ -290,25 +312,25 @@ function bpptc_is_tab_visible_for( $user_id, $tab ) {
 	// we will reach here only if the user is logged in, so yeh, let's allow.
 	if ( is_super_admin() ) {
 		return true;
-	} elseif ( in_array( 'logged_in', $roles_visible ) ) {
+	} elseif ( in_array( 'logged_in', $roles_visible, true ) ) {
 		return true;
-	} elseif ( in_array( 'self', $roles_visible ) && bp_is_my_profile() ) {
+	} elseif ( in_array( 'self', $roles_visible, true ) && bp_is_my_profile() ) {
 		return true;
 	}
 
 	$displayed_user_id = bp_displayed_user_id();
 
 	// if self, and is my profile.
-	 if ( $displayed_user_id && in_array( 'friends', $roles_visible ) && function_exists( 'friends_check_friendship' ) && friends_check_friendship( $user_id, $displayed_user_id ) ) {
+	if ( $displayed_user_id && in_array( 'friends', $roles_visible, true ) && function_exists( 'friends_check_friendship' ) && friends_check_friendship( $user_id, $displayed_user_id ) ) {
 		return true;
 	} elseif ( $displayed_user_id && function_exists( 'bp_follow_get_followers' ) ) {
 
-		if ( in_array( 'followers', $roles_visible ) && bp_follow_is_following( array(
+		if ( in_array( 'followers', $roles_visible, true ) && bp_follow_is_following( array(
 				'leader_id'   => $displayed_user_id,
 				'follower_id' => $user_id,
 			) ) ) {
 			return true;
-		} elseif ( in_array( 'following', $roles_visible ) && bp_follow_is_following( array(
+		} elseif ( in_array( 'following', $roles_visible, true ) && bp_follow_is_following( array(
 				'leader_id'   => $user_id, // Logged in user is being followed by our displayed user.
 				'follower_id' => $displayed_user_id,
 			) ) ) {
@@ -317,7 +339,7 @@ function bpptc_is_tab_visible_for( $user_id, $tab ) {
 		}
 	}
 	// if we are here, we need to check again for self.
-	if ( in_array( 'self', $roles_visible ) && ! bp_is_user() && is_user_logged_in() ) {
+	if ( in_array( 'self', $roles_visible, true ) && ! bp_is_user() && is_user_logged_in() ) {
 		return true;
 	}
 
@@ -343,6 +365,29 @@ function bpptc_is_tab_visible_for( $user_id, $tab ) {
 }
 
 /**
+ * Is tab scoping enabled?
+ *
+ * @param BPPTC_Profile_Tabs_Tab_Entry $tab tab object.
+ *
+ * @return bool
+ */
+function bpptc_is_scoping_enabled( $tab ) {
+	return ! empty( $tab->associated_user_ids );
+}
+
+/**
+ * Is user associated with the tab?
+ *
+ * @param int                          $user_id User id.
+ * @param BPPTC_Profile_Tabs_Tab_Entry $tab tab object.
+ *
+ * @return bool
+ */
+function bpptc_is_scoped_user( $user_id, $tab ) {
+	return ! empty( $tab->associated_user_ids ) && in_array( $user_id, $tab->associated_user_ids );
+}
+
+/**
  * Is the tab enabled on the profile of the given user?
  *
  * @param int                          $user_id user id.
@@ -351,15 +396,27 @@ function bpptc_is_tab_visible_for( $user_id, $tab ) {
  * @return bool
  */
 function bpptc_is_tab_enabled_for( $user_id, $tab ) {
-	$roles_enabled = $tab->enabled_roles;
 
-	if ( ! $roles_enabled ) {
+	$is_existing   = isset( $tab->is_existing ) ? $tab->is_existing : false;
+	$roles_enabled = isset( $tab->enabled_roles ) ? (array) $tab->enabled_roles : array();
+
+	// this is a scoped tab.
+	if ( ! empty( $tab->associated_user_ids ) ) {
+		$is_scope_match = in_array( $user_id, (array) $tab->associated_user_ids );
+
+		if ( in_array( 'none', $roles_enabled, true ) ) {
+			return $is_existing ? ! $is_scope_match : false;
+		} else {
+			return $is_scope_match;
+		}
+	}
+
+	// for non scoped user, the old settings continue.
+	if ( empty( $roles_enabled ) || in_array( 'none', $roles_enabled, true ) ) {
 		return false;
 	}
 
-	if ( in_array( 'none', $roles_enabled ) ) {
-		return false;
-	} elseif ( in_array( 'all', $roles_enabled ) ) {
+	if ( in_array( 'all', $roles_enabled, true ) ) {
 		return true;
 	}
 
@@ -381,10 +438,7 @@ function bpptc_is_tab_enabled_for( $user_id, $tab ) {
 	}
 
 	return true;
-
 }
-
-
 
 /**
  * Get the total count from label.
@@ -403,4 +457,81 @@ function bpptc_parse_count_from_text( $text ) {
 	}
 
 	return $matches[1];
+}
+
+
+/**
+ * Get current tab object.
+ *
+ * @return null|\BPPTC_Profile_Tabs_Tab_Entry
+ */
+function bpptc_get_current_tab() {
+	$tab_slug = bp_current_component();
+	if ( ! $tab_slug ) {
+		return null;
+	}
+
+	$active_tabs = bpptc_get_active_profile_tab_entries();
+
+	$current_tab = null;
+
+	$user_id = bp_displayed_user_id();
+	foreach ( $active_tabs as $active_tab ) {
+		if ( isset( $active_tab->slug ) && $tab_slug === $active_tab->slug && bpptc_is_tab_enabled_for( $user_id, $active_tab ) ) {
+			$current_tab = $active_tab;
+			break;
+		}
+	}
+
+	return $current_tab; // isset( $active_tabs[ $tab_slug ] ) ? $active_tabs[ $tab_slug ] : null;
+}
+
+/**
+ * Get current subtab object.
+ *
+ * @return null|\BPPTC_Profile_Tabs_Subnav_Entry
+ */
+function bpptc_get_current_sub_tab() {
+
+
+	$tab = bpptc_get_current_tab();
+
+	if ( ! $tab ) {
+		return null;
+	}
+
+	$sub_tab_slug = bp_current_action();
+
+	if ( $sub_tab_slug && isset( $tab->sub_navs[ $sub_tab_slug ] ) ) {
+		$sub_tab = $tab->sub_navs[ $sub_tab_slug ];
+	} else {
+		$sub_tab = current( $tab->sub_navs );
+	}
+
+	// upto BuddyPress 2.9.2, BuddyPress does not support a tab without a default sub tab,
+	// See ticket https://buddypress.trac.wordpress.org/ticket/7628
+	// for the details.
+	if ( ! $sub_tab ) {
+		return null;
+	}
+
+	return $sub_tab;
+}
+
+/**
+ * Retrieves user url
+ *
+ * @param int    $user_id       User id.
+ * @param string $user_nicename User nicename.
+ * @param string $user_login    User login.
+ *
+ * @return string
+ */
+function bpptc_get_user_url( $user_id, $user_nicename = '', $user_login = '' ) {
+
+	if ( function_exists( 'bp_members_get_user_url' ) ) {
+		return bp_members_get_user_url( $user_id );
+	}
+
+	return bp_core_get_user_domain( $user_id, $user_nicename, $user_login );
 }

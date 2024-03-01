@@ -50,7 +50,7 @@ class LearnDash_Elementor_Widget_Login extends LearnDash_Elementor_Widget_Base {
 	}
 
 	/** Documented in Elementor /includes/base/controls-stack.php */
-	protected function register_controls() {
+	protected function _register_controls() {
 
 		$this->start_controls_section(
 			'preview_section',
@@ -168,9 +168,9 @@ class LearnDash_Elementor_Widget_Login extends LearnDash_Elementor_Widget_Base {
 				'type'        => \Elementor\Controls_Manager::SELECT,
 				'label_block' => true,
 				'options'     => array(
-					'left' => __( 'Left - To left of label', 'learndash-elementor' ),
-					''     => __( 'Right - To right of label', 'learndash-elementor' ),
-					'none' => __( 'None - No icon', 'learndash-elementor' ),
+					'left'  => __( 'Left - To left of label', 'learndash-elementor' ),
+					''      => __( 'Right - To right of label', 'learndash-elementor' ),
+					'none'  => __( 'None - No icon', 'learndash-elementor' ),
 				),
 			)
 		);

@@ -49,6 +49,15 @@
 			}
 		}
 	}
+	.ld-content-actions {
+		font-size: 18px;
+		.ld-course-step-back {
+			margin-top: 20px;
+		}
+	}
+	.elementor-social-icons-wrapper .elementor-icon {
+		color: #fff;
+	}
 	.universal-footer { z-index: 999; }
 }
 
@@ -160,7 +169,7 @@
 			max-width: 380px;
 			margin-left: auto;
 			position: absolute;
-			z-index: 2;
+			z-index: 9;
 			right: 10px;
 			width: 42%;
 			top: 100px;
@@ -239,6 +248,10 @@
 		}
 	}
 	.ld-status-icon { display: none; }
+	.ld-item-title {
+		font-size: 18px;
+		span { font-weight: bold; }
+	}
 	.ld-item-details {
 		.lds-btn {
 			width: 100%;
@@ -407,7 +420,7 @@
 			cursor: pointer;
 			white-space: nowrap;
 			font-family: Roboto;
-			font-size: 14px;
+			font-size: 16px;
 			margin-left: 10px;
 		}
 	}

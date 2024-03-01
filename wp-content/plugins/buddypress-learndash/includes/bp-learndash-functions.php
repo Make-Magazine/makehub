@@ -519,7 +519,7 @@ function bp_learndash_record_activity( $args = '' ) {
 
 		if( 'nav-menus.php' != $pagenow && !defined('DOING_AJAX') && isset( $item->url ) && 'custom' == $item->type ) {
 
-			$my_courses_url = bp_get_loggedin_user_link().bp_learndash_profile_courses_slug();
+			$my_courses_url = bp_loggedin_user_url().bp_learndash_profile_courses_slug();
 
 			switch ( $item->url ) {
 

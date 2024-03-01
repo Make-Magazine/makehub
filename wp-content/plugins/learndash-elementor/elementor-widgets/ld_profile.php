@@ -47,7 +47,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 	}
 
 	/** Documented in Elementor /includes/base/controls-stack.php */
-	protected function register_controls() {
+	protected function _register_controls() {
 
 		$this->start_controls_section(
 			'section_profile',
@@ -59,12 +59,12 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 		$this->add_control(
 			'per_page',
 			array(
-				'label' => sprintf(
+				'label'       => sprintf(
 					// translators: placeholder: Courses.
 					esc_html_x( '%s per page', 'placeholder: Courses', 'learndash-elementor' ),
 					\LearnDash_Custom_Label::get_label( 'courses' )
 				),
-				'type'  => \Elementor\Controls_Manager::NUMBER,
+				'type'        => \Elementor\Controls_Manager::NUMBER,
 			)
 		);
 
@@ -120,7 +120,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 		$this->add_control(
 			'course_points_user',
 			array(
-				// translators: placeholder: Course.
+				// translators: placeholder: Cours.
 				'label'   => sprintf( esc_html_x( 'Show Earned %s Points', 'placeholder: Course', 'learndash-elementor' ), \LearnDash_Custom_Label::get_label( 'course' ) ),
 				'type'    => \Elementor\Controls_Manager::SWITCHER,
 				'default' => 'yes',
@@ -149,7 +149,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 		$this->add_control(
 			'expand_all',
 			array(
-				// translators: placeholder: Course.
+				// translators: placeholder: Cours.
 				'label'   => sprintf( esc_html_x( 'Expand All %s Sections', 'placeholder: Course', 'learndash-elementor' ), \LearnDash_Custom_Label::get_label( 'course' ) ),
 				'type'    => \Elementor\Controls_Manager::SWITCHER,
 				'default' => 'yes',
@@ -336,6 +336,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 
 		$this->end_controls_section();
 
+
 		$this->start_controls_section(
 			'section_profile_row_item',
 			array(
@@ -355,6 +356,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 				),
 			)
 		);
+
 
 		$this->add_control(
 			'header_section_profile_row_item_title',
@@ -554,6 +556,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 			)
 		);
 
+
 		$this->add_control(
 			'header_section_profile_row_item_course_progress_bar',
 			array(
@@ -576,7 +579,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 		);
 
 		$this->add_control(
-			'control_profile_row_item_course_progress_bar_color_background',
+			'control_profile_row_item_course_progress_bar_color_backgrouns',
 			array(
 				'label'     => __( 'Progress Bar Background', 'learndash-elementor' ),
 				'type'      => \Elementor\Controls_Manager::COLOR,
@@ -600,6 +603,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
 			)
 		);
+
 
 		$this->add_control(
 			'header_section_profile_row_item_progress_quiz_header',
@@ -644,6 +648,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 				),
 			)
 		);
+
 
 		$this->add_control(
 			'header_section_profile_row_item_progress_quiz_row',
@@ -691,7 +696,9 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 			)
 		);
 
+
 		$this->end_controls_section();
+
 
 		$this->start_controls_section(
 			'section_profile_row_item_progress_assignments',
@@ -744,6 +751,7 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 				),
 			)
 		);
+
 
 		$this->add_control(
 			'header_section_profile_row_item_progress_assignments_row',
@@ -835,6 +843,9 @@ class LearnDash_Elementor_Widget_Profile extends LearnDash_Elementor_Widget_Base
 				),
 			)
 		);
+
+
+
 
 		$this->end_controls_section();
 	}
