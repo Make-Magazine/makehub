@@ -1,6 +1,7 @@
 // GDPR compliance never looked so good
 jQuery(document).ready( function() {
-
+  // don't run any of this on mfairestage
+  if (!window.location.href.indexOf("mfairestage") > -1) {
 	var storage = new CrossStorageClient('https://make.co/wp-content/universal-assets/v2/page-elements/universal-gdpr-helper.html', {
 	  timeout: 5000,
 	  frameId: 'storageFrame'
@@ -60,6 +61,5 @@ jQuery(document).ready( function() {
 			return storage.set('cookies-allowed', 'no');
 		}
 	});
-
-
+  }
 });
