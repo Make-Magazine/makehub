@@ -136,7 +136,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					'KOA.ROSA@GMAIL.COM' => esc_html__('Active Subscription - Gift Donor', 'elementor-make-widget'),
 					'pjo@pobox.com' => esc_html__('No Subscription - Gift Donor', 'elementor-make-widget'),
 					'MICHAEL@MFRANCE.NET' => esc_html__('Multiple Expired Subscriptions', 'elementor-make-widget'),
-					'dhares@hickoryhill-consulting.com' => esc_html__('Multiple Active Accounts', 'elementor-make-widget'),
+					'david.casselbury@jhuapl.edu' => esc_html__('Multiple Active Accounts', 'elementor-make-widget'),
 				],
 			]
 		);
