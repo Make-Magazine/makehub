@@ -99,3 +99,10 @@ foreach ($function_files as $file) {
 if ( ! defined( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS' ) ) {
     define( 'REQUESTS_SILENCE_PSR0_DEPRECATIONS', true );
 }
+
+//add a class of 'makehub' to all of our sites
+add_filter( 'body_class', 'custom_class' );
+    function custom_class( $classes ) {        
+        $classes[] = 'makehub';        
+        return $classes;
+    }
