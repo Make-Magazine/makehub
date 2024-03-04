@@ -368,7 +368,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			2) if the customer array is not empty and
 				there are no subscriptions (gift giver with no subscription)
 		*/
-		$this->digitalAccess = FALSE;		
+		$this->digitalAccess = FALSE;
 		if (empty($customer_array) || isset($customer_array['subscriptions'])) {
 ?>
 			<script>
@@ -450,17 +450,17 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					} // end gift check
 					?>
 				</div>
-				<div id="tabs-2">				
-				<?php					
-					if($this->digitalAccess){							
-						?>
-					
-					<article style="height:100vh">
-						<iframe id="bluetoad-iframe" src="/wp-content/themes/make-community/blue-toad-login.php" height="700"></iframe>
-					</article>					
-				
-				<?php 
-					}else{
+				<div id="tabs-2">
+					<?php
+					if ($this->digitalAccess) {
+					?>
+
+						<article style="height:100vh">
+							<iframe id="bluetoad-iframe" src="/wp-content/themes/make-community/blue-toad-login.php" height="700"></iframe>
+						</article>
+
+					<?php
+					} else {
 						echo "I'm sorry, this account does not have access to the digital magazine";
 					}
 					?>
@@ -472,14 +472,14 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		if (empty($customer_array) || empty($customer_array['subscriptions']) || $this->noActive) {
 		?>
-		<div class="subscriptions-wrapper">
-			<div class="subscription-item sub-offer">
-				<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83"></a>
-				<div>
-					Ready for a creative escape? <i><strong>Make:</strong></i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% savings off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
+			<div class="subscriptions-wrapper">
+				<div class="subscription-item sub-offer">
+					<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83"></a>
+					<div>
+						Ready for a creative escape? <i><strong>Make:</strong></i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% savings off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
+					</div>
 				</div>
 			</div>
-		</div>	
 		<?php
 		}
 		?>
@@ -665,13 +665,13 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		if ($subscription['PaymentStatus'] == 3 && $subscription['custEncryptID'] != 0) {
 			$return .= '<div class="sub-issuesRemaining" title="Pay bill now"><a href="https://subscribe.makezine.com/loading.do?omedasite=Make_bill_pay&r=' . $subscription['custEncryptID'] . '" target="_blank">Pay Now</a></div>';
 		}
-		
+
 		//if they have access to a digital sub, add this link
 		if (
 			($subscription['ActualVersionCode'] == 'B' || $subscription['ActualVersionCode'] == 'D')
 			&& $subscription['Status'] == '1'
 		) {
-			$this->digitalAccess = TRUE;		
+			$this->digitalAccess = TRUE;
 			//$return .= 	   '<div class="sub-digital" title="Digital Access"><a href="https://make-digital.com" target="_blank">View Digital</a></div>';
 		}
 
