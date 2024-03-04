@@ -205,3 +205,26 @@ function makewidget_rss_output($rss, $settings) {
     $rss->__destruct();
     unset($rss);
 }
+
+//curl functionality
+function MakeBasicCurl($url, $headers = null) {
+    $ch = curl_init();
+    //curl_setopt($ch, CURLOPT_VERBOSE, TRUE);
+    //curl_setopt($ch, CURLOPT_STDERR, $verbose = fopen('php://temp', 'rw+'));
+    curl_setopt($ch, CURLOPT_URL, $url);
+    if ($headers != null) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+
+	  if (strpos(NETWORK_HOME_URL, '.local') > -1 || strpos(NETWORK_HOME_URL, '.test') > -1 ) { // wpengine local environments
+      curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    }
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    $data = curl_exec($ch);
+
+    //echo "Verbose information:\n", !rewind($verbose), stream_get_contents($verbose), "\n";
+    curl_close($ch);
+    return $data;
+}

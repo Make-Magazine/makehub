@@ -240,7 +240,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 		$sub_by_email_api = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/email/' . $user_email . '/subscription/product/7/*';
 		$header = array("x-omeda-appid: 0387143E-E0DB-4D2F-8441-8DAB0AF47954");
 
-		$subscriptionJson = json_decode(basicCurl($sub_by_email_api, $header));
+		$subscriptionJson = json_decode(MakeBasicCurl($sub_by_email_api, $header));
 
 		//no customers found, let's try by entered postal id
 		if (!isset($subscriptionJson->Customers)) {
@@ -249,12 +249,12 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			if ($omeda_postal_id != '') {
 				//call Customer Lookup By PostalAddressId
 				$url = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/' . $omeda_postal_id . '/postaladdressid/*';
-				$customerInfo  = json_decode(basicCurl($url, $header));
+				$customerInfo  = json_decode(MakeBasicCurl($url, $header));
 
 				//did we find a customer?
 				if (isset($customerInfo->Customer)) {
 					//pull any subscriptions
-					$subscriptions = json_decode(basicCurl($customerInfo->Subscriptions, $header));
+					$subscriptions = json_decode(MakeBasicCurl($customerInfo->Subscriptions, $header));
 					$customers[] = (object) array('Url' => $customerInfo->Customer, 'Subscriptions' => (array)$subscriptions->Subscriptions);
 				}
 			}
@@ -276,7 +276,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 					https://training.omeda.com/knowledge-base/customer-lookup-by-customer-id/
 				*/
 				//echo '<b>Calling customer specific API '.$customer->Url.'</b><br/>';
-				$customerInfo = json_decode(basicCurl($customer->Url, $header));
+				$customerInfo = json_decode(MakeBasicCurl($customer->Url, $header));
 				$custEncryptID = (isset($customerInfo->EncryptedCustomerId) ? $customerInfo->EncryptedCustomerId : 0);
 
 				/*                   Address Lookup By Customer Id
@@ -286,7 +286,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 				*/
 				if (isset($customerInfo->Addresses)) {
 					//echo '<b>Calling customer address API '.$customerInfo->Addresses.'</b><br/>';
-					$customer_address = json_decode(basicCurl($customerInfo->Addresses, $header));
+					$customer_address = json_decode(MakeBasicCurl($customerInfo->Addresses, $header));
 
 					//save addresses for this customer
 					$address_array = array();
@@ -305,7 +305,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 						//pull donor information
 						$donor_api  = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/' . $customer_sub->DonorId . '/*';
 						//echo '<b>Calling donor API '.$donor_api.'</b><br/>';
-						$donorInfo  = json_decode(basicCurl($donor_api, $header));
+						$donorInfo  = json_decode(MakeBasicCurl($donor_api, $header));
 						$donorName = (isset($donorInfo->FirstName) ? $donorInfo->FirstName : '') . ' ' .
 							(isset($donorInfo->LastName) ? $donorInfo->LastName : '');
 					}
@@ -326,7 +326,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			$giftAPI = 'https://ows.omeda.com/webservices/rest/brand/MK/customer/' . $customer_id . '/gift/*';
 
 			//echo '<b>Calling gift API '.$giftAPI.'</b><br/>';
-			$gift_array = json_decode(basicCurl($giftAPI, $header));
+			$gift_array = json_decode(MakeBasicCurl($giftAPI, $header));
 
 			if (isset($gift_array->GiftRecipients) && !empty($gift_array->GiftRecipients)) {
 				foreach ($gift_array->GiftRecipients as $giftRecipients) {
@@ -395,6 +395,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 											<div class="subscription-item-wrapper">
 												<div class="subscription-item disclaimer">';
 									$return .= 				"<p>I'm sorry, we couldn't find any subscriptions using email " . $user_email . ($omeda_postal_id ? ' or Account Number ' . $omeda_postal_id : '') . '</p><br/><br/>';
+									/*
 									$return .= 				'<p>Have a subscription with us? We can also look up your subscription using the account number found on the mailing label of your most recent magazine.</p>
 													 <div class="account-form-wrapper">
                                                          <img src="' . plugin_dir_url(dirname(__FILE__)) . '/images/label-example.png" alt="magazine label example" />
@@ -404,8 +405,8 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
     														<input type="number" id="omeda_postal_id" name="omeda_postal_id" value="' . $omeda_postal_id . '" />
     														<button id="make-update-Omeda-ID" class="universal-btn">Update</button>
     													</div>
-                                                     </div>
-												</div>
+                                                     </div>';*/
+									$return .= '</div>
 											</div>
 										</div>';
 								}
@@ -471,12 +472,14 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 
 		if (empty($customer_array) || empty($customer_array['subscriptions']) || $this->noActive) {
 		?>
+		<div class="subscriptions-wrapper">
 			<div class="subscription-item sub-offer">
 				<a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none"><img src="https://make.co/wp-content/universal-assets/v1/images/magazine-nav-subscribe-single.jpg?v=83"></a>
 				<div>
 					Ready for a creative escape? <i><strong>Make:</strong></i> is here to help! Now, with our limited community offer you can save big and jump into the world of DIY and global innovations. Don't miss out on 66% savings off the cover price - <a href="https://subscribe.makezine.com/loading.do?omedasite=Make_subscribe&amp;PK=M2GNWB3" target="_none">get your subscription today</a>!
 				</div>
 			</div>
+		</div>	
 		<?php
 		}
 		?>
@@ -669,7 +672,7 @@ class Elementor_mySubscription_Widget extends \Elementor\Widget_Base {
 			&& $subscription['Status'] == '1'
 		) {
 			$this->digitalAccess = TRUE;		
-			$return .= 	   '<div class="sub-digital" title="Digital Access"><a href="https://make-digital.com" target="_blank">View Digital</a></div>';
+			//$return .= 	   '<div class="sub-digital" title="Digital Access"><a href="https://make-digital.com" target="_blank">View Digital</a></div>';
 		}
 
 		//Begin additional information section

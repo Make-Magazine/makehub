@@ -152,7 +152,7 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 
     $api_url      = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
     $customer_api = $api_url . '/admin/customers/search.json?query=email:' . $user_email  . '&fields=id';
-		$customer_content = basicCurl($customer_api);
+		$customer_content = MakeBasicCurl($customer_api);
 
     // Decode the JSON in the file
     $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : array());
@@ -164,7 +164,7 @@ class Elementor_mShedPurch_Widget extends \Elementor\Widget_Base {
 		if (isset($customer['customers']) && !empty($customer['customers']) ) {
         $customerID = $customer['customers'][0]['id'];
         $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
-        $orders_content = basicCurl($orders_api);
+        $orders_content = MakeBasicCurl($orders_api);
         $orderJson = json_decode($orders_content, true);
   			if ( empty($orderJson["orders"]) ) {
         	$output .= 	'<li>
