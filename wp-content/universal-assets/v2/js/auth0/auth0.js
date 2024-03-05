@@ -129,8 +129,15 @@ jQuery(document).ready(function() {
 					// other wise, do the thing!
 					userProfile = user;
 					auth0loggedin = true;
-					displayButtons();
+					
+                    //if this is a site that requires WP login, but they aren't logged into wp, log them in
+                    if (wpLoginRequired && wploggedin == false && !jQuery("body").is(".logged-in")) {                        
+                        WPlogin();
+                    }    
+
+                    displayButtons();
 				});
+                
 			} else {
 		        //check if logged in another place
  				checkSession();
