@@ -228,10 +228,10 @@ jQuery(document).ready(function() {
         if (wploggedin) {
             //user is logged into wordpress at this point, let's display wordpress data
             user = {
-                user_avatar: (ajax_object.wp_user_avatar == undefined) ? '' : ajax_object.wp_user_avatar,
-                user_email: (ajax_object.wp_user_email == undefined) ? '' : ajax_object.wp_user_email,
-                user_name: (ajax_object.wp_user_nicename == undefined) ? '' : ajax_object.wp_user_nicename,
-                user_memlevel: (ajax_object.wp_user_memlevel == undefined) ? '' : ajax_object.wp_user_memlevel,
+                user_avatar: (typeof ajax_object.wp_user_avatar == 'undefined') ? '' : ajax_object.wp_user_avatar,
+                user_email: (typeof ajax_object.wp_user_email == 'undefined') ? '' : ajax_object.wp_user_email,
+                user_name: (typeof ajax_object.wp_user_nicename == 'undefined') ? '' : ajax_object.wp_user_nicename,
+                user_memlevel: (typeof ajax_object.wp_user_memlevel == 'undefined') ? '' : ajax_object.wp_user_memlevel,
             };
         } else if (auth0loggedin) { // if user is logged into auth0, we will call data from auth0
             //we already got the userprofile info from auth0 in the check session step
@@ -242,10 +242,10 @@ jQuery(document).ready(function() {
             }
 
             user = {
-                user_avatar: (userProfile['http://makershare.com/picture'] == undefined) ? userProfile.picture : userProfile['http://makershare.com/picture'],
-                user_email: (userProfile.email == undefined) ? '' : userProfile.email,
-                user_name: (userProfile['http://makershare.com/first_name'] == undefined && userProfile['http://makershare.com/last_name'] == undefined) ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
-                user_memlevel: (userProfile['http://makershare.com/membership_level'] == undefined) ? '' : userProfile['http://makershare.com/membership_level'],
+                user_avatar: (typeof userProfile['http://makershare.com/picture'] == 'undefined') ? userProfile.picture : userProfile['http://makershare.com/picture'],
+                user_email: (typeof userProfile.email == 'undefined') ? '' : userProfile.email,
+                user_name: (typeof userProfile['http://makershare.com/first_name'] == 'undefined' && typeof userProfile['http://makershare.com/last_name'] == 'undefined') ? '' : userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'],
+                user_memlevel: (typeof userProfile['http://makershare.com/membership_level'] == 'undefined') ? '' : userProfile['http://makershare.com/membership_level'],
             };
         } else {
             //not logged into auth0 or wp, get out of here
