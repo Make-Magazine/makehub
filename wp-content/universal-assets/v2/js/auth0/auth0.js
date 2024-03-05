@@ -1,5 +1,4 @@
 jQuery(document).ready(function() {
-    console.log('jQuery Ready');    
     wploggedin = false;        
     //if you are on a makehub site and logged in, you do not need to call auth0
     // we use ajax fields to set the user drop down in this case
@@ -9,7 +8,6 @@ jQuery(document).ready(function() {
     displayButtons();   //let's set up the dropdowns
 
     function displayButtons() {
-        console.log('displayButtons');
         //are we logged into wordpress?
         if (wploggedin) {
             //hide the logout button
@@ -27,7 +25,6 @@ jQuery(document).ready(function() {
     }
 
     function getProfile() {
-        console.log('getProfile');
         var user = {};
         //are they logged into WP? this should just be mf and make.co domains
         if (wploggedin) {
@@ -64,7 +61,6 @@ jQuery(document).ready(function() {
 
     //this function is used to set the user avatar and drop down sections in the universal header
     function setUserDrop(user) {
-        console.log('setUserDrop');
         //set user avatar
         if (user.user_avatar != '') {
             jQuery('#profile-view #dropdownMenuLink img.avatar').attr("src", user.user_avatar);
