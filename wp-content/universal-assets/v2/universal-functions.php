@@ -29,9 +29,9 @@ function set_ajax_params(){
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v2/css/universal.min.css', array(), $my_version);
 
 	//auth0
-	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
-	wp_enqueue_script('universal-auth0', content_url() . '/universal-assets/v2/js/min/universal-auth0.min.js', array('auth0'), $my_version, true);
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v2/js/min/universal.min.js', array('auth0'), $my_version, true);
+	//wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
+	wp_enqueue_script('universal-auth0', content_url() . '/universal-assets/v2/js/min/universal-auth0.min.js', array(), $my_version, true);
+	wp_enqueue_script('universal', content_url() . '/universal-assets/v2/js/min/universal.min.js', array(), $my_version, true);
 
 	$membershipType = $last_name = $first_name = $user_email = $user_image = "";
 
