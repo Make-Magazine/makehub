@@ -106,3 +106,4 @@ add_filter( 'body_class', 'custom_class' );
         $classes[] = 'makehub';        
         return $classes;
     }
+	
