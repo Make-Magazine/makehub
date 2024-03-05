@@ -23,7 +23,7 @@ jQuery(document).ready(function() {
     var wpLoginRequired = false; //is a WP login required?
     var makehubSite = false; //is this a makehub site?
 
-    if (url.indexOf('make.co') !== -1 || url.indexOf('makehub') !== -1) {
+    if (document.body.classList.contains('makehub')) {
         makehubSite = true;
         wpLoginRequired = true;
     } else if (url.indexOf('mfaire') !== -1 || url.indexOf('makerfaire') !== -1) {
